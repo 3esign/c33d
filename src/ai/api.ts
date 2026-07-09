@@ -186,16 +186,16 @@ export async function chatCompletionWithTools(
 // emitting malformed JSON ("Value looks like object, but can't find closing '}'").
 // Convert those to a STRING param ("JSON encoded as string"); the executor's
 // normalizeArgs already tolerantly re-parses stringified objects/arrays.
-function ollamaSanitizeSchema(schema: any): any {
+function sanitizeSchema(schema: any): any {
   if (!schema || typeof schema !== 'object') return schema;
   if (schema.type === 'object' && (!schema.properties || Object.keys(schema.properties).length === 0)) {
-    return { type: 'string', description: `${schema.description || 'Object'} — provide as a JSON-encoded string.` };
+    return { type: 'string', description: `${schema.description || 'Object'} — encode as a JSON string.` };
   }
   const out = { ...schema };
   if (out.properties) {
-    out.properties = Object.fromEntries(Object.entries(out.properties).map(([k, v]) => [k, ollamaSanitizeSchema(v)]));
+    out.properties = Object.fromEntries(Object.entries(out.properties).map(([k, v]) => [k, sanitizeSchema(v)]));
   }
-  if (out.items) out.items = ollamaSanitizeSchema(out.items);
+  if (out.items) out.items = sanitizeSchema(out.items);
   return out;
 }
 
@@ -249,7 +249,7 @@ async function openAIStyleToolCompletion(
     model,
     messages: apiMessages,
     tools: tools.map(t => {
-      const params = flavor === 'ollama' ? ollamaSanitizeSchema(t.parameters) : t.parameters;
+      const params = flavor === 'ollama' ? sanitizeSchema(t.parameters) : t.parameters;
       return { type: 'function', function: { name: t.name, description: t.description, parameters: params } };
     }),
   };
@@ -301,20 +301,7 @@ async function openAIStyleToolCompletion(
   return { text: message.content || null, toolCalls, truncated };
 }
 
-// Gemini rejects OBJECT schemas with empty/missing `properties`. Convert those
-// to STRING ("JSON encoded as string") — the executor tolerantly re-parses.
-function geminiSanitizeSchema(schema: any): any {
-  if (!schema || typeof schema !== 'object') return schema;
-  if (schema.type === 'object' && (!schema.properties || Object.keys(schema.properties).length === 0)) {
-    return { type: 'string', description: `${schema.description || 'Object'} — encode as a JSON string.` };
-  }
-  const out = { ...schema };
-  if (out.properties) {
-    out.properties = Object.fromEntries(Object.entries(out.properties).map(([k, v]) => [k, geminiSanitizeSchema(v)]));
-  }
-  if (out.items) out.items = geminiSanitizeSchema(out.items);
-  return out;
-}
+// Schema sanitization logic shared by Ollama and Gemini (removes empty properties and converts empty objects to JSON strings)
 
 async function geminiToolCompletion(
   apiKey: string,
@@ -360,7 +347,7 @@ async function geminiToolCompletion(
         const decl: any = { name: t.name, description: t.description };
         // Omit parameters entirely for no-arg tools (Gemini rejects empty OBJECT schemas)
         if (t.parameters?.properties && Object.keys(t.parameters.properties).length > 0) {
-          decl.parameters = geminiSanitizeSchema(t.parameters);
+          decl.parameters = sanitizeSchema(t.parameters);
         }
         return decl;
       })

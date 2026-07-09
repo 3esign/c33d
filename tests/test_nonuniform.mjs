@@ -116,9 +116,10 @@ async function run() {
     say('FAILED: no solid produced');
   } else {
     const wrapped = replicad.cast(solidShape);
-    say('resulting volume:', wrapped.volume.toFixed(3));
+    const vol = replicad.measureVolume(wrapped);
+    say('resulting volume:', vol.toFixed(3));
     say('resulting bbox:', JSON.stringify(wrapped.boundingBox.bounds));
-    say('volume error %:', (100 * Math.abs(wrapped.volume - expectedVolume) / expectedVolume).toFixed(2));
+    say('volume error %:', (100 * Math.abs(vol - expectedVolume) / expectedVolume).toFixed(2));
 
     try {
       const analyzer = new OC.BRepCheck_Analyzer(wrapped.wrapped, true, false);
@@ -131,7 +132,8 @@ async function run() {
     try {
       const box = replicad.makeBox([-0.5,-0.5,-0.5],[0.5,0.5,0.5]).translate([0, 0, 3]);
       const union = wrapped.fuse(box);
-      say('fuse-with-box succeeded, union volume:', union.volume.toFixed(3));
+      const unionVol = replicad.measureVolume(union);
+      say('fuse-with-box succeeded, union volume:', unionVol.toFixed(3));
     } catch (e) {
       say('fuse-with-box FAILED:', e.message);
     }
@@ -145,7 +147,8 @@ async function run() {
   say('sewn shape type:', r2.shapeTypeName, ' shells found:', r2.shellsFound, 'faces built:', r2.builtFaces, '/', r2.triCount);
   if (r2.solidShape) {
     const w2 = replicad.cast(r2.solidShape);
-    say('expected volume', expectedVol2, ' got', w2.volume.toFixed(3), ' bbox', JSON.stringify(w2.boundingBox.bounds));
+    const vol2 = replicad.measureVolume(w2);
+    say('expected volume', expectedVol2, ' got', vol2.toFixed(3), ' bbox', JSON.stringify(w2.boundingBox.bounds));
   } else {
     say('FAILED: no solid for box test. explorerError=', r2.explorerError, 'directShellError=', r2.directShellError);
   }

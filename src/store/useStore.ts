@@ -13,6 +13,17 @@ import type {
   NodeChange,
 } from '@xyflow/react';
 import type { MacroDefinition, SuccessExample } from '../nodes/NodeDefinitions';
+import type {
+  GeometryReport,
+  EvaluationOutcome,
+  NudgeCandidate,
+  EvalResultEntry,
+  ChatMessage,
+  SceneObject,
+  PerformanceLogEntry,
+  AgentSlot,
+} from './types';
+import { DEFAULT_GUIDELINES } from './guidelines';
 
 // Web worker lifecycle (recreatable — OCCT WASM leaks are contained by recycling)
 const createGeometryWorker = () =>
@@ -28,33 +39,18 @@ export const generateUUID = () => {
   return Date.now().toString() + '-' + Math.random().toString(36).substring(2, 9);
 };
 
-// ---- Geometry report types (mirrors worker output) ----
-export type LeafReport = {
-  id: string;
-  bbox: { min: number[]; max: number[]; center: number[]; size: number[] } | null;
-  volume?: number;
-  meshOk: boolean;
-  vertexCount: number;
-  error?: string | null;
-};
-export type GeometryReport = {
-  leaves: LeafReport[];
-  nodeErrors: { id: string; error: string }[];
-  numbers: Record<string, number | number[]>;
-  scene: { min: number[]; max: number[]; size: number[] } | null;
-  meshedLeafCount: number;
-  evalCount: number;
-  recycleRecommended: boolean;
-  // Design-parameter inventory (slider label → value) so the model always sees
-  // which names inline formulas can reference.
-  sliders?: Record<string, number>;
-  // Graph size — lets the model (and the human) spot node-count ballooning
-  // across repair rounds.
-  nodeCount?: number;
-  edgeCount?: number;
-};
-
-export type EvaluationOutcome = { error: string | null; report: GeometryReport | null };
+// Persistence helper to dry up fetch calls
+async function persistData(endpoint: string, payload: any, isText = false) {
+  try {
+    await fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': isText ? 'text/plain; charset=utf-8' : 'application/json' },
+      body: isText ? payload : JSON.stringify(payload),
+    });
+  } catch (e) {
+    console.error(`Failed to save data to ${endpoint}:`, e);
+  }
+}
 
 // Waiters allow the agent to await the outcome of the next evaluation
 let evalWaiters: ((outcome: EvaluationOutcome) => void)[] = [];
@@ -72,160 +68,6 @@ export const waitForEvaluation = (timeoutMs = 30000): Promise<EvaluationOutcome>
     const timer = setTimeout(() => resolve({ error: 'Evaluation timed out after 30s', report: null }), timeoutMs);
     evalWaiters.push((outcome) => { clearTimeout(timer); resolve(outcome); });
   });
-};
-
-export type NudgeCandidate = {
-  prompts: string[];
-  plan: string;
-  graphFinal: { nodes: any[]; edges: any[] };
-  graphOriginal: { nodes: any[]; edges: any[] } | null;
-  model: string;
-};
-
-export type EvalResultEntry = {
-  timestamp: string;
-  model: string;
-  promptId: string;
-  level: number;
-  prompt: string;
-  parsedOk: boolean;
-  evaluatedOk: boolean;
-  geometrySane: boolean;
-  nodeCount: number;
-  edgeCount: number;
-  durationMs: number;
-  visionScore?: number;
-  error?: string;
-};
-
-
-const DEFAULT_GUIDELINES = `# AI Parametric CAD Architect Agent Guidelines
-
-This document outlines the core architecture, constraints, coordinate systems, and design conventions for the AI Architect graph editor application. All AI coding assistants and graph generation agents working on this project must adhere strictly to these rules.
-
-## 1. Node Library & Handles
-The graph engine supports the following nodes:
-- **Primitives**: \`Box\`, \`Sphere\`, \`Cylinder\`, \`Plane\`, \`Text3D\`, \`Sketch\`.
-  - Primitives only have output handles named \`"solid"\`.
-  - \`Plane\` represents a true 2D flat surface. Do NOT use a thin \`Box\` to simulate a flat plane.
-  - \`Text3D\` generates 3D extruded text from a string parameter.
-  - \`Sketch\` takes an SVG path parameter (e.g. 'M 0 0 L 10 0 L 10 10 L 0 10 Z') and outputs a flat 2D shape.
-- **Transforms**: \`Translate\`, \`Rotate\`, \`Scale\`, \`PlaceOnSurface\`, \`ScatterOnSurface\`, \`PlaceOnVertices\`, \`Fillet\`, \`Chamfer\`, \`Extrude\`, \`Mirror\`, \`Shell\`, \`Loft\`, \`LinearPattern\`, \`CircularPattern\`.
-  - Transforms take a \`"solid"\` input handle (or specific inputs like \`"profile1"\`/\`"profile2"\` for \`Loft\`) and yield a \`"solid"\` output handle.
-  - \`PlaceOnSurface\` takes \`"surface"\` and \`"shape"\`. It places a shape at a specific UV coordinate (\`u\`, \`v\`) on the surface.
-  - \`ScatterOnSurface\` takes \`"surface"\` and \`"shape"\`. It places a configured \`"count"\` of the shape at pseudo-random UV positions on the surface. Supports random instanced sizing via \`scaleMin\` and \`scaleMax\` parameters. Note: This node only outputs the scattered shapes; to render the base surface as well, merge them using a Boolean (union) or Compound node.
-  - \`PlaceOnVertices\` takes \`"solid"\` and \`"shape"\`. It duplicates the shape and places a copy centered on every single vertex (point/corner) of the primary solid. Supports random instanced sizing via \`scaleMin\` and \`scaleMax\` parameters. Note: This node only outputs the duplicated shapes; to render the base solid as well, merge them using a Boolean (union) or Compound node.
-  - \`Loft\` takes \`"profile1"\` and \`"profile2"\`. It lofts a solid skin between their boundary wires.
-  - \`LinearPattern\` repeats a solid in a straight line.
-  - \`CircularPattern\` repeats a solid in a circle around the Z-axis.
-  - You must always connect the output of a shape or transform to the downstream nodes.
-- **Booleans**: \`Boolean\` (operations: 'union', 'difference', 'intersect').
-- **Group**: \`Compound\` node groups up to 4 shapes (inputs: \`solid1\`, \`solid2\`, \`solid3\`, \`solid4\`) into a compound shape without using expensive boolean merges.
-- **Math & Lists (driven parameters)**: \`NumberSlider\`, \`Expression\`, \`Series\`, \`Range\`, \`ListItem\`, \`ListLength\`.
-  - \`NumberSlider\` outputs a single value.
-  - \`Expression\` evaluates a formula like 'a * 2 + b'.
-  - \`Series\` generates a list of numbers starting at \`start\`, stepping by \`step\`, with a given \`count\`.
-  - \`Range\` generates a list of numbers from \`min\` to \`max\` in a given number of \`steps\`.
-  - \`ListItem\` retrieves an item from a list at the specified \`index\`.
-  - \`ListLength\` returns the size of the list.
-
-## 2. Coordinate System Mapping (Z-up vs Y-up)
-- **CAD Engine**: Replicad/OpenCascade uses **Z-up** coordinates:
-  - \`XY\` plane is the ground plane (where \`Z = 0\`).
-  - \`Z\` is the height axis.
-- **3D Viewport**: Three.js uses **Y-up** coordinates.
-- **Mapping Fix**: The 3D viewport applies a \`-90\` degree rotation around the X-axis (\`[-Math.PI / 2, 0, 0]\`) to align the systems.
-  - Consequently, building a shape on the \`XY\` plane in the CAD node graph will correctly render flat on the ground grid in the 3D viewport.
-  - Do not apply ad-hoc rotations to make elements face "up" in the viewport; they are naturally Z-up.
-
-## 3. Dynamic Slider Parameter Ranges
-All numerical sliders rendered in the UI adapt to custom limits configured in the node library:
-- **Translate offsets**: \`-100\` to \`100\`
-- **Rotational Angles**: \`-360\` to \`360\`
-- **Scaling Factors**: \`0.01\` to \`10\`
-- **Geometric Dimensions (Radius, Width, etc.)**: \`0.1\` to \`200\`
-- **UV Coordinates (u, v)**: \`0\` to \`1\`
-Ensure you specify numerical values in \`node.data\` that fall within these logical ranges.
-
-## 4. List Processing & Loop Approximations (Parametric Loops)
-- The graph engine supports implicit looping via list mapping.
-- **Series & Range:** Use \`Series\` or \`Range\` nodes to generate lists of numbers.
-- **Implicit Mapping on Transforms:** If you connect a list of numbers (from \`Series\`, \`Range\`, or list-mapped \`Expression\`) to a numeric input parameter of a transform node (\`Translate\`, \`Rotate\`, \`Scale\`), the transform is automatically repeated for each value in the list, producing a \`Compound\` solid containing all the individual instances. For example, connecting a \`Series\` to a \`Translate\` node's \`z\` parameter creates a vertical stack of shifted solids.
-- **List Expressions:** If any inputs (\`a\`, \`b\`, \`c\`, \`d\`) to an \`Expression\` node are lists, the formula is evaluated element-by-element, returning a list of numbers.
-- **Scatter/Place fallback:** If a specific point on a surface is required, use **\`PlaceOnSurface\`** with \`"u"\` and \`"v"\` values between \`0\` and \`1\`. To create a cluster of multiple shapes scattered across a surface, you can still use the **\`ScatterOnSurface\`** node.
-
-## 5. Standard Geometric Recipes
-- **Dome**:
-  To build a dome of radius R:
-  1. Create a \`Sphere\` node (radius = R).
-  2. Create a \`Box\` node (width = 2*R + 10, length = 2*R + 10, height = R).
-  3. Create a \`Translate\` node with offsets \`x = 0, y = 0, z = -R/2\` and connect \`Box.solid\` -> \`Translate.solid\`.
-  4. Create a \`Boolean\` node with \`operation = "difference"\`.
-  5. Connect \`Sphere.solid\` -> \`Boolean.target\` and \`Translate.solid\` -> \`Boolean.tool\`. This subtracts the bottom hemisphere to yield a clean dome.
-
-- **Tapered Column / Stem**:
-  To build a tapering stem or pillar of height H:
-  1. Create a base \`Cylinder\` node (e.g., radius = 2) at the base.
-  2. Create a top \`Cylinder\` node (e.g., radius = 0.5) at the top.
-  3. Create a \`Translate\` node with offsets \`x = 0, y = 0, z = H\` and connect the top \`Cylinder.solid\` -> \`Translate.solid\`.
-  4. Connect the base \`Cylinder.solid\` to \`Loft.profile1\` and \`Translate.solid\` to \`Loft.profile2\` to skin a smooth tapering pillar.
-
-- **Parametric Flower**:
-  To construct a beautiful parametric flower at height H:
-  1. **Stem**: Create a tapered pillar using the loft recipe above (from \`z = 0\` to \`z = H\`).
-  2. **Receptacle/Center**: Create a \`Sphere\` node (radius = R) and translate it to \`z = H\` using a \`Translate\` node.
-  3. **Petal Profile**: Create a \`Sketch\` node with a teardrop SVG path (e.g. \`svgPath = "M 0 0 C -2 2 -4 6 0 10 C 4 6 2 2 0 0 Z"\`).
-  4. **Thickness**: Connect the sketch to \`Extrude\` (height = 0.2).
-  5. **Pitch/Orientation**: Connect \`Extrude\` to a \`Rotate\` node with \`isLocal: true\` (e.g., \`angle = 75\`, \`axisX = 1\`, \`axisY = 0\`, \`axisZ = 0\`) to tilt the petal outward.
-  6. **Radial Placement**: Connect the rotated petal to a \`Translate\` node to offset it from the center (e.g., \`y = 3\`) and lift it to the top of the stem (\`z = H\`).
-  7. **Bloom Array**: Connect the translated petal to a \`CircularPattern\` node (e.g., \`count = 8\`, \`angle = 360\`) to create a radial bloom.
-  8. **Group**: Connect the stem loft, center sphere translation, and circular pattern of petals into a \`Compound\` node.
-
-## 6. Visual Node Grouping (Structuring graphs)
-- You can group related nodes visually using parent container nodes of type \`"group"\`.
-- To create a group:
-  1. Add a node with \`"type": "group"\`, and specify a label in its data (e.g. \`data: { label: "Stem Group" }\`).
-  2. Set its boundary size using the style property, e.g. \`"style": { "width": 300, "height": 250 }\`.
-  3. For any nodes inside the group, add the property \`"parentId": "group_node_id"\` and set their \`"position"\` relative to the group's top-left corner \`[0, 0]\` instead of global coordinates.
-- This is highly recommended when creating multiple components (e.g. Stem, Bloom, Leaves) to keep graphs clean and organized!
-`;
-
-export type ChatMessage = {
-  id: string;
-  role: 'user' | 'assistant' | 'system';
-  content: string;
-};
-
-export type SceneObject = {
-  id: string;
-  name: string;
-  type: string;
-  visible: boolean;
-  color?: string;
-  geometryData?: any; // Will store the mesh vertices/indices from replicad
-  meshHash?: string;  // worker's shape+param hash; lets us reuse GPU buffers when unchanged
-};
-
-export type PerformanceLogEntry = {
-  timestamp: string;
-  model: string;
-  request: string;
-  success: boolean;
-  responseTimeMs: number;
-  nodeCount: number;
-  edgeCount: number;
-  error?: string;
-};
-
-export type AgentSlot = {
-  id: string;
-  name: string;
-  provider: 'gemini' | 'ollama' | 'openai' | 'openrouter';
-  apiKey: string; // API Key or URL for Ollama
-  model: string;
-  optimizeForSmallModels?: boolean;
-  enableVisionVerification?: boolean; // send viewport snapshots to vision models for a verification pass
-  disableToolCalling?: boolean;       // force the legacy single-shot JSON protocol
 };
 
 type AppState = {
@@ -554,14 +396,9 @@ export const useStore = create<AppState>()(
             timestamp: new Date().toISOString()
           };
           set((state) => ({
-            performanceLogs: [newEntry, ...state.performanceLogs]
+            performanceLogs: [newEntry, ...state.performanceLogs].slice(0, 50)
           }));
-          // Send to the server log endpoint to save in intelligence_log.json
-          fetch('/api/log', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(newEntry)
-          }).catch(err => console.error('Failed to log on server:', err));
+          persistData('/api/log', newEntry);
         },
 
         // Chat
@@ -669,11 +506,7 @@ export const useStore = create<AppState>()(
         agentGuidelines: DEFAULT_GUIDELINES,
         setAgentGuidelines: (agentGuidelines) => {
           set({ agentGuidelines });
-          fetch('/api/guidelines', {
-            method: 'POST',
-            headers: { 'Content-Type': 'text/plain; charset=utf-8' },
-            body: agentGuidelines
-          }).catch(err => console.error('Failed to save guidelines on server:', err));
+          persistData('/api/guidelines', agentGuidelines, true);
         },
         initializeGuidelines: async () => {
           try {
@@ -706,22 +539,14 @@ export const useStore = create<AppState>()(
         addSuccessExample: (ex: SuccessExample) => {
           set((state) => {
             const successExamples = [ex, ...state.successExamples];
-            fetch('/api/examples', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(successExamples)
-            }).catch(e => console.error('Failed to save examples', e));
+            persistData('/api/examples', successExamples);
             return { successExamples };
           });
         },
         removeSuccessExample: (id: string) => {
           set((state) => {
             const successExamples = state.successExamples.filter(e => e.id !== id);
-            fetch('/api/examples', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(successExamples)
-            }).catch(e => console.error('Failed to save examples', e));
+            persistData('/api/examples', successExamples);
             return { successExamples };
           });
         },
@@ -742,22 +567,14 @@ export const useStore = create<AppState>()(
         addMacro: (m: MacroDefinition) => {
           set((state) => {
             const macros = [m, ...state.macros];
-            fetch('/api/macros', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(macros)
-            }).catch(e => console.error('Failed to save macros', e));
+            persistData('/api/macros', macros);
             return { macros };
           });
         },
         removeMacro: (id: string) => {
           set((state) => {
             const macros = state.macros.filter(m => m.id !== id);
-            fetch('/api/macros', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(macros)
-            }).catch(e => console.error('Failed to save macros', e));
+            persistData('/api/macros', macros);
             return { macros };
           });
         },
@@ -785,11 +602,7 @@ export const useStore = create<AppState>()(
         evalResults: [],
         addEvalResult: (r: EvalResultEntry) => {
           set((state) => ({ evalResults: [r, ...state.evalResults] }));
-          fetch('/api/eval-results', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(r)
-          }).catch(e => console.error('Failed to save eval result', e));
+          persistData('/api/eval-results', r);
         },
         isRunningEvals: false,
         setIsRunningEvals: (v: boolean) => set({ isRunningEvals: v }),
@@ -809,3 +622,15 @@ export const useStore = create<AppState>()(
     }
   )
 );
+
+export type {
+  LeafReport,
+  GeometryReport,
+  EvaluationOutcome,
+  NudgeCandidate,
+  EvalResultEntry,
+  ChatMessage,
+  SceneObject,
+  PerformanceLogEntry,
+  AgentSlot,
+} from './types';

@@ -50,13 +50,13 @@ function analyzeSpatialRelations(report: GeometryReport): { contained: string[];
   const relations: string[] = [];
   // Only non-degenerate leaves participate in placement checks. A null/zero
   // bbox is a null-geometry problem (reported elsewhere), not a "move it" one.
-  const leaves = report.leaves.filter(l =>
+  const leaves = report.leaves.filter((l: any) =>
     l.bbox && l.bbox.size.every((s: number) => isFinite(s) && s > 1e-6)
   ) as { id: string; bbox: Box; volume?: number }[];
   if (leaves.length < 2) return { contained, detached, relations };
 
   const diag = report.scene
-    ? Math.sqrt(report.scene.size.reduce((s, v) => s + v * v, 0))
+    ? Math.sqrt(report.scene.size.reduce((s: number, v: number) => s + v * v, 0))
     : 0;
   const tol = Math.max(diag * 0.01, 1e-3); // ~1% of scene diagonal
 
@@ -172,8 +172,8 @@ export function checkGeometrySanity(report: GeometryReport | null, evalError: st
   // size are almost always stale copies left behind by a repair round — they
   // z-fight in the viewport and balloon the node count. Flag each pair once.
   {
-    const live = report.leaves.filter(l => l.bbox && l.bbox.size.every((s: number) => isFinite(s)));
-    const diag = report.scene ? Math.sqrt(report.scene.size.reduce((s, v) => s + v * v, 0)) : 0;
+    const live = report.leaves.filter((l: any) => l.bbox && l.bbox.size.every((s: number) => isFinite(s)));
+    const diag = report.scene ? Math.sqrt(report.scene.size.reduce((s: number, v: number) => s + v * v, 0)) : 0;
     const tol = Math.max(diag * 0.005, 1e-4);
     let flagged = 0;
     for (let i = 0; i < live.length && flagged < 4; i++) {
@@ -208,7 +208,7 @@ export function formatGeometryReport(report: GeometryReport | null, evalError: s
   }
   const sliderEntries = Object.entries(report.sliders || {});
   if (sliderEntries.length > 0) {
-    lines.push(`Design sliders (referenceable in inline formulas): ${sliderEntries.map(([k, v]) => `${k}=${fmt(v)}`).join(', ')}`);
+    lines.push(`Design sliders (referenceable in inline formulas): ${sliderEntries.map(([k, v]) => `${k}=${fmt(v as number)}`).join(', ')}`);
   }
   if (report.scene) {
     lines.push(`Scene bbox: size [${report.scene.size.map(fmt).join(', ')}], min [${report.scene.min.map(fmt).join(', ')}], max [${report.scene.max.map(fmt).join(', ')}]`);

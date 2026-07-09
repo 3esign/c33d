@@ -544,6 +544,43 @@ export const NODE_LIBRARY: Record<string, NodeDefinition> = {
       { name: 'tolerance', type: 'number', default: 0.1, min: 0.01, max: 1.0, step: 0.01 },
     ],
   },
+  Helix: {
+    type: 'Helix',
+    label: 'Helix (Coil)',
+    category: 'geometry',
+    inputs: [],
+    outputs: [{ name: 'solid', type: 'Solid' }],
+    params: [
+      { name: 'pitch', type: 'number', default: 5, min: 0.1, max: 100, step: 0.1 },
+      { name: 'height', type: 'number', default: 20, min: 0.1, max: 200, step: 0.1 },
+      { name: 'radius', type: 'number', default: 10, min: 0.1, max: 200, step: 0.1 },
+      { name: 'radialChange', type: 'number', default: 0, min: -50, max: 50, step: 0.1 },
+      { name: 'color', type: 'string', default: '#3b82f6' },
+    ],
+  },
+  Sweep: {
+    type: 'Sweep',
+    label: 'Sweep Along Path',
+    category: 'transform',
+    inputs: [
+      { name: 'profile', type: 'Solid' },
+      { name: 'path', type: 'Solid' },
+    ],
+    outputs: [{ name: 'solid', type: 'Solid' }],
+    params: [],
+  },
+  VariableFillet: {
+    type: 'VariableFillet',
+    label: 'Variable/Filtered Fillet',
+    category: 'transform',
+    inputs: [{ name: 'solid', type: 'Solid' }],
+    outputs: [{ name: 'solid', type: 'Solid' }],
+    params: [
+      { name: 'radius', type: 'number', default: 1, min: 0.01, max: 50, step: 0.01 },
+      { name: 'filterAxis', type: 'string', default: 'all' }, // 'all', 'X', 'Y', 'Z'
+      { name: 'edgeIndex', type: 'number', default: -1, min: -1, max: 200, step: 1 },
+    ],
+  },
   Macro: {
     type: 'Macro',
     label: 'Macro (Reusable Component)',
