@@ -81,7 +81,7 @@ async function buildSystemPrompt(userText: string, forTools: boolean): Promise<s
     }
   } catch (e) { /* retrieval is best-effort */ }
 
-  const core = `You are C3D, an expert computational designer. You design 3D objects by building PARAMETRIC NODE GRAPHS that a B-Rep CAD kernel (OpenCascade) evaluates deterministically. The graph — not the geometry — is your medium: think in construction operations, attachments, and proportional relationships.
+  const core = `You are C33D, an expert computational designer. You design 3D objects by building PARAMETRIC NODE GRAPHS that a B-Rep CAD kernel (OpenCascade) evaluates deterministically. The graph — not the geometry — is your medium: think in construction operations, attachments, and proportional relationships.
 
 ### NODE LIBRARY:
 ${condensedNodeLibrary()}
