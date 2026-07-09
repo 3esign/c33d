@@ -1,0 +1,1731 @@
+This is a much more ambitious idea than simply "AI generates CAD geometry." What you're actually describing is a new computational design operating system where natural language, procedural geometry, visual programming, machine reasoning, and continuous learning all become parts of the same environment.
+
+I think the biggest opportunity is not making another AI CAD assistant. There are already many of those.
+
+The opportunity is building a system where AI itself becomes a procedural designer that operates through a visual graph instead of directly producing meshes.
+
+My interpretation
+
+Current workflow
+
+Human
+   ↓
+CAD software
+   ↓
+Geometry
+
+Current AI CAD
+
+Human
+   ↓
+Prompt
+   ↓
+LLM
+   ↓
+CAD API
+   ↓
+Geometry
+
+Your idea
+
+Human
+   ↓
+Conversation
+   ↓
+Reasoning
+   ↓
+Procedural graph
+   ↓
+Parametric graph
+   ↓
+Geometry
+   ↓
+Interactive editing
+   ↓
+Learning
+   ↓
+Improved reasoning
+
+Notice that geometry is no longer the output.
+
+The graph becomes the output.
+
+That is a major conceptual difference.
+
+What this resembles
+
+It touches multiple research areas simultaneously.
+
+Field	Relation
+Generative CAD	very high
+Computational Design	extremely high
+Parametric Design	core
+Explainable AI	high
+Human-AI Collaboration	core
+Intelligent Agents	core
+Visual Programming	core
+Knowledge Graphs	high
+Procedural Modeling	core
+Interactive Machine Learning	high
+CAD/CAM	future direction
+Digital Fabrication	future direction
+Design Cognition	very interesting
+Existing systems worth studying
+
+I would divide literature into several completely different groups.
+
+Group 1
+
+AI CAD
+
+Study systems like
+
+Autodesk Fusion
+Onshape
+SolidWorks AI assistants
+nTop
+Plasticity
+
+Most generate geometry.
+
+Almost none generate procedural graphs.
+
+Group 2
+
+Visual scripting
+
+Probably the most important.
+
+Study deeply
+
+Grasshopper
+Dynamo
+Geometry Nodes
+Houdini
+
+These communities have spent decades solving problems you'll encounter:
+
+graph evaluation
+dirty propagation
+caching
+dependency solving
+node UX
+graph debugging
+procedural thinking
+Group 3
+
+Procedural generation
+
+Huge literature.
+
+Topics
+
+Procedural Modeling
+
+Shape Grammars
+
+L-systems
+
+Constructive Solid Geometry
+
+Signed Distance Functions
+
+Voxel modeling
+
+Parametric surfaces
+
+Implicit surfaces
+
+Mesh generation
+
+Subdivision
+
+B-rep
+
+NURBS
+
+Group 4
+
+Human-AI interaction
+
+This might actually become the most important.
+
+Questions include
+
+How many clarification questions should AI ask?
+
+How certain is AI?
+
+How much autonomy should AI have?
+
+How much reasoning should be visible?
+
+Can user interrupt reasoning?
+
+Can reasoning branch?
+
+Can reasoning rewind?
+
+Group 5
+
+Programming by conversation
+
+Very relevant.
+
+Projects like
+
+Cursor
+GitHub Copilot
+Replit
+
+Their ideas about iterative generation are useful.
+
+I would NOT let AI generate meshes directly.
+
+Instead
+
+AI should generate
+
+Intent
+
+↓
+
+Design Plan
+
+↓
+
+Graph
+
+↓
+
+Parameters
+
+↓
+
+Geometry
+
+↓
+
+Mesh
+
+This keeps everything editable forever.
+
+Proposed architecture
++------------------------------------------------+
+
+Chat
+
+Reasoning
+
+Memory
+
+Planner
+
+↓
+
+Task Graph
+
+↓
+
+Geometry Graph
+
+↓
+
+Execution Engine
+
+↓
+
+3D Scene
+
+↓
+
+Renderer
+
+↓
+
+History
+
+↓
+
+Learning
+
++------------------------------------------------+
+
+Everything becomes modular.
+
+I think the graph itself should become intelligent
+
+Instead of
+
+Cube
+
+Move
+
+Scale
+
+Imagine nodes like
+
+Generate Building
+
+Optimize Sunlight
+
+Reduce Material
+
+Increase Stability
+
+Create Truss
+
+Create Roof
+
+Create Handle
+
+Split Surface
+
+Decorate
+
+Symmetry
+
+Urban Grid
+
+Voronoi
+
+Subdivision
+
+These become semantic nodes.
+
+Multi-layer reasoning
+
+I strongly agree.
+
+I would separate reasoning into layers.
+
+Layer 1
+
+Understand language.
+
+Layer 2
+
+Understand design intention.
+
+Layer 3
+
+Generate design plan.
+
+Layer 4
+
+Generate procedural graph.
+
+Layer 5
+
+Evaluate graph.
+
+Layer 6
+
+Repair graph.
+
+Layer 7
+
+Explain decisions.
+
+Layer 8
+
+Suggest improvements.
+
+Confidence system
+
+Every AI decision should carry confidence.
+
+Example
+
+Generate chair
+
+Confidence
+
+93%
+
+Reason
+
+User asked for ergonomic chair.
+
+Missing information
+
+Seat height
+
+Material
+
+Target manufacturing
+Clarification Engine
+
+Instead of immediately generating
+
+AI should ask
+
+Do you mean
+
+Office chair
+
+Dining chair
+
+Gaming chair
+
+Minimal chair
+
+Foldable chair
+
+Outdoor chair
+
+?
+
+This alone could massively improve outputs.
+
+Graph should remain editable
+
+Suppose AI creates
+
+Box
+
+↓
+
+Fillet
+
+↓
+
+Extrude
+
+↓
+
+Boolean
+
+↓
+
+Shell
+
+User moves one slider.
+
+Entire model updates.
+
+Perfect.
+
+Knowledge representation
+
+One of the biggest research questions.
+
+Don't only store prompts.
+
+Store
+
+Intent
+
+↓
+
+Reasoning
+
+↓
+
+Generated graph
+
+↓
+
+Corrections
+
+↓
+
+Final graph
+
+↓
+
+User satisfaction
+
+↓
+
+Performance
+
+↓
+
+Manufacturing success
+
+Now AI learns much richer information.
+
+Local Knowledge Base
+
+I would not use simple vector search.
+
+I would combine
+
+Semantic embeddings
+
+Graph database
+
+Traditional SQL
+
+Filesystem
+
+Because geometry is graph-like.
+
+Continuous learning
+
+I would distinguish
+
+Short-term memory
+
+Conversation
+
+↓
+
+Project memory
+
+↓
+
+Organization memory
+
+↓
+
+Global knowledge
+
+↓
+
+Curated datasets
+
+↓
+
+Model fine tuning
+
+Each has different trust and validation requirements.
+
+AI modifying the application
+
+This is extremely interesting.
+
+But dangerous.
+
+I would NEVER allow unrestricted self-modification.
+
+Instead
+
+AI
+
+↓
+
+Proposal
+
+↓
+
+Simulation
+
+↓
+
+Validation
+
+↓
+
+Tests
+
+↓
+
+Approval
+
+↓
+
+Plugin installed
+
+AI proposes.
+
+Application approves.
+
+Plugin system
+
+Everything should be plugins.
+
+Nodes
+
+Commands
+
+Panels
+
+Importers
+
+Exporters
+
+Generators
+
+Constraints
+
+Manufacturing modules
+
+Simulation modules
+
+Material libraries
+
+Execution pipeline
+Conversation
+
+↓
+
+Planner
+
+↓
+
+Node graph
+
+↓
+
+Compiler
+
+↓
+
+Execution
+
+↓
+
+Geometry
+
+↓
+
+Visualization
+
+↓
+
+Validation
+
+↓
+
+Feedback
+
+↓
+
+Learning
+CAD/CAM future
+
+One exciting direction is not generating finished parts but generating manufacturing intent.
+
+Instead of
+
+Make box.
+
+AI reasons
+
+Material
+
+Machine
+
+Tolerance
+
+Surface quality
+
+Manufacturing process
+
+Assembly
+
+Fasteners
+
+Support structures
+
+Tool accessibility
+
+Cost
+
+Geometry then becomes only one consequence of the design intent.
+
+Research questions that deserve attention
+
+I think these are some of the highest-value questions to answer early:
+
+Should AI generate geometry directly, or always generate editable procedural graphs?
+How should the AI represent design intent internally so it can revise decisions without starting over?
+How should the system decide when to ask clarifying questions versus making reasonable assumptions?
+What is the smallest, most expressive node vocabulary that can generate a wide range of models?
+How can graphs remain understandable as they grow to hundreds or thousands of nodes?
+How should the knowledge base distinguish reusable design knowledge from project-specific decisions?
+What validation pipeline is needed before AI-generated nodes or plugins become available to users?
+How can manufacturing constraints be introduced early enough that designs remain practical for CAD/CAM workflows?
+How should multiple AI models collaborate—for example, one planning, another generating graphs, and another validating results?
+What metrics will define success: modeling speed, editability, manufacturability, user satisfaction, graph quality, or something else?
+A possible long-term vision
+
+The most compelling vision is not simply "ChatGPT inside CAD." Instead, imagine an environment where conversation, reasoning, procedural graphs, geometry, simulation, manufacturing, and accumulated design knowledge are all different views of the same underlying model. The user can move seamlessly between natural language, visual scripting, direct manipulation, and fabrication constraints. AI acts less like an automatic model generator and more like a collaborative computational designer that explains its reasoning, asks targeted questions when uncertainty is high, produces editable procedural graphs instead of opaque meshes, and continually improves through validated experience. If realized well, such a platform could become not just another CAD application, but a research environment for next-generation computational design, human-AI co-design, and intelligent CAD/CAM systems.
+
+I also think it's important to treat the first version as a research platform rather than a feature-complete CAD system. A focused MVP with a clean architecture, plugin-based execution engine, graph-first representation, multiple interchangeable AI providers (such as OpenRouter and local models via Ollama), transparent reasoning, and a robust knowledge layer will make it much easier to evolve into an AAA-class system than trying to compete immediately with mature CAD software. The architecture should prioritize extensibility, observability, and experimentation from day one, because those qualities will determine how quickly the platform can incorporate new AI capabilities as the field continues to evolve.
+
+This is a genuinely interesting and ambitious project — it sits at the intersection of several hard problems (parametric CAD, visual scripting, multi-agent LLM orchestration, and self-modifying software), so let me ground this in what's actually happening in the field right now rather than just riffing from memory.Architected conversational response structure with modular formatting optionsArchitected conversational response structure with modular formatting optionsThis is a strong idea, and it's not naive — you've independently arrived at an architecture that overlaps a lot with where the field is actually heading. But there are some real landmines in the ambitious parts (self-modifying app, "continuous learning"), so let me give you the honest map: what already exists, what's genuinely novel about your combination, where the hard problems are, and what to nail down before you write code.
+Where you sit relative to the state of the art
+Your closest real-world analog right now is Zoo's Design Studio (formerly KittyCAD). They've built a GPU-native geometry engine, a text-based CAD language called KCL, and a conversational agent ("Zookeeper") that sits inside the modeling app, inspects the model, and can generate/edit geometry through reasoning steps rather than one-shot generation. Everything is code under the hood (so it's git-versionable), and the UI is just a projection of that code. This validates a core piece of your architecture: treat the parametric graph as the source of truth, and treat both the human's clicks and the AI's actions as edits to that same underlying representation.
+Other relevant reference points:
+
+ShapeDiver already solved "parametric node graph → web app with sliders" for Grasshopper definitions, including a full app-builder skeleton system and a JS API to drive a 3D viewer from graph parameters. It doesn't do natural language or AI-editing-the-graph, but it's the best existing proof that node-graph-to-web-sliders works at production scale.
+Academic text-to-CAD (Text2CAD, DeepCAD, FutureCAD, ArchGen, and current benchmarks like Text2CAD-Bench) is actively grappling with exactly the problem you'll hit: general LLMs are decent at simple parametric sequences but degrade fast with geometric complexity, and there's an unresolved tension between "parametric feature-tree" representations (editable, interpretable, but can't express fillets/booleans well) and "B-Rep" representations (expressive, but not naturally editable or LLM-friendly). This is a real open research problem, not a solved one — worth reading FutureCAD's framing of this tension specifically.
+The honest industry consensus for 2026 (multiple vendors converge on this) is a "hybrid workflow": AI proposes/generates probabilistically, a deterministic layer validates (physics, manufacturability, geometric constraints), and a human approves. Pure prompt→shape with no verification loop is what makes current text-to-CAD demos impressive but practically fragile.
+
+So: nobody has yet shipped your specific combination — bring-your-own-LLM-provider (OpenRouter/Ollama) + visible node graph as the shared substrate between human and AI + a system that lets the AI extend its own tool/node vocabulary + a persistent cross-session knowledge base. That combination is a legitimate differentiator. It's also why it's hard: you're not implementing one hard problem, you're implementing four and gluing them together.
+Breaking down your seven subsystems
+1. Multi-provider AI connector layer. This is the easy, well-trodden part. OpenRouter already normalizes many providers behind one API; Ollama is local and OpenAI-compatible-ish. Build a thin adapter interface (chat(), toolCall(), streaming) so the rest of the app never talks to a specific vendor. Store keys client-side or in an encrypted vault if you eventually run a backend — don't proxy user keys through your own server unless you have to (cost, liability).
+2. Node graph engine (the Grasshopper/Dynamo-style panel). For web, the realistic choices are React Flow (mature, huge ecosystem, good for DAG editors) or Rete.js (built specifically for visual programming / node editors, has execution engines). Litegraph.js is the lighter/older option Babylon-adjacent projects use. I'd lean React Flow + your own execution engine, since you'll want tight control over evaluation order, caching, and how AI edits map onto graph mutations.
+3. 3D viewport. three.js via react-three-fiber is the standard choice here and pairs naturally with React Flow. Your geometry kernel is the real decision: do you want your own procedural kernel (CSG via three-bvh-csg / manifold-3d wasm), or do you want to wrap an existing solid-modeling kernel (OpenCascade via opencascade.js, which gives you real B-Rep, fillets, STEP export — much heavier but "real CAD")? This single decision — mesh-based procedural geometry vs. true B-Rep kernel — will shape almost everything downstream, including what the AI can and can't reliably generate. Worth deciding early and deliberately.
+4. Chat-to-graph translation (the actual AI core). This is where "layers of questions and reasoning" needs to become concrete. Don't build one big prompt. A workable pattern:
+
+Intent layer: classify what the user is asking for (new geometry, modify existing, ambiguous, clarification needed) — this is where recent "Clarify Before You Draw" research is directly relevant: proactive agents that ask before generating outperform ones that guess, especially as complexity rises.
+Planning layer: decompose into a sequence of node-graph operations, referencing your existing node vocabulary first.
+Grounding/tool-use layer: emit actual tool calls that mutate the graph (add node, set parameter, connect ports) rather than emitting free-form code or JSON you hope parses correctly.
+Verification layer: after execution, check the geometry is valid (non-manifold checks, bounding box sanity, did the operation actually change anything) and feed that back to the model before declaring success.
+
+5. Layer/scene list. Straightforward UI work once your graph engine emits a stable scene-graph representation — low risk, do it last.
+6. Knowledge base / "continuous learning." Be very precise about what you mean by this, because "continuous learning" conflates several very different things people often bundle together:
+
+Session memory (what did we discuss this session) — trivial, just context.
+Cross-session retrieval (RAG over past successful graphs, node combos, user corrections) — doable now with a vector DB (pgvector, Chroma, LanceDB) storing embeddings of prompts → resulting graph fragments, tagged with success/failure signals.
+Actual model weight updates from usage (fine-tuning or RLHF-style learning) — this is expensive, requires curated data pipelines, and isn't something a v1 product should attempt. Almost every "AI learns continuously" claim in production products today is actually RAG over a growing knowledge store, not weight updates. I'd design for that honestly, and call it "the system remembers and reuses what worked," not "the AI is learning" — the latter creates expectations you can't meet with an OpenRouter/Ollama-based architecture where you don't control training.
+
+7. AI editing the app itself (new tools/nodes/commands). This is the part I'd flag hardest. It's the most exciting idea in your proposal and also the most dangerous to get wrong. A few non-negotiables if you pursue it:
+
+The AI should never directly write to your live application code path. It should propose a new node definition (a scoped, sandboxed function with declared inputs/outputs) that runs in an isolated execution context (a Web Worker, or server-side in a container/microVM) — not arbitrary code with DOM/network access.
+Every AI-authored tool needs a review/test gate before it's promoted from "experimental, this-session-only" to "available in the library" — a version history (git-backed, exactly like Zoo does for KCL) so bad AI-authored nodes can be rolled back.
+Treat this less like "self-modifying app" (which sounds like the app rewrites its own source, a real safety and reliability problem) and more like "user-extensible node library that an agent can populate," which is the same feature conceptually but framed in a way that's actually buildable and inspectable.
+
+What I'd genuinely worry about
+
+Scope collapse. You've described roughly five products (multi-provider AI chat, visual programming IDE, 3D CAD viewport, a RAG knowledge system, and a plugin-generating agent framework). Any one of these is a multi-month solo project done well. Trying to ship all five at MVP quality risks a demo that looks impressive for 30 seconds and breaks on the second real request — which is literally the criticism leveled at most current text-to-CAD tools.
+Geometry validity. LLMs are unreliable at anything requiring exact numeric/topological consistency (watertight meshes, non-self-intersecting solids, valid B-Rep). You need a deterministic validation layer between "AI proposes" and "committed to the graph," or your users will hit silent garbage geometry constantly.
+"Understanding intention" is the actual research frontier, not a solved feature. The clarification-agent literature above is very recent (2026) precisely because this is unsolved — budget real design time for the disambiguation UX (showing multiple interpretations, cheap regeneration, explicit confirmation before committing changes), not just a good prompt.
+
+A realistic path to a first version
+I'd suggest sequencing so each phase is independently demoable and de-risks the next:
+
+Provider connector + chat panel + a small fixed node library (say 15–20 hand-built primitives: box, extrude, boolean, array, etc.) with sliders, no AI graph-editing yet.
+Chat-driven graph construction using only that fixed library (tool-use, not code-gen) — this alone is close to a v1 product.
+Layer panel + persistence + basic RAG over past sessions.
+AI-proposed new node types, sandboxed, session-scoped, with manual promotion to the shared library.
+Toolpath/CAM generation — genuinely treat this as a v2+ research track; it's its own deep domain (see how much of the CAM world MeshCAM/Fusion360/Mastercam still hand-tune) and bolting it onto an unproven core would spread you thin.
+
+A few things worth deciding before you write your first line of code, since they're expensive to reverse later:Q: Geometry kernel: mesh-based procedural (fast, simple, less "real CAD") or a true B-Rep kernel like OpenCascade (accurate, exportable to STEP, much heavier to integrate)?
+A: Not sure yet — want tradeoffsQ: Where should AI reasoning and heavy computation run?
+A: [No preference]Q: For the very first prototype, what matters most to you?
+A: Prove AI can extend its own tool libraryWeighed mesh versus B-Rep tradeoffs, advocated mesh-first approachWeighed mesh versus B-Rep tradeoffs, advocated mesh-first approachGood answers — let me address each honestly, then focus on the tool-extension prototype since that's what you actually want to prove first.
+Kernel: the real tradeoff
+Given your stated priority, start mesh/procedural, not B-Rep. Here's why it's not just "easier," it's actually the right fit for this specific experiment:
+
+Mesh/procedural (three.js primitives + CSG via manifold-3d or three-bvh-csg, all runnable in-browser/WASM): a "node" is just a pure function that takes typed inputs and returns vertex/face buffers. When an AI writes one badly, worst case you get an ugly or wrong shape — not a crash. That forgiving failure mode is exactly what you need while you're letting an AI author new tools through trial and error.
+B-Rep (OpenCascade via opencascade.js): gives you exact curves/surfaces, robust fillets, real STEP export, feature-tree history — genuinely necessary for manufacturing-grade output eventually. But the kernel is stateful and unforgiving: a malformed AI-generated call sequence commonly hangs or throws deep in the kernel rather than failing gracefully. That's a bad environment for the specific loop you want to prototype (AI proposes tool → tries it → learns from failure), because failures become opaque crashes instead of legible feedback.
+
+The common industry pattern (and what I'd suggest) is a two-track future: procedural mesh kernel for the interactive/AI-experimentation layer now, with a later "finalize/export" pass that either reconstructs geometry through a vetted subset of B-Rep-backed nodes, or accepts mesh export (STL/OBJ) as good enough for a first audience. Don't let the eventual need for STEP export talk you into B-Rep for the prototype — it'll bury the actual thing you're trying to learn.
+Compute location
+Since you said no preference: for this specific prototype, run everything locally — browser main thread for UI, and crucially, run each AI-authored node's code inside a Web Worker (not the main thread). That gives you free sandboxing: no DOM access, no fetch/XHR if you don't expose them, a hard timeout you can enforce, and structured-clone message passing so a runaway node can't corrupt app state. This is sufficient for a solo prototype. Once you have multiple users running each other's AI-generated nodes, you'll need server-side isolation (V8 isolates, containers, or a service like Cloudflare Workers/Deno Deploy) — but that's a later, different problem. Don't solve it now.
+Designing the "AI extends its own tool library" prototype
+This is the highest-value, highest-risk part of your whole idea, so it deserves a concrete loop, not just a vibe. Here's a shape that's actually buildable in a few weeks:
+1. Node definition schema — keep it small and explicit:
+{
+  id, name, description,          // description is what gets embedded for retrieval
+  inputs: [{ name, type, default }],   // type: number | vector3 | geometry | boolean
+  outputs: [{ name, type }],
+  body: <function source>,        // pure function, no side effects
+  provenance: "builtin" | "ai_experimental" | "ai_trusted",
+  createdFrom: <the user prompt that produced it>  // seeds your knowledge base
+}
+2. The loop, when the user asks for something not in the library:
+
+Embed the request, search existing node descriptions (even a naive cosine-similarity over a small local vector store is enough at first) — reuse before regenerating.
+If nothing fits, the AI drafts a new node body as a pure function.
+Run it in a Worker against a handful of test inputs — some AI-suggested, some auto-generated edge cases (zero, negative, extreme scale).
+Validate output mechanically: no NaNs, positive volume/bounding box, roughly manifold. This validation step matters more than it sounds — it's what turns "AI trial and error" from a vibe into something with a real feedback signal.
+On failure, feed the concrete error back to the AI for a fix. Cap retries (3–5) — if it still fails, surface that to the user instead of looping silently forever.
+On success, the node becomes ai_experimental: usable immediately in this session's graph, visibly badged as AI-generated so the user knows it hasn't been vetted long-term.
+Only promote to ai_trusted (persisted into the shared library, available across sessions) after either explicit user confirmation ("keep this") or repeated successful reuse — never silently.
+
+That gives you, in one small system: the sandbox-safety story, the "AI edits the app" feature in its safest possible form (it's authoring data — a registered function with a declared interface — not touching your actual application source), a legible trial-and-error loop, and the natural seed of your knowledge base (store the prompt → node-definition pairs, embed them, and you already have cross-session retrieval without needing any fine-tuning).
+One thing worth deciding before you build this: how strict do you want the sandbox to be? A full JS function is more capable but harder to fully sandbox; a restricted expression DSL (no loops beyond bounded iteration, no arbitrary object access) is safer but limits what the AI can express. For a solo prototype I'd allow full JS in the Worker (timeout + no network/DOM is enough protection when it's just you), and only tighten to a restricted DSL if you move toward multi-user deployment.
+
+I think this idea is much larger than "AI-assisted CAD." It is closer to a new computational design paradigm.
+
+What you are describing sits somewhere between:
+
+conversational AI
+Grasshopper/Dynamo visual programming
+procedural geometry
+knowledge graphs
+agentic AI
+CAD/CAM
+self-extending software
+interactive programming environments
+machine teaching
+
+The interesting part is not that AI generates geometry.
+
+The interesting part is that AI reasons about geometry as a graph of parametric construction operations instead of producing meshes.
+
+That difference changes almost everything.
+
+My interpretation
+
+Current workflow
+
+Human
+↓
+
+Prompt
+
+↓
+
+AI
+
+↓
+
+Mesh
+
+Your vision
+
+Human
+
+↓
+
+Conversation
+
+↓
+
+AI reasons
+
+↓
+
+Construction strategy
+
+↓
+
+Node Graph
+
+↓
+
+Parameters
+
+↓
+
+Geometry
+
+↓
+
+Editable by user
+
+↓
+
+AI learns
+
+↓
+
+Knowledge Base
+
+↓
+
+Future reasoning improves
+
+The node graph is not merely visualization.
+
+It becomes the language of geometry.
+
+That is a completely different philosophy.
+
+The philosophical shift
+
+Instead of asking
+
+Draw me a chair.
+
+AI asks itself
+
+How can a chair be represented as a reusable parametric construction graph?
+
+Every object becomes
+
+intent
+
+↓
+
+decomposition
+
+↓
+
+primitive geometry
+
+↓
+
+constraints
+
+↓
+
+relationships
+
+↓
+
+parameters
+
+↓
+
+construction history
+
+which is exactly how engineers think.
+
+I actually think there are five AIs inside this system
+
+Instead of one LLM.
+
+AI #1
+
+Intent Understanding
+
+This AI tries to understand
+
+What does the user actually want?
+
+Example
+
+User
+
+Build a modern coffee table.
+
+Questions
+
+indoor?
+wooden?
+glass?
+CNC?
+printable?
+assembly?
+dimensions?
+aesthetic?
+production cost?
+
+This is basically architectural programming.
+
+AI #2
+
+Geometric Planner
+
+This is the important one.
+
+Instead of generating geometry
+
+it generates
+
+Construction Plans.
+
+Example
+
+Cube
+
+Possible plans
+
+Method A
+
+Point
+
+↓
+
+Rectangle
+
+↓
+
+Extrude
+
+Method B
+
+Two Points
+
+↓
+
+Bounding Box
+
+Method C
+
+Origin
+
+↓
+
+3 orthogonal vectors
+
+↓
+
+Construct faces
+
+Method D
+
+Six planes
+
+↓
+
+Boolean intersection
+
+Method E
+
+Voxel cube
+
+Method F
+
+Implicit surface
+
+Every object may have
+
+10
+
+50
+
+100
+
+construction plans.
+
+This becomes extremely powerful.
+
+AI #3
+
+Node Graph Generator
+
+Given
+
+Construction Plan
+
+↓
+
+generate nodes.
+
+Exactly like Grasshopper.
+
+AI #4
+
+Optimization AI
+
+After graph creation
+
+look for
+
+duplicate nodes
+simplify graph
+merge operations
+reuse variables
+optimize evaluation
+GPU opportunities
+AI #5
+
+Learning AI
+
+Every successful construction becomes knowledge.
+
+This is where your system becomes unique.
+
+The Knowledge Base
+
+I would not store prompts.
+
+I would store
+
+Construction Knowledge.
+
+Example
+
+Cube
+
+Methods
+
+Method 1
+
+Advantages
+
+Editable
+
+Fast
+
+Simple
+
+Nodes 5
+
+Method 2
+
+Advantages
+
+Bounding Box
+
+Flexible
+
+Method 3
+
+Advantages
+
+Manufacturing Friendly
+
+The knowledge becomes
+
+Engineering Knowledge
+
+not prompt history.
+
+Huge difference.
+
+I would organize the interface differently
+-------------------------------------------------------
+
+Menu
+
+-------------------------------------------------------
+
+AI Chat
+
+Node Library
+
+3D View
+
+Layer Tree
+
+(left)
+
+(center)
+
+(right)
+
+Questions
+
+Geometry
+
+Objects
+
+Reasoning
+
+Camera
+
+Materials
+
+Suggestions
+
+Selection
+
+History
+
+-------------------------------------------------------
+
+Knowledge
+
+Node Graph
+
+(bottom)
+
+Construction Tree
+
+Parameters
+
+Variables
+
+Comments
+
+-------------------------------------------------------
+
+Notice
+
+Reasoning should be visible.
+
+Not hidden.
+
+One thing I think is missing
+
+Construction History.
+
+Every CAD system has
+
+Feature Tree.
+
+Fusion
+
+SolidWorks
+
+Inventor
+
+NX
+
+Catia
+
+All rely on
+
+Construction History.
+
+AI should generate
+
+Feature History.
+
+Not merely nodes.
+
+Even more interesting
+
+Multiple valid solutions.
+
+Suppose user asks
+
+Make a cube.
+
+Instead of immediately building.
+
+AI says
+
+Possible construction strategies
+
+Strategy 1
+
+Rectangle Extrusion
+
+Strategy 2
+
+Bounding Box
+
+Strategy 3
+
+CSG
+
+Strategy 4
+
+Implicit Geometry
+
+Strategy 5
+
+Voxel Construction
+
+Strategy 6
+
+Signed Distance Field
+
+Each has
+
+Pros
+
+Cons
+
+Editable
+
+Performance
+
+Manufacturability
+
+Node Count
+
+This becomes explainable AI
+
+Most AI systems say
+
+Here.
+
+Your system says
+
+Here is WHY.
+
+That is huge.
+
+Layers of reasoning
+
+I completely agree with this.
+
+I would separate reasoning into stages.
+
+Stage 1
+
+Intent
+
+↓
+
+Stage 2
+
+Requirements
+
+↓
+
+Stage 3
+
+Geometry decomposition
+
+↓
+
+Stage 4
+
+Primitive recognition
+
+↓
+
+Stage 5
+
+Parametric strategy
+
+↓
+
+Stage 6
+
+Node graph
+
+↓
+
+Stage 7
+
+Parameter exposure
+
+↓
+
+Stage 8
+
+Simulation
+
+↓
+
+Stage 9
+
+Optimization
+
+↓
+
+Stage 10
+
+Manufacturing
+
+Each stage can ask questions.
+
+Something almost nobody does
+
+Geometry Grammar
+
+Instead of
+
+Cube
+
+Cylinder
+
+Sphere
+
+Think
+
+Grammar
+
+Example
+
+Building
+
+↓
+
+Floors
+
+↓
+
+Rooms
+
+↓
+
+Walls
+
+↓
+
+Openings
+
+↓
+
+Windows
+
+↓
+
+Frames
+
+↓
+
+Glass
+
+Every object becomes a language.
+
+AI learns grammar.
+
+This is probably much more scalable.
+
+The CAM opportunity
+
+I think this is one of the strongest research directions.
+
+Instead of
+
+Geometry
+
+↓
+
+Export
+
+↓
+
+CAM
+
+do
+
+Construction Graph
+
+↓
+
+Toolpath Graph
+
+↓
+
+Machine Graph
+
+↓
+
+Simulation
+
+↓
+
+Optimization
+
+Now AI reasons directly in manufacturing.
+
+Self-expanding application
+
+This is the most dangerous part.
+
+I would NEVER allow AI to directly modify the application.
+
+Instead
+
+AI proposes
+
+New Node
+
+↓
+
+Validation
+
+↓
+
+Sandbox
+
+↓
+
+Tests
+
+↓
+
+User approval
+
+↓
+
+Plugin
+
+↓
+
+Official library
+
+Otherwise eventually one hallucination destroys everything.
+
+Think of AI as
+
+Contributor
+
+not
+
+Administrator.
+
+Long-term architecture
+
+I actually imagine something like this
+
+User
+
+↓
+
+Conversation
+
+↓
+
+Intent AI
+
+↓
+
+Planning AI
+
+↓
+
+Construction AI
+
+↓
+
+Node Graph
+
+↓
+
+Geometry Kernel
+
+↓
+
+3D Scene
+
+↓
+
+Evaluation
+
+↓
+
+Knowledge Extraction
+
+↓
+
+Knowledge Graph
+
+↓
+
+Future Learning
+
+Every arrow becomes research.
+
+Research fields I would study deeply
+
+Not because they are fashionable, but because each solves a real problem in your vision:
+
+Parametric CAD kernels (how robust geometric operations are represented internally)
+Boundary Representation (B-Rep) versus meshes versus implicit geometry
+Constructive Solid Geometry (CSG)
+Shape grammars for rule-based generation
+Procedural modeling and graph-based generation
+Constraint solving for maintaining parametric relationships
+Feature-based modeling used in mechanical CAD
+Knowledge graphs for representing reusable design knowledge
+Graph rewriting systems for transforming and optimizing node graphs
+Program synthesis, where AI generates executable programs rather than static outputs
+Differentiable geometry and optimization techniques
+Computational geometry algorithms
+Digital fabrication and CAM toolpath planning
+Human–AI co-design and interactive design workflows
+Explainable AI for making construction reasoning transparent
+State of the art projects worth studying
+
+Rather than looking for direct competitors, study systems that each solve one piece of the problem:
+
+Grasshopper — mature parametric node-based modeling.
+Dynamo — BIM-oriented parametric workflows.
+Geometry Nodes — procedural geometry and fields.
+OpenSCAD — geometry as code.
+CadQuery — programmatic parametric solids.
+FreeCAD — feature history and parametric editing.
+Onshape — collaborative CAD and versioning.
+FeatureScript — extending CAD with custom features.
+nTopology — field-driven and implicit geometry.
+Plasticity — modern CAD interaction built on robust kernels.
+
+Each contributes an idea, but none combines conversational reasoning, node synthesis, explainable construction, and continuous knowledge accumulation in the way you describe.
+
+The research question that excites me most
+
+If I had to reduce the entire project to a single sentence, it would be:
+
+Can an AI learn to represent every designed object as an explainable, reusable, optimizable parametric construction graph rather than as static geometry?
+
+If the answer is yes, the system stops being an AI that draws objects and becomes an AI that understands how objects are built. That distinction has implications far beyond CAD: it creates a foundation for explainable design, automated optimization, manufacturing-aware reasoning, collaborative engineering, and continuously expanding design knowledge. I believe that should be the guiding principle for the first version of the platform, because it keeps the architecture focused while leaving room for increasingly capable AI agents, richer node libraries, and deeper CAD/CAM integration over time.
+
+Good enough — one more search on agent memory/continual learning architectures, then I'll synthesize.Architected comprehensive AI-CAD framework with phased roadmap and research considerationsArchitected comprehensive AI-CAD framework with phased roadmap and research considerationsThis is a genuinely interesting and well-thought-through idea, and it overlaps a lot with real, active research and product efforts — some of which have already solved pieces of what you're describing (which is good news: you don't have to invent everything from scratch). Let me give you an honest map of the landscape, then go through your architecture panel by panel, then talk about the two riskiest parts of your vision (AI editing the app itself, and continuous learning), then walk through your cube and stadium examples against that architecture.
+The closest thing that already exists — study it closely
+Zoo.dev / KittyCAD is doing something remarkably close to your idea, and their design decisions are worth understanding before you make your own. They tried direct text-to-3D-geometry generation first and abandoned it, because unlike text-to-3D models that generate point clouds or meshes for gaming assets, CAD requires B-Rep surfaces that can be imported into existing CAD programs and edited, and mesh output "would just be one large amorphous" blob with no editability. Mechanomy
+Their fix was to invent KCL, a text-based parametric design language, and make that — not raw geometry — the thing the LLM generates. Their reasoning is exactly your intuition: most CAD systems never show you their internal model — KCL is different because if you want to know what the software truly knows about your model, you just read the KCL, there's no hidden information. And critically: code is inherently parametric — top-tier designers don't model a gear with pitch diameter and pressure angle as static magic values, they write reusable functions. Text is also the one modality where LLMs are far ahead of AI graphical or binary models, so representing 3D designs as text lets LLMs generate, explain, and refactor geometry using the rapidly-growing ecosystem of machine text tools. Zoo + 2
+They've since layered an agent on top called Zookeeper, and its loop is basically the "layers of reasoning" you're asking for: plan → act (call tools) → observe results → update the plan → repeat, with additional tools for connecting to the CAD engine, writing/executing/debugging KCL, and analyzing models via visual snapshots and computational tools like center of mass, mass, surface area, and volume. It's also designed to behave like a real engineer: it searches for and reads documentation as it works, frequently executes the model to check for errors, and reviews the geometry via multi-view snapshots — i.e. it closes the loop with actual geometric feedback, not just text generation. They're also working on reverse engineering parametric intent from static STEP/STL geometry, and fleets of agents working concurrently on different components. Zoo + 2
+Why this matters for you: don't try to have your AI directly emit vertices/faces. Have it emit graph/code that a deterministic kernel evaluates. That single decision solves editability, versioning (diffable text), explainability, and error-recovery all at once. It also means your node graph and your "chat with AI" are two views of the same underlying representation — exactly like Zoo's point-and-click UI and KCL are two views of one thing.
+The sober industry reality, which you should internalize going in: text-to-CAD tools have improved a lot, geometry looks better, some output STEP instead of just STL, and a handful generate basic parametric features — but for production engineering most still produce single-part geometry with no feature tree, no tolerance data, no manufacturing awareness, and natural-language-to-CAD is still experimental — current systems can produce simple parametric geometry from text but can't handle manufacturing constraints, tolerancing, or assembly relationships that production engineering requires. That's not a reason not to build this — it's a reason to be honest about what v1 is: a design-intent and concept tool, not a manufacturing-tolerance tool, at least at first. Leo AICoLab
+Mapping your panels to a real architecture
+Left panel (chat + API keys). This part is the easy part technically. Build a thin provider-abstraction layer: one internal message/tool-call schema, adapters for OpenRouter (already multi-provider), Ollama (local), and direct Anthropic/OpenAI keys. Use whatever provider supports structured tool-calling as your primary path — the AI should not be asked to "write JSON that looks right," it should call declared tools/functions (create_node, connect_nodes, set_parameter, extrude, query_scene...). This is the same pattern Zookeeper uses and it's far more reliable than parsing free text.
+Upper-middle (3D preview). Three.js is the obvious choice for a web app. For the geometry kernel underneath, you have real options, roughly in order of "how real is the geometry":
+
+CSG-only / procedural (fast, simple, but no true B-Rep, harder to get fillets/booleans right) — three-csg-ts, Manifold.
+True B-Rep via OpenCascade compiled to WASM — projects like replicad and opencascade.js give you real solid modeling (extrude, fillet, boolean, shell) in-browser, and Python-side CadQuery/build123d if you want a server-side kernel instead. This is what gives you STEP export, real fillets, and the kind of geometry an engineer would trust.
+
+Given your ambitions (parametric CAD, not just visualization), I'd bias toward a real B-Rep kernel from day one, even though it's more work — retrofitting real geometry underneath a "looks 3D but is just meshes" prototype is painful.
+Lower-middle (2D node graph, Grasshopper/Dynamo-style). Don't build this from scratch. Rete.js is purpose-built for exactly this and even has a 3D area plugin that lets you enhance a 3D scene with the node editor using the rete-area-3d-plugin, rendering 3D objects and native HTML elements together in a single viewport for full interactivity — meaning you could eventually merge your upper-middle and lower-middle panels if you want a more Houdini-like workspace later. Alternatives: LiteGraph.js (used in ComfyUI, simpler, canvas-based) or React Flow / xyflow (great UI polish, more "workflow tool" than "computation graph" but very mature). Given you want the graph to be the parametric model (not just a diagram of it), Rete's execution-engine focus fits best. Retejs
+Top-right (layer/scene list). This is a straightforward reactive UI over your scene graph — every node in the graph that produces geometry registers as an entity with a name, visibility toggle, and reference back to its node(s). Nothing exotic here, but design the data model so an "element" can point to multiple graph nodes (a stadium bowl might be one visual element built from a dozen nodes) — you'll want grouping/hierarchy early, not bolted on later.
+The part that needs the most caution: AI editing the application itself
+This is your most exciting idea and also your biggest risk, so I want to be direct about it rather than just enthusiastic.
+Letting an LLM "add new tools, commands, shapes, nodes" to your own app is architecturally a form of agentic code generation with runtime execution inside a tool you're distributing to users. That's not inherently unsafe, but it means you need, from day one:
+
+Sandboxing. Any AI-authored node/tool code must run in an isolated context (a Web Worker with a locked-down API surface, or a server-side sandboxed runtime) — never with direct DOM/network/filesystem access.
+A declarative node schema, not arbitrary code, wherever possible. Instead of "AI writes a new JS class," have the AI write a node definition (inputs, outputs, parameters, and a body expressed in your safe parametric DSL — like KCL). This gives you 90% of the flexibility with a fraction of the attack surface and lets you statically validate it before it ever runs.
+A review/versioning step. Treat AI-proposed new nodes like pull requests: generated, tested against a small suite of sample inputs, diffed against existing nodes to avoid duplication, and either auto-approved (low risk, pure geometry) or held for user confirmation (anything touching app behavior, storage, or other users' data).
+Separating "learns new geometry recipes" from "modifies the application." These are very different in risk profile. The first (AI discovers a good way to parametrically build a stadium bowl and saves it as a reusable node) is low-risk and high-value — build this first. The second (AI adds UI panels, changes core app logic) is a v3-or-later feature at best, and I'd genuinely reconsider whether it's necessary for the product to be great — most of the value you're describing (AI reasoning about geometry, building a growing vocabulary of parametric moves) doesn't require the AI to touch application code at all, only to grow a library of node definitions. I'd decouple "self-extending toolkit" (yes, valuable, feasible) from "self-modifying application" (much harder to make safe, and not obviously where the user value is).
+
+Reasoning layers and "understanding intention"
+The pattern you want already has a name in agent research: a plan → act → observe → revise loop with tool access, plus a critique step. Concretely for your app, a reasonable pipeline per user request is:
+
+Clarify — if the request under-specifies key parameters (like the "24 tooth spur gear" example researchers noted, where Zoo's system wasn't asked for design context or missing parameters and just replied with a gear model, caveat emptor — a cautionary example of not doing this step), ask 1–3 targeted questions or propose reasonable defaults explicitly ("I'll assume symmetric oval bowl, 40,000 seats, standard tiering — tell me if that's wrong"). Mechanomy
+Decompose into primitives — this is your cube example generalized: the AI's job is to recognize a target shape as a composition of point/vector/plane/extrude/loft/pattern operations, i.e. build a shape grammar. This is a real, established field (shape grammars, procedural modeling, CSG-tree synthesis) — worth reading into specifically, since it's the theoretical backbone of "AI thinks in basic geometric operations and connects them parametrically."
+Emit the graph/DSL, not raw geometry.
+Execute deterministically in the kernel.
+Observe and critique — render snapshots, check bounding box/volume/topology sanity, compare against stated constraints (Zookeeper's "multi-view snapshot review" pattern is worth copying directly).
+Repair or ask — on failure, either self-correct (adjust parameters, re-run) or surface the ambiguity to the user rather than silently guessing.
+
+The learning/knowledge-base system — the part where "continuous learning" needs precision
+"Continuous learning" is a phrase that hides a lot of very different mechanisms, and conflating them will hurt you. Current best practice in agent design (this is an active, fast-moving area, not settled) treats memory as at least three separate layers, not one blob:
+
+Episodic memory — the raw log of "this session, this prompt, this graph was produced, this was the outcome/feedback."
+Semantic memory — distilled facts extracted from episodes (e.g., "user prefers metric units," "this stadium type uses radial trusses"), converting a past interaction into a permanent fact rather than keeping the whole episode around. Analytics Vidhya
+Procedural memory — the actual reusable node/graph recipes: "how to build a parametric bowl seating tier," saved as a callable subgraph. This is process knowledge the agent should apply consistently, not just a preference — and tooling for managing procedural memory specifically is still early-stage industry-wide, which is actually an opportunity for you: a domain-specific procedural memory store for geometry recipes is a genuinely novel contribution, not something you're late to. Mem0
+
+Architecturally, current systems mostly combine a vector store (semantic similarity search over past designs/facts) with a structured store (a real database or knowledge graph for hard facts, entity relationships, and the actual node-graph definitions, since those need exact retrieval, not fuzzy similarity). The missing piece in most agent stacks isn't the storage components — those exist — it's the decision layer that treats memory as something actively managed rather than passively accumulated. For you, "actively managed" means: don't just log every session into a vector DB and hope. Have an explicit step (can be a background job, doesn't need to be synchronous) that reviews recent sessions, extracts a candidate reusable node or a corrected heuristic, and — importantly — tests it before promoting it into the shared library, otherwise your knowledge base degrades into contradictory or wrong "learned facts" over time. One benchmark paper is literally built around this concern — MemTrace probes what final-accuracy metrics miss in long-term memory systems — worth a skim, because "the AI seemed to learn" and "the AI actually learned something true and reusable" are different claims and easy to conflate. XTracearxiv
+Also: keep per-user memory and shared/global memory separate from the start. You said "global learning system" — great, but you'll want a clear boundary (and, practically, user consent) around which lessons get promoted from one user's session into the shared knowledge base everyone benefits from, versus staying private to that user's projects.
+Your cube example, generalized
+What you described — point → polar coords → square → extrude by corner distance; or point → move → perpendicular move → extrude by normal; or two points → box — is exactly a small shape grammar with multiple valid derivations for the same target. This is the right mental model to design around, and it suggests a concrete technical task: build a library of primitive constructors (point, line, plane, polygon-from-points, extrude, revolve, loft, pattern, boolean) as your node vocabulary, and treat "the AI's job" as selecting and parametrizing a sequence of these primitives to match intent, with multiple valid decompositions being normal and fine — your critique step should judge the result (does it match the geometry/intent), not insist on one canonical derivation.
+Walking through your stadium example against this architecture
+
+User: "I want to design a stadium." AI (clarify step) asks about capacity, bowl shape (oval/horseshoe), roof (yes/no, retractable?), tiering — or proposes sensible defaults and states them.
+AI decomposes: central field polygon → radial offset curves for tiers → lofted/patterned seating-tier surfaces → extruded structural rings → optional roof as a surface/shell operation. Each of these becomes nodes in the graph, visible in the lower-middle panel, editable via sliders, with the layer panel listing "Field," "Tier 1," "Tier 2," "Roof Structure," etc.
+AI writes this as a subgraph, executes it, renders snapshots, checks (does capacity roughly match seat spacing × tier area? does the roof clash with any tier geometry?).
+If it looks right, this "stadium bowl" pattern gets a chance to be distilled into a reusable procedural node ("parametric stadium bowl generator" with capacity/shape/tiers as top-level sliders) — this is the actual "AI builds new tools" moment, and it's safe because it's a graph of existing validated primitives, not new arbitrary code.
+The session (prompts, graph, outcome, any corrections you made) becomes an episode; useful distilled facts and the new procedural node become candidates for semantic/procedural memory, subject to your review/testing step before promotion.
+
+What I'd genuinely recommend for v1 scope
+Given everything above, I'd resist building all of this at once. A realistic, still-ambitious first version:
+
+Provider-agnostic chat panel with real tool-calling (OpenRouter + Ollama + direct keys).
+A real (even if minimal) B-Rep kernel (replicad/opencascade.js is a good web-native starting point) driving a Three.js viewport.
+A node graph (Rete.js) that is the source of truth, not a visualization of something else.
+A small, hand-built library of primitive nodes (point, line, plane, extrude, loft, boolean, pattern) — enough to do your cube example three different ways.
+A basic layer/outline panel.
+Session-level memory only (episodic), stored simply — skip the global cross-user learning system and the app-self-modification feature entirely for v1.
+
+Get that loop feeling good — chat → graph → geometry → chat correction — before touching procedural memory promotion, shared knowledge bases, or letting the AI write new nodes unsupervised. Those are real v2/v3 differentiators, not v1 requirements, and building them on top of a shaky core will cost you more than building them second.
+One honest flag on the CAM/toolpath idea specifically: continuous toolpath generation touches physical machine safety (collisions, feed rates, tool breakage) — treat that as a much later, much more conservatively-validated feature than the design/modeling side, with real domain-expert review before anyone runs generated toolpaths on actual equipment.
+
+Strategic Analysis: AI-Native Self-Evolving Parametric CAD
+I. What You Are Actually Building
+You are not building "a CAD tool with AI features." You are proposing an AI-Native, Self-Evolving Parametric Design Environment — a new software category. Let me define it precisely:
+A web-based computational design sandbox where natural language, parametric node graphs, and continuous learning form a single feedback loop. The AI is not a plugin; it is a co-author that can propose, parameterize, reason about, and eventually extend the very environment in which it operates.
+This is distinct from current text-to-CAD tools (AdamCAD, Zoo, Leo AI) which generate static geometry or assemblies from prompts. Those tools output results. Your system outputs procedures — parametric node graphs that can be inspected, edited, and reused. 
+II. State of the Art: The Gap You Are Filling
+Current Landscape (2025–2026)
+Table
+Category	Examples	What They Do	What They Lack
+Text-to-CAD	AdamCAD, Zoo, CADScribe, Leo AI	Generate 3D models from text	Static output; no parametric history; no learning across sessions
+AI CAD Assistants	CADGPT	Answer questions, write scripts	No generative geometry; no visual node system
+Cloud Parametric CAD	Onshape, Shapr3D	Browser-based parametric modeling	No AI-native conversational interface; no self-modification
+Web Visual Programming	Polygonjs, Mattercraft	Node-based 3D scene editing	Not CAD-precision; no AI reasoning layers
+Generative Design	Autodesk Fusion	Topology optimization	Black-box optimization; not conversational; not self-extending
+Your opportunity: The intersection of conversational AI reasoning, visual parametric node graphs, and continuous design memory is completely unoccupied. No existing tool treats a stadium design conversation as structured knowledge that improves the next bridge, chair, or facade design.
+III. The Stadium Example: A Concrete Walkthrough
+Let me trace how your app would handle "Design a stadium for 40,000 spectators with a retractable roof":
+Layer 1: Intention Parsing (The "Why")
+The AI does not immediately generate geometry. It enters a reasoning phase:
+"What sport? What climate? Budget tier? Retractable roof — pneumatic, folding, or sliding? Seating bowl geometry: single-tier or multi-tier? Sightline constraints?"
+This produces a Design Intent Document (JSON/schema) that lives in the knowledge base.
+Layer 2: Parametric Strategy Selection (The "How")
+The AI selects from learned parametric strategies:
+Strategy A: Start from a central spine curve → array radial seating sections → loft bowl surface → Boolean subtract circulation voids.
+Strategy B: Start from a parametric oval footprint → extrude walls → populate with adaptive seating components.
+Strategy C: (Learned from a previous concert hall) Use a generative seating algorithm that optimizes for sightlines.
+It presents these as node graph previews in the 2D panel, with sliders for: bowl radius, tier count, roof span, material density.
+Layer 3: Geometry Construction (The "What")
+The user selects Strategy A. The AI generates the node graph:
+Curve.ByPoints → RadialArray → Loft → Solid.BooleanDifference
+Each node exposes sliders: tier_angle, roof_retraction_ratio, seat_width
+The 3D preview updates in real-time. The user says "Make it more oval", and the AI adjusts the underlying curve node parameters rather than rebuilding the mesh.
+Layer 4: Knowledge Extraction & Storage
+Everything is stored in the Global Learning System:
+Episodic Memory: The full conversation transcript, parameter values, user corrections.
+Semantic Memory: "Stadiums require sightline analysis nodes" → added to the knowledge graph.
+Procedural Memory: The node subgraph for "radial seating bowl from spine" becomes a reusable macro-node.
+Parametric Memory: The AI's weights are fine-tuned (via LoRA-style adapters) so the next stadium prompt triggers better defaults. 
+IV. Critical Architecture: What You Must Know
+1. The Geometry Kernel Problem
+This is your biggest technical decision. Three.js alone cannot do robust parametric solid modeling. You need:
+Option A: Open CASCADE (OCCT) compiled to WASM
+Used by FreeCAD, CADQuery, Onshape.
+Provides real B-rep (Boundary Representation), booleans, fillets, constraints.
+Heavy (~20MB WASM), but browser-viable.
+Recommendation: Use this for the parametric kernel; use Three.js only for the viewport preview.
+Option B: Custom Parametric Mesh Kernel
+Lighter, but you will rebuild boolean operations and constraint solving from scratch.
+Only viable if you restrict to a specific domain (e.g., architecture-only, no mechanical parts).
+Option C: Hybrid — Signed Distance Fields (SDF) + Mesh
+Fast, differentiable, but imprecise for manufacturing.
+Good for early-stage form-finding, bad for CAM toolpaths.
+Verdict: For a research platform aiming at CAM, you need Option A (OCCT or similar). The web-based visual programming environment literature confirms that solid modeling requires robust geometric kernels behind the node interface. 
+2. The Node Graph Architecture
+Your 2D panel is a Directed Acyclic Graph (DAG) with dirty propagation:
+Nodes = operations (Point, Line, Extrude, Boolean, Loft, etc.)
+Edges = data flow (geometry, numbers, vectors)
+Critical: The graph must be serializable to JSON and reversible (the AI must be able to read and edit it as text/code).
+Design the node schema so the AI can output it directly:
+JSON
+{
+  "id": "loft_01",
+  "type": "Loft",
+  "inputs": {"profiles": ["circle_01", "circle_02"]},
+  "parameters": {"degree": 3},
+  "outputs": ["surface_01"]
+}
+3. The AI Reasoning Stack
+Do not use a single LLM call. Use a multi-agent pipeline:
+Table
+Agent	Role	Output
+Intention Agent	Clarifies ambiguity, asks questions	Design Intent Schema
+Planner Agent	Selects parametric strategy	Node graph skeleton
+Geometer Agent	Writes precise node parameters	Filled node graph JSON
+Critic Agent	Checks for manufacturability, errors	Validation report
+Explainer Agent	Describes what was built and why	Natural language summary
+Each agent can be a different model (e.g., Ollama local for privacy, OpenRouter for heavy reasoning).
+4. The Memory Architecture
+Adopt a dual-path memory inspired by MemVerse: 
+Explicit Memory (Knowledge Graph): Structured, queryable, versioned. Stores nodes, design patterns, user preferences, project histories.
+Parametric Memory (Model Weights): LoRA adapters or small fine-tuned models that encode "muscle memory" — the instinct to suggest a certain beam spacing or roof truss pattern based on past work.
+Key challenge: Catastrophic forgetting. When the AI learns a new stadium technique, it must not forget how to make chairs. Use Elastic Weight Consolidation (EWC) or Gradient Episodic Memory (GEM). 
+V. Self-Modification: The Sandbox Paradox
+You want the AI to "partly be able to edit the very application — add new tools, commands, shapes, nodes." This is the most radical and dangerous part.
+The Problem
+Truly self-modifying AI systems face the verification impossibility: how does the AI know its modification improves rather than breaks the system across all scenarios? 
+A Pragmatic Approach: Bounded Self-Modification
+Instead of letting the AI rewrite your React/Three.js source code, create modification sandboxes:
+Node Definition Sandbox: The AI can propose new node types by submitting a JSON schema + a JavaScript/WASM function body. You run it in a Web Worker with no network access, test it against a suite of geometric cases, and promote it if it passes.
+UI Extension Sandbox: The AI can suggest new slider layouts, panel arrangements, or tool palettes — stored as user preferences, not core code.
+Macro Sandbox: The AI can compose existing nodes into higher-order "super-nodes" (procedural memory). This is safe and extremely powerful.
+Rule: The AI may propose modifications to the core app, but a human (or a hardened CI/CD pipeline) must approve them. This is the "bounded" tier that makes self-improvement viable without superintelligence risks. 
+VI. Potential Problems & Risk Analysis
+Technical Risks
+Table
+Risk	Severity	Mitigation
+AI hallucinates geometry	High	Multi-agent critic; human-in-the-loop for execution; reversible graph
+OCCT WASM performance	High	Server-side rendering option; progressive LOD in Three.js
+Node graph complexity explosion	Medium	Auto-layout algorithms; hierarchical grouping ("subgraphs as nodes")
+Catastrophic forgetting	Medium	EWC/GEM; episodic replay buffer; versioned parametric memory
+Self-modification crashes app	Critical	Sandboxed Web Workers; immutable core; rollback snapshots
+Product Risks
+Trust asymmetry: Users will not trust AI-generated toolpaths for CNC machining until they can inspect every node. Your UI must make the parametric logic more transparent, not less.
+Scope creep: Trying to do CAD + CAM + AI + self-modification in V1 will kill the project. You need a wedge.
+Ethical/Safety Risks
+If the AI can self-modify and connects to external APIs (OpenRouter), prompt injection could lead to arbitrary code execution in the sandbox. Isolate the AI's code generation environment.
+VII. Strategic Recommendations for V1
+Phase 1: The Parametric Kernel (Months 1–4)
+OCCT WASM + Three.js viewport
+20 core nodes: Point, Line, Circle, Extrude, Loft, BooleanUnion, BooleanDifference, Fillet, Offset, Array, etc.
+Human-created node graphs only. No AI yet.
+Goal: Prove the web parametric stack works.
+Phase 2: The Conversational Designer (Months 5–8)
+Add the chat panel.
+AI suggests node graphs; user approves/modifies.
+AI asks clarifying questions (the "layers of reasoning").
+Goal: NL → parametric graph, human-in-the-loop.
+Phase 3: The Memory Layer (Months 9–12)
+Add explicit knowledge graph (project histories, reusable subgraphs).
+Add parametric memory (fine-tuned adapters for style/preferences).
+Goal: The AI remembers your last stadium and suggests better defaults.
+Phase 4: The Sandbox (Year 2)
+AI proposes new node types and macros.
+Community voting/promotion for new nodes.
+Goal: The app grows its own vocabulary.
+The Wedge Market
+Do not build general-purpose CAD initially. Start with architectural massing and structural concept design — the stadium use case is perfect because:
+Geometry is complex but parametrically describable.
+Users (architects) are already comfortable with visual scripting (Grasshopper).
+CAM is not required in V1 (but the parametric kernel will support it later).
+VIII. Questions to Raise Awareness & Align Goals
+To ensure we build the right thing, I need to understand your constraints better:
+Domain Constraint: Are you targeting mechanical engineering (needs precise B-rep, tolerances, CAM toolpaths) or architectural/conceptual design (needs form-finding, spatial reasoning)? This determines the geometry kernel choice.
+AI Autonomy Gradient: On a scale of 1–10, how autonomous should the AI be in V1? (1 = suggests only, 10 = designs entire stadium unattended). I strongly recommend starting at 3–4.
+Deployment Model: Is this a local-first app (Ollama local models, runs offline) or cloud-hybrid (heavy rendering on server, AI via APIs)? This affects WASM vs. server-side rendering.
+Open Source Strategy: Do you want the community to contribute node definitions? If so, the node schema must be a public API from day one.
+The "CAM" Question: When you say toolpaths — do you mean 2.5D milling, 3D surfacing, or robotic fabrication? This determines whether you need true NURBS/B-rep or can approximate with meshes.
+Knowledge Ownership: If a user designs a stadium and the AI learns from it, does that knowledge belong to the user, the global model, or both? This is a legal/product question.
+Verification Budget: For self-modification, how much compute can you dedicate to testing AI-generated nodes? A full OCCT test suite per new node is expensive.
+IX. New Advancements to Watch
+MemVerse-style multimodal memory: The dual-path (explicit graph + parametric weights) is the right paradigm for your knowledge base. 
+Neural-symbolic CAD: Emerging research on using graph neural networks to predict parametric sequences from point clouds or sketches. This could let your AI "reverse engineer" a mesh into a node graph.
+Differentiable CAD: Projects like diffcad and differentiable CSG allow gradient descent on parametric models. Your AI could optimize geometry by backpropagating errors.
+WebAssembly multithreading: OCCT in WASM with SharedArrayBuffer will soon be viable for real-time boolean operations in the browser.
+Final Assessment
+Your idea is technically feasible but architecturally demanding. The stadium example reveals that the core innovation is not "chat generates box" but "conversation produces inspectable, reusable, learnable procedures."
+The risk is building too much at once. The opportunity is that no one has connected these four pillars:
+Conversational intention parsing
+Parametric node graphs
+Continuous multimodal memory
+Bounded self-extension
+My recommendation: Start with the node graph and a single AI agent that only proposes parametric strategies for architectural forms. Get that loop tight. Then add memory. Then add autonomy. The self-modifying sandbox is Year 2, not Month 2.
+
