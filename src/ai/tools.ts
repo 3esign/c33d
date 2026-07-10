@@ -17,7 +17,26 @@ export const AGENT_TOOLS: ToolDef[] = [
     description: 'Record your design plan BEFORE building: named parts, their roles, attachment relationships, and governing proportions/ratios. Call this first for any new design.',
     parameters: {
       type: 'object',
-      properties: { plan: { type: 'string', description: 'Short structured plan: parts, relationships, ratios.' } },
+      properties: {
+        plan: { type: 'string', description: 'Short structured plan: parts, relationships, ratios.' },
+        ratios: {
+          type: 'array',
+          description: 'Optional structured proportions/ratios to enforce. Example: [{"param": "abdomen.radiusX", "formula": "bodyLength*0.28"}]',
+          items: {
+            type: 'object',
+            properties: {
+              param: { type: 'string', description: 'Node ID + parameter name, e.g. "abdomen.radiusX"' },
+              formula: { type: 'string', description: 'Formula expression referencing driver sliders, e.g. "bodyLength*0.28"' }
+            },
+            required: ['param', 'formula']
+          }
+        },
+        drivers: {
+          type: 'array',
+          description: 'Optional list of driver sliders/parameters.',
+          items: { type: 'string' }
+        }
+      },
       required: ['plan'],
     },
   },
@@ -147,6 +166,8 @@ export interface ToolExecutionResult {
   finished?: string;        // finish summary
   clearedGraph?: boolean;
   plan?: string;
+  ratios?: any[];
+  drivers?: string[];
 }
 
 // Some providers (or schema sanitization for Gemini) deliver nested objects as
@@ -202,7 +223,13 @@ export function executeTool(
 
   switch (name) {
     case 'set_plan': {
-      return { message: 'Plan recorded.', mutatedGraph: false, plan: String(args.plan || '') };
+      return {
+        message: 'Plan recorded.',
+        mutatedGraph: false,
+        plan: String(args.plan || ''),
+        ratios: args.ratios,
+        drivers: args.drivers
+      };
     }
 
     case 'add_nodes': {

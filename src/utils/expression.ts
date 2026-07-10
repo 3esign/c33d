@@ -47,9 +47,18 @@ function tokenize(src: string): Tok[] {
   return toks;
 }
 
+export function normalizeVarName(s: string): string {
+  return s.toLowerCase().replace(/[^a-z0-9_]/g, '');
+}
+
 export function evaluateExpression(formula: string, vars: Record<string, number>): number {
   const toks = tokenize(formula);
   let pos = 0;
+
+  const normalizedVars: Record<string, number> = {};
+  for (const [k, v] of Object.entries(vars)) {
+    normalizedVars[normalizeVarName(k)] = v;
+  }
 
   const peek = () => toks[pos];
   const next = () => toks[pos++];
@@ -116,10 +125,13 @@ export function evaluateExpression(formula: string, vars: Record<string, number>
         if (!fn) throw new Error(`Unknown function '${t.value}'`);
         return fn(...args);
       }
-      if (t.value in vars && typeof vars[t.value] === 'number' && isFinite(vars[t.value])) return vars[t.value];
-      if (t.value in CONSTS) return CONSTS[t.value];
-      // Unknown variable defaults to 0 (unconnected input)
-      return 0;
+      const normId = normalizeVarName(t.value);
+      if (normId in normalizedVars && typeof normalizedVars[normId] === 'number' && isFinite(normalizedVars[normId])) {
+        return normalizedVars[normId];
+      }
+      if (normId in CONSTS) return CONSTS[normId];
+      const available = Object.keys(normalizedVars).join(', ');
+      throw new Error(`unknown variable '${t.value}' — available: ${available || '(none)'}`);
     }
     throw new Error(`Unexpected token '${t.value}'`);
   }

@@ -19,6 +19,21 @@ export type GeometryReport = {
   sliders?: Record<string, number>;
   nodeCount?: number;
   edgeCount?: number;
+  selections?: Record<
+    string,
+    {
+      matchedCount: number;
+      elements: {
+        centroid: number[];
+        areaOrLength: number;
+        normal?: number[];
+        direction?: number[];
+      }[];
+      warning?: string;
+    }
+  >;
+  helpers?: Record<string, any>;
+  proportionalIntegrity?: number;
 };
 
 export type EvaluationOutcome = { error: string | null; report: GeometryReport | null };
@@ -44,6 +59,7 @@ export type EvalResultEntry = {
   edgeCount: number;
   durationMs: number;
   visionScore?: number;
+  proportionalIntegrity?: number;
   error?: string;
 };
 

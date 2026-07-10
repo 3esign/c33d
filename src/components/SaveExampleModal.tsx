@@ -4,6 +4,7 @@ import { useStore, generateUUID } from '../store/useStore';
 import { captureViewportSnapshot } from '../utils/snapshot';
 import { tryEmbed } from '../ai/api';
 import { exampleSearchText } from '../ai/retrieval';
+import { calculateParametricCoverage } from '../ai/graphValidation';
 import type { SuccessExample } from '../nodes/NodeDefinitions';
 
 export const SaveExampleModal: React.FC = () => {
@@ -25,6 +26,12 @@ export const SaveExampleModal: React.FC = () => {
     : { nodes: JSON.parse(JSON.stringify(nodes)), edges: JSON.parse(JSON.stringify(edges)) };
   const graphOriginal = candidate ? candidate.graphOriginal : (lastAIGraph ? JSON.parse(JSON.stringify(lastAIGraph)) : null);
 
+  const { coverage, total } = useMemo(() => {
+    return calculateParametricCoverage(graphFinal.nodes, graphFinal.edges);
+  }, [graphFinal]);
+
+  const coverageBlocked = total > 0 && coverage < 0.40;
+
   const thumbnail = useMemo(() => {
     if (!saveModalOpen) return '';
     // For a nudge candidate the old design is already replaced on screen; the
@@ -42,6 +49,7 @@ export const SaveExampleModal: React.FC = () => {
   })();
 
   const save = async () => {
+    if (coverageBlocked) return;
     const example: SuccessExample = {
       id: generateUUID(),
       createdAt: new Date().toISOString(),
@@ -117,6 +125,12 @@ export const SaveExampleModal: React.FC = () => {
           />
         </div>
 
+        {coverageBlocked && (
+          <div className="bg-red-950/40 border border-red-800 text-red-350 rounded p-2.5 text-[10px] leading-relaxed">
+            <strong>Saving Blocked:</strong> Low parametric coverage ({Math.round(coverage * 100)}%). At least 40% of the dimensions must be driven by sliders/formulas to ensure parametric scalability. Fix the literals in your graph first.
+          </div>
+        )}
+
         <div className="text-[10px] text-slate-500">
           Graph: {graphFinal.nodes.length} nodes / {graphFinal.edges.length} edges
           {graphOriginal ? ` · AI original kept (${graphOriginal.nodes.length} nodes)` : ' · no AI original recorded'}
@@ -125,7 +139,15 @@ export const SaveExampleModal: React.FC = () => {
 
         <div className="flex justify-end gap-2">
           <button onClick={closeSaveModal} className="text-xs px-3 py-1.5 rounded bg-slate-700 text-slate-300 hover:bg-slate-650">Cancel</button>
-          <button onClick={save} className="text-xs px-3 py-1.5 rounded bg-emerald-600 text-white hover:bg-emerald-700 flex items-center gap-1.5">
+          <button
+            onClick={save}
+            disabled={coverageBlocked}
+            className={`text-xs px-3 py-1.5 rounded flex items-center gap-1.5 font-medium transition-colors ${
+              coverageBlocked
+                ? 'bg-slate-700 text-slate-500 cursor-not-allowed border border-slate-650'
+                : 'bg-emerald-600 text-white hover:bg-emerald-700'
+            }`}
+          >
             <Star size={12} /> Save to library
           </button>
         </div>

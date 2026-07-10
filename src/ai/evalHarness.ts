@@ -30,6 +30,7 @@ export const EVAL_PROMPTS: EvalPrompt[] = [
   { id: 'L2-06', level: 2, prompt: 'Create a cup: hollow cylinder with a bottom, wall thickness 1, height 25, radius 8.' },
   { id: 'L2-07', level: 2, prompt: 'Make a ring (torus-like) by subtracting a smaller cylinder from a bigger one, 2 units tall.' },
   { id: 'L2-08', level: 2, prompt: 'Create a tapered column: wide circular base lofted to a narrow top, 40 tall.' },
+  { id: 'L2-09', level: 2, prompt: 'Create a smooth helical spline curve with 8 turns, radius 10, height 40, and 200 points.' },
 
   // L3 — multi-part composition + parametric relationships
   { id: 'L3-01', level: 3, prompt: 'Design a simple table: rectangular top with four legs at the corners. Make the leg thickness a parameter driven from the tabletop size.' },
@@ -40,6 +41,10 @@ export const EVAL_PROMPTS: EvalPrompt[] = [
   { id: 'L3-06', level: 3, prompt: 'Create a simple bridge: deck, two support pillars, and railings made with a linear pattern of posts.' },
   { id: 'L3-07', level: 3, prompt: 'Design a rocket: cylindrical body, nose cone, and three fins arranged radially, multi-colored.' },
   { id: 'L3-08', level: 3, prompt: 'Make a gear-like disc: cylinder with 8 teeth arranged with a circular pattern around the rim.' },
+  { id: 'L3-09', level: 3, prompt: 'Sweep a circular profile of radius 2 along a helical spine of radius 15, pitch 10, height 50.' },
+  { id: 'L3-10', level: 3, prompt: 'Create a 20x20x20 cube, select its vertical corners (edges parallel to Z), and apply a variable fillet that transitions from radius 1 at the bottom to radius 4 at the top.' },
+  { id: 'L3-11', level: 3, prompt: 'make a cube, split its top face 3x3, and extrude the center cell' },
+  { id: 'L3-12', level: 3, prompt: 'Create a parametric rock using formulaic sliders for size and roughness, ensuring all dimensions scale with the rockSize slider (use rockSize * 0.8, etc., with spaces in labels but correctly mapped normalized formulas).' },
 
   // L4 — open creative briefs
   { id: 'L4-01', level: 4, prompt: 'Design a modern coffee table with an interesting parametric leg structure. Expose 3 design sliders.' },
@@ -109,6 +114,7 @@ export async function runEvalSuite(onProgress?: (done: number, total: number, cu
         edgeCount: outcome.edgeCount,
         durationMs: outcome.durationMs,
         visionScore: outcome.visionScore,
+        proportionalIntegrity: outcome.proportionalIntegrity,
         error: outcome.error,
       });
     }

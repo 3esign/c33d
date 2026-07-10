@@ -6,8 +6,9 @@ import {
   nonUniformScale,
   bendShape,
   twistShape
-} from './deformation';
-import { parseSVGPath } from './svgPath';
+} from './deformation.ts';
+import { parseSVGPath } from './svgPath.ts';
+import { evaluateSelectionQuery } from './selectionQuery.ts';
 
 // NaN-safe numeric param read.
 function num(v: any, d: number): number {
@@ -46,7 +47,7 @@ function extractFirstTwoPathPoints(pathStr: string): [number, number][] {
 
 export const EXECUTORS: Record<
   string,
-  (params: any, inputs: any[], warn: (msg: string) => void) => any
+  (params: any, inputs: any[], warn: (msg: string) => void, scope?: Record<string, number>) => any
 > = {
   Box: (params) => {
     const w = parseFloat(params.width) || 10;
@@ -490,11 +491,24 @@ export const EXECUTORS: Record<
     return replicad.makeCompound(shapes);
   },
 
-  Fillet: (params, inputs, warn) => {
+  Fillet: (params, inputs, warn, scope) => {
     const solidInput = inputs.find((i) => i.targetHandle === 'solid')?.value;
     if (!solidInput) return null;
+    const selection = inputs.find((i) => i.targetHandle === 'selection')?.value;
     const r = parseFloat(params.radius) || 1;
     try {
+      if (selection && selection.query) {
+        const descends = solidInput.sourceNodeId === selection.sourceNodeId || 
+                         (solidInput.ancestorNodeIds && solidInput.ancestorNodeIds.includes(selection.sourceNodeId));
+        if (!descends) {
+          warn(`Selection sourceNodeId "${selection.sourceNodeId}" is not an ancestor of solid "${solidInput.sourceNodeId}". Filtering all edges.`);
+        }
+        const resolved = evaluateSelectionQuery(selection.query, selection.domain, solidInput, scope || {}, 0.1);
+        return solidInput.fillet(r, (edge: any) => {
+          const h = typeof edge.hashCode === 'function' ? edge.hashCode() : edge.hashCode;
+          return resolved.hashes.includes(h);
+        });
+      }
       return solidInput.fillet(r);
     } catch (err) {
       console.warn("Fillet failed:", err);
@@ -505,11 +519,24 @@ export const EXECUTORS: Record<
     }
   },
 
-  Chamfer: (params, inputs, warn) => {
+  Chamfer: (params, inputs, warn, scope) => {
     const solidInput = inputs.find((i) => i.targetHandle === 'solid')?.value;
     if (!solidInput) return null;
+    const selection = inputs.find((i) => i.targetHandle === 'selection')?.value;
     const r = parseFloat(params.radius) || 1;
     try {
+      if (selection && selection.query) {
+        const descends = solidInput.sourceNodeId === selection.sourceNodeId || 
+                         (solidInput.ancestorNodeIds && solidInput.ancestorNodeIds.includes(selection.sourceNodeId));
+        if (!descends) {
+          warn(`Selection sourceNodeId "${selection.sourceNodeId}" is not an ancestor of solid "${solidInput.sourceNodeId}". Filtering all edges.`);
+        }
+        const resolved = evaluateSelectionQuery(selection.query, selection.domain, solidInput, scope || {}, 0.1);
+        return solidInput.chamfer(r, (edge: any) => {
+          const h = typeof edge.hashCode === 'function' ? edge.hashCode() : edge.hashCode;
+          return resolved.hashes.includes(h);
+        });
+      }
       return solidInput.chamfer(r);
     } catch (err) {
       console.warn("Chamfer failed:", err);
@@ -635,7 +662,7 @@ export const EXECUTORS: Record<
     for (const s of shapes) {
       if (!seen.has(s)) {
         seen.add(s);
-        uniqueShapes.push(s);
+        uniqueShapes.push(s.clone()); // CLONE TO AVOID LIFETIME CRASHES ON CACHE EVICTION
       }
     }
 
@@ -665,10 +692,17 @@ export const EXECUTORS: Record<
   Shell: (params, inputs, warn) => {
     const solidInput = inputs.find((i) => i.targetHandle === 'solid')?.value;
     if (!solidInput) return null;
+    const selection = inputs.find((i) => i.targetHandle === 'selection')?.value;
     const thickness = parseFloat(params.thickness) || 1;
     const removeBottom =
       params.removeBottomFace === true || params.removeBottomFace === 'true';
     try {
+      if (selection && selection.hashes) {
+        return solidInput.shell(thickness, (f: any) => {
+          const h = typeof f.hashCode === 'function' ? f.hashCode() : f.hashCode;
+          return selection.hashes.includes(h);
+        });
+      }
       if (removeBottom) {
         return solidInput.shell(thickness, (f: any) => f.inPlane("XY", 0));
       }
@@ -783,26 +817,46 @@ export const EXECUTORS: Record<
   },
 
   PlaceOnVertices: (params, inputs, warn) => {
-    const solidInput = inputs.find((i) => i.targetHandle === 'solid')?.value;
+    const source = inputs.find((i) => i.targetHandle === 'solid')?.value;
     const shapeInput = inputs.find((i) => i.targetHandle === 'shape')?.value;
-    if (!solidInput || !shapeInput) return null;
+    if (!source || !shapeInput) return null;
 
     const scaleMin = num(params.scaleMin, 1);
     const scaleMax = num(params.scaleMax, 1);
-    const includeBase =
-      params.includeBase !== false && params.includeBase !== 'false';
+    const includeBase = params.includeBase !== false && params.includeBase !== 'false';
 
     try {
-      const ocVertices = (solidInput as any)._listTopo("vertex");
-      if (!ocVertices || ocVertices.length === 0) return null;
+      let coords: [number, number, number][] = [];
+      if (source.type === 'Point') {
+        coords.push([source.x, source.y, source.z]);
+      } else if (Array.isArray(source)) {
+        source.forEach(p => {
+          if (p && p.type === 'Point') coords.push([p.x, p.y, p.z]);
+        });
+      } else if (source.type === 'Curve') {
+        try {
+           coords.push([...source.value.pointAt(0)] as [number, number, number]);
+           coords.push([...source.value.pointAt(1)] as [number, number, number]);
+        } catch(e) {}
+      } else if (source.type === 'Plane' || source.type === 'Vector' || source.type === 'Selection') {
+        warn(`Cannot place shapes on a ${source.type}. Connect a solid, point, list of points, or curve.`);
+        return null;
+      } else {
+        const ocVertices = (source as any)._listTopo("vertex");
+        if (ocVertices && ocVertices.length > 0) {
+          ocVertices.forEach((ocV: any) => {
+            const v = new (replicad as any).Vertex(ocV);
+            coords.push(v.asTuple() as [number, number, number]);
+          });
+        }
+      }
 
-      const placedShapes = ocVertices.map((ocV: any, idx: number) => {
-        const v = new (replicad as any).Vertex(ocV);
-        const [x, y, z] = v.asTuple();
+      if (coords.length === 0) return null;
 
+      const placedShapes = coords.map((c, idx) => {
+        const [x, y, z] = c;
         const r = (Math.sin(idx + 5.67) * 10000) % 1;
         const scaleVal = scaleMin + Math.abs(r) * (scaleMax - scaleMin);
-
         const scaled = scaleVal !== 1 ? safeScale(shapeInput, scaleVal) : null;
         const targetShape = scaled || shapeInput;
 
@@ -816,21 +870,17 @@ export const EXECUTORS: Record<
           z - center[2]
         ]);
         if (scaled) {
-          try {
-            scaled.delete();
-          } catch (e) {}
+          try { scaled.delete(); } catch (e) {}
         }
         return translated;
       });
 
-      if (includeBase) {
-        placedShapes.unshift(solidInput.clone());
+      if (includeBase && typeof source.clone === 'function') {
+        placedShapes.unshift(source.clone());
       }
-
       return replicad.makeCompound(placedShapes);
-    } catch (err: any) {
-      console.warn("PlaceOnVertices failed:", err);
-      warn(`PlaceOnVertices failed: ${String(err?.message || err)}.`);
+    } catch (e: any) {
+      warn(`PlaceOnVertices failed: ${e.message}`);
       return null;
     }
   },
@@ -1100,31 +1150,60 @@ export const EXECUTORS: Record<
     }
 
     const OC = (replicad as any).getOC();
-    const makePolygon = new OC.BRepBuilderAPI_MakePolygon();
-    points.forEach((p) => {
-      const gpPt = new OC.gp_Pnt(p[0], p[1], p[2]);
-      makePolygon.Add(gpPt);
+    const ptsArray = new OC.TColgp_Array1OfPnt_2(1, points.length);
+    points.forEach((p, idx) => {
+      const gpPt = new OC.gp_Pnt_3(p[0], p[1], p[2]);
+      ptsArray.SetValue(idx + 1, gpPt);
       gpPt.delete();
     });
-    const shape = replicad.cast(makePolygon.Shape());
-    makePolygon.delete();
+
+    const continuity = OC.GeomAbs_Shape ? OC.GeomAbs_Shape.GeomAbs_C2 : 3;
+    const builder = new OC.GeomAPI_PointsToBSpline_2(ptsArray, 3, 8, continuity, 1e-3);
+    if (!builder.IsDone()) {
+      ptsArray.delete();
+      builder.delete();
+      throw new Error('Helix spline interpolation failed');
+    }
+    const curve = builder.Curve();
+    const makeEdge = new OC.BRepBuilderAPI_MakeEdge_24(curve);
+    if (!makeEdge.IsDone()) {
+      ptsArray.delete();
+      builder.delete();
+      makeEdge.delete();
+      throw new Error('Helix edge creation failed');
+    }
+    const edge = makeEdge.Edge();
+    const makeWire = new OC.BRepBuilderAPI_MakeWire_1(edge);
+    if (!makeWire.IsDone()) {
+      ptsArray.delete();
+      builder.delete();
+      makeEdge.delete();
+      makeWire.delete();
+      throw new Error('Helix wire creation failed');
+    }
+    const wire = makeWire.Wire();
+    const shape = replicad.cast(wire);
+
+    ptsArray.delete();
+    builder.delete();
+    makeEdge.delete();
+    makeWire.delete();
     return shape;
   },
 
-  Sweep: (_params, inputs, warn) => {
+  Sweep: (params, inputs, warn) => {
     const profile = inputs.find((i) => i.targetHandle === 'profile')?.value;
     const path = inputs.find((i) => i.targetHandle === 'path')?.value;
     if (!profile || !path) return null;
 
+    const transitionMode = String(params.transitionMode || 'right').toLowerCase();
+
     try {
-      const OC = (replicad as any).getOC();
       const wireObj = path.wires ? (path.wires()[0] || path) : path;
-      const maker = new OC.BRepOffsetAPI_MakePipe_1(
-        wireObj.wrapped || wireObj,
-        profile.wrapped || profile
-      );
-      const shape = replicad.cast(maker.Shape());
-      maker.delete();
+      const shape = (replicad as any).genericSweep(profile, wireObj, {
+        transitionMode,
+        forceProfileSpineOthogonality: true
+      });
       return shape;
     } catch (err: any) {
       console.warn("Sweep failed:", err);
@@ -1134,11 +1213,14 @@ export const EXECUTORS: Record<
   },
 
   VariableFillet: (params, inputs, warn) => {
+    warn(`VariableFillet is deprecated. Please use Fillet with a Selection node instead.`);
     const solidInput = inputs.find((i) => i.targetHandle === 'solid')?.value;
     if (!solidInput) return null;
     const radius = parseFloat(params.radius) || 1.0;
     const filterAxis = String(params.filterAxis || 'all').toUpperCase();
-    const edgeIndex = parseInt(params.edgeIndex) ?? -1;
+    
+    const parsedIndex = parseInt(params.edgeIndex);
+    const edgeIndex = Number.isNaN(parsedIndex) ? -1 : parsedIndex;
 
     try {
       return solidInput.fillet(radius, (edge: any) => {
@@ -1166,5 +1248,590 @@ export const EXECUTORS: Record<
       warn(`VariableFillet failed — passed solid through unfilleted.`);
       return solidInput.clone();
     }
+  },
+
+  SelectFaces: (params: any, inputs: any[], warn: (msg: string) => void, scope?: Record<string, number>) => {
+    const solidInput = inputs.find((i: any) => i.targetHandle === 'solid')?.value;
+    if (!solidInput) return null;
+    const predicate = String(params.predicate || 'normal ~ +Z');
+    const tol = parseFloat(params.tolerance) || 0.1;
+    
+    try {
+      const res = evaluateSelectionQuery(predicate, 'faces', solidInput, scope || {}, tol);
+      const totalCount = (solidInput.faces || []).length;
+      
+      if (res.hashes.length === 0) {
+        warn(`Selection error: query "${predicate}" matched 0 faces on solid.`);
+      } else if (res.hashes.length === totalCount) {
+        warn(`Selection error: query "${predicate}" matched all ${totalCount} faces on solid (matched everything).`);
+      } else {
+        const centroids = res.elements.map(el => el.centroid.map(c => Number(c.toFixed(2))));
+        const areas = res.elements.map(el => Number(el.areaOrLength.toFixed(2)));
+        warn(`Selection info: matched ${res.hashes.length} faces, centroids: ${JSON.stringify(centroids)}, areas: ${JSON.stringify(areas)}`);
+      }
+
+      return {
+        type: 'Selection',
+        domain: 'faces',
+        query: predicate,
+        sourceNodeId: solidInput.sourceNodeId || ''
+      };
+    } catch (err: any) {
+      warn(`SelectFaces failed: ${err.message || err}`);
+      return { type: 'Selection', domain: 'faces', query: predicate, sourceNodeId: solidInput.sourceNodeId || '' };
+    }
+  },
+
+  SelectEdges: (params: any, inputs: any[], warn: (msg: string) => void, scope?: Record<string, number>) => {
+    const solidInput = inputs.find((i: any) => i.targetHandle === 'solid')?.value;
+    if (!solidInput) return null;
+    const predicate = String(params.predicate || 'parallel Z');
+    const tol = parseFloat(params.tolerance) || 0.1;
+    
+    try {
+      const res = evaluateSelectionQuery(predicate, 'edges', solidInput, scope || {}, tol);
+      const totalCount = (solidInput.edges || []).length;
+      
+      if (res.hashes.length === 0) {
+        warn(`Selection error: query "${predicate}" matched 0 edges on solid.`);
+      } else if (res.hashes.length === totalCount) {
+        warn(`Selection error: query "${predicate}" matched all ${totalCount} edges on solid (matched everything).`);
+      } else {
+        const centroids = res.elements.map(el => el.centroid.map(c => Number(c.toFixed(2))));
+        const lengths = res.elements.map(el => Number(el.areaOrLength.toFixed(2)));
+        warn(`Selection info: matched ${res.hashes.length} edges, centroids: ${JSON.stringify(centroids)}, lengths: ${JSON.stringify(lengths)}`);
+      }
+
+      return {
+        type: 'Selection',
+        domain: 'edges',
+        query: predicate,
+        sourceNodeId: solidInput.sourceNodeId || ''
+      };
+    } catch (err: any) {
+      warn(`SelectEdges failed: ${err.message || err}`);
+      return { type: 'Selection', domain: 'edges', query: predicate, sourceNodeId: solidInput.sourceNodeId || '' };
+    }
+  },
+
+  SelectionCombine: (params: any, inputs: any[], _warn: (msg: string) => void) => {
+    const s1 = inputs.find((i: any) => i.targetHandle === 'selection1')?.value;
+    const s2 = inputs.find((i: any) => i.targetHandle === 'selection2')?.value;
+    const op = String(params.operation || 'union').toLowerCase();
+    
+    if (!s1 && !s2) return { type: 'Selection', domain: 'faces', query: '', sourceNodeId: '' };
+    if (!s1) return s2;
+    if (!s2) return s1;
+    
+    let expr = '';
+    if (op === 'union') {
+      expr = `(${s1.query}) or (${s2.query})`;
+    } else if (op === 'intersect') {
+      expr = `(${s1.query}) and (${s2.query})`;
+    } else if (op === 'subtract') {
+      expr = `(${s1.query}) and (not (${s2.query}))`;
+    }
+    
+    return {
+      type: 'Selection',
+      domain: s1.domain,
+      query: expr,
+      sourceNodeId: s1.sourceNodeId || s2.sourceNodeId || ''
+    };
+  },
+  SplitLoop: (params, inputs, warn) => {
+    const solidInput = inputs.find((i) => i.targetHandle === 'solid')?.value;
+    if (!solidInput) return null;
+    const axis = String(params.axis || 'Z');
+    const at = num(params.at, 0.5);
+
+    try {
+      const bbox = solidInput.boundingBox;
+      const bounds = bbox.bounds;
+      let min = 0, max = 0;
+      const axisLower = axis.toLowerCase();
+      if (axisLower === 'x') {
+        min = bounds[0][0];
+        max = bounds[1][0];
+      } else if (axisLower === 'y') {
+        min = bounds[0][1];
+        max = bounds[1][1];
+      } else {
+        min = bounds[0][2];
+        max = bounds[1][2];
+      }
+      const splitVal = min + at * (max - min);
+
+      const pad = 1000.0;
+      const xMin = bounds[0][0] - pad;
+      const xMax = bounds[1][0] + pad;
+      const yMin = bounds[0][1] - pad;
+      const yMax = bounds[1][1] + pad;
+      const zMin = bounds[0][2] - pad;
+      const zMax = bounds[1][2] + pad;
+
+      let b1, b2;
+      if (axisLower === 'x') {
+        b1 = replicad.makeBox([xMin, yMin, zMin], [splitVal, yMax, zMax]);
+        b2 = replicad.makeBox([splitVal, yMin, zMin], [xMax, yMax, zMax]);
+      } else if (axisLower === 'y') {
+        b1 = replicad.makeBox([xMin, yMin, zMin], [xMax, splitVal, zMax]);
+        b2 = replicad.makeBox([xMin, splitVal, zMin], [xMax, yMax, zMax]);
+      } else {
+        b1 = replicad.makeBox([xMin, yMin, zMin], [xMax, yMax, splitVal]);
+        b2 = replicad.makeBox([xMin, yMin, splitVal], [xMax, yMax, zMax]);
+      }
+
+      const half1 = solidInput.intersect(b1);
+      const half2 = solidInput.intersect(b2);
+      
+      const out = replicad.makeCompound([half1, half2]);
+      
+      try {
+        b1.delete?.();
+        b2.delete?.();
+        half1.delete?.();
+        half2.delete?.();
+      } catch (e) {}
+
+      return out;
+    } catch (err: any) {
+      console.warn("SplitLoop failed:", err);
+      warn(`SplitLoop failed: ${err.message || err}. Passed original solid.`);
+      return solidInput.clone();
+    }
+  },
+
+  SplitSolid: (_params, inputs, warn) => {
+    const solidInput = inputs.find((i) => i.targetHandle === 'solid')?.value;
+    const tool = inputs.find((i) => i.targetHandle === 'tool')?.value;
+    if (!solidInput) return null;
+    if (!tool) return solidInput.clone();
+
+    try {
+      const alignToPlane = (shape: any, planeFace: any) => {
+        const center = planeFace.center.toTuple();
+        const normalVec = planeFace.normalAt().toTuple();
+        
+        let res = shape.translate(center);
+        
+        const zDir = [0, 0, 1];
+        const dot = zDir[0]*normalVec[0] + zDir[1]*normalVec[1] + zDir[2]*normalVec[2];
+        const angle = Math.acos(Math.max(-1, Math.min(1, dot))) * 180 / Math.PI;
+        
+        if (angle > 1e-4) {
+          const rx = zDir[1]*normalVec[2] - zDir[2]*normalVec[1];
+          const ry = zDir[2]*normalVec[0] - zDir[0]*normalVec[2];
+          const rz = zDir[0]*normalVec[1] - zDir[1]*normalVec[0];
+          const len = Math.sqrt(rx*rx + ry*ry + rz*rz);
+          if (len > 1e-9) {
+            res = res.rotate(angle, center, [rx/len, ry/len, rz/len]);
+          }
+        }
+        return res;
+      };
+
+      const pad = 1000.0;
+      const b1_raw = replicad.makeBox([-pad, -pad, -pad], [pad, pad, 0]);
+      const b2_raw = replicad.makeBox([-pad, -pad, 0], [pad, pad, pad]);
+      
+      const face = tool.faces ? (tool.faces[0] || tool) : tool;
+      const b1 = alignToPlane(b1_raw, face);
+      const b2 = alignToPlane(b2_raw, face);
+      
+      const half1 = solidInput.intersect(b1);
+      const half2 = solidInput.intersect(b2);
+      
+      const out = replicad.makeCompound([half1, half2]);
+
+      try {
+        b1_raw.delete?.();
+        b2_raw.delete?.();
+        b1.delete?.();
+        b2.delete?.();
+        half1.delete?.();
+        half2.delete?.();
+      } catch (e) {}
+
+      return out;
+    } catch (err: any) {
+      console.warn("SplitSolid failed:", err);
+      warn(`SplitSolid failed: ${err.message || err}. Passed original solid.`);
+      return solidInput.clone();
+    }
+  },
+
+  ExtrudeFace: (params, inputs, warn, scope) => {
+    const solidInput = inputs.find((i) => i.targetHandle === 'solid')?.value;
+    const selection = inputs.find((i) => i.targetHandle === 'selection')?.value;
+    if (!solidInput) return null;
+    if (!selection) return solidInput.clone();
+    const height = num(params.height, 5);
+
+    if (Math.abs(height) < 1e-4) {
+      return solidInput.clone();
+    }
+
+    try {
+      const descends = solidInput.sourceNodeId === selection.sourceNodeId || 
+                       (solidInput.ancestorNodeIds && solidInput.ancestorNodeIds.includes(selection.sourceNodeId));
+      if (!descends) {
+        warn(`Selection sourceNodeId "${selection.sourceNodeId}" is not an ancestor of solid "${solidInput.sourceNodeId}".`);
+      }
+
+      const resolved = evaluateSelectionQuery(selection.query, selection.domain, solidInput, scope || {}, 0.1);
+      if (resolved.hashes.length === 0) {
+        return solidInput.clone();
+      }
+
+      const facesToExtrude = (solidInput.faces || []).filter((f: any) => {
+        const h = typeof f.hashCode === 'function' ? f.hashCode() : f.hashCode;
+        return resolved.hashes.includes(h);
+      });
+
+      let out = solidInput;
+      for (const f of facesToExtrude) {
+        const normal = f.normalAt().toTuple();
+        const wire = f.outerWire();
+        const sketch = new replicad.Sketch(wire);
+        const prism = sketch.extrude(Math.abs(height), { extrusionDirection: normal });
+        
+        if (height > 0) {
+          out = out.fuse(prism);
+        } else {
+          out = out.cut(prism);
+        }
+
+        try {
+          wire.delete?.();
+          prism.delete?.();
+        } catch (e) {}
+      }
+
+      return out;
+    } catch (err: any) {
+      console.warn("ExtrudeFace failed:", err);
+      warn(`ExtrudeFace failed: ${err.message || err}. Passed original solid.`);
+      return solidInput.clone();
+    }
+  },
+
+  // ---------------------------------------------------------
+  // POINT NODES
+  // ---------------------------------------------------------
+  Point: (params) => {
+    return { type: 'Point', x: num(params.x, 0), y: num(params.y, 0), z: num(params.z, 0) };
+  },
+  DeconstructPoint: (_params, inputs) => {
+    const pt = inputs.find(i => i.targetHandle === 'point')?.value || { x: 0, y: 0, z: 0 };
+    return { __multi: true, values: { x: pt.x, y: pt.y, z: pt.z } };
+  },
+  Centroid: (_params, inputs) => {
+    const shape = inputs.find(i => i.targetHandle === 'solid')?.value;
+    if (!shape) return { type: 'Point', x: 0, y: 0, z: 0 };
+    try {
+      const bb = shape.boundingBox;
+      return { type: 'Point', x: bb.center[0], y: bb.center[1], z: bb.center[2] };
+    } catch {
+      return { type: 'Point', x: 0, y: 0, z: 0 };
+    }
+  },
+  Midpoint: (_params, inputs) => {
+    const p1 = inputs.find(i => i.targetHandle === 'pointA')?.value || { x: 0, y: 0, z: 0 };
+    const p2 = inputs.find(i => i.targetHandle === 'pointB')?.value || { x: 0, y: 0, z: 0 };
+    return { type: 'Point', x: (p1.x + p2.x) / 2, y: (p1.y + p2.y) / 2, z: (p1.z + p2.z) / 2 };
+  },
+  PointBetween: (params, inputs) => {
+    const p1 = inputs.find(i => i.targetHandle === 'pointA')?.value || { x: 0, y: 0, z: 0 };
+    const p2 = inputs.find(i => i.targetHandle === 'pointB')?.value || { x: 0, y: 0, z: 0 };
+    const t = num(params.t, 0.5);
+    return { type: 'Point', x: p1.x + (p2.x - p1.x) * t, y: p1.y + (p2.y - p1.y) * t, z: p1.z + (p2.z - p1.z) * t };
+  },
+  Endpoints: (_params, inputs) => {
+    const curve = inputs.find(i => i.targetHandle === 'curve')?.value;
+    if (!curve || curve.type !== 'Curve') {
+      const p = { type: 'Point', x: 0, y: 0, z: 0 };
+      return { __multi: true, values: { start: p, end: p } };
+    }
+    try {
+      const pt1 = curve.value.pointAt(0);
+      const pt2 = curve.value.pointAt(1);
+      return { __multi: true, values: {
+        start: { type: 'Point', x: pt1[0], y: pt1[1], z: pt1[2] },
+        end: { type: 'Point', x: pt2[0], y: pt2[1], z: pt2[2] }
+      }};
+    } catch {
+      const p = { type: 'Point', x: 0, y: 0, z: 0 };
+      return { __multi: true, values: { start: p, end: p } };
+    }
+  },
+
+  // ---------------------------------------------------------
+  // VECTOR NODES
+  // ---------------------------------------------------------
+  VectorXYZ: (params) => {
+    return { type: 'Vector', x: num(params.x, 0), y: num(params.y, 0), z: num(params.z, 0) };
+  },
+  DeconstructVector: (_params, inputs) => {
+    const v = inputs.find(i => i.targetHandle === 'vector')?.value || { x: 0, y: 0, z: 0 };
+    return { __multi: true, values: { x: v.x, y: v.y, z: v.z } };
+  },
+  Vector2Pt: (_params, inputs) => {
+    const p1 = inputs.find(i => i.targetHandle === 'from')?.value || { x: 0, y: 0, z: 0 };
+    const p2 = inputs.find(i => i.targetHandle === 'to')?.value || { x: 0, y: 0, z: 0 };
+    return { type: 'Vector', x: p2.x - p1.x, y: p2.y - p1.y, z: p2.z - p1.z };
+  },
+  VectorMath: (params, inputs, warn) => {
+    const v1 = inputs.find(i => i.targetHandle === 'vectorA')?.value || { x: 0, y: 0, z: 0 };
+    const v2 = inputs.find(i => i.targetHandle === 'vectorB')?.value || { x: 0, y: 0, z: 0 };
+    const op = params.operation || 'add';
+    
+    if (op === 'add') return { __multi: true, values: { vector: { type: 'Vector', x: v1.x + v2.x, y: v1.y + v2.y, z: v1.z + v2.z }, value: 0 } };
+    if (op === 'subtract') return { __multi: true, values: { vector: { type: 'Vector', x: v1.x - v2.x, y: v1.y - v2.y, z: v1.z - v2.z }, value: 0 } };
+    if (op === 'dot') return { __multi: true, values: { vector: { type: 'Vector', x:0, y:0, z:0 }, value: v1.x * v2.x + v1.y * v2.y + v1.z * v2.z } };
+    if (op === 'cross') return { __multi: true, values: { vector: { type: 'Vector', x: v1.y * v2.z - v1.z * v2.y, y: v1.z * v2.x - v1.x * v2.z, z: v1.x * v2.y - v1.y * v2.x }, value: 0 } };
+    if (op === 'normalize') {
+      const len = Math.sqrt(v1.x*v1.x + v1.y*v1.y + v1.z*v1.z);
+      if (len < 1e-6) { warn('Cannot normalize zero vector'); return { __multi: true, values: { vector: { type: 'Vector', x:0, y:0, z:0 }, value: 0 } }; }
+      return { __multi: true, values: { vector: { type: 'Vector', x: v1.x/len, y: v1.y/len, z: v1.z/len }, value: len } };
+    }
+    if (op === 'length') return { __multi: true, values: { vector: { type: 'Vector', x:0, y:0, z:0 }, value: Math.sqrt(v1.x*v1.x + v1.y*v1.y + v1.z*v1.z) } };
+    return { __multi: true, values: { vector: { type: 'Vector', x:0, y:0, z:0 }, value: 0 } };
+  },
+
+  // ---------------------------------------------------------
+  // PLANE NODES
+  // ---------------------------------------------------------
+  ConstructPlane: (_params, inputs) => {
+    const o = inputs.find(i => i.targetHandle === 'origin')?.value || { x: 0, y: 0, z: 0 };
+    const n = inputs.find(i => i.targetHandle === 'normal')?.value || { x: 0, y: 0, z: 1 };
+    return { type: 'Plane', origin: o, normal: n };
+  },
+
+  // ---------------------------------------------------------
+  // CURVE NODES
+  // ---------------------------------------------------------
+  Line: (_params, inputs) => {
+    const p1 = inputs.find(i => i.targetHandle === 'start')?.value || { x: 0, y: 0, z: 0 };
+    const p2 = inputs.find(i => i.targetHandle === 'end')?.value || { x: 10, y: 10, z: 10 };
+    try {
+      return { type: 'Curve', value: replicad.makeLine([p1.x, p1.y, p1.z], [p2.x, p2.y, p2.z]) };
+    } catch { return null; }
+  },
+  Arc: (_params, inputs) => {
+    const p1 = inputs.find(i => i.targetHandle === 'start')?.value || { x: -5, y: 0, z: 0 };
+    const mid = inputs.find(i => i.targetHandle === 'mid')?.value || { x: 0, y: 5, z: 0 };
+    const p2 = inputs.find(i => i.targetHandle === 'end')?.value || { x: 5, y: 0, z: 0 };
+    try {
+      return { type: 'Curve', value: replicad.makeThreePointArc([p1.x, p1.y, p1.z], [mid.x, mid.y, mid.z], [p2.x, p2.y, p2.z]) };
+    } catch { return null; }
+  },
+  CircleCurve: (params) => {
+    const r = Math.max(0.001, num(params.radius, 5));
+    try {
+       const circle = replicad.drawCircle(r);
+       return { type: 'Curve', value: circle };
+    } catch { return null; }
+  },
+  EllipseCurve: (params) => {
+    const rx = Math.max(0.001, num(params.radiusX, 5));
+    const ry = Math.max(0.001, num(params.radiusY, 3));
+    try { return { type: 'Curve', value: replicad.drawEllipse(rx, ry) }; } catch { return null; }
+  },
+  PolylineCurve: (_params, inputs) => {
+    const pts = inputs.find(i => i.targetHandle === 'points')?.value;
+    if (!Array.isArray(pts) || pts.length < 2) return null;
+    try {
+       const coords = pts.map(p => [p.x||0, p.y||0, p.z||0] as [number, number, number]);
+       const edges = [];
+       for (let i = 0; i < coords.length - 1; i++) {
+         edges.push(replicad.makeLine(coords[i], coords[i + 1]));
+       }
+       return { type: 'Curve', value: (replicad as any).assembleWire(edges) };
+    } catch { return null; }
+  },
+  SplineCurve: (_params, inputs) => {
+    const pts = inputs.find(i => i.targetHandle === 'points')?.value;
+    if (!Array.isArray(pts) || pts.length < 2) return null;
+    try {
+       const coords = pts.map(p => [p.x||0, p.y||0, p.z||0] as [number, number, number]);
+       return { type: 'Curve', value: (replicad as any).makeBSplineApproximation(coords) };
+    } catch { return null; }
+  },
+  EdgesAsCurves: (_params, inputs) => {
+    const s = inputs.find(i => i.targetHandle === 'shape')?.value;
+    if (!s) return null;
+    const edges = s.edges || [];
+    if (edges.length === 0) return null;
+    return edges.map((e: any) => ({ type: 'Curve', value: e }));
+  },
+
+  // ---------------------------------------------------------
+  // MEASUREMENT NODES
+  // ---------------------------------------------------------
+  Measure: (_params, inputs) => {
+    const shape = inputs.find(i => i.targetHandle === 'solid')?.value;
+    let v = 0; let a = 0; let c = { type: 'Point', x: 0, y: 0, z: 0 };
+    if (shape && typeof shape.boundingBox === 'object') {
+      try { v = (replicad as any).measureVolume(shape) || 0; } catch {}
+      try { a = (replicad as any).measureArea(shape) || 0; } catch {}
+      try {
+        const bb = shape.boundingBox;
+        if (bb && bb.center) c = { type: 'Point', x: bb.center[0], y: bb.center[1], z: bb.center[2] };
+      } catch {}
+    }
+    return { __multi: true, values: { volume: v, area: a, centroid: c } };
+  },
+  BoundingBox: (_params, inputs) => {
+    const shape = inputs.find(i => i.targetHandle === 'solid')?.value;
+    let min = { type: 'Point', x: 0, y: 0, z: 0 };
+    let max = { type: 'Point', x: 0, y: 0, z: 0 };
+    let sz = { type: 'Vector', x: 0, y: 0, z: 0 };
+    let box = null;
+    if (shape && typeof shape.boundingBox === 'object') {
+      try {
+        const bb = shape.boundingBox;
+        if (bb && bb.bounds) {
+          min = { type: 'Point', x: bb.bounds[0][0], y: bb.bounds[0][1], z: bb.bounds[0][2] };
+          max = { type: 'Point', x: bb.bounds[1][0], y: bb.bounds[1][1], z: bb.bounds[1][2] };
+          sz = { type: 'Vector', x: bb.bounds[1][0] - bb.bounds[0][0], y: bb.bounds[1][1] - bb.bounds[0][1], z: bb.bounds[1][2] - bb.bounds[0][2] };
+          box = replicad.makeBox([min.x, min.y, min.z], [max.x, max.y, max.z]);
+        }
+      } catch {}
+    }
+    return { __multi: true, values: { box, min, max, size: sz } };
+  },
+  DistanceMeasure: (_params, inputs) => {
+    const p1 = inputs.find(i => i.targetHandle === 'pointA')?.value || { x: 0, y: 0, z: 0 };
+    const p2 = inputs.find(i => i.targetHandle === 'pointB')?.value || { x: 0, y: 0, z: 0 };
+    const dx = p1.x - p2.x, dy = p1.y - p2.y, dz = p1.z - p2.z;
+    return { __multi: true, values: { distance: Math.sqrt(dx*dx + dy*dy + dz*dz), pointA: p1, pointB: p2 } };
+  },
+  IsInside: (_params, inputs) => {
+    const pt = inputs.find(i => i.targetHandle === 'point')?.value || { x: 0, y: 0, z: 0 };
+    const shape = inputs.find(i => i.targetHandle === 'solid')?.value;
+    let inside = 0;
+    if (shape && typeof shape.intersect === 'function') {
+      try {
+         const s = replicad.makeSphere(0.001).translate([pt.x, pt.y, pt.z]);
+         const cut = shape.intersect(s);
+         const vol = (replicad as any).measureVolume(cut);
+         if (vol && vol > 1e-10) inside = 1;
+         cut.delete();
+         s.delete();
+      } catch {}
+    }
+    return { __multi: true, values: { isInside: inside } };
+  },
+  SelectionMeasure: (_params, inputs) => {
+    const sel = inputs.find(i => i.targetHandle === 'selection')?.value;
+    let v = 0;
+    let cx = 0, cy = 0, cz = 0;
+    let count = 0;
+    if (sel && sel.elements && sel.elements.length > 0) {
+      for (const e of sel.elements) {
+        v += (sel.domain === 'faces' ? e.area : e.length) || 0;
+        if (e.centroid) {
+           cx += e.centroid[0]; cy += e.centroid[1]; cz += e.centroid[2];
+           count++;
+        }
+      }
+      if (count > 0) {
+         cx /= count; cy /= count; cz /= count;
+      }
+    }
+    return { __multi: true, values: { areaOrLength: v, centroid: { type: 'Point', x: cx, y: cy, z: cz } } };
+  },
+  CurveLength: (_params, inputs) => {
+    const curve = inputs.find(i => i.targetHandle === 'curve')?.value;
+    let L = 0;
+    if (curve && curve.type === 'Curve') {
+      try {
+         L = curve.value.length;
+      } catch {}
+    }
+    return { __multi: true, values: { length: L } };
+  },
+  PointOnCurve: (params, inputs) => {
+    const curve = inputs.find(i => i.targetHandle === 'curve')?.value;
+    let t = num(params.t, 0.5);
+    let p = { type: 'Point', x: 0, y: 0, z: 0 };
+    if (curve && curve.type === 'Curve') {
+       try {
+         const pt = curve.value.pointAt(Math.max(0, Math.min(1, t)));
+         p = { type: 'Point', x: pt[0], y: pt[1], z: pt[2] };
+       } catch {}
+    }
+    return p;
+  },
+  EvaluateCurve: (params, inputs) => {
+    const curve = inputs.find(i => i.targetHandle === 'curve')?.value;
+    let t = num(params.t, 0.5);
+    let p = { type: 'Point', x: 0, y: 0, z: 0 };
+    let v = { type: 'Vector', x: 1, y: 0, z: 0 };
+    if (curve && curve.type === 'Curve') {
+       try {
+         t = Math.max(0, Math.min(1, t));
+         const pt = curve.value.pointAt(t);
+         const tan = curve.value.tangentAt(t);
+         p = { type: 'Point', x: pt[0], y: pt[1], z: pt[2] };
+         v = { type: 'Vector', x: tan[0], y: tan[1], z: tan[2] };
+       } catch {}
+    }
+    return { __multi: true, values: { point: p, tangent: v } };
+  },
+  DivideCurve: (params, inputs) => {
+    const curve = inputs.find(i => i.targetHandle === 'curve')?.value;
+    const count = Math.max(2, Math.round(num(params.count, 10)));
+    const pts = [];
+    if (curve && curve.type === 'Curve') {
+       try {
+         for (let i = 0; i < count; i++) {
+           const t = i / (count - 1);
+           const pt = curve.value.pointAt(t);
+           pts.push({ type: 'Point', x: pt[0], y: pt[1], z: pt[2] });
+         }
+       } catch {}
+    }
+    return { __multi: true, values: { points: pts } };
+  },
+  PointGrid: (params) => {
+    const nx = Math.max(1, Math.round(num(params.countX, 5)));
+    const ny = Math.max(1, Math.round(num(params.countY, 5)));
+    const sx = num(params.spacingX, 2);
+    const sy = num(params.spacingY, 2);
+    const pts = [];
+    const ox = -((nx - 1) * sx) / 2;
+    const oy = -((ny - 1) * sy) / 2;
+    for (let i = 0; i < nx; i++) {
+      for (let j = 0; j < ny; j++) {
+        pts.push({ type: 'Point', x: ox + i * sx, y: oy + j * sy, z: 0 });
+      }
+    }
+    return { __multi: true, values: { points: pts } };
+  },
+  Jitter: (params, inputs) => {
+    const pts = inputs.find(i => i.targetHandle === 'points')?.value || [];
+    const arr = Array.isArray(pts) ? pts : [pts];
+    const amount = num(params.amount, 0.5);
+    const seed = num(params.seed, 42);
+    
+    let s = seed;
+    const rand = () => {
+      s = Math.sin(s) * 10000;
+      return s - Math.floor(s);
+    };
+
+    const jpts = arr.map(p => {
+       if (p && p.type === 'Point') {
+          return { type: 'Point', 
+            x: p.x + (rand() * 2 - 1) * amount,
+            y: p.y + (rand() * 2 - 1) * amount,
+            z: p.z + (rand() * 2 - 1) * amount
+          };
+       }
+       return p;
+    });
+    return { __multi: true, values: { points: jpts } };
   }
 };

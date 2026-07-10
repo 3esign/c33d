@@ -32,3 +32,5 @@ transcript_tail.txt
 context.txt
 transcript_extracted.txt
 scratch/
+
+.vercel

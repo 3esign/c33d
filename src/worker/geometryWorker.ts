@@ -2,7 +2,7 @@ import opencascade from 'replicad-opencascadejs';
 import opencascadeWasm from 'replicad-opencascadejs/src/replicad_single.wasm?url';
 import * as replicad from 'replicad';
 import { NODE_LIBRARY } from '../nodes/NodeDefinitions';
-import { evaluateExpression as evaluateExpressionSafe } from '../utils/expression';
+import { evaluateExpression as evaluateExpressionSafe, normalizeVarName } from '../utils/expression';
 import { EXECUTORS } from './executors';
 
 // Turns a generic "no geometry" leaf into an actionable trace: is an input
@@ -41,6 +41,40 @@ const EXPR_BUILTINS = new Set([
   'sin', 'cos', 'tan', 'asin', 'acos', 'atan', 'atan2', 'sqrt', 'abs', 'min', 'max',
   'floor', 'ceil', 'round', 'pow', 'log', 'exp', 'clamp', 'lerp', 'pi', 'e',
 ]);
+
+// Resolves a source value, supporting multi-output `{ __multi: true, values }` records.
+export function resolveSourceValue(
+  sourceId: string,
+  sourceHandle: string | undefined,
+  nodeCache: Record<string, any>,
+  numberCache: Record<string, any>
+): any {
+  const val = nodeCache[sourceId] !== undefined ? nodeCache[sourceId] : numberCache[sourceId];
+  if (val === undefined) return undefined;
+  
+  if (val && typeof val === 'object' && val.__multi) {
+    if (sourceHandle) {
+      return val.values[sourceHandle];
+    }
+    return undefined;
+  }
+  return val;
+}
+
+// Recursively walks objects/arrays to collect all actual replicad shapes for safe eviction.
+export function collectShapes(val: any, out = new Set<any>()): Set<any> {
+  if (!val) return out;
+  if (val.wrapped && typeof val.delete === 'function') {
+    out.add(val);
+    return out;
+  }
+  if (Array.isArray(val)) {
+    for (const item of val) collectShapes(item, out);
+  } else if (typeof val === 'object') {
+    for (const key of Object.keys(val)) collectShapes(val[key], out);
+  }
+  return out;
+}
 
 // Inline parametric expressions: any numeric parameter may be given as a FORMULA
 // STRING that references NumberSlider labels by name (e.g. height "bodyRadius*0.2").
@@ -189,7 +223,13 @@ function stableHash(obj: any): string {
   return '{' + Object.keys(obj).sort().map(k => k + ':' + stableHash(obj[k])).join(',') + '}';
 }
 
-async function evaluateGraph(rawNodes: any[], rawEdges: any[], macros: any[]) {
+async function evaluateGraphInternal(
+  rawNodes: any[],
+  rawEdges: any[],
+  macros: any[],
+  sliderScopeOverride: Record<string, number> | null = null,
+  customShapeCache: Map<string, { hash: string; shape: any; mesh: any | null }> = shapeCache
+) {
   const { nodes: allNodes, edges, aliasMap } = expandMacros(rawNodes, rawEdges, macros);
   // Group container nodes are visual only
   const nodes = allNodes.filter(n => n.type !== 'group');
@@ -198,16 +238,37 @@ async function evaluateGraph(rawNodes: any[], rawEdges: any[], macros: any[]) {
   const numberCache: Record<string, number | number[]> = {};
   const nodeErrors: { id: string; error: string }[] = [];
 
-  // Scope for inline parametric formulas: slider values keyed by (lowercased)
+  // Scope for inline parametric formulas: slider values keyed by (normalized)
   // label AND id, so a param like "bodyRadius*0.2" resolves without any edges.
   const sliderScope: Record<string, number> = {};
+  const normalizedLabelsSeen: Record<string, { original: string; id: string }> = {};
+
   for (const n of nodes) {
     if (n.type !== 'NumberSlider') continue;
-    const v = parseFloat((n.data || {}).value);
-    if (!isFinite(v)) continue;
-    const label = String((n.data || {}).label ?? '').trim().toLowerCase();
-    if (label) sliderScope[label] = v;
-    sliderScope[String(n.id).toLowerCase()] = v;
+    const defaultVal = parseFloat((n.data || {}).value);
+    const normId = normalizeVarName(n.id);
+    const rawIdOverride = sliderScopeOverride
+      ? (sliderScopeOverride[normId] ?? sliderScopeOverride[n.id.toLowerCase()] ?? sliderScopeOverride[n.id])
+      : undefined;
+    const v = (rawIdOverride !== undefined) ? rawIdOverride : (isFinite(defaultVal) ? defaultVal : 0);
+
+    const label = String((n.data || {}).label ?? '').trim();
+    if (label) {
+      const normLabel = normalizeVarName(label);
+      if (normalizedLabelsSeen[normLabel]) {
+        nodeErrors.push({
+          id: n.id,
+          error: `Slider label "${label}" normalizes to "${normLabel}", which collides with slider "${normalizedLabelsSeen[normLabel].original}" (ID: ${normalizedLabelsSeen[normLabel].id}). Labels must normalize to unique alphanumeric identifiers.`
+        });
+      } else {
+        normalizedLabelsSeen[normLabel] = { original: label, id: n.id };
+      }
+      const rawLabelOverride = sliderScopeOverride
+        ? (sliderScopeOverride[normLabel] ?? sliderScopeOverride[label.toLowerCase()] ?? sliderScopeOverride[label])
+        : undefined;
+      sliderScope[normLabel] = (rawLabelOverride !== undefined) ? rawLabelOverride : v;
+    }
+    sliderScope[normId] = v;
   }
 
   // Build dependency graph
@@ -255,7 +316,7 @@ async function evaluateGraph(rawNodes: any[], rawEdges: any[], macros: any[]) {
     for (const e of incoming) {
       if (typeof e.targetHandle === 'string' && e.targetHandle.startsWith('param:')) {
         const pName = e.targetHandle.slice(6);
-        const v = numberCache[e.source];
+        const v = resolveSourceValue(e.source, e.sourceHandle, nodeCache, numberCache);
         if (v !== undefined) effectiveParams[pName] = v;
       }
     }
@@ -269,15 +330,20 @@ async function evaluateGraph(rawNodes: any[], rawEdges: any[], macros: any[]) {
 
     // 2. Number/List nodes: resolve to plain numbers/arrays, no geometry
     if (node.type === 'NumberSlider') {
-      const v = parseFloat(effectiveParams.value);
-      numberCache[node.id] = isFinite(v) ? v : 0;
+      const defaultVal = parseFloat(effectiveParams.value);
+      const normId = normalizeVarName(node.id);
+      const rawOverride = sliderScopeOverride
+        ? (sliderScopeOverride[normId] ?? sliderScopeOverride[node.id.toLowerCase()] ?? sliderScopeOverride[node.id])
+        : undefined;
+      const v = (rawOverride !== undefined) ? rawOverride : (isFinite(defaultVal) ? defaultVal : 0);
+      numberCache[node.id] = v;
       continue;
     }
     if (node.type === 'Expression') {
       const vars: Record<string, number | number[]> = {};
       for (const e of incoming) {
         if (e.targetHandle && !String(e.targetHandle).startsWith('param:')) {
-          const v = numberCache[e.source];
+          const v = resolveSourceValue(e.source, e.sourceHandle, nodeCache, numberCache);
           if (v !== undefined) vars[String(e.targetHandle)] = v;
         }
       }
@@ -290,9 +356,9 @@ async function evaluateGraph(rawNodes: any[], rawEdges: any[], macros: any[]) {
       continue;
     }
     if (node.type === 'Series') {
-      const start = getNumericInputOrParam('start', 0, incoming, effectiveParams, numberCache);
-      const step = getNumericInputOrParam('step', 1, incoming, effectiveParams, numberCache);
-      const count = Math.max(1, Math.round(getNumericInputOrParam('count', 5, incoming, effectiveParams, numberCache)));
+      const start = getNumericInputOrParam('start', 0, incoming, effectiveParams, numberCache, nodeCache);
+      const step = getNumericInputOrParam('step', 1, incoming, effectiveParams, numberCache, nodeCache);
+      const count = Math.max(1, Math.round(getNumericInputOrParam('count', 5, incoming, effectiveParams, numberCache, nodeCache)));
       
       const values: number[] = [];
       for (let i = 0; i < count; i++) {
@@ -302,9 +368,9 @@ async function evaluateGraph(rawNodes: any[], rawEdges: any[], macros: any[]) {
       continue;
     }
     if (node.type === 'Range') {
-      const min = getNumericInputOrParam('min', 0, incoming, effectiveParams, numberCache);
-      const max = getNumericInputOrParam('max', 10, incoming, effectiveParams, numberCache);
-      const steps = Math.max(1, Math.round(getNumericInputOrParam('steps', 5, incoming, effectiveParams, numberCache)));
+      const min = getNumericInputOrParam('min', 0, incoming, effectiveParams, numberCache, nodeCache);
+      const max = getNumericInputOrParam('max', 10, incoming, effectiveParams, numberCache, nodeCache);
+      const steps = Math.max(1, Math.round(getNumericInputOrParam('steps', 5, incoming, effectiveParams, numberCache, nodeCache)));
       
       const values: number[] = [];
       for (let i = 0; i <= steps; i++) {
@@ -317,12 +383,12 @@ async function evaluateGraph(rawNodes: any[], rawEdges: any[], macros: any[]) {
       let listVal: number[] = [];
       const listEdge = incoming.find(e => e.targetHandle === 'list');
       if (listEdge) {
-        const v = numberCache[listEdge.source];
+        const v = resolveSourceValue(listEdge.source, listEdge.sourceHandle, nodeCache, numberCache);
         if (v !== undefined) {
           listVal = Array.isArray(v) ? v : [v];
         }
       }
-      const index = Math.round(getNumericInputOrParam('index', 0, incoming, effectiveParams, numberCache));
+      const index = Math.round(getNumericInputOrParam('index', 0, incoming, effectiveParams, numberCache, nodeCache));
       if (listVal.length === 0) {
         numberCache[node.id] = 0;
       } else {
@@ -335,7 +401,7 @@ async function evaluateGraph(rawNodes: any[], rawEdges: any[], macros: any[]) {
       let listVal: number[] = [];
       const listEdge = incoming.find(e => e.targetHandle === 'list');
       if (listEdge) {
-        const v = numberCache[listEdge.source];
+        const v = resolveSourceValue(listEdge.source, listEdge.sourceHandle, nodeCache, numberCache);
         if (v !== undefined) {
           listVal = Array.isArray(v) ? v : [v];
         }
@@ -353,7 +419,7 @@ async function evaluateGraph(rawNodes: any[], rawEdges: any[], macros: any[]) {
     const hash = `${node.type}#${stableHash(effectiveParams)}#${inputHashPart}`;
     nodeHashes[node.id] = hash;
 
-    const cached = shapeCache.get(node.id);
+    const cached = customShapeCache.get(node.id);
     if (cached && cached.hash === hash && cached.shape) {
       nodeCache[node.id] = cached.shape;
       continue;
@@ -361,69 +427,136 @@ async function evaluateGraph(rawNodes: any[], rawEdges: any[], macros: any[]) {
 
     const nodeInputs = geoInputs.map(e => ({
       targetHandle: e.targetHandle,
-      value: nodeCache[e.source]
+      value: resolveSourceValue(e.source, e.sourceHandle, nodeCache, numberCache)
     }));
 
     try {
-      nodeCache[node.id] = executeNode(
+      const val = executeNode(
         { ...node, data: effectiveParams },
         nodeInputs,
-        (msg: string) => nodeErrors.push({ id: node.id, error: msg })
+        (msg: string) => nodeErrors.push({ id: node.id, error: msg }),
+        sliderScope
       );
+      nodeCache[node.id] = val;
+      if (val && typeof val === 'object') {
+        val.sourceNodeId = node.id;
+        const ancestors = new Set<string>();
+        for (const input of nodeInputs) {
+          if (input.value && typeof input.value === 'object') {
+            if (input.value.sourceNodeId) ancestors.add(input.value.sourceNodeId);
+            if (input.value.ancestorNodeIds) {
+              input.value.ancestorNodeIds.forEach((id: string) => ancestors.add(id));
+            }
+          }
+        }
+        val.ancestorNodeIds = Array.from(ancestors);
+      }
     } catch (err: any) {
       nodeCache[node.id] = null;
       nodeErrors.push({ id: node.id, error: String(err.message || err) });
     }
-    shapeCache.set(node.id, { hash, shape: nodeCache[node.id], mesh: null });
+    customShapeCache.set(node.id, { hash, shape: nodeCache[node.id], mesh: null });
   }
 
   // ---------- Cache eviction (identity-safe) ----------
   const liveIds = new Set(sortedNodes.map(n => n.id));
   const retainedShapes = new Set<any>();
-  for (const [id, entry] of shapeCache) {
-    if (liveIds.has(id) && entry.hash === nodeHashes[id]) retainedShapes.add(entry.shape);
+  for (const [id, entry] of customShapeCache) {
+    if (liveIds.has(id) && entry.hash === nodeHashes[id]) collectShapes(entry.shape, retainedShapes);
   }
-  for (const [id, entry] of Array.from(shapeCache.entries())) {
+  for (const [id, entry] of Array.from(customShapeCache.entries())) {
     const stale = !liveIds.has(id) || entry.hash !== nodeHashes[id];
     if (stale) {
-      if (entry.shape && !retainedShapes.has(entry.shape)) {
-        try { entry.shape.delete?.(); } catch (e) { /* already freed */ }
+      if (entry.shape) {
+        const toDelete = collectShapes(entry.shape);
+        for (const s of toDelete) {
+          if (!retainedShapes.has(s)) {
+            try { s.delete?.(); } catch (e) {}
+          }
+        }
       }
-      shapeCache.delete(id);
+      customShapeCache.delete(id);
     }
   }
 
   // ---------- Mesh leaf nodes + geometry report ----------
-  // Edges into an Align "reference" input do NOT consume the source part: a
-  // part used only as a positioning reference still renders as its own colored
-  // leaf. Param edges likewise never consume.
   const sourceNodeIds = new Set(
-    edges
-      .filter(e => {
-        const th = String(e.targetHandle || '');
-        return !th.startsWith('param:') && th !== 'reference';
-      })
+    edges.filter(e => !String(e.targetHandle || '').startsWith('param:') && String(e.targetHandle || '') !== 'reference')
       .map(e => e.source)
   );
+
   const finalMeshes: any[] = [];
   const leafReports: any[] = [];
 
-  // reverse alias map for attributing macro leaves back to the outer macro node id
-  const reverseAlias: Record<string, string> = {};
-  Object.entries(aliasMap).forEach(([outer, inner]) => { reverseAlias[inner] = outer; });
+  let sceneMin = [Infinity, Infinity, Infinity];
+  let sceneMax = [-Infinity, -Infinity, -Infinity];
+  for (const [_id, value] of Object.entries(nodeCache)) {
+    if (!value || value.type === 'Point' || value.type === 'Vector' || value.type === 'Plane' || value.type === 'Curve' || value.type === 'Selection') continue;
+    try {
+      const bb = value.boundingBox;
+      if (bb && bb.bounds) {
+        sceneMin[0] = Math.min(sceneMin[0], bb.bounds[0][0]);
+        sceneMax[0] = Math.max(sceneMax[0], bb.bounds[1][0]);
+        sceneMin[1] = Math.min(sceneMin[1], bb.bounds[0][1]);
+        sceneMax[1] = Math.max(sceneMax[1], bb.bounds[1][1]);
+        sceneMin[2] = Math.min(sceneMin[2], bb.bounds[0][2]);
+        sceneMax[2] = Math.max(sceneMax[2], bb.bounds[1][2]);
+      }
+    } catch(e) {}
+  }
+  let diag = 0;
+  if (isFinite(sceneMin[0])) {
+    const dx = sceneMax[0] - sceneMin[0];
+    const dy = sceneMax[1] - sceneMin[1];
+    const dz = sceneMax[2] - sceneMin[2];
+    diag = Math.sqrt(dx*dx + dy*dy + dz*dz);
+  }
+  const helperSize = diag > 0 ? Math.max(0.1, diag * 0.01) : 0.25;
 
   for (const [id, value] of Object.entries(nodeCache)) {
-    if (sourceNodeIds.has(id)) continue; // skip intermediate nodes
-    const reportId = reverseAlias[id] || id;
+    if (!value) continue;
+    const reportId = aliasMap[id] || id;
+    const isHelper = value && (value.type === 'Point' || value.type === 'Vector' || value.type === 'Plane' || value.type === 'Curve' || value.type === 'Selection');
 
-    if (value && typeof value.mesh === 'function') {
-      const entry = shapeCache.get(id);
+    if (!sourceNodeIds.has(id)) {
+      const entry = customShapeCache.get(id);
       let meshData = entry?.mesh || null;
       let meshError: string | null = null;
       if (!meshData) {
         try {
-          const mesh = value.mesh({ tolerance: 0.1, angularTolerance: 30 });
-          meshData = { vertices: mesh.vertices, indices: mesh.triangles, normals: mesh.normals };
+          if (value && value.type === 'Point') {
+            const sz = helperSize;
+            meshData = {
+              type: 'Point',
+              vertices: [
+                value.x - sz, value.y, value.z,
+                value.x + sz, value.y, value.z,
+                value.x, value.y - sz, value.z,
+                value.x, value.y + sz, value.z,
+                value.x, value.y, value.z - sz,
+                value.x, value.y, value.z + sz
+              ],
+              indices: [0, 1, 2, 3, 4, 5],
+              normals: []
+            };
+          } else if (value && value.type === 'Curve') {
+            const steps = 50;
+            const vertices = [];
+            const indices = [];
+            for (let i = 0; i <= steps; i++) {
+              const pt = value.value.pointAt(i / steps);
+              vertices.push(pt[0], pt[1], pt[2]);
+              if (i < steps) {
+                indices.push(i, i + 1);
+              }
+            }
+            meshData = { type: 'Line', vertices, indices, normals: [] };
+          } else if (isHelper) {
+            meshData = null;
+          } else {
+            const mesh = value.mesh({ tolerance: 0.1, angularTolerance: 30 });
+            meshData = { type: 'Mesh', vertices: mesh.vertices, indices: mesh.triangles, normals: mesh.normals };
+          }
           if (entry) entry.mesh = meshData;
         } catch (err: any) {
           meshError = String(err.message || err);
@@ -431,52 +564,49 @@ async function evaluateGraph(rawNodes: any[], rawEdges: any[], macros: any[]) {
         }
       }
       if (meshData) {
-        // include the shape+param hash so the main thread can skip rebuilding
-        // (and re-uploading) three.js buffers for parts that did not change
         finalMeshes.push({ id: reportId, hash: entry?.hash, ...meshData });
       }
 
-      // Metrics
-      let bbox: any = null;
-      let volume: number | undefined = undefined;
-      try {
-        const bb = value.boundingBox;
-        if (bb && bb.bounds) {
-          const [mn, mx] = bb.bounds;
-          bbox = {
-            min: mn, max: mx,
-            center: bb.center,
-            size: [mx[0] - mn[0], mx[1] - mn[1], mx[2] - mn[2]],
-          };
-        }
-      } catch (e) { /* no bbox */ }
-      try {
-        // Shape3D has no `.volume` property (that was always undefined here —
-        // replicad only exposes volume via the measureVolume() helper, which
-        // computes it through BRepGProp.VolumeProperties under the hood).
-        const v = (replicad as any).measureVolume(value);
-        if (typeof v === 'number' && isFinite(v)) volume = v;
-      } catch (e) { /* volume unsupported for faces/compounds/open shells */ }
-
-      leafReports.push({
-        id: reportId,
-        bbox,
-        volume,
-        meshOk: !!meshData,
-        vertexCount: meshData ? meshData.vertices.length / 3 : 0,
-        error: meshError,
-      });
+      if (!isHelper) {
+        // Metrics
+        let bbox: any = null;
+        let volume: number | undefined = undefined;
+        try {
+          const bb = value.boundingBox;
+          if (bb && bb.bounds) {
+            const [mn, mx] = bb.bounds;
+            bbox = {
+              min: mn, max: mx,
+              center: bb.center,
+              size: [mx[0] - mn[0], mx[1] - mn[1], mx[2] - mn[2]],
+            };
+          }
+        } catch (e) { /* no bbox */ }
+        try {
+          const v = (replicad as any).measureVolume(value);
+          if (typeof v === 'number' && isFinite(v)) volume = v;
+        } catch (e) { /* volume unsupported */ }
+  
+        leafReports.push({
+          id: reportId,
+          bbox,
+          volume,
+          meshOk: !!meshData,
+          vertexCount: meshData ? meshData.vertices.length / 3 : 0,
+          error: meshError,
+        });
+      }
     } else if (nodes.find(n => n.id === id)) {
       const n = nodes.find(nd => nd.id === id);
-      if (n && n.type !== 'NumberSlider' && n.type !== 'Expression') {
+      if (n && n.type !== 'NumberSlider' && n.type !== 'Expression' && !isHelper) {
         leafReports.push({ id: reportId, bbox: null, volume: undefined, meshOk: false, vertexCount: 0, error: explainNullGeometry(id, nodes, edges, nodeCache) });
       }
     }
   }
 
   // Scene extents
-  let sceneMin = [Infinity, Infinity, Infinity];
-  let sceneMax = [-Infinity, -Infinity, -Infinity];
+  sceneMin = [Infinity, Infinity, Infinity];
+  sceneMax = [-Infinity, -Infinity, -Infinity];
   leafReports.forEach(l => {
     if (l.bbox) {
       for (let k = 0; k < 3; k++) {
@@ -487,22 +617,66 @@ async function evaluateGraph(rawNodes: any[], rawEdges: any[], macros: any[]) {
   });
   const hasScene = isFinite(sceneMin[0]);
 
-  // Slider inventory (label → value) for the report
+  // Slider inventory
   const sliderInventory: Record<string, number> = {};
   for (const n of nodes) {
     if (n.type !== 'NumberSlider') continue;
-    const v = parseFloat((n.data || {}).value);
-    if (!isFinite(v)) continue;
+    const defaultVal = parseFloat((n.data || {}).value);
+    const normId = normalizeVarName(n.id);
+    const rawOverride = sliderScopeOverride
+      ? (sliderScopeOverride[normId] ?? sliderScopeOverride[n.id.toLowerCase()] ?? sliderScopeOverride[n.id])
+      : undefined;
+    const v = (rawOverride !== undefined) ? rawOverride : (isFinite(defaultVal) ? defaultVal : 0);
     const label = String((n.data || {}).label ?? '').trim();
     sliderInventory[label || n.id] = v;
   }
 
-  evalCounter++;
+  // Selections inventory for percepts
+  const selections: Record<string, any> = {};
+  for (const n of nodes) {
+    if (n.type === 'SelectFaces' || n.type === 'SelectEdges' || n.type === 'SelectionCombine') {
+      const val = nodeCache[n.id];
+      if (val && val.type === 'Selection') {
+        const reportId = aliasMap[n.id] || n.id;
+        let warning: string | undefined = undefined;
+        if (val.matchedCount === 0) {
+          warning = `Selection query matched 0 elements. Under downstream modifiers, this will do nothing.`;
+        } else {
+          const edge = edges.find(e => e.target === n.id && (e.targetHandle === 'solid' || e.targetHandle === 'selection1'));
+          if (edge) {
+            const inputVal = nodeCache[edge.source];
+            if (inputVal) {
+              const totalElements = val.domain === 'faces' ? (inputVal.faces?.length || 0) : (inputVal.edges?.length || 0);
+              if (totalElements > 0 && val.matchedCount === totalElements) {
+                warning = `Selection query matched ALL ${totalElements} elements. If you wanted to filter specific features, refine the query.`;
+              }
+            }
+          }
+        }
+        selections[reportId] = {
+          matchedCount: val.matchedCount,
+          elements: val.elements || [],
+          warning
+        };
+      }
+    }
+  }
+
+  const helpers: Record<string, any> = {};
+  for (const [id, value] of Object.entries(nodeCache)) {
+    if (value && (value.type === 'Point' || value.type === 'Vector' || value.type === 'Plane')) {
+      const reportId = aliasMap[id] || id;
+      helpers[reportId] = value;
+    }
+  }
+
   const report = {
     leaves: leafReports,
     nodeErrors,
     numbers: numberCache,
     sliders: sliderInventory,
+    selections,
+    helpers,
     nodeCount: nodes.length,
     edgeCount: edges.length,
     scene: hasScene ? {
@@ -510,16 +684,206 @@ async function evaluateGraph(rawNodes: any[], rawEdges: any[], macros: any[]) {
       size: [sceneMax[0] - sceneMin[0], sceneMax[1] - sceneMin[1], sceneMax[2] - sceneMin[2]],
     } : null,
     meshedLeafCount: finalMeshes.length,
-    evalCount: evalCounter,
-    recycleRecommended: evalCounter >= WORKER_RECYCLE_HINT,
   };
 
   return { meshes: finalMeshes, report };
 }
 
-// evaluateExpressionSafe is now imported from src/utils/expression.ts
+function bboxesOverlap(boxA: any, boxB: any, tolerance = 0.1): boolean {
+  if (!boxA || !boxB) return false;
+  return (
+    boxA.min[0] - tolerance <= boxB.max[0] && boxA.max[0] + tolerance >= boxB.min[0] &&
+    boxA.min[1] - tolerance <= boxB.max[1] && boxA.max[1] + tolerance >= boxB.min[1] &&
+    boxA.min[2] - tolerance <= boxB.max[2] && boxA.max[2] + tolerance >= boxB.min[2]
+  );
+}
 
-// Helper functions are now imported or defined in executors.ts
+function bboxContains(boxParent: any, boxChild: any, tolerance = 0.1): boolean {
+  if (!boxParent || !boxChild) return false;
+  return (
+    boxParent.min[0] - tolerance <= boxChild.min[0] && boxParent.max[0] + tolerance >= boxChild.max[0] &&
+    boxParent.min[1] - tolerance <= boxChild.min[1] && boxParent.max[1] + tolerance >= boxChild.max[1] &&
+    boxParent.min[2] - tolerance <= boxChild.min[2] && boxParent.max[2] + tolerance >= boxChild.max[2]
+  );
+}
+
+interface LeafRelationSignature {
+  overlaps: string[];
+  containments: string[];
+  normCenters: Record<string, number[]>;
+}
+
+function getRelationSignature(leaves: any[], sceneBbox: any): LeafRelationSignature {
+  const overlaps: string[] = [];
+  const containments: string[] = [];
+  const normCenters: Record<string, number[]> = {};
+
+  const size = sceneBbox ? sceneBbox.size : [1, 1, 1];
+  const center = sceneBbox ? [
+    (sceneBbox.min[0] + sceneBbox.max[0]) / 2,
+    (sceneBbox.min[1] + sceneBbox.max[1]) / 2,
+    (sceneBbox.min[2] + sceneBbox.max[2]) / 2,
+  ] : [0, 0, 0];
+
+  for (let i = 0; i < leaves.length; i++) {
+    const lA = leaves[i];
+    if (!lA.bbox) continue;
+
+    const lCenter = lA.bbox.center || [0, 0, 0];
+    normCenters[lA.id] = [
+      (lCenter[0] - center[0]) / (size[0] || 1),
+      (lCenter[1] - center[1]) / (size[1] || 1),
+      (lCenter[2] - center[2]) / (size[2] || 1),
+    ];
+
+    for (let j = i + 1; j < leaves.length; j++) {
+      const lB = leaves[j];
+      if (!lB.bbox) continue;
+
+      if (bboxesOverlap(lA.bbox, lB.bbox)) {
+        overlaps.push(`${lA.id}-${lB.id}`);
+      }
+
+      if (bboxContains(lA.bbox, lB.bbox)) {
+        containments.push(`${lB.id}_in_${lA.id}`);
+      } else if (bboxContains(lB.bbox, lA.bbox)) {
+        containments.push(`${lA.id}_in_${lB.id}`);
+      }
+    }
+  }
+
+  return { overlaps, containments, normCenters };
+}
+
+function compareSignatures(
+  defaultSig: LeafRelationSignature,
+  perturbedSig: LeafRelationSignature,
+  sliderLabel: string,
+  factor: number,
+  leaves: any[]
+): string[] {
+  const issues: string[] = [];
+
+  for (const overlap of defaultSig.overlaps) {
+    if (!perturbedSig.overlaps.includes(overlap)) {
+      const [idA, idB] = overlap.split('-');
+      const nameA = leaves.find(l => l.id === idA)?.id || idA;
+      const nameB = leaves.find(l => l.id === idB)?.id || idB;
+      issues.push(`At ${sliderLabel} ${factor > 1 ? 'increase' : 'decrease'} (${factor}x), "${nameA}" detaches from "${nameB}". Check that their positions are driven by formulas or Align rather than absolute coordinates.`);
+    }
+  }
+
+  for (const containment of perturbedSig.containments) {
+    if (!defaultSig.containments.includes(containment)) {
+      const [childId, parentId] = containment.split('_in_');
+      const childName = leaves.find(l => l.id === childId)?.id || childId;
+      const parentName = leaves.find(l => l.id === parentId)?.id || parentId;
+      issues.push(`At ${sliderLabel} ${factor > 1 ? 'increase' : 'decrease'} (${factor}x), "${childName}" becomes fully buried inside "${parentName}".`);
+    }
+  }
+
+  for (const id of Object.keys(defaultSig.normCenters)) {
+    const cDef = defaultSig.normCenters[id];
+    const cPert = perturbedSig.normCenters[id];
+    if (cPert) {
+      const dx = cPert[0] - cDef[0];
+      const dy = cPert[1] - cDef[1];
+      const dz = cPert[2] - cDef[2];
+      const dist = Math.sqrt(dx*dx + dy*dy + dz*dz);
+      if (dist > 0.08) {
+        const name = leaves.find(l => l.id === id)?.id || id;
+        issues.push(`At ${sliderLabel} ${factor > 1 ? 'increase' : 'decrease'} (${factor}x), "${name}" shifts non-proportionally relative to the assembly center (deviation ${Math.round(dist * 100)}%). Derive its position from the driver sliders or use Align.`);
+      }
+    }
+  }
+
+  return issues;
+}
+
+async function evaluateGraph(rawNodes: any[], rawEdges: any[], macros: any[]) {
+  const mainResult = await evaluateGraphInternal(rawNodes, rawEdges, macros, null, shapeCache);
+  const { meshes, report } = mainResult;
+
+  evalCounter++;
+  (report as any).evalCount = evalCounter;
+  (report as any).recycleRecommended = evalCounter >= WORKER_RECYCLE_HINT;
+
+  // Run relation signature and perturbation test if sane and has sliders
+  const sliderNodes = rawNodes.filter(n => n.type === 'NumberSlider');
+  if (report.nodeErrors.length === 0 && report.leaves.length > 0 && sliderNodes.length > 0) {
+    try {
+      const defaultSig = getRelationSignature(report.leaves, report.scene);
+      const perturbationIssues: string[] = [];
+      let successfulRuns = 0;
+      let totalRuns = 0;
+
+      for (const slider of sliderNodes) {
+        const label = String(slider.data?.label ?? slider.id).trim();
+        const defaultVal = parseFloat(slider.data?.value);
+        if (!isFinite(defaultVal) || defaultVal === 0) continue;
+
+        const factors = [0.6, 1.5];
+        for (const f of factors) {
+          totalRuns++;
+          const overrideVal = defaultVal * f;
+          const overrideScope = { [String(slider.id).toLowerCase()]: overrideVal };
+          if (label) {
+            overrideScope[label.toLowerCase()] = overrideVal;
+          }
+
+          try {
+            const tempCache = new Map(shapeCache);
+            const perturbedResult = await evaluateGraphInternal(
+              rawNodes,
+              rawEdges,
+              macros,
+              overrideScope,
+              tempCache
+            );
+
+            // Clean up newly created shapes in tempCache
+            for (const [id, entry] of tempCache) {
+              if (!shapeCache.has(id) || shapeCache.get(id)!.hash !== entry.hash) {
+                try { entry.shape?.delete?.(); } catch (e) {}
+              }
+            }
+
+            const perturbedSig = getRelationSignature(perturbedResult.report.leaves, perturbedResult.report.scene);
+            const runIssues = compareSignatures(defaultSig, perturbedSig, label || slider.id, f, report.leaves);
+
+            const perturbedSelections = (perturbedResult.report as any).selections || {};
+            const defaultSelections = (report as any).selections || {};
+            for (const [nodeId, defSel] of Object.entries(defaultSelections)) {
+              const pertSel = perturbedSelections[nodeId];
+              if (pertSel) {
+                if ((defSel as any).matchedCount !== pertSel.matchedCount) {
+                  runIssues.push(
+                    `At ${label || slider.id} = ${f}x: selection "${nodeId}" matches ${pertSel.matchedCount} elements (expected ${(defSel as any).matchedCount}). The selection query is fragile under scaling.`
+                  );
+                }
+              }
+            }
+
+            if (runIssues.length === 0) {
+              successfulRuns++;
+            } else {
+              perturbationIssues.push(...runIssues);
+            }
+          } catch (err) {
+            perturbationIssues.push(`At ${label || slider.id} = ${f}x: evaluation crashed: ${err}`);
+          }
+        }
+      }
+
+      (report as any).perturbationIssues = perturbationIssues;
+      (report as any).proportionalIntegrity = totalRuns > 0 ? successfulRuns / totalRuns : 1.0;
+    } catch (e) {
+      console.warn("Perturbation test failed:", e);
+    }
+  }
+
+  return { meshes, report };
+}
 
 function getNumericInputOrParam(
   pName: string,
@@ -527,21 +891,22 @@ function getNumericInputOrParam(
   incomingEdges: any[],
   effectiveParams: any,
   numberCache: Record<string, number | number[]>,
+  nodeCache: Record<string, any>
 ): number {
   const edge = incomingEdges.find(e => e.targetHandle === pName);
   if (edge) {
-    const v = numberCache[edge.source];
+    const v = resolveSourceValue(edge.source, edge.sourceHandle, nodeCache, numberCache);
     if (v !== undefined) return Array.isArray(v) ? (v[0] ?? fallback) : v;
   }
   const parsed = parseFloat(effectiveParams[pName]);
   return isFinite(parsed) ? parsed : fallback;
 }
 
-function executeNode(node: any, inputs: any[], warn: (msg: string) => void = () => {}) {
+function executeNode(node: any, inputs: any[], warn: (msg: string) => void = () => {}, scope?: Record<string, number>) {
   const params = node.data || {};
   const executor = EXECUTORS[node.type];
   if (executor) {
-    return executor(params, inputs, warn);
+    return executor(params, inputs, warn, scope);
   }
   return null;
 }

@@ -2,6 +2,7 @@
 // reason over, and runs an optional vision pass over viewport snapshots.
 
 import type { GeometryReport } from '../store/useStore';
+import { useStore } from '../store/useStore';
 import { chatCompletionVision } from './api';
 
 export interface SanityResult {
@@ -194,6 +195,51 @@ export function checkGeometrySanity(report: GeometryReport | null, evalError: st
   const { contained } = analyzeSpatialRelations(report);
   issues.push(...contained);
 
+  // Perturbation test issues
+  if ((report as any).perturbationIssues && (report as any).perturbationIssues.length > 0) {
+    issues.push(...(report as any).perturbationIssues);
+  }
+
+  // Flag any Translate node with large literal offsets relative to the leaf bbox
+  const translateNodes = report.leaves.length > 0 ? (useStore.getState().nodes.filter(n => n.type === 'Translate')) : [];
+  for (const tNode of translateNodes) {
+    const data = tNode.data as any;
+    const xVal = parseFloat(data?.x ?? '0');
+    const yVal = parseFloat(data?.y ?? '0');
+    const zVal = parseFloat(data?.z ?? '0');
+    const isXLiteral = !data?.x || !isNaN(xVal);
+    const isYLiteral = !data?.y || !isNaN(yVal);
+    const isZLiteral = !data?.z || !isNaN(zVal);
+
+    if (isXLiteral && isYLiteral && isZLiteral) {
+      const isAncestorOfLeaf = (leafId: string): boolean => {
+        const visited = new Set<string>();
+        const queue = [tNode.id];
+        while (queue.length > 0) {
+          const curr = queue.shift()!;
+          if (curr === leafId) return true;
+          if (visited.has(curr)) continue;
+          visited.add(curr);
+          const outgoing = useStore.getState().edges.filter(e => e.source === curr).map(e => e.target);
+          queue.push(...outgoing);
+        }
+        return false;
+      };
+
+      const dependentLeaves = report.leaves.filter(l => isAncestorOfLeaf(l.id) && l.bbox);
+      for (const leaf of dependentLeaves) {
+        if (!leaf.bbox) continue;
+        const size = leaf.bbox.size;
+        const maxOffset = Math.max(Math.abs(xVal), Math.abs(yVal), Math.abs(zVal));
+        const maxPartSize = Math.max(size[0], size[1], size[2]);
+        if (maxPartSize > 0 && maxOffset > maxPartSize * 0.20) {
+          issues.push(`Translate node "${tNode.id}" uses absolute literal offset [${data?.x || 0}, ${data?.y || 0}, ${data?.z || 0}] which is larger than 20% of the part size (${fmt(maxPartSize)}). Derive these coordinates from driver sliders (e.g. using a formula) or use Align to stack parts.`);
+          break;
+        }
+      }
+    }
+  }
+
   return { sane: issues.length === 0, issues };
 }
 
@@ -233,9 +279,45 @@ export function formatGeometryReport(report: GeometryReport | null, evalError: s
     }).join(', ')}`);
   }
 
+  // Selections percepts
+  const selectionEntries = Object.entries(report.selections || {});
+  if (selectionEntries.length > 0) {
+    lines.push('Selections:');
+    for (const [nodeId, sel] of selectionEntries) {
+      lines.push(`- ${nodeId}: matched ${sel.matchedCount} elements${sel.warning ? ` (WARNING: ${sel.warning})` : ''}`);
+      sel.elements.forEach((el, idx) => {
+        if (idx < 5) {
+          const normalStr = el.normal ? `, normal [${el.normal.map(fmt).join(', ')}]` : '';
+          const dirStr = el.direction ? `, direction [${el.direction.map(fmt).join(', ')}]` : '';
+          lines.push(`  * [${idx}]: center [${el.centroid.map(fmt).join(', ')}]${normalStr}${dirStr}, size ${fmt(el.areaOrLength)}`);
+        }
+      });
+      if (sel.elements.length > 5) {
+        lines.push(`  * ... and ${sel.elements.length - 5} more`);
+      }
+    }
+  }
+
   // Spatial relations — concrete adjacency/attachment feedback so the model can
   // reason about how parts sit together instead of re-deriving coordinates.
-  const { detached, relations } = analyzeSpatialRelations(report);
+  const helperEntries = Object.entries(report.helpers || {});
+  if (helperEntries.length > 0) {
+    lines.push('Computed Points/Vectors/Planes:');
+    for (const [id, h] of helperEntries) {
+      if (h.type === 'Point' || h.type === 'Vector') {
+        lines.push(`- ${id} (${h.type}): [${fmt(h.x)}, ${fmt(h.y)}, ${fmt(h.z)}]`);
+      } else if (h.type === 'Plane') {
+        const o = h.origin, n = h.normal;
+        lines.push(`- ${id} (Plane): origin [${fmt(o.x)}, ${fmt(o.y)}, ${fmt(o.z)}], normal [${fmt(n.x)}, ${fmt(n.y)}, ${fmt(n.z)}]`);
+      }
+    }
+  }
+
+  const { contained, detached, relations } = analyzeSpatialRelations(report);
+  if (contained.length) {
+    lines.push('Geometry containment warnings (hidden/buried parts):');
+    contained.slice(0, 10).forEach(c => lines.push(`  ${c}`));
+  }
   if (relations.length) {
     lines.push('Spatial relations (which parts touch):');
     relations.slice(0, 20).forEach(r => lines.push(`  ${r}`));

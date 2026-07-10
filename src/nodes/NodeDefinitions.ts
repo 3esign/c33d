@@ -271,7 +271,10 @@ export const NODE_LIBRARY: Record<string, NodeDefinition> = {
     type: 'Fillet',
     label: 'Fillet (Round Edges)',
     category: 'transform',
-    inputs: [{ name: 'solid', type: 'Solid' }],
+    inputs: [
+      { name: 'solid', type: 'Solid' },
+      { name: 'selection', type: 'Selection' }
+    ],
     outputs: [{ name: 'solid', type: 'Solid' }],
     params: [
       { name: 'radius', type: 'number', default: 1, min: 0.1, max: 20, step: 0.1 },
@@ -281,7 +284,10 @@ export const NODE_LIBRARY: Record<string, NodeDefinition> = {
     type: 'Chamfer',
     label: 'Chamfer (Bevel Edges)',
     category: 'transform',
-    inputs: [{ name: 'solid', type: 'Solid' }],
+    inputs: [
+      { name: 'solid', type: 'Solid' },
+      { name: 'selection', type: 'Selection' }
+    ],
     outputs: [{ name: 'solid', type: 'Solid' }],
     params: [
       { name: 'radius', type: 'number', default: 1, min: 0.1, max: 20, step: 0.1 },
@@ -393,7 +399,10 @@ export const NODE_LIBRARY: Record<string, NodeDefinition> = {
     type: 'Shell',
     label: 'Shell (Hollow)',
     category: 'transform',
-    inputs: [{ name: 'solid', type: 'Solid' }],
+    inputs: [
+      { name: 'solid', type: 'Solid' },
+      { name: 'selection', type: 'Selection' }
+    ],
     outputs: [{ name: 'solid', type: 'Solid' }],
     params: [
       { name: 'thickness', type: 'number', default: 1, min: 0.1, max: 50, step: 0.1 },
@@ -579,6 +588,439 @@ export const NODE_LIBRARY: Record<string, NodeDefinition> = {
       { name: 'radius', type: 'number', default: 1, min: 0.01, max: 50, step: 0.01 },
       { name: 'filterAxis', type: 'string', default: 'all' }, // 'all', 'X', 'Y', 'Z'
       { name: 'edgeIndex', type: 'number', default: -1, min: -1, max: 200, step: 1 },
+    ],
+  },
+  SelectFaces: {
+    type: 'SelectFaces',
+    label: 'Select Faces',
+    category: 'geometry',
+    inputs: [{ name: 'solid', type: 'Solid' }],
+    outputs: [{ name: 'selection', type: 'Selection' }],
+    params: [
+      { name: 'predicate', type: 'string', default: 'normal ~ +Z' },
+      { name: 'tolerance', type: 'number', default: 0.1, min: 0.001, max: 1.0, step: 0.001 }
+    ],
+  },
+  SelectEdges: {
+    type: 'SelectEdges',
+    label: 'Select Edges',
+    category: 'geometry',
+    inputs: [{ name: 'solid', type: 'Solid' }],
+    outputs: [{ name: 'selection', type: 'Selection' }],
+    params: [
+      { name: 'predicate', type: 'string', default: 'parallel Z' },
+      { name: 'tolerance', type: 'number', default: 0.1, min: 0.001, max: 1.0, step: 0.001 }
+    ],
+  },
+  SelectionCombine: {
+    type: 'SelectionCombine',
+    label: 'Combine Selections',
+    category: 'boolean',
+    inputs: [
+      { name: 'selection1', type: 'Selection' },
+      { name: 'selection2', type: 'Selection' }
+    ],
+    outputs: [{ name: 'selection', type: 'Selection' }],
+    params: [
+      { name: 'operation', type: 'string', default: 'union' }
+    ],
+  },
+  SplitLoop: {
+    type: 'SplitLoop',
+    label: 'Split Loop (Slicing)',
+    category: 'transform',
+    inputs: [{ name: 'solid', type: 'Solid' }],
+    outputs: [{ name: 'solid', type: 'Solid' }],
+    params: [
+      { name: 'axis', type: 'string', default: 'Z' }, // 'X' | 'Y' | 'Z'
+      { name: 'at', type: 'number', default: 0.5, min: 0.0, max: 1.0, step: 0.01 }
+    ],
+  },
+  SplitSolid: {
+    type: 'SplitSolid',
+    label: 'Split Solid (Cutter)',
+    category: 'transform',
+    inputs: [
+      { name: 'solid', type: 'Solid' },
+      { name: 'tool', type: 'Solid' }
+    ],
+    outputs: [{ name: 'solid', type: 'Solid' }],
+    params: [],
+  },
+  ExtrudeFace: {
+    type: 'ExtrudeFace',
+    label: 'Extrude Face (Push/Pull)',
+    category: 'transform',
+    inputs: [
+      { name: 'solid', type: 'Solid' },
+      { name: 'selection', type: 'Selection' }
+    ],
+    outputs: [{ name: 'solid', type: 'Solid' }],
+    params: [
+      { name: 'height', type: 'number', default: 5, min: -100, max: 100, step: 0.1 }
+    ],
+  },
+  // ---------- Point & Vector Math ----------
+  Point: {
+    type: 'Point',
+    label: 'Point (XYZ)',
+    category: 'math',
+    inputs: [
+      { name: 'x', type: 'number' },
+      { name: 'y', type: 'number' },
+      { name: 'z', type: 'number' },
+    ],
+    outputs: [{ name: 'point', type: 'Point' }],
+    params: [
+      { name: 'x', type: 'number', default: 0, min: -100, max: 100, step: 0.1 },
+      { name: 'y', type: 'number', default: 0, min: -100, max: 100, step: 0.1 },
+      { name: 'z', type: 'number', default: 0, min: -100, max: 100, step: 0.1 },
+    ],
+  },
+  DeconstructPoint: {
+    type: 'DeconstructPoint',
+    label: 'Deconstruct Point',
+    category: 'math',
+    inputs: [{ name: 'point', type: 'Point' }],
+    outputs: [
+      { name: 'x', type: 'number' },
+      { name: 'y', type: 'number' },
+      { name: 'z', type: 'number' },
+    ],
+    params: [],
+  },
+  Centroid: {
+    type: 'Centroid',
+    label: 'Centroid',
+    category: 'math',
+    inputs: [{ name: 'solid', type: 'Solid' }],
+    outputs: [{ name: 'centroid', type: 'Point' }],
+    params: [],
+  },
+  Midpoint: {
+    type: 'Midpoint',
+    label: 'Midpoint',
+    category: 'math',
+    inputs: [
+      { name: 'a', type: 'Point' },
+      { name: 'b', type: 'Point' },
+    ],
+    outputs: [{ name: 'midpoint', type: 'Point' }],
+    params: [],
+  },
+  PointBetween: {
+    type: 'PointBetween',
+    label: 'Point Between',
+    category: 'math',
+    inputs: [
+      { name: 'a', type: 'Point' },
+      { name: 'b', type: 'Point' },
+      { name: 't', type: 'number' },
+    ],
+    outputs: [{ name: 'point', type: 'Point' }],
+    params: [
+      { name: 't', type: 'number', default: 0.5, min: 0, max: 1, step: 0.01 },
+    ],
+  },
+  Endpoints: {
+    type: 'Endpoints',
+    label: 'Endpoints',
+    category: 'math',
+    inputs: [{ name: 'curve', type: 'Curve' }],
+    outputs: [
+      { name: 'start', type: 'Point' },
+      { name: 'end', type: 'Point' },
+    ],
+    params: [],
+  },
+  VectorXYZ: {
+    type: 'VectorXYZ',
+    label: 'Vector (XYZ)',
+    category: 'math',
+    inputs: [
+      { name: 'x', type: 'number' },
+      { name: 'y', type: 'number' },
+      { name: 'z', type: 'number' },
+    ],
+    outputs: [{ name: 'vector', type: 'Vector' }],
+    params: [
+      { name: 'x', type: 'number', default: 0, min: -100, max: 100, step: 0.1 },
+      { name: 'y', type: 'number', default: 0, min: -100, max: 100, step: 0.1 },
+      { name: 'z', type: 'number', default: 1, min: -100, max: 100, step: 0.1 },
+    ],
+  },
+  DeconstructVector: {
+    type: 'DeconstructVector',
+    label: 'Deconstruct Vector',
+    category: 'math',
+    inputs: [{ name: 'vector', type: 'Vector' }],
+    outputs: [
+      { name: 'x', type: 'number' },
+      { name: 'y', type: 'number' },
+      { name: 'z', type: 'number' },
+    ],
+    params: [],
+  },
+  Vector2Pt: {
+    type: 'Vector2Pt',
+    label: 'Vector 2Pt',
+    category: 'math',
+    inputs: [
+      { name: 'a', type: 'Point' },
+      { name: 'b', type: 'Point' },
+    ],
+    outputs: [{ name: 'vector', type: 'Vector' }],
+    params: [
+      { name: 'normalize', type: 'boolean', default: false },
+    ],
+  },
+  VectorMath: {
+    type: 'VectorMath',
+    label: 'Vector Math',
+    category: 'math',
+    inputs: [
+      { name: 'a', type: 'Vector' },
+      { name: 'b', type: 'Vector' },
+      { name: 'factor', type: 'number' },
+    ],
+    outputs: [
+      { name: 'vector', type: 'Vector' },
+      { name: 'value', type: 'number' },
+    ],
+    params: [
+      { name: 'operation', type: 'string', default: 'add' }, // add, subtract, scale, cross, dot, angle
+      { name: 'factor', type: 'number', default: 1, min: -100, max: 100, step: 0.1 },
+    ],
+  },
+  ConstructPlane: {
+    type: 'ConstructPlane',
+    label: 'Construct Plane',
+    category: 'math',
+    inputs: [
+      { name: 'origin', type: 'Point' },
+      { name: 'normal', type: 'Vector' },
+    ],
+    outputs: [{ name: 'plane', type: 'Plane' }],
+    params: [],
+  },
+  // ---------- Curve Generation ----------
+  Line: {
+    type: 'Line',
+    label: 'Line (2Pt)',
+    category: 'geometry',
+    inputs: [
+      { name: 'a', type: 'Point' },
+      { name: 'b', type: 'Point' },
+    ],
+    outputs: [{ name: 'curve', type: 'Curve' }],
+    params: [
+      { name: 'color', type: 'string', default: '#3b82f6' },
+    ],
+  },
+  Arc: {
+    type: 'Arc',
+    label: 'Arc (3Pt)',
+    category: 'geometry',
+    inputs: [
+      { name: 'start', type: 'Point' },
+      { name: 'middle', type: 'Point' },
+      { name: 'end', type: 'Point' },
+    ],
+    outputs: [{ name: 'curve', type: 'Curve' }],
+    params: [
+      { name: 'color', type: 'string', default: '#3b82f6' },
+    ],
+  },
+  CircleCurve: {
+    type: 'CircleCurve',
+    label: 'Circle (Curve)',
+    category: 'geometry',
+    inputs: [
+      { name: 'center', type: 'Point' },
+      { name: 'normal', type: 'Vector' },
+    ],
+    outputs: [{ name: 'curve', type: 'Curve' }],
+    params: [
+      { name: 'radius', type: 'number', default: 5, min: 0.1, max: 100, step: 0.1 },
+      { name: 'color', type: 'string', default: '#3b82f6' },
+    ],
+  },
+  EllipseCurve: {
+    type: 'EllipseCurve',
+    label: 'Ellipse (Curve)',
+    category: 'geometry',
+    inputs: [
+      { name: 'center', type: 'Point' },
+      { name: 'normal', type: 'Vector' },
+    ],
+    outputs: [{ name: 'curve', type: 'Curve' }],
+    params: [
+      { name: 'radiusX', type: 'number', default: 5, min: 0.1, max: 100, step: 0.1 },
+      { name: 'radiusY', type: 'number', default: 3, min: 0.1, max: 100, step: 0.1 },
+      { name: 'color', type: 'string', default: '#3b82f6' },
+    ],
+  },
+  PolylineCurve: {
+    type: 'PolylineCurve',
+    label: 'Polyline',
+    category: 'geometry',
+    inputs: [{ name: 'points', type: 'Point' }],
+    outputs: [{ name: 'curve', type: 'Curve' }],
+    params: [
+      { name: 'closed', type: 'boolean', default: false },
+      { name: 'color', type: 'string', default: '#3b82f6' },
+    ],
+  },
+  SplineCurve: {
+    type: 'SplineCurve',
+    label: 'Spline (Interpolate)',
+    category: 'geometry',
+    inputs: [{ name: 'points', type: 'Point' }],
+    outputs: [{ name: 'curve', type: 'Curve' }],
+    params: [
+      { name: 'closed', type: 'boolean', default: false },
+      { name: 'color', type: 'string', default: '#3b82f6' },
+    ],
+  },
+  EdgesAsCurves: {
+    type: 'EdgesAsCurves',
+    label: 'Edges to Curves',
+    category: 'geometry',
+    inputs: [{ name: 'selection', type: 'Selection' }],
+    outputs: [{ name: 'curve', type: 'Curve' }],
+    params: [
+      { name: 'color', type: 'string', default: '#3b82f6' },
+    ],
+  },
+  // ---------- Measurement & Query ----------
+  Measure: {
+    type: 'Measure',
+    label: 'Measure Shape',
+    category: 'math',
+    inputs: [{ name: 'solid', type: 'Solid' }],
+    outputs: [
+      { name: 'volume', type: 'number' },
+      { name: 'area', type: 'number' },
+      { name: 'centroid', type: 'Point' },
+    ],
+    params: [],
+  },
+  BoundingBox: {
+    type: 'BoundingBox',
+    label: 'Bounding Box',
+    category: 'math',
+    inputs: [{ name: 'solid', type: 'Solid' }],
+    outputs: [
+      { name: 'box', type: 'Solid' },
+      { name: 'min', type: 'Point' },
+      { name: 'max', type: 'Point' },
+      { name: 'size', type: 'Vector' },
+    ],
+    params: [],
+  },
+  DistanceMeasure: {
+    type: 'DistanceMeasure',
+    label: 'Distance',
+    category: 'math',
+    inputs: [
+      { name: 'a', type: 'Point' },
+      { name: 'b', type: 'Point' },
+    ],
+    outputs: [{ name: 'distance', type: 'number' }],
+    params: [],
+  },
+  IsInside: {
+    type: 'IsInside',
+    label: 'Is Inside',
+    category: 'math',
+    inputs: [
+      { name: 'solid', type: 'Solid' },
+      { name: 'point', type: 'Point' },
+    ],
+    outputs: [{ name: 'isInside', type: 'number' }],
+    params: [],
+  },
+  SelectionMeasure: {
+    type: 'SelectionMeasure',
+    label: 'Selection Measure',
+    category: 'math',
+    inputs: [{ name: 'selection', type: 'Selection' }],
+    outputs: [
+      { name: 'areaOrLength', type: 'number' },
+      { name: 'centroid', type: 'Point' },
+    ],
+    params: [],
+  },
+  CurveLength: {
+    type: 'CurveLength',
+    label: 'Curve Length',
+    category: 'math',
+    inputs: [{ name: 'curve', type: 'Curve' }],
+    outputs: [{ name: 'length', type: 'number' }],
+    params: [],
+  },
+  PointOnCurve: {
+    type: 'PointOnCurve',
+    label: 'Point on Curve',
+    category: 'math',
+    inputs: [
+      { name: 'curve', type: 'Curve' },
+      { name: 't', type: 'number' },
+    ],
+    outputs: [{ name: 'point', type: 'Point' }],
+    params: [
+      { name: 't', type: 'number', default: 0.5, min: 0, max: 1, step: 0.01 },
+    ],
+  },
+  EvaluateCurve: {
+    type: 'EvaluateCurve',
+    label: 'Evaluate Curve',
+    category: 'math',
+    inputs: [
+      { name: 'curve', type: 'Curve' },
+      { name: 't', type: 'number' },
+    ],
+    outputs: [
+      { name: 'point', type: 'Point' },
+      { name: 'tangent', type: 'Vector' },
+    ],
+    params: [
+      { name: 't', type: 'number', default: 0.5, min: 0, max: 1, step: 0.01 },
+    ],
+  },
+  DivideCurve: {
+    type: 'DivideCurve',
+    label: 'Divide Curve',
+    category: 'math',
+    inputs: [{ name: 'curve', type: 'Curve' }],
+    outputs: [{ name: 'points', type: 'Point' }],
+    params: [
+      { name: 'count', type: 'number', default: 10, min: 2, max: 1000, step: 1 },
+    ],
+  },
+  // ---------- Point Grid & Jitter ----------
+  PointGrid: {
+    type: 'PointGrid',
+    label: 'Point Grid',
+    category: 'math',
+    inputs: [],
+    outputs: [{ name: 'points', type: 'Point' }],
+    params: [
+      { name: 'countX', type: 'number', default: 5, min: 1, max: 50, step: 1 },
+      { name: 'countY', type: 'number', default: 5, min: 1, max: 50, step: 1 },
+      { name: 'spacingX', type: 'number', default: 2, min: 0.1, max: 50, step: 0.1 },
+      { name: 'spacingY', type: 'number', default: 2, min: 0.1, max: 50, step: 0.1 },
+    ],
+  },
+  Jitter: {
+    type: 'Jitter',
+    label: 'Jitter Points',
+    category: 'math',
+    inputs: [{ name: 'points', type: 'Point' }],
+    outputs: [{ name: 'points', type: 'Point' }],
+    params: [
+      { name: 'amount', type: 'number', default: 0.5, min: 0, max: 20, step: 0.01 },
+      { name: 'seed', type: 'number', default: 1, min: 1, max: 100, step: 1 },
     ],
   },
   Macro: {

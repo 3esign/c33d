@@ -33,6 +33,34 @@ Paste this verbatim, on an empty canvas:
 3. Does the Twist'd horn show a spiral (check it doesn't error with "passed through UNTWISTED")?
 4. Total evaluation time — reference: a bent petal took ~1s, a twisted cylinder ~1s, a curved Pipe well under 1s. A whole vine+leaves+horn build should still land in single-digit seconds.
 
+## NEWEST+2 quick benchmark — the sub-shape editor (tests SplitLoop/SelectFaces/ExtrudeFace, July 10 build)
+
+This build adds B-Rep sub-shape editing nodes: **SplitLoop**, **SplitSolid**, **SelectFaces**, **SelectEdges**, **SelectionCombine**, and **ExtrudeFace**.
+
+Paste this verbatim, on an empty canvas:
+
+> make a cube, split its top face 3x3, and extrude the center cell
+
+**What this discriminates:**
+1. Does the model correctly instantiate two `SplitLoop` nodes along X (at 0.333 and 0.667) and two along Y (at 0.333 and 0.667)?
+2. Does it use a `SelectFaces` node with a query predicate checking for `normal ~ +Z` and center coordinate boundaries to isolate the center cell?
+3. Does it extrude the center cell using `ExtrudeFace` (volume increases by the extrusion volume and faceCount increases)?
+
+---
+
+## NEWEST+3 quick benchmark — the parametric rock (tests expression variable normalization, July 10 build)
+
+This build fixes variable normalization in slider parameters. Slider labels are normalized (lowercased and non-alphanumerics stripped, e.g. "Rock Size" becomes "rocksize") so formula evaluation is robust to casing and whitespace inconsistencies.
+
+Paste this verbatim, on an empty canvas:
+
+> Create a parametric rock using formulaic sliders for size and roughness, ensuring all dimensions scale with the rockSize slider (use rockSize * 0.8, etc., with spaces in labels but correctly mapped normalized formulas).
+
+**What this discriminates:**
+1. Does the model define sliders with descriptive labels (e.g. "Rock Size", "Rock Roughness")?
+2. Do downstream formulas successfully reference them (e.g. `rockSize * 0.8`) without causing evaluation errors?
+3. Does the rock geometry generate and scale correctly without auto-repair failure?
+
 ---
 
 ## NEW quick benchmark — the lighthouse (tests the Align node, July 8 build)

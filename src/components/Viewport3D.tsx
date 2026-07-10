@@ -54,6 +54,15 @@ const GeometryMesh: React.FC<{ object: SceneObject }> = ({ object }) => {
   if (!geometry) return null;
 
   const objectColor = object.color || "#3b82f6";
+  const geoType = (object.geometryData as any).type || 'Mesh';
+
+  if (geoType === 'Line' || geoType === 'Point') {
+    return (
+      <lineSegments geometry={geometry}>
+        <lineBasicMaterial color={objectColor === "#3b82f6" ? "#facc15" : objectColor} linewidth={geoType === 'Point' ? 2 : 3} />
+      </lineSegments>
+    );
+  }
 
   return (
     <mesh geometry={geometry} castShadow receiveShadow>

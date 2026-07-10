@@ -32,6 +32,8 @@ function requiredGeoInputs(type: string): { handles: string[]; minConnected: num
   if (type === 'Compound') return { handles: geoHandles, minConnected: 1 };
   // Align: "shape" is required; "reference" is optional (mode "ground" needs none).
   if (type === 'Align') return { handles: ['shape'], minConnected: 1 };
+  // Fillet, Chamfer, Shell: selection is optional, solid is required.
+  if (type === 'Fillet' || type === 'Chamfer' || type === 'Shell') return { handles: ['solid'], minConnected: 1 };
   // Everything else (Translate, Rotate, Boolean, PlaceOnSurface, …) needs every
   // one of its geometry input handles connected.
   return { handles: geoHandles, minConnected: geoHandles.length };
@@ -47,7 +49,11 @@ function referencedVars(formula: string): string[] {
   return out;
 }
 
-export function validateGraphStructure(nodes: GNode[], edges: GEdge[]): StructuralIssue[] {
+export function validateGraphStructure(
+  nodes: GNode[],
+  edges: GEdge[],
+  ratios?: { param: string; formula: string }[]
+): StructuralIssue[] {
   const issues: StructuralIssue[] = [];
   const byId: Record<string, GNode> = {};
   nodes.forEach(n => { byId[n.id] = n; });
@@ -79,32 +85,19 @@ export function validateGraphStructure(nodes: GNode[], edges: GEdge[]): Structur
     }
   }
 
-  // 0b. Parametric interconnection analysis. The whole point of the graph is
-  //     that a few sliders drive the entire model through shared formulas —
-  //     a hard-coded dimension breaks rescaling, and a slider nothing
-  //     references is dead weight. Both are reported as (non-gating) warnings
-  //     so the model rewires them before finishing.
+  // 0b. Parametric interconnection analysis.
   {
     const sliderNodes = nodes.filter(n => n.type === 'NumberSlider');
-    const numericLiteral = /^[-+]?[0-9]*\.?[0-9]+(e[-+]?[0-9]+)?$/i;
     if (sliderNodes.length > 0) {
-      const refNames = new Set<string>(); // slider labels/ids referenced by any formula
-      let formulaCount = 0;
-      let literalCount = 0;
-      const literalExamples: string[] = [];
+      const refNames = new Set<string>();
       for (const node of nodes) {
         const def = NODE_LIBRARY[node.type];
-        if (!def || def.category === 'math') continue; // sliders/expressions/series aren't "dimensions"
+        if (!def || def.category === 'math') continue;
         for (const p of def.params) {
           if (p.type !== 'number') continue;
           const v = node.data?.[p.name];
-          if (v === undefined || v === null) continue; // default in use — not an authored dimension
-          if (typeof v === 'string' && v.trim() !== '' && !numericLiteral.test(v.trim())) {
-            formulaCount++;
+          if (typeof v === 'string' && v.trim() !== '' && !/^[-+]?[0-9]*\.?[0-9]+(e[-+]?[0-9]+)?$/i.test(v.trim())) {
             (v.toLowerCase().match(/[a-z_][a-z0-9_]*/g) || []).forEach(x => refNames.add(x));
-          } else {
-            literalCount++;
-            if (literalExamples.length < 8) literalExamples.push(`${node.id}.${p.name}=${v}`);
           }
         }
       }
@@ -120,12 +113,45 @@ export function validateGraphStructure(nodes: GNode[], edges: GEdge[]): Structur
           message: `Dead design parameter${deadSliders.length > 1 ? 's' : ''}: slider${deadSliders.length > 1 ? 's' : ''} ${deadSliders.map(s => `"${String(s.data?.label || s.id)}"`).join(', ')} ${deadSliders.length > 1 ? 'are' : 'is'} not referenced by any formula or edge — moving ${deadSliders.length > 1 ? 'them' : 'it'} changes nothing. Wire dimensions to ${deadSliders.length > 1 ? 'them' : 'it'} or remove ${deadSliders.length > 1 ? 'them' : 'it'}.`,
         });
       }
-      if (literalCount >= 4 && literalCount > formulaCount) {
+
+      const { coverage, drivenCount, total, literalExamples } = calculateParametricCoverage(nodes, edges);
+      if (coverage < 0.60 && total > 0) {
         issues.push({
           nodeId: sliderNodes[0].id,
           severity: 'warning',
-          message: `PARAMETRIC COVERAGE IS LOW: ${literalCount} dimensions are hard-coded literals vs ${formulaCount} slider-driven formulas, so the model will NOT rescale coherently when sliders move. Rewrite the literals as formulas of your sliders (shared ratios interconnect the design). Hard-coded examples: ${literalExamples.join(', ')}.`,
+          message: `PARAMETRIC COVERAGE IS LOW (${Math.round(coverage * 100)}%): Only ${drivenCount} of ${total} dimensions are driven by slider-based formulas or edges. Hard-coded literals will break design scalability when sliders move. Please rewrite these bare literals as formulas of your sliders: ${literalExamples.join(', ')}.`,
         });
+      }
+    }
+  }
+
+  // 0c. Plan ratio contract check.
+  if (ratios && ratios.length > 0) {
+    for (const r of ratios) {
+      const parts = r.param.split('.');
+      if (parts.length !== 2) continue;
+      const [nodeId, paramName] = parts;
+      const targetNode = nodes.find(n => n.id === nodeId);
+      if (!targetNode) continue;
+
+      const actualVal = targetNode.data?.[paramName];
+      const isEdgeDriven = edges.some(e => e.target === nodeId && e.targetHandle === `param:${paramName}`);
+      const cleanFormula = (str: string) => String(str).replace(/\s+/g, '').toLowerCase();
+
+      if (!isEdgeDriven) {
+        if (actualVal === undefined || actualVal === null || String(actualVal).trim() === '') {
+          issues.push({
+            nodeId,
+            severity: 'warning',
+            message: `Plan ratio contract deviation: "${r.param}" is not set. Expected formula "${r.formula}".`
+          });
+        } else if (cleanFormula(String(actualVal)) !== cleanFormula(r.formula)) {
+          issues.push({
+            nodeId,
+            severity: 'warning',
+            message: `Plan ratio contract deviation: "${r.param}" is "${actualVal}" but plan declared it should be "${r.formula}". Please update the parameter to match the plan.`
+          });
+        }
       }
     }
   }
@@ -184,19 +210,48 @@ export function validateGraphStructure(nodes: GNode[], edges: GEdge[]): Structur
       }
     }
 
-    // 3. Edges into non-existent handles (silent mis-wiring).
+    // 3. Edges into non-existent handles (silent mis-wiring) AND port type mismatches.
     const def = NODE_LIBRARY[node.type];
     if (def && node.type !== 'Macro') {
-      const validGeo = new Set(def.inputs.map(i => i.name));
+      const validGeo = new Map(def.inputs.map(i => [i.name, i.type]));
       const validParams = new Set(def.params.filter(p => p.type === 'number').map(p => p.name));
       for (const e of geoEdges) {
         const th = String(e.targetHandle || 'solid');
-        if (!validGeo.has(th)) {
+        const targetType = validGeo.get(th);
+        if (!targetType) {
           issues.push({
             nodeId: node.id,
             severity: 'error',
             message: `Edge into "${node.id}" targets handle "${th}", which ${node.type} does not have. Valid inputs: ${def.inputs.map(i => i.name).join(', ') || '(none)'}.`,
           });
+        } else {
+          // Check type compatibility if source node exists
+          const sourceNode = byId[e.source];
+          if (sourceNode) {
+            const sourceDef = NODE_LIBRARY[sourceNode.type];
+            if (sourceDef) {
+              // Defaults for sourceHandle if undefined: solid for geometry, value for math
+              let defaultOut = 'solid';
+              if (sourceDef.outputs.length > 0 && sourceDef.outputs[0].name !== 'solid') {
+                defaultOut = sourceDef.outputs[0].name;
+              }
+              const sh = String(e.sourceHandle || defaultOut);
+              const outPort = sourceDef.outputs.find(o => o.name === sh);
+              if (!outPort) {
+                 issues.push({
+                   nodeId: node.id,
+                   severity: 'error',
+                   message: `Edge from "${e.source}" targets output handle "${sh}", which ${sourceNode.type} does not output.`
+                 });
+              } else if (outPort.type !== targetType && outPort.type !== 'any' && targetType !== 'any') {
+                 issues.push({
+                   nodeId: node.id,
+                   severity: 'error',
+                   message: `Type mismatch: Cannot connect ${outPort.type} output "${outPort.name}" from "${e.source}" to ${targetType} input "${th}" on "${node.id}".`
+                 });
+              }
+            }
+          }
         }
       }
       for (const e of ins) {
@@ -220,4 +275,65 @@ export function validateGraphStructure(nodes: GNode[], edges: GEdge[]): Structur
   }
 
   return issues;
+}
+
+export function calculateParametricCoverage(nodes: any[], edges: any[]): {
+  coverage: number;
+  drivenCount: number;
+  significantLiteralCount: number;
+  total: number;
+  literalExamples: string[];
+} {
+  const sliderNodes = nodes.filter(n => n.type === 'NumberSlider');
+  if (sliderNodes.length === 0) {
+    return { coverage: 1.0, drivenCount: 0, significantLiteralCount: 0, total: 0, literalExamples: [] };
+  }
+
+  const numericLiteral = /^[-+]?[0-9]*\.?[0-9]+(e[-+]?[0-9]+)?$/i;
+  const refNames = new Set<string>();
+  let drivenCount = 0;
+  let significantLiteralCount = 0;
+  const literalExamples: string[] = [];
+
+  for (const node of nodes) {
+    const def = NODE_LIBRARY[node.type];
+    if (!def || def.category === 'math') continue;
+    for (const p of def.params) {
+      if (p.type !== 'number') continue;
+      const v = node.data?.[p.name];
+      if (v === undefined || v === null || String(v).trim() === '') continue;
+
+      const isEdgeDriven = edges.some(e => e.target === node.id && e.targetHandle === `param:${p.name}`);
+      const isFormula = typeof v === 'string' && v.trim() !== '' && !numericLiteral.test(v.trim());
+
+      if (isEdgeDriven || isFormula) {
+        drivenCount++;
+        if (isFormula) {
+          (v.toLowerCase().match(/[a-z_][a-z0-9_]*/g) || []).forEach(x => refNames.add(x));
+        }
+      } else {
+        const val = parseFloat(v);
+        const isSmallOrCount = 
+          p.name.toLowerCase().includes('count') ||
+          p.name.toLowerCase().includes('segments') ||
+          p.name.toLowerCase().includes('divisions') ||
+          p.name.toLowerCase().includes('index') ||
+          p.name.toLowerCase().includes('tolerance') ||
+          p.name === 'axisX' || p.name === 'axisY' || p.name === 'axisZ' ||
+          (p.name.toLowerCase().includes('angle') && Math.abs(val) <= 15) ||
+          val === 0 || val === 1 || val === -1;
+
+        if (!isSmallOrCount) {
+          significantLiteralCount++;
+          if (literalExamples.length < 8) {
+            literalExamples.push(`${node.id}.${p.name}=${v}`);
+          }
+        }
+      }
+    }
+  }
+
+  const total = drivenCount + significantLiteralCount;
+  const coverage = total > 0 ? drivenCount / total : 1.0;
+  return { coverage, drivenCount, significantLiteralCount, total, literalExamples };
 }

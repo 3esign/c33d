@@ -1,0 +1,93 @@
+[
+  {
+    "id": "ex_cube_split_extrude",
+    "createdAt": "2026-07-10T02:08:00Z",
+    "prompts": [
+      "make a cube, split its top face 3x3, and extrude the center cell"
+    ],
+    "plan": "1. Create top-level sliders for cube size and extrusion height.\n2. Generate a Box primitive.\n3. Split the box twice along the X axis and twice along the Y axis using SplitLoop to create a 3x3 grid of faces on the top.\n4. Select the center face on the top using a query predicate checking for normal ~ +Z and position boundaries.\n5. Extrude the selected face using ExtrudeFace.",
+    "comment": "Verified parametric sub-shape edit mode example",
+    "graphOriginal": null,
+    "graphFinal": {
+      "nodes": [
+        {
+          "id": "slider_size",
+          "type": "NumberSlider",
+          "data": { "label": "size", "value": 12 }
+        },
+        {
+          "id": "slider_height",
+          "type": "NumberSlider",
+          "data": { "label": "height", "value": 4 }
+        },
+        {
+          "id": "cube",
+          "type": "Box",
+          "data": {
+            "width": "size",
+            "length": "size",
+            "height": "size"
+          }
+        },
+        {
+          "id": "split_x1",
+          "type": "SplitLoop",
+          "data": {
+            "axis": "X",
+            "at": 0.333
+          }
+        },
+        {
+          "id": "split_x2",
+          "type": "SplitLoop",
+          "data": {
+            "axis": "X",
+            "at": 0.667
+          }
+        },
+        {
+          "id": "split_y1",
+          "type": "SplitLoop",
+          "data": {
+            "axis": "Y",
+            "at": 0.333
+          }
+        },
+        {
+          "id": "split_y2",
+          "type": "SplitLoop",
+          "data": {
+            "axis": "Y",
+            "at": 0.667
+          }
+        },
+        {
+          "id": "select_center",
+          "type": "SelectFaces",
+          "data": {
+            "predicate": "normal ~ +Z and center.x > -size/6 and center.x < size/6 and center.y > -size/6 and center.y < size/6"
+          }
+        },
+        {
+          "id": "extrude_center",
+          "type": "ExtrudeFace",
+          "data": {
+            "height": "height"
+          }
+        }
+      ],
+      "edges": [
+        { "source": "cube", "target": "split_x1", "sourceHandle": "solid", "targetHandle": "solid" },
+        { "source": "split_x1", "target": "split_x2", "sourceHandle": "solid", "targetHandle": "solid" },
+        { "source": "split_x2", "target": "split_y1", "sourceHandle": "solid", "targetHandle": "solid" },
+        { "source": "split_y1", "target": "split_y2", "sourceHandle": "solid", "targetHandle": "solid" },
+        { "source": "split_y2", "target": "select_center", "sourceHandle": "solid", "targetHandle": "solid" },
+        { "source": "split_y2", "target": "extrude_center", "sourceHandle": "solid", "targetHandle": "solid" },
+        { "source": "select_center", "target": "extrude_center", "sourceHandle": "selection", "targetHandle": "selection" }
+      ]
+    },
+    "thumbnail": "",
+    "model": "gemini-2.5-pro",
+    "tags": ["subshape", "slicing", "extrusion"]
+  }
+]

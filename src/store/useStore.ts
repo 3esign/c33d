@@ -123,8 +123,12 @@ type AppState = {
   // Episode tracking (prompts + plan of the current design, for the success library)
   episodePrompts: string[];
   episodePlan: string;
+  episodeRatios: { param: string; formula: string }[];
+  episodeDrivers: string[];
   addEpisodePrompt: (p: string) => void;
   setEpisodePlan: (p: string) => void;
+  setEpisodeRatios: (ratios: { param: string; formula: string }[]) => void;
+  setEpisodeDrivers: (drivers: string[]) => void;
   resetEpisode: () => void;
   lastAIGraph: { nodes: any[]; edges: any[] } | null;
   setLastAIGraph: (g: { nodes: any[]; edges: any[] } | null) => void;
@@ -528,9 +532,13 @@ export const useStore = create<AppState>()(
         // Episode tracking
         episodePrompts: [],
         episodePlan: '',
+        episodeRatios: [],
+        episodeDrivers: [],
         addEpisodePrompt: (p: string) => set((state) => ({ episodePrompts: [...state.episodePrompts, p] })),
         setEpisodePlan: (p: string) => set({ episodePlan: p }),
-        resetEpisode: () => set({ episodePrompts: [], episodePlan: '', lastAIGraph: null }),
+        setEpisodeRatios: (ratios) => set({ episodeRatios: ratios }),
+        setEpisodeDrivers: (drivers) => set({ episodeDrivers: drivers }),
+        resetEpisode: () => set({ episodePrompts: [], episodePlan: '', episodeRatios: [], episodeDrivers: [], lastAIGraph: null }),
         lastAIGraph: null,
         setLastAIGraph: (g) => set({ lastAIGraph: g }),
 

@@ -91,11 +91,12 @@ ${macroLibraryText()}
 1. Z is UP. The XY plane is the ground. The Plane node is a true 2D face on XY (Z=0); use Rotate (angle + axisX/axisY/axisZ) to orient shapes.
 2. Data flow: primitives output "solid"; transforms take a "solid" (or named) input and output "solid"; Boolean takes "target" + "tool". Every transform input MUST be connected. The solid chain (e.g. Cone→Translate→leaf) is usually the ONLY kind of edge you need.
 3. No loops exist. For repeated/scattered shapes use LinearPattern, CircularPattern, ScatterOnSurface, PlaceOnVertices — never dozens of duplicated nodes.
-4. PARAMETRIC DESIGN (essential — read carefully): create 2–5 NumberSlider nodes as the top-level design parameters, and give each a clear "label" (e.g. data {"label":"bodyRadius","value":6}). To make ANY numeric parameter depend on them, set that parameter's VALUE TO A FORMULA STRING referencing slider labels — NOT a separate node. Examples: a Cone with data {"radius1":"bodyRadius*1.3","radius2":"bodyRadius*0.6","height":"stage1Height*0.2"}; a Translate with data {"z":"stage1Height*0.6 + stage1Height/2"}. Formulas support + - * / ^ %, parentheses and functions (min, max, abs, sqrt, sin, cos, clamp, lerp, …). Do NOT build Expression nodes or "param:" edges for this kind of scalar math — inline formula strings are strongly preferred, need zero edges, and keep the graph small and robust. When a slider moves, every formula re-evaluates so the whole model rescales. (Expression / Series / Range nodes exist only for list/loop math, not for simple dimensions.) THE INTERCONNECTION IS THE DESIGN: derive parts from SHARED sliders so proportions are coupled (wheelRadius "carLength*0.09", cabin "carLength*0.45") — a slider that drives only one isolated shape, or a dimension typed as a bare number, is a design failure. The geometry report will call out hard-coded dimensions and dead sliders; rewire them before finishing.
-5. Placement: RELATIVE, never arithmetic. To stack or attach a part next to another, use the Align node (inputs "shape" + "reference"; param mode: above/below/left/right/front/back/center/ground, plus offsetX/Y/Z) — it snaps the shape's bounding box against the reference's, so you never hand-compute stacking coordinates. Example rocket: nozzle at origin → Align(shape=stage1, reference=nozzle, mode "above") → Align(shape=stage2, reference=that Align, mode "above") → … A part used as an Align reference STILL renders as its own colored leaf (reference edges do not consume it). Chain each next Align's reference to the PREVIOUS Align node (not the raw part) so the stack stays connected when sliders move. Use mode "ground" (no reference needed) to sit a part on Z=0. For attaching onto curved surfaces use PlaceOnSurface u/v, PlaceOnVertices, ScatterOnSurface. Reserve Translate for small deliberate offsets, and only the root part sits at the origin.
+4. PARAMETRIC DESIGN (essential — read carefully): create 2–5 NumberSlider nodes as the top-level design parameters, and give each a clear "label" (e.g. data {"label":"bodyRadius","value":6}). To make ANY numeric parameter depend on them, set that parameter's VALUE TO A FORMULA STRING referencing slider labels — NOT a separate node. Examples: a Cone with data {"radius1":"bodyRadius*1.3","radius2":"bodyRadius*0.6","height":"stage1Height*0.2"}; a Translate with data {"z":"stage1Height*0.6 + stage1Height/2"}. Formulas support + - * / ^ %, parentheses and functions (min, max, abs, sqrt, sin, cos, clamp, lerp, …). Do NOT build Expression nodes or "param:" edges for this kind of scalar math — inline formula strings are strongly preferred, need zero edges, and keep the graph small and robust. When a slider moves, every formula re-evaluates so the whole model rescales. (Expression / Series / Range nodes exist only for list/loop math, not for simple dimensions.) THE INTERCONNECTION IS THE DESIGN: derive parts from SHARED sliders so proportions are coupled (wheelRadius "carLength*0.09", cabin "carLength*0.45") — a slider that drives only one isolated shape, or a dimension typed as a bare number, is a design failure. Recommended slider labels: carLength, carWidth, carHeight, wheelRadius, wheelWidth (for cars); rockSize, rockRoughness, rockScale (for rocks); buildingHeight, buildingWidth, columnRadius, columnHeight, domeRadius (for buildings); stemHeight, stemRadius, petalCount, petalLength, petalWidth, centerRadius (for flowers). The geometry report will call out hard-coded dimensions and dead sliders; rewire them before finishing.
+5. Placement: RELATIVE, never arithmetic. Translate between parts is forbidden; use Align. Translate is only for small nudges, and its vector components must be formulas of a driver slider, never literals. To stack or attach a part next to another, use the Align node (inputs "shape" + "reference"; param mode: above/below/left/right/front/back/center/ground, plus offsetX/Y/Z) — it snaps the shape's bounding box against the reference's, so you never hand-compute stacking coordinates. Example rocket: nozzle at origin → Align(shape=stage1, reference=nozzle, mode "above") → Align(shape=stage2, reference=that Align, mode "above") → … A part used as an Align reference STILL renders as its own colored leaf (reference edges do not consume it). Chain each next Align's reference to the PREVIOUS Align node (not the raw part) so the stack stays connected when sliders move. Use mode "ground" (no reference needed) to sit a part on Z=0. For attaching onto curved surfaces use PlaceOnSurface u/v, PlaceOnVertices, ScatterOnSurface.
 6. Multi-color rendering: leaf nodes (no outgoing edges) mesh separately, each with its own "color" param traced from its subgraph. Keep sub-assemblies as separate leaves for multi-color models; merge with Boolean/Compound only what must be single-color/solid.
 7. Detailing: SubdivideSurface and FilterFaces carve panels/windows/facades out of base solids. Loft between profiles for tapered/organic forms. Revolve a Sketch profile for rotationally symmetric parts (vases, domes, wheels).
 7b. ORGANIC FORMS: use ScaleXYZ (non-uniform squash/stretch, isLocal default) to turn spheres into petals/leaves/discs/cushions — e.g. Sphere→ScaleXYZ(1, 0.4, 0.15) is a cupped petal, far better than a thin extruded sketch. Ellipsoid and Torus are direct primitives (seed heads, rings, tires, wreaths). CircularPattern supports startAngle (phase-offset interleaved petal rings), rise (z per copy → spirals/phyllotaxis), and scaleStart/scaleEnd (instances grade in size — natural, not mechanical). For a flower: petal = Ellipsoid or ScaleXYZ'd Sphere, tilted with Rotate(isLocal), Translate outward, CircularPattern with count=petalCount; second ring with startAngle "180/petalCount" and smaller scale.
+7c. SUB-SHAPE EDITING & SELECTIONS: use SelectFaces / SelectEdges (outputs "Selection") to target specific sub-faces or edges of a solid using a query predicate. Predicate queries support: "normal ~ +Z" (normal near direction), "center.z > 5" (face/edge centroid position), "parallel Z" (edge direction), "area > 10" (face area), "length < 5" (edge length), "coplanar" or "coaxial" checks. Boolean combinators (and, or, not) and parentheses are supported (e.g., "normal ~ +Z and center.z > 10"). Connect the Selection into ExtrudeFace (param height: positive to pull, negative to push/cut) or Fillet/Chamfer to modify the targeted sub-shapes. Use SplitLoop(solid, axis, at) to imprint edge loops (slice the outer face mesh into separate sub-faces) before selecting them; this allows localized extrusions/details on a single base solid. Note: Selection nodes output a Selection descriptor (resolved on execution); do not connect them to "solid" ports.
 8. Style: vary construction strategies and aesthetics between requests — do not repeat one formulaic design.
 9. When the user asks for a completely NEW object, clear the graph first so old geometry does not overlap.
 
@@ -142,6 +143,7 @@ export interface IntentOutcome {
   edgeCount: number;
   durationMs: number;
   visionScore?: number;
+  proportionalIntegrity?: number;
   error?: string;
 }
 
@@ -165,7 +167,7 @@ async function applyAndPerceive(graph: WorkingGraph) {
   // Structural (kernel-free) validation runs first: missing solid inputs and
   // unconnected Expression variables are the root cause of the null/collapse
   // cascade, so we surface them ahead of the downstream geometry symptoms.
-  const structural = validateGraphStructure(graph.nodes as any[], graph.edges as any[]);
+  const structural = validateGraphStructure(graph.nodes as any[], graph.edges as any[], store.episodeRatios);
   if (structural.length > 0) {
     const structuralMsgs = structural.filter(s => s.severity === 'error').map(s => s.message);
     if (structuralMsgs.length > 0) {
@@ -176,6 +178,18 @@ async function applyAndPerceive(graph: WorkingGraph) {
     if (warningMsgs.length > 0) sanity.warnings = warningMsgs;
   }
   return { ...outcome, sanity };
+}
+
+function formatCompactGraphState(nodes: any[], edges: any[]): string {
+  const nodeStrs = nodes.map(n => {
+    const params = Object.entries(n.data || {})
+      .filter(([k]) => !k.endsWith('__min') && !k.endsWith('__max') && !k.endsWith('__step'))
+      .map(([k, v]) => `${k}:${v}`)
+      .join(', ');
+    return `- ${n.id} (${n.type})${params ? ` [${params}]` : ''}`;
+  });
+  const edgeStrs = edges.map(e => `- ${e.source}${e.sourceHandle !== 'solid' && e.sourceHandle !== 'value' ? `.${e.sourceHandle}` : ''} → ${e.target}.${e.targetHandle}`);
+  return `CURRENT CANVAS GRAPH STATE:\nNodes (${nodes.length}):\n${nodeStrs.join('\n') || '(no nodes)'}\nEdges (${edges.length}):\n${edgeStrs.join('\n') || '(no edges)'}`;
 }
 
 // Nudge: before the graph is wiped for a new object, offer to save the old design.
@@ -263,6 +277,23 @@ export async function processUserIntent(userText: string, options?: { forEval?: 
   if (!activeAgent) {
     addSystemMessage('Error: No active agent. Please create or select an agent in settings.');
     return { parsedOk: false, evaluatedOk: false, geometrySane: false, nodeCount: 0, edgeCount: 0, durationMs: 0, error: 'No active agent' };
+  }
+
+  const provider = activeAgent.provider;
+  const isOllama = provider === 'ollama';
+  const hasKey = activeAgent.apiKey && activeAgent.apiKey.trim().length > 0;
+  if (!isOllama && !hasKey) {
+    const errorMsg = `Agent slot "${activeAgent.name}" has no API key. Please configure the API key in the settings panel before generating designs.`;
+    addSystemMessage(`Error: ${errorMsg}`);
+    return {
+      parsedOk: false,
+      evaluatedOk: false,
+      geometrySane: false,
+      nodeCount: store.nodes.length,
+      edgeCount: store.edges.length,
+      durationMs: 0,
+      error: errorMsg
+    };
   }
 
   const useTools = providerSupportsTools(activeAgent) && !activeAgent.optimizeForSmallModels;
@@ -379,6 +410,8 @@ async function runToolLoop(modifiedUserText: string, originalText: string, optio
       const result = executeTool(tc.name, tc.arguments, graph, useStore.getState().macros);
       if (result.plan) {
         useStore.getState().setEpisodePlan(result.plan);
+        if (result.ratios) useStore.getState().setEpisodeRatios(result.ratios);
+        if (result.drivers) useStore.getState().setEpisodeDrivers(result.drivers);
         addAssistantMessage(`Plan:\n${result.plan}`);
       }
       if (result.mutatedGraph) mutated = true;
@@ -398,10 +431,11 @@ async function runToolLoop(modifiedUserText: string, originalText: string, optio
       evaluatedOk = !percept.error;
       geometrySane = percept.sanity.sane;
       lastError = percept.error || (percept.sanity.issues.length ? percept.sanity.issues.join(' | ') : undefined);
+      const compactState = formatCompactGraphState(graph.nodes, graph.edges);
       const reportText = formatGeometryReport(percept.report, percept.error) +
         (percept.sanity.issues.length ? `\nISSUES DETECTED:\n${percept.sanity.issues.map(i => '- ' + i).join('\n')}` : '\nNo issues detected.') +
         (percept.sanity.warnings?.length ? `\nWARNINGS (non-blocking):\n${percept.sanity.warnings.map(w => '- ' + w).join('\n')}` : '');
-      messages.push({ role: 'user', content: `GEOMETRY REPORT:\n${reportText}` });
+      messages.push({ role: 'user', content: `${compactState}\n\nGEOMETRY REPORT:\n${reportText}` });
       useStore.getState().setLastAIGraph({ nodes: JSON.parse(JSON.stringify(graph.nodes)), edges: JSON.parse(JSON.stringify(graph.edges)) });
 
       // Truncated turn: later tool calls (usually the `connect` batch after a
@@ -464,6 +498,7 @@ async function runToolLoop(modifiedUserText: string, originalText: string, optio
     parsedOk, evaluatedOk, geometrySane,
     nodeCount: s.nodes.length, edgeCount: s.edges.length,
     durationMs: 0, visionScore, error: lastError,
+    proportionalIntegrity: s.lastGeometryReport?.proportionalIntegrity
   };
 }
 
@@ -532,18 +567,27 @@ async function runLegacyJson(modifiedUserText: string, originalText: string, opt
         ? '\n\nQuestions:\n' + parsed.questions.map((q: string) => '- ' + q).join('\n')
         : '';
       addAssistantMessage(`${parsed.reasoning || ''}${qs}`);
-      if (parsed.reasoning && !options?.forEval) useStore.getState().setEpisodePlan(String(parsed.reasoning));
+      if (parsed.reasoning && !options?.forEval) {
+        useStore.getState().setEpisodePlan(String(parsed.reasoning));
+        if (parsed.ratios) useStore.getState().setEpisodeRatios(parsed.ratios);
+        if (parsed.drivers) useStore.getState().setEpisodeDrivers(parsed.drivers);
+      }
     }
 
-    const graph = applyParsedGraphOps(parsed, options);
-    if (!graph) {
+    const graphResult = applyParsedGraphOps(parsed, options);
+    if (!graphResult) {
       // No graph changes (pure question / conversation)
       evaluatedOk = true;
       geometrySane = true;
       break;
     }
 
+    const graph = { nodes: graphResult.nodes, edges: graphResult.edges };
     const percept = await applyAndPerceive(graph);
+    if (graphResult.droppedEdges && graphResult.droppedEdges.length > 0) {
+      percept.sanity.issues.push(...graphResult.droppedEdges.map((e: string) => `Dropped invalid edge: ${e}`));
+      percept.sanity.sane = false;
+    }
     evaluatedOk = !percept.error;
     geometrySane = percept.sanity.sane;
     lastError = percept.error || (percept.sanity.issues.length ? percept.sanity.issues.join(' | ') : undefined);
@@ -566,11 +610,12 @@ async function runLegacyJson(modifiedUserText: string, originalText: string, opt
 
     if (attempt < MAX_AUTO_REPAIRS) {
       addSystemMessage(`Issues detected (auto-repair ${attempt + 1}/${MAX_AUTO_REPAIRS}): ${percept.sanity.issues.slice(0, 3).join('; ')}`);
+      const compactState = formatCompactGraphState(graph.nodes, graph.edges);
       const reportText = formatGeometryReport(percept.report, percept.error) +
         `\nISSUES:\n${percept.sanity.issues.map(i => '- ' + i).join('\n')}` +
         (percept.sanity.warnings?.length ? `\nWARNINGS (non-blocking):\n${percept.sanity.warnings.map(w => '- ' + w).join('\n')}` : '');
       apiMessages.push({ role: 'assistant' as const, content: responseText.slice(0, 4000) });
-      apiMessages.push({ role: 'user' as const, content: `GEOMETRY REPORT after your last change:\n${reportText}\n\nFix these issues. Respond ONLY with JSON using the patch protocol (addedNodes/updatedNodes/removedNodeIds/addedEdges/removedEdgeIds).` });
+      apiMessages.push({ role: 'user' as const, content: `${compactState}\n\nGEOMETRY REPORT after your last change:\n${reportText}\n\nFix these issues. Respond ONLY with JSON using the patch protocol (addedNodes/updatedNodes/removedNodeIds/addedEdges/removedEdgeIds).` });
     } else {
       addSystemMessage(`Auto-repair limit reached. Remaining issues: ${(lastError || '').slice(0, 300)}`);
     }
@@ -581,42 +626,65 @@ async function runLegacyJson(modifiedUserText: string, originalText: string, opt
     parsedOk, evaluatedOk, geometrySane,
     nodeCount: s.nodes.length, edgeCount: s.edges.length,
     durationMs: 0, visionScore, error: lastError,
+    proportionalIntegrity: s.lastGeometryReport?.proportionalIntegrity
   };
 }
 
 // Applies parsed JSON graph operations to a fresh working copy. Returns null if no ops.
 const NUMBER_OUTPUT_TYPES_JSON = new Set(['NumberSlider', 'Expression', 'Series', 'Range', 'ListItem', 'ListLength']);
 
-function applyParsedGraphOps(parsed: any, options?: { forEval?: boolean }): WorkingGraph | null {
+function applyParsedGraphOps(parsed: any, options?: { forEval?: boolean }): (WorkingGraph & { droppedEdges: string[] }) | null {
   const store = useStore.getState();
   let nextNodes: any[] = JSON.parse(JSON.stringify(store.nodes));
   let nextEdges: any[] = JSON.parse(JSON.stringify(store.edges));
   let hasUpdates = false;
+  const droppedEdges: string[] = [];
 
-  // Fill omitted edge handles the same way the tool path does: sourceHandle
-  // defaults to "value" for number nodes else "solid"; targetHandle defaults to
-  // the single geo input, or — for multi-input nodes — the first input not yet
-  // connected in `edgeList` (declaration order: Boolean target→tool, Align
-  // shape→reference, Loft profile1..4).
-  const resolveEdge = (e: any, edgeList: any[]): any => {
-    const srcType = (nextNodes.find(n => n.id === String(e.source)) || {}).type;
-    const tgtType = (nextNodes.find(n => n.id === String(e.target)) || {}).type;
+  // Fill omitted edge handles the same way the tool path does, validating existence of nodes/handles
+  const validateAndResolveEdge = (e: any, edgeList: any[]): { sourceHandle: string; targetHandle: string; isValid: boolean; error?: string } => {
+    const source = String(e.source);
+    const target = String(e.target);
+    const srcNode = nextNodes.find(n => n.id === source);
+    const tgtNode = nextNodes.find(n => n.id === target);
+    if (!srcNode) {
+      return { sourceHandle: '', targetHandle: '', isValid: false, error: `source node "${source}" does not exist` };
+    }
+    if (!tgtNode) {
+      return { sourceHandle: '', targetHandle: '', isValid: false, error: `target node "${target}" does not exist` };
+    }
+    const srcType = srcNode.type;
+    const tgtType = tgtNode.type;
+    const targetDef = NODE_LIBRARY[tgtType];
+    const geoHandles = geoInputHandles(tgtType);
+
     let targetHandle = e.targetHandle !== undefined && e.targetHandle !== null && String(e.targetHandle) ? String(e.targetHandle) : '';
     if (!targetHandle) {
-      const gh = geoInputHandles(tgtType);
+      const gh = geoHandles;
       if (gh.length === 1) {
         targetHandle = gh[0];
       } else if (gh.length > 1) {
-        const taken = new Set(edgeList.filter((x: any) => x.target === String(e.target)).map((x: any) => String(x.targetHandle)));
+        const taken = new Set(edgeList.filter((x: any) => x.target === target).map((x: any) => String(x.targetHandle)));
         targetHandle = gh.find(h => !taken.has(h)) || gh[0];
       } else {
         targetHandle = 'solid';
       }
     }
+
+    // Check target handle validity
+    if (targetHandle.startsWith('param:')) {
+      const pName = targetHandle.slice(6);
+      if (targetDef && tgtType !== 'Macro' && !targetDef.params.some(p => p.name === pName && p.type === 'number')) {
+        return { sourceHandle: '', targetHandle: '', isValid: false, error: `"${tgtType}" has no numeric param "${pName}"` };
+      }
+    } else if (targetDef && tgtType !== 'Macro' && !geoHandles.includes(targetHandle)) {
+      return { sourceHandle: '', targetHandle: '', isValid: false, error: `"${tgtType}" has no input handle "${targetHandle}"` };
+    }
+
     const sourceHandle = e.sourceHandle !== undefined && e.sourceHandle !== null && String(e.sourceHandle)
       ? String(e.sourceHandle)
       : (srcType && NUMBER_OUTPUT_TYPES_JSON.has(srcType) ? 'value' : 'solid');
-    return { sourceHandle, targetHandle };
+
+    return { sourceHandle, targetHandle, isValid: true };
   };
 
   const hasPatch = ['addedNodes', 'updatedNodes', 'removedNodeIds', 'addedEdges', 'removedEdgeIds']
@@ -662,7 +730,12 @@ function applyParsedGraphOps(parsed: any, options?: { forEval?: boolean }): Work
     }
     if (parsed.addedEdges) {
       parsed.addedEdges.forEach((e: any) => {
-        const { sourceHandle, targetHandle } = resolveEdge(e, nextEdges);
+        const res = validateAndResolveEdge(e, nextEdges);
+        if (!res.isValid) {
+          droppedEdges.push(`${e.source} → ${e.target}${e.targetHandle ? `.${e.targetHandle}` : ''} (${res.error})`);
+          return;
+        }
+        const { sourceHandle, targetHandle } = res;
         const id = String(e.id || `e_${e.source}_${e.target}_${targetHandle}`);
         nextEdges = nextEdges.filter(existing => existing.id !== id);
         nextEdges.push({ ...e, id, source: String(e.source), target: String(e.target), sourceHandle, targetHandle });
@@ -675,7 +748,12 @@ function applyParsedGraphOps(parsed: any, options?: { forEval?: boolean }): Work
     nextNodes = parsed.nodes.map((n: any) => ({ ...n, id: String(n.id), position: n.position || { x: 0, y: 0 } }));
     const rebuilt: any[] = [];
     for (const e of parsed.edges) {
-      const { sourceHandle, targetHandle } = resolveEdge(e, rebuilt);
+      const res = validateAndResolveEdge(e, rebuilt);
+      if (!res.isValid) {
+        droppedEdges.push(`${e.source} → ${e.target}${e.targetHandle ? `.${e.targetHandle}` : ''} (${res.error})`);
+        continue;
+      }
+      const { sourceHandle, targetHandle } = res;
       rebuilt.push({
         ...e,
         id: String(e.id || `e_${e.source}_${e.target}_${targetHandle}`),
@@ -688,5 +766,5 @@ function applyParsedGraphOps(parsed: any, options?: { forEval?: boolean }): Work
     nextEdges = rebuilt;
   }
 
-  return hasUpdates ? { nodes: nextNodes, edges: nextEdges } : null;
+  return hasUpdates ? { nodes: nextNodes, edges: nextEdges, droppedEdges } : null;
 }
