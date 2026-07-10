@@ -168,7 +168,7 @@ export const useStore = create<AppState>()(
       // Listen for worker messages (bindable so the worker can be recycled)
       const bindWorker = (w: Worker) => {
       w.onmessage = (e) => {
-        const { type, result, error, report } = e.data;
+        const { type, result, error, report, id } = e.data;
         if (type === 'EVALUATE_DONE') {
           const currentObjects = get().sceneObjects;
           const newObjects = result.map((res: any) => {
