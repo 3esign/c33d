@@ -1,11 +1,11 @@
-# C3D — Consolidated Development Roadmap
+# C33D — Consolidated Development Roadmap
 *July 2026. A living design record and master roadmap combining implementation phases, code-level analysis, reliability diagnostics, and architectural conventions.*
 
 ---
 
 ## 1. The Perception–Action Loop (The Intelligence Harness)
 
-An LLM reasons in language and emits symbols, but has no innate 3D perception. The core architecture of C3D is a **perception–action loop** built around a blind reasoner:
+An LLM reasons in language and emits symbols, but has no innate 3D perception. The core architecture of C33D is a **perception–action loop** built around a blind reasoner:
 
 ```
   intent (language)

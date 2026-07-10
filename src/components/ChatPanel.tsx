@@ -54,7 +54,10 @@ export const ChatPanel: React.FC = () => {
     <div className="flex flex-col h-full bg-slate-800 border-r border-slate-700">
       {/* Header */}
       <div className="flex justify-between items-center p-4 border-b border-slate-700">
-        <h2 className="text-lg font-semibold text-slate-100">AI Architect</h2>
+        <div>
+          <h2 className="text-lg font-bold text-slate-100 tracking-wide">C33D</h2>
+          <p className="text-[10px] text-slate-500 leading-tight">by <a href="mailto:poturaksemir@gmail.com" className="hover:text-slate-300 transition-colors">PhD Semir Poturak</a></p>
+        </div>
         <div className="flex items-center gap-1.5">
           <button
             onClick={() => {
