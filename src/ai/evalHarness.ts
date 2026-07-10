@@ -87,6 +87,7 @@ export async function runEvalSuite(onProgress?: (done: number, total: number, cu
 
       // Fresh canvas per prompt
       useStore.getState().clearGraph();
+      useStore.getState().clearMessages();
       useStore.getState().addMessage({ id: generateUUID(), role: 'user', content: `[EVAL ${p.id}] ${p.prompt}` });
 
       const t0 = performance.now();

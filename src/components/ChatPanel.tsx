@@ -22,6 +22,7 @@ export const ChatPanel: React.FC = () => {
     setActiveAgentId,
     restoreDefaultAgents,
     clearGraph,
+    clearMessages,
     performanceLogs = [],
     agentGuidelines,
     setAgentGuidelines,
@@ -69,6 +70,7 @@ export const ChatPanel: React.FC = () => {
           <button
             onClick={() => {
               clearGraph();
+              clearMessages();
               addMessage({
                 id: generateUUID(),
                 role: 'system',

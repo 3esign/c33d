@@ -277,7 +277,8 @@ export async function processUserIntent(userText: string, options?: { forEval?: 
       maybeSetNudgeCandidate();          // offer to save the prior design first
       store.clearGraph();
       store.resetEpisode();
-      addAssistantMessage('Canvas cleared.');
+      store.clearMessages();
+      addAssistantMessage('Canvas cleared and chat history reset.');
       return { parsedOk: true, evaluatedOk: true, geometrySane: true, nodeCount: 0, edgeCount: 0, durationMs: 0 };
     }
   }
