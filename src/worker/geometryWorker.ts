@@ -835,7 +835,7 @@ function compareSignatures(
 }
 
 async function evaluateGraph(rawNodes: any[], rawEdges: any[], macros: any[], disablePerturbation = false) {
-  const mainResult = await evaluateGraphInternal(rawNodes, rawEdges, macros, null, shapeCache, false, false);
+  const mainResult = await evaluateGraphInternal(rawNodes, rawEdges, macros, null, shapeCache, false);
   const { meshes, report } = mainResult;
 
   evalCounter++;

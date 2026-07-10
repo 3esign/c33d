@@ -165,7 +165,7 @@ export function validateAndNormalizeNodeData(
   id: string,
   type: string,
   data: Record<string, any> | undefined,
-  macros: any[]
+  _macros: any[]
 ): { warnings: string[]; errors: string[]; validatedData: Record<string, any> } {
   const warnings: string[] = [];
   const errors: string[] = [];
