@@ -5,6 +5,7 @@ This directory contains older research documents and reference material that inf
 ## Contents
 
 - **`organic_shape_vocabulary_review.md`**: The original investigation into missing node types and the discovery that `ScaleXYZ` was silently broken due to a missing WASM binding (`BRepBuilderAPI_GTransform_2`). Documents the root cause and fix. Historically significant as the analysis that led to the non-uniform scaling fix.
+- **`github_repo_plan.md`**: The original repository positioning and implementation plan (restructuring, licensing, and open-science structure).
 - **`literature_research.txt`**: Raw literature notes and references collected during the initial research phase.
 
 For current, authoritative research documents, see [../research/](../research/).

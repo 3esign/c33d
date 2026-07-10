@@ -28,8 +28,4 @@ jobs:
         run: npx tsc -b --noEmit
 
       - name: Run worker unit tests
-        run: |
-          node tests/test_formula_fix.mjs
-          node tests/test_selection.mjs
-        env:
-          NODE_OPTIONS: '--experimental-vm-modules'
+        run: npm test

@@ -389,7 +389,7 @@ export const NODE_LIBRARY: Record<string, NodeDefinition> = {
     inputs: [],
     outputs: [{ name: 'solid', type: 'Solid' }],
     params: [
-      { name: 'text', type: 'string', default: 'C3D' },
+      { name: 'text', type: 'string', default: 'C33D' },
       { name: 'size', type: 'number', default: 10, min: 1, max: 100, step: 1 },
       { name: 'height', type: 'number', default: 2, min: 0.1, max: 50, step: 0.1 },
       { name: 'color', type: 'string', default: '#3b82f6' },

@@ -677,7 +677,7 @@ export const EXECUTORS: Record<
   },
 
   Text3D: (params, _inputs, warn) => {
-    const txt = params.text || "C3D";
+    const txt = params.text || "C33D";
     const size = parseFloat(params.size) || 10;
     const h = parseFloat(params.height) || 2;
     try {

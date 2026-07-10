@@ -18,7 +18,7 @@ export const EVAL_PROMPTS: EvalPrompt[] = [
   { id: 'L1-03', level: 1, prompt: 'Make a cylinder 30 tall and 4 wide, standing upright.' },
   { id: 'L1-04', level: 1, prompt: 'Create a flat rectangular plate 40 x 20 with rounded edges.' },
   { id: 'L1-05', level: 1, prompt: 'Make a cone that is 20 tall with a base radius of 10 and a tip radius of 1.' },
-  { id: 'L1-06', level: 1, prompt: 'Create the 3D text "C3D" extruded 3 units deep.' },
+  { id: 'L1-06', level: 1, prompt: 'Create the 3D text "C33D" extruded 3 units deep.' },
   { id: 'L1-07', level: 1, prompt: 'Make a box 10x10x10 rotated 45 degrees around the Z axis.' },
 
   // L2 — booleans, patterns, shells
