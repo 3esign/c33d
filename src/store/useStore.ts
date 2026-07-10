@@ -238,6 +238,19 @@ export const useStore = create<AppState>()(
           } else {
             resolveEvalWaiters({ error: evaluationError, report: report || null });
           }
+        } else if (type === 'PERTURBATION_REPORT') {
+          set((state) => {
+            if (state.lastGeometryReport) {
+              return {
+                lastGeometryReport: {
+                  ...state.lastGeometryReport,
+                  perturbationIssues: report.perturbationIssues,
+                  proportionalIntegrity: report.proportionalIntegrity
+                }
+              };
+            }
+            return {};
+          });
         } else if (type === 'EVALUATE_ERROR') {
           const errStr = String(error || 'Unknown error during graph evaluation');
           if (isSystemError(errStr) && !get().hasRetriedDeleted) {
@@ -252,7 +265,7 @@ export const useStore = create<AppState>()(
             worker.postMessage({
               type: 'EVALUATE_GRAPH',
               id: id || generateUUID(),
-              payload: { nodes, edges, macros }
+              payload: { nodes, edges, macros, disablePerturbation: true }
             });
             return;
           }

@@ -161,15 +161,260 @@ function addAssistantMessage(content: string) {
   useStore.getState().addMessage({ id: generateUUID(), role: 'assistant', content });
 }
 
+export function validateAndNormalizeNodeData(
+  id: string,
+  type: string,
+  data: Record<string, any> | undefined,
+  macros: any[]
+): { warnings: string[]; errors: string[]; validatedData: Record<string, any> } {
+  const warnings: string[] = [];
+  const errors: string[] = [];
+  const validatedData: Record<string, any> = {};
+
+  if (!data) return { warnings, errors, validatedData };
+
+  const def = NODE_LIBRARY[type];
+  if (!def) {
+    return { warnings, errors, validatedData: { ...data } };
+  }
+
+  const allowedKeys = new Set([
+    'label',
+    'formula',
+    'operation',
+    'color',
+    'macroId',
+    'parentId',
+    'axisFilter',
+    'direction',
+    'index',
+    'tolerance'
+  ]);
+
+  const allowedKeysLowerMap = new Map<string, string>();
+  allowedKeys.forEach(k => allowedKeysLowerMap.set(k.toLowerCase(), k));
+
+  const validParams = def.params.map(p => p.name);
+  const validParamsLowerMap = new Map<string, string>();
+  validParams.forEach(p => validParamsLowerMap.set(p.toLowerCase(), p));
+
+  for (const [key, value] of Object.entries(data)) {
+    const keyLower = key.toLowerCase();
+    
+    if (allowedKeysLowerMap.has(keyLower)) {
+      const correctKey = allowedKeysLowerMap.get(keyLower)!;
+      validatedData[correctKey] = value;
+      if (correctKey !== key) {
+        warnings.push(`field "${key}" on node "${id}" was auto-corrected to "${correctKey}"`);
+      }
+      continue;
+    }
+
+    const doubleUnderscoreIdx = key.indexOf('__');
+    if (doubleUnderscoreIdx > 0) {
+      const baseParam = key.slice(0, doubleUnderscoreIdx);
+      const suffix = key.slice(doubleUnderscoreIdx);
+      if (suffix === '__min' || suffix === '__max' || suffix === '__step') {
+        const baseParamLower = baseParam.toLowerCase();
+        if (validParamsLowerMap.has(baseParamLower)) {
+          const correctBase = validParamsLowerMap.get(baseParamLower)!;
+          validatedData[correctBase + suffix] = value;
+          if (correctBase !== baseParam) {
+            warnings.push(`parameter override "${key}" on node "${id}" was auto-corrected to "${correctBase + suffix}"`);
+          }
+        } else {
+          errors.push(`unknown parameter override "${key}" on node "${id}" (node type "${type}" has no parameter "${baseParam}")`);
+        }
+        continue;
+      }
+    }
+
+    if (validParamsLowerMap.has(keyLower)) {
+      const correctKey = validParamsLowerMap.get(keyLower)!;
+      validatedData[correctKey] = value;
+      if (correctKey !== key) {
+        warnings.push(`parameter "${key}" on node "${id}" was auto-corrected to "${correctKey}"`);
+      }
+    } else {
+      errors.push(`unknown parameter "${key}" on node "${id}" (node type "${type}" does not support "${key}"). Valid parameters: ${validParams.join(', ') || '(none)'}`);
+    }
+  }
+
+  return { warnings, errors, validatedData };
+}
+
+function autofixGraphStructure(graph: WorkingGraph) {
+  // 1. Auto-coerce solid -> shape on Align target handles
+  for (const edge of graph.edges) {
+    const targetNode = graph.nodes.find(n => n.id === edge.target);
+    if (targetNode && targetNode.type === 'Align') {
+      if (edge.targetHandle === 'solid' || !edge.targetHandle) {
+        edge.targetHandle = 'shape';
+      }
+    }
+  }
+
+  // 2. Auto-connect Align shape input if exactly one unconsumed solid exists
+  for (const node of graph.nodes) {
+    if (node.type === 'Align') {
+      const hasShapeInput = graph.edges.some(e => e.target === node.id && e.targetHandle === 'shape');
+      if (!hasShapeInput) {
+        const solidNodes = graph.nodes.filter(n => {
+          if (n.id === node.id) return false;
+          const def = NODE_LIBRARY[n.type];
+          return def?.outputs.some(o => o.name === 'solid');
+        });
+        const consumedNodeIds = new Set(graph.edges.map(e => e.source));
+        const unconsumedSolids = solidNodes.filter(n => !consumedNodeIds.has(n.id));
+        if (unconsumedSolids.length === 1) {
+          graph.edges.push({
+            id: `${unconsumedSolids[0].id}__to__${node.id}__shape`,
+            source: unconsumedSolids[0].id,
+            sourceHandle: 'solid',
+            target: node.id,
+            targetHandle: 'shape'
+          });
+          addSystemMessage(`[Autofix] Connected unconsumed solid "${unconsumedSolids[0].id}" to Align "${node.id}" shape input.`);
+        }
+      }
+    }
+  }
+}
+
+export function aggregateAndRankIssues(issues: string[]): string[] {
+  const structural: string[] = [];
+  const nullGeometry: string[] = [];
+  const engine: string[] = [];
+  const containment: string[] = [];
+  const proportional: string[] = [];
+  const others: string[] = [];
+
+  const propRegex = /At (.*?) (?:increase|decrease) \(.*?x\), "(.*?)" shifts non-proportionally.*\(deviation (\d+)%\)/i;
+  const propBySlider: Record<string, { parts: Set<string>; worstPart: string; worstDev: number }> = {};
+
+  for (const issue of issues) {
+    const lower = issue.toLowerCase();
+    const match = issue.match(propRegex);
+    if (match) {
+      const slider = match[1];
+      const part = match[2];
+      const dev = parseInt(match[3], 10);
+      if (!propBySlider[slider]) {
+        propBySlider[slider] = { parts: new Set(), worstPart: part, worstDev: dev };
+      }
+      propBySlider[slider].parts.add(part);
+      if (dev > propBySlider[slider].worstDev) {
+        propBySlider[slider].worstDev = dev;
+        propBySlider[slider].worstPart = part;
+      }
+      continue;
+    }
+    if (lower.includes('shifts non-proportionally') || lower.includes('fragile under scaling')) {
+      proportional.push(issue);
+      continue;
+    }
+    if (
+      lower.includes('missing required input') ||
+      lower.includes('no connection on input') ||
+      lower.includes('is not set. expected formula') ||
+      lower.includes('deviation: "') ||
+      lower.includes('does not exist') ||
+      lower.includes('does not output') ||
+      lower.includes('target handle') ||
+      lower.includes('expression') && lower.includes('not connected')
+    ) {
+      structural.push(issue);
+      continue;
+    }
+    if (
+      lower.includes('could not be meshed') ||
+      lower.includes('failed:') ||
+      lower.includes('produced no geometry') ||
+      lower.includes('degenerate geometry') ||
+      lower.includes('non-positive volume')
+    ) {
+      nullGeometry.push(issue);
+      continue;
+    }
+    if (
+      lower.includes('engine fault') ||
+      lower.includes('evaluation error') ||
+      lower.includes('timed out') ||
+      lower.includes('crashed') ||
+      lower.includes('kernel failed')
+    ) {
+      engine.push(issue);
+      continue;
+    }
+    if (
+      lower.includes('floating in space') ||
+      lower.includes('far from the rest') ||
+      lower.includes('exact same space') ||
+      lower.includes('stale duplicate') ||
+      lower.includes('buried inside') ||
+      lower.includes('fully contained')
+    ) {
+      containment.push(issue);
+      continue;
+    }
+    others.push(issue);
+  }
+
+  const proportionalFormatted: string[] = [];
+  for (const [slider, info] of Object.entries(propBySlider)) {
+    proportionalFormatted.push(
+      `${info.parts.size} parts shift non-proportionally when "${slider}" moves — positions use absolute Translates; worst: "${info.worstPart}" (${info.worstDev}%)`
+    );
+  }
+
+  let duplicateCount = 0;
+  const filteredContainment: string[] = [];
+  for (const c of containment) {
+    if (c.toLowerCase().includes('occupy the exact same space')) {
+      duplicateCount++;
+    } else {
+      filteredContainment.push(c);
+    }
+  }
+  if (duplicateCount > 0) {
+    filteredContainment.push(`${duplicateCount} pairs of leaves occupy the exact same space (stale duplicates). Remove one of them.`);
+  }
+
+  const ordered = [
+    ...structural,
+    ...nullGeometry,
+    ...engine,
+    ...filteredContainment,
+    ...proportionalFormatted,
+    ...proportional.filter(p => !p.match(propRegex)),
+    ...others
+  ];
+
+  if (ordered.length > 5) {
+    const capped = ordered.slice(0, 5);
+    capped.push(`... and ${ordered.length - 5} more quality issues (see full list in UI).`);
+    return capped;
+  }
+  return ordered;
+}
+
 // Applies a working graph to the store (with auto-layout), waits for evaluation,
 // returns { error, report, sanity } — the agent's percepts.
 async function applyAndPerceive(graph: WorkingGraph) {
   const store = useStore.getState();
 
+  // Run deterministic autofixes
+  autofixGraphStructure(graph);
+
   // Run structural validation first
   const structural = validateGraphStructure(graph.nodes as any[], graph.edges as any[], store.episodeRatios);
   const structuralErrors = structural.filter(s => s.severity === 'error').map(s => s.message);
   const structuralWarnings = structural.filter(s => s.severity === 'warning').map(s => s.message);
+
+  // Always auto-layout and set nodes/edges in the store FIRST so the viewport displays updates!
+  const laidOut = autoLayout(graph.nodes as any[], graph.edges as any[]);
+  store.setNodes(laidOut as any[]);
+  store.setEdges(graph.edges as any[]);
 
   if (structuralErrors.length > 0) {
     // Skip worker evaluation entirely on structural errors!
@@ -185,9 +430,6 @@ async function applyAndPerceive(graph: WorkingGraph) {
     };
   }
 
-  const laidOut = autoLayout(graph.nodes as any[], graph.edges as any[]);
-  store.setNodes(laidOut as any[]);
-  store.setEdges(graph.edges as any[]);
   const outcome = await waitForEvaluation();
   const sanity = checkGeometrySanity(outcome.report, outcome.error);
 
@@ -451,7 +693,7 @@ async function runToolLoop(modifiedUserText: string, originalText: string, optio
       lastError = percept.error || (percept.sanity.issues.length ? percept.sanity.issues.join(' | ') : undefined);
       const compactState = formatCompactGraphState(graph.nodes, graph.edges);
       const reportText = formatGeometryReport(percept.report, percept.error) +
-        (percept.sanity.issues.length ? `\nISSUES DETECTED:\n${percept.sanity.issues.map(i => '- ' + i).join('\n')}` : '\nNo issues detected.') +
+        (percept.sanity.issues.length ? `\nISSUES DETECTED:\n${aggregateAndRankIssues(percept.sanity.issues).map(i => '- ' + i).join('\n')}` : '\nNo issues detected.') +
         (percept.sanity.warnings?.length ? `\nWARNINGS (non-blocking):\n${percept.sanity.warnings.map(w => '- ' + w).join('\n')}` : '');
       messages.push({ role: 'user', content: `${compactState}\n\nGEOMETRY REPORT:\n${reportText}` });
       useStore.getState().setLastAIGraph({ nodes: JSON.parse(JSON.stringify(graph.nodes)), edges: JSON.parse(JSON.stringify(graph.edges)) });
@@ -555,6 +797,7 @@ async function runLegacyJson(modifiedUserText: string, originalText: string, opt
   let geometrySane = false;
   let lastError: string | undefined;
   let visionScore: number | undefined;
+  let structuralExemptions = 0;
 
   for (let attempt = 0; attempt <= MAX_AUTO_REPAIRS; attempt++) {
     const responseText = await chatCompletion(apiMessages, systemPrompt);
@@ -638,8 +881,13 @@ async function runLegacyJson(modifiedUserText: string, originalText: string, opt
 
     let isBudgetExempt = false;
     if (percept.isStructural) {
-      addSystemMessage(`Structural validation error (does not count against repair budget) — asking the model to fix.`);
-      isBudgetExempt = true;
+      if (structuralExemptions < 3) {
+        addSystemMessage(`Structural validation error (does not count against repair budget, ${structuralExemptions + 1}/3) — asking the model to fix.`);
+        isBudgetExempt = true;
+        structuralExemptions++;
+      } else {
+        addSystemMessage(`Structural validation error (exemptions exhausted, counts against repair budget) — asking the model to fix.`);
+      }
     } else if (isSystemError(percept.error)) {
       addSystemMessage(`Engine fault (does not count against repair budget) — retrying.`);
       isBudgetExempt = true;
@@ -655,7 +903,7 @@ async function runLegacyJson(modifiedUserText: string, originalText: string, opt
       }
       const compactState = formatCompactGraphState(graph.nodes, graph.edges);
       const reportText = formatGeometryReport(percept.report, percept.error) +
-        `\nISSUES:\n${percept.sanity.issues.map(i => '- ' + i).join('\n')}` +
+        `\nISSUES:\n${aggregateAndRankIssues(percept.sanity.issues).map(i => '- ' + i).join('\n')}` +
         (percept.sanity.warnings?.length ? `\nWARNINGS (non-blocking):\n${percept.sanity.warnings.map(w => '- ' + w).join('\n')}` : '');
       apiMessages.push({ role: 'assistant' as const, content: responseText.slice(0, 4000) });
       apiMessages.push({ role: 'user' as const, content: `${compactState}\n\nGEOMETRY REPORT after your last change:\n${reportText}\n\nFix these issues. Respond ONLY with JSON using the patch protocol (addedNodes/updatedNodes/removedNodeIds/addedEdges/removedEdgeIds).` });
@@ -759,16 +1007,33 @@ function applyParsedGraphOps(parsed: any, options?: { forEval?: boolean }): (Wor
     if (parsed.addedNodes) {
       parsed.addedNodes.forEach((n: any) => {
         const id = String(n.id);
+        const { warnings, errors, validatedData } = validateAndNormalizeNodeData(id, n.type, n.data, store.macros);
+        if (errors.length > 0) {
+          droppedEdges.push(`Node "${id}" has invalid data: ${errors.join(', ')}`);
+        }
+        if (warnings.length > 0) {
+          warnings.forEach(w => addSystemMessage(`[Warning] ${w}`));
+        }
         nextNodes = nextNodes.filter(existing => existing.id !== id);
-        nextNodes.push({ ...n, id, position: n.position || { x: 0, y: 0 } });
+        nextNodes.push({ ...n, id, data: validatedData, position: n.position || { x: 0, y: 0 } });
       });
     }
     if (parsed.updatedNodes) {
       parsed.updatedNodes.forEach((n: any) => {
         const id = String(n.id);
-        nextNodes = nextNodes.map(existing => existing.id === id
-          ? { ...existing, ...n, id, data: { ...existing.data, ...n.data } }
-          : existing);
+        const existing = nextNodes.find(x => x.id === id);
+        if (existing) {
+          const { warnings, errors, validatedData } = validateAndNormalizeNodeData(id, existing.type, n.data, store.macros);
+          if (errors.length > 0) {
+            droppedEdges.push(`Node "${id}" update has invalid data: ${errors.join(', ')}`);
+          }
+          if (warnings.length > 0) {
+            warnings.forEach(w => addSystemMessage(`[Warning] ${w}`));
+          }
+          nextNodes = nextNodes.map(ex => ex.id === id
+            ? { ...ex, ...n, id, data: { ...ex.data, ...validatedData } }
+            : ex);
+        }
       });
     }
     if (parsed.addedEdges) {
@@ -788,7 +1053,17 @@ function applyParsedGraphOps(parsed: any, options?: { forEval?: boolean }): (Wor
 
   if (Array.isArray(parsed.nodes) && Array.isArray(parsed.edges) && parsed.nodes.length > 0) {
     hasUpdates = true;
-    nextNodes = parsed.nodes.map((n: any) => ({ ...n, id: String(n.id), position: n.position || { x: 0, y: 0 } }));
+    nextNodes = parsed.nodes.map((n: any) => {
+      const id = String(n.id);
+      const { warnings, errors, validatedData } = validateAndNormalizeNodeData(id, n.type, n.data, store.macros);
+      if (errors.length > 0) {
+        droppedEdges.push(`Node "${id}" has invalid data: ${errors.join(', ')}`);
+      }
+      if (warnings.length > 0) {
+        warnings.forEach(w => addSystemMessage(`[Warning] ${w}`));
+      }
+      return { ...n, id, data: validatedData, position: n.position || { x: 0, y: 0 } };
+    });
     const rebuilt: any[] = [];
     for (const e of parsed.edges) {
       const res = validateAndResolveEdge(e, rebuilt);

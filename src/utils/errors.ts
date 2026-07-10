@@ -9,6 +9,8 @@ export function isSystemError(errorStr: string | null | undefined): boolean {
          lower.includes('unreachable') ||
          lower.includes('signature mismatch') ||
          lower.includes('array bounds') ||
+         lower.includes('timed out') ||
+         lower.includes('timeout') ||
          lower.includes('opencascade kernel failed') ||
          lower.includes('worker error');
 }

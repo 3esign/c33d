@@ -153,8 +153,11 @@ self.onmessage = async (e) => {
 
   if (type === 'EVALUATE_GRAPH') {
     try {
-      const { meshes, report } = await evaluateGraph(payload.nodes, payload.edges, payload.macros || []);
+      const { meshes, report, runPerturbation } = await evaluateGraph(payload.nodes, payload.edges, payload.macros || [], payload.disablePerturbation);
       postMessage({ type: 'EVALUATE_DONE', id, result: meshes, report });
+      if (runPerturbation) {
+        runPerturbation(id).catch(err => console.warn("Perturbation failed:", err));
+      }
     } catch (err: any) {
       postMessage({ type: 'EVALUATE_ERROR', id, error: err.message || 'Unknown error during graph evaluation' });
     }
@@ -237,7 +240,8 @@ async function evaluateGraphInternal(
   rawEdges: any[],
   macros: any[],
   sliderScopeOverride: Record<string, number> | null = null,
-  customShapeCache: Map<string, { hash: string; shape: any; mesh: any | null }> = shapeCache
+  customShapeCache: Map<string, { hash: string; shape: any; mesh: any | null }> = shapeCache,
+  skipMeshing = false
 ) {
   const { nodes: allNodes, edges, aliasMap } = expandMacros(rawNodes, rawEdges, macros);
   // Group container nodes are visual only
@@ -524,15 +528,32 @@ async function evaluateGraphInternal(
   const helperSize = diag > 0 ? Math.max(0.1, diag * 0.01) : 0.25;
 
   for (const [id, value] of Object.entries(nodeCache)) {
-    if (!value) continue;
     const reportId = aliasMap[id] || id;
-    const isHelper = value && (value.type === 'Point' || value.type === 'Vector' || value.type === 'Plane' || value.type === 'Curve' || value.type === 'Selection');
+    const node = nodes.find(n => n.id === id);
+    if (!node) continue;
+    if (node.type === 'NumberSlider' || node.type === 'Expression') continue;
+
+    const isHelper = node.type === 'Point' || node.type === 'Vector' || node.type === 'Plane' || node.type === 'Curve' || node.type === 'Selection';
+
+    if (!value) {
+      if (!isHelper) {
+        leafReports.push({
+          id: reportId,
+          bbox: null,
+          volume: undefined,
+          meshOk: false,
+          vertexCount: 0,
+          error: explainNullGeometry(id, nodes, edges, nodeCache)
+        });
+      }
+      continue;
+    }
 
     if (!sourceNodeIds.has(id)) {
       const entry = customShapeCache.get(id);
       let meshData = entry?.mesh || null;
       let meshError: string | null = null;
-      if (!meshData) {
+      if (!skipMeshing && !meshData) {
         try {
           if (value && value.type === 'Point') {
             const sz = helperSize;
@@ -601,15 +622,10 @@ async function evaluateGraphInternal(
           id: reportId,
           bbox,
           volume,
-          meshOk: !!meshData,
+          meshOk: skipMeshing ? true : !!meshData,
           vertexCount: meshData ? meshData.vertices.length / 3 : 0,
           error: meshError,
         });
-      }
-    } else if (nodes.find(n => n.id === id)) {
-      const n = nodes.find(nd => nd.id === id);
-      if (n && n.type !== 'NumberSlider' && n.type !== 'Expression' && !isHelper) {
-        leafReports.push({ id: reportId, bbox: null, volume: undefined, meshOk: false, vertexCount: 0, error: explainNullGeometry(id, nodes, edges, nodeCache) });
       }
     }
   }
@@ -818,24 +834,64 @@ function compareSignatures(
   return issues;
 }
 
-async function evaluateGraph(rawNodes: any[], rawEdges: any[], macros: any[]) {
-  const mainResult = await evaluateGraphInternal(rawNodes, rawEdges, macros, null, shapeCache);
+async function evaluateGraph(rawNodes: any[], rawEdges: any[], macros: any[], disablePerturbation = false) {
+  const mainResult = await evaluateGraphInternal(rawNodes, rawEdges, macros, null, shapeCache, false, false);
   const { meshes, report } = mainResult;
 
   evalCounter++;
   (report as any).evalCount = evalCounter;
   (report as any).recycleRecommended = evalCounter >= WORKER_RECYCLE_HINT;
 
-  // Run relation signature and perturbation test if sane and has sliders
   const sliderNodes = rawNodes.filter(n => n.type === 'NumberSlider');
-  if (report.nodeErrors.length === 0 && report.leaves.length > 0 && sliderNodes.length > 0) {
+  const shouldRunPerturb = !disablePerturbation && report.nodeErrors.length === 0 && report.leaves.length > 0 && sliderNodes.length > 0;
+
+  const runPerturbation = shouldRunPerturb ? async (msgId: string) => {
     try {
       const defaultSig = getRelationSignature(report.leaves, report.scene);
       const perturbationIssues: string[] = [];
       let successfulRuns = 0;
       let totalRuns = 0;
 
-      for (const slider of sliderNodes) {
+      // Count slider references to test only the top 3 most-referenced sliders
+      const sliderCounts: Record<string, number> = {};
+      for (const n of sliderNodes) {
+        sliderCounts[n.id] = 0;
+        const label = String(n.data?.label ?? '').trim();
+        if (label) {
+          sliderCounts[label] = 0;
+        }
+      }
+
+      for (const node of rawNodes) {
+        const def = NODE_LIBRARY[node.type];
+        if (!def || def.category === 'math') continue;
+        for (const p of def.params) {
+          if (p.type !== 'number') continue;
+          const v = String(node.data?.[p.name] || '');
+          if (v) {
+            for (const key of Object.keys(sliderCounts)) {
+              if (new RegExp(`(^|[^a-zA-Z0-9_])${key}([^a-zA-Z0-9_]|$)`, 'i').test(v)) {
+                sliderCounts[key]++;
+              }
+            }
+          }
+        }
+      }
+      for (const edge of rawEdges) {
+        if (sliderCounts[edge.source] !== undefined) {
+          sliderCounts[edge.source]++;
+        }
+      }
+
+      const sortedSliders = [...sliderNodes].sort((a, b) => {
+        const countA = (sliderCounts[a.id] || 0) + (sliderCounts[String(a.data?.label || '').trim()] || 0);
+        const countB = (sliderCounts[b.id] || 0) + (sliderCounts[String(b.data?.label || '').trim()] || 0);
+        return countB - countA;
+      });
+
+      const testSliders = sortedSliders.slice(0, 3);
+
+      for (const slider of testSliders) {
         const label = String(slider.data?.label ?? slider.id).trim();
         const defaultVal = parseFloat(slider.data?.value);
         if (!isFinite(defaultVal) || defaultVal === 0) continue;
@@ -856,14 +912,14 @@ async function evaluateGraph(rawNodes: any[], rawEdges: any[], macros: any[]) {
               rawEdges,
               macros,
               overrideScope,
-              tempCache
+              tempCache,
+              true // skipMeshing = true
             );
 
             // Clean up newly created shapes in tempCache
             for (const [id, entry] of tempCache) {
               if (!shapeCache.has(id) || shapeCache.get(id)!.hash !== entry.hash) {
                 // Mitigated: stop deleting to prevent TopoDS_Shape pointer corruption
-                // try { entry.shape?.delete?.(); } catch (e) {}
               }
             }
 
@@ -894,14 +950,20 @@ async function evaluateGraph(rawNodes: any[], rawEdges: any[], macros: any[]) {
         }
       }
 
-      (report as any).perturbationIssues = perturbationIssues;
-      (report as any).proportionalIntegrity = totalRuns > 0 ? successfulRuns / totalRuns : 1.0;
+      postMessage({
+        type: 'PERTURBATION_REPORT',
+        id: msgId,
+        report: {
+          perturbationIssues,
+          proportionalIntegrity: totalRuns > 0 ? successfulRuns / totalRuns : 1.0
+        }
+      });
     } catch (e) {
       console.warn("Perturbation test failed:", e);
     }
-  }
+  } : null;
 
-  return { meshes, report };
+  return { meshes, report, runPerturbation };
 }
 
 function getNumericInputOrParam(

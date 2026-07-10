@@ -5,6 +5,7 @@
 import { NODE_LIBRARY } from '../nodes/NodeDefinitions';
 import type { MacroDefinition } from '../nodes/NodeDefinitions';
 import type { ToolDef } from './api';
+import { validateAndNormalizeNodeData } from './agent';
 
 export interface WorkingGraph {
   nodes: any[];
@@ -234,6 +235,7 @@ export function executeTool(
 
     case 'add_nodes': {
       const errors: string[] = [];
+      const warnings: string[] = [];
       let added = 0;
       for (const n of args.nodes || []) {
         if (!n.id || !n.type) { errors.push(`Node missing id or type: ${JSON.stringify(n).slice(0, 80)}`); continue; }
@@ -248,28 +250,41 @@ export function executeTool(
             continue;
           }
         }
+        const { warnings: nodeWarns, errors: nodeErrs, validatedData } = validateAndNormalizeNodeData(id, n.type, n.data, macros);
+        if (nodeErrs.length > 0) {
+          errors.push(...nodeErrs);
+          continue;
+        }
+        warnings.push(...nodeWarns);
         graph.nodes = graph.nodes.filter(existing => existing.id !== id);
-        graph.nodes.push({ id, type: n.type, position: { x: 0, y: 0 }, data: { ...(n.data || {}) } });
+        graph.nodes.push({ id, type: n.type, position: { x: 0, y: 0 }, data: validatedData });
         added++;
       }
       return {
-        message: `${added} node(s) added.${errors.length ? ' ERRORS: ' + errors.join(' | ') : ''}`,
+        message: `${added} node(s) added.${warnings.length ? ' Warnings: ' + warnings.join(' | ') : ''}${errors.length ? ' ERRORS: ' + errors.join(' | ') : ''}`,
         mutatedGraph: added > 0,
       };
     }
 
     case 'update_nodes': {
       const errors: string[] = [];
+      const warnings: string[] = [];
       let updated = 0;
       for (const n of args.nodes || []) {
         const id = String(n.id);
         const existing = graph.nodes.find(x => x.id === id);
         if (!existing) { errors.push(`Node "${id}" not found.`); continue; }
-        existing.data = { ...existing.data, ...(n.data || {}) };
+        const { warnings: nodeWarns, errors: nodeErrs, validatedData } = validateAndNormalizeNodeData(id, existing.type, n.data, macros);
+        if (nodeErrs.length > 0) {
+          errors.push(...nodeErrs);
+          continue;
+        }
+        warnings.push(...nodeWarns);
+        existing.data = { ...existing.data, ...validatedData };
         updated++;
       }
       return {
-        message: `${updated} node(s) updated.${errors.length ? ' ERRORS: ' + errors.join(' | ') : ''}`,
+        message: `${updated} node(s) updated.${warnings.length ? ' Warnings: ' + warnings.join(' | ') : ''}${errors.length ? ' ERRORS: ' + errors.join(' | ') : ''}`,
         mutatedGraph: updated > 0,
       };
     }

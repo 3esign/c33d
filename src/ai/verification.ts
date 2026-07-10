@@ -155,6 +155,8 @@ export function checkGeometrySanity(report: GeometryReport | null, evalError: st
     }
   }
 
+  const warnings: string[] = [];
+
   // Scattered-parts check: any leaf whose center is far outside the scene bulk
   if (report.scene && report.leaves.length > 1) {
     const diag = Math.sqrt(report.scene.size[0] ** 2 + report.scene.size[1] ** 2 + report.scene.size[2] ** 2);
@@ -171,7 +173,7 @@ export function checkGeometrySanity(report: GeometryReport | null, evalError: st
         (leaf.bbox.center[2] - sceneCenter[2]) ** 2
       );
       if (diag > 0 && d > diag * 0.75) {
-        issues.push(`Leaf "${leaf.id}" is far from the rest of the model (distance ${fmt(d)} vs scene diagonal ${fmt(diag)}) — it may be floating in space unintentionally.`);
+        warnings.push(`Leaf "${leaf.id}" is far from the rest of the model (distance ${fmt(d)} vs scene diagonal ${fmt(diag)}) — it may be floating in space unintentionally.`);
       }
     }
   }
@@ -191,7 +193,7 @@ export function checkGeometrySanity(report: GeometryReport | null, evalError: st
           Math.abs(a.center[k] - b.center[k]) <= tol && Math.abs(a.size[k] - b.size[k]) <= tol);
         if (same) {
           flagged++;
-          issues.push(`Leaves "${live[i].id}" and "${live[j].id}" occupy the exact same space (same center and size) — one is almost certainly a stale duplicate from an earlier attempt. Remove one of them (remove_nodes), do not move it.`);
+          warnings.push(`Leaves "${live[i].id}" and "${live[j].id}" occupy the exact same space (same center and size) — one is almost certainly a stale duplicate from an earlier attempt. Remove one of them (remove_nodes), do not move it.`);
         }
       }
     }
@@ -200,11 +202,11 @@ export function checkGeometrySanity(report: GeometryReport | null, evalError: st
   // Object-agnostic containment check: a part fully buried inside another is
   // almost always a positioning/sizing mistake and is invisible in the viewport.
   const { contained } = analyzeSpatialRelations(report);
-  issues.push(...contained);
+  warnings.push(...contained);
 
   // Perturbation test issues
   if ((report as any).perturbationIssues && (report as any).perturbationIssues.length > 0) {
-    issues.push(...(report as any).perturbationIssues);
+    warnings.push(...(report as any).perturbationIssues);
   }
 
   // Flag any Translate node with large literal offsets relative to the leaf bbox
@@ -240,7 +242,7 @@ export function checkGeometrySanity(report: GeometryReport | null, evalError: st
         const maxOffset = Math.max(Math.abs(xVal), Math.abs(yVal), Math.abs(zVal));
         const maxPartSize = Math.max(size[0], size[1], size[2]);
         if (maxPartSize > 0 && maxOffset > maxPartSize * 0.20) {
-          issues.push(`Translate node "${tNode.id}" uses absolute literal offset [${data?.x || 0}, ${data?.y || 0}, ${data?.z || 0}] which is larger than 20% of the part size (${fmt(maxPartSize)}). Derive these coordinates from driver sliders (e.g. using a formula) or use Align to stack parts.`);
+          warnings.push(`Translate node "${tNode.id}" uses absolute literal offset [${data?.x || 0}, ${data?.y || 0}, ${data?.z || 0}] which is larger than 20% of the part size (${fmt(maxPartSize)}). Derive these coordinates from driver sliders (e.g. using a formula) or use Align to stack parts.`);
           break;
         }
       }
@@ -248,9 +250,9 @@ export function checkGeometrySanity(report: GeometryReport | null, evalError: st
   }
 
   if (report.nodeEconomyWarning) {
-    issues.push(`Node economy warning: This graph has too many transform nodes (${report.transformCount}) relative to the number of rendered leaves (${report.leaves.length}). Use list-driven transforms, patterns (LinearPattern/CircularPattern), or instancers (PlaceOnVertices/ScatterOnSurface) to repeat shapes instead of duplicating Translate/Rotate/Scale nodes.`);
+    warnings.push(`Node economy warning: This graph has too many transform nodes (${report.transformCount}) relative to the number of rendered leaves (${report.leaves.length}). Use list-driven transforms, patterns (LinearPattern/CircularPattern), or instancers (PlaceOnVertices/ScatterOnSurface) to repeat shapes instead of duplicating Translate/Rotate/Scale nodes.`);
   }
-  return { sane: issues.length === 0, issues };
+  return { sane: issues.length === 0, issues, warnings };
 }
 
 // Compact textual report for the model — symbolic percepts, not raw dumps.
