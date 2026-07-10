@@ -1,0 +1,12 @@
+cff-version: 1.2.0
+message: "If you use this software in your research, please cite it using these metadata."
+title: "C33D: AI-Native Parametric CAD"
+abstract: "An open-science platform for parametric design intelligence. C33D generates editable 3D node graphs (B-Rep, STEP-exportable) from natural language."
+authors:
+  - family-names: "Poturak"
+    given-names: "Semir"
+    email: "poturaksemir@gmail.com"
+version: "0.1.0"
+date-released: "2026-07-09"
+repository-code: "https://github.com/3esign/c33d"
+license: "Apache-2.0"

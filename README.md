@@ -1,56 +1,85 @@
-# C3D — Parametric CAD Architect
+# C33D
+**AI that designs editable 3D models — parametric CAD you can talk to.**
 
-C3D is a state-of-the-art agentic CAD design engine and web application that compiles natural language prompts into parametric, watertight 3D models. It couples a dynamic Node Graph visual scripting interface (powered by React Flow) with a high-performance boundary-representation (B-Rep) CAD kernel (OpenCascade, compiled to WebAssembly via Replicad).
+![Hero Demo (Coming Soon)](docs/assets/hero.gif)
 
-## Features
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
+[![Live Demo](https://img.shields.io/badge/Live-Demo-brightgreen.svg)](#) <!-- Add URL -->
 
-- **Parametric Node Graph**: Visualizes CAD operations as a data-flow graph of primitives, transforms, booleans, and math sliders.
-- **Wasm-Powered B-Rep Kernel**: Evaluates complex geometric operations (fillets, lofts, sweeps, subdivision, boolean subtraction) locally in a Web Worker using OpenCascade.js.
-- **Proportional Coherence Engine**: Evaluates the design at different scale factors (e.g. 0.6x and 1.5x) to verify design intent and flag any mechanical shearing or intersection issues before saving.
-- **Success Example Retrieval (RAG)**: Retrieves verified CAD graph recipes based on prompt similarity using vector embeddings.
-- **Interactive Repair Loop**: Detects evaluation crashes, topological changes, and visual inconsistencies, feeding self-repair hints back to the LLM.
+**[Try it](#) · [How it works](#how-it-works) · [Research](docs/research/README.md) · [Contributing](CONTRIBUTING.md)**
 
-## Tech Stack
+---
 
-- **Frontend**: React, TypeScript, Vite, Tailwind CSS, React Flow
-- **CAD Kernel**: OpenCascade (via `replicad`) running in a Web Worker
-- **3D Viewport**: Three.js/React Three Fiber
+## What it does
 
-## Getting Started
+C33D is a browser-based, AI-native parametric CAD system. You describe an object in chat, and an LLM agent architects it as a node graph. Because the output is a *graph* and not a static mesh, the model remains fully parametric. You can tweak dimensions, drag sliders, and remix features without breaking the design.
 
-### Prerequisites
+It generates real CAD geometry. The underlying engine runs OpenCascade (via `replicad`) in WebAssembly, meaning the designs are robust B-Rep solids that can be exported directly to STEP files for manufacturing or 3D printing.
 
-- Node.js (v18+)
-- npm or yarn
+We prioritize privacy and flexibility. C33D uses a **Bring Your Own Key (BYOK)** architecture. You input your own API keys (e.g., Gemini, OpenAI, or local Ollama), and they are stored exclusively in your browser's local storage. The application runs entirely client-side and never sends your keys or prompts to any external server other than the AI provider.
 
-### Installation
+## Quickstart
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/3esign/c33d.git
-   cd C3D
-   ```
-
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-
-3. Run the local development server:
-   ```bash
-   npm run dev
-   ```
-
-## Development & Structure
-
-- `src/nodes/`: Node registry and specifications.
-- `src/worker/`: B-Rep executors registry (`executors.ts`), geometry workers, and kernel-level computations.
-- `src/ai/`: Agent process loops (`agent.ts`), graph linter rules (`graphValidation.ts`), retriever modules, and verification diagnostics.
-- `src/components/`: Node canvas editor and evaluation panels.
-
-## Testing
-
-Run the local test harness to verify spline helix generation, sweep calculations, and boolean robustness:
 ```bash
-node tests/test_bendtwist.mjs
+git clone https://github.com/3esign/c33d.git
+cd c33d
+npm install
+npm run dev
 ```
+
+*Alternatively, use the [hosted live demo](#).*
+
+## How it works
+
+1. **Chat**: You describe the object you want to build.
+2. **LLM Plans**: The AI agent reasons about the structural proportions and deconstructs the request into a series of parametric operations.
+3. **Graph Generation**: The agent emits a node graph matching C33D's specific library (Primitives, Modifiers, Booleans).
+4. **Validation Gate**: The graph is strictly typed and validated before execution.
+5. **Execution**: A web worker runs the OpenCascade kernel to build the B-Rep geometry.
+6. **Geometry Percepts**: The worker returns geometric reports (volume, bounding boxes, face counts) back to the LLM.
+7. **Auto-Repair Loop**: If the geometry fails (e.g., self-intersecting fillet), the LLM uses the percepts to fix the graph autonomously.
+
+## What makes it different?
+
+| Feature | C33D | Grasshopper / Dynamo | CadQuery / build123d | Zoo (KCL) / text-to-CAD | Blender + LLM plugins |
+|---|---|---|---|---|---|
+| **Paradigm** | AI-authored **node graph**, human-editable | human-authored node graph | human-written code | AI-generated code/geometry | AI-driven destructive mesh edits |
+| **Output stays parametric** | ✅ sliders + formulas + relations | ✅ | ✅ | partially (code regenerable, no live UI) | ❌ mesh |
+| **Real CAD kernel (B-Rep, STEP)** | ✅ OpenCascade | ✅ Rhino | ✅ | ✅ | ❌ |
+| **Runs in browser, no install** | ✅ | ❌ | ❌ | ✅ (SaaS) | ❌ |
+| **Model-agnostic (BYOK)** | ✅ incl. Ollama | — | — | ❌ vendor-hosted | varies |
+| **AI feedback loop** | ✅ (percepts & auto-repair) | — | — | internal/closed | ❌ |
+| **Self-improving knowledge base**| ✅ human-gated examples | — | — | closed | ❌ |
+| **Evaluation of parametric integrity**| ✅ (unique) | — | — | ❌ | ❌ |
+
+## The Research Angle
+
+C33D serves as an open research platform for **parametric design intelligence**. We tackle two main challenges in AI-CAD:
+
+1. **The Knowledge Loop**: The agent can save verified, successful designs as few-shot examples, organically extending its own vocabulary based on human validation.
+2. **Evaluation Methodology**: Unlike static text-to-CAD benchmarks, our [evaluation suite](results/README.md) scores models on **proportional integrity under parameter perturbation**. We test if a model's design logic survives when slider values change.
+
+Read the foundational architecture documents in the [**Research Directory**](docs/research/README.md).
+
+## Status & Roadmap
+
+C33D is currently in a **Research Preview** phase. It is a proof-of-concept for AI-native parametric modeling.
+See the [ROADMAP.md](docs/ROADMAP.md) for upcoming features and open RFCs.
+
+## Contributing and Citation
+
+We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) (coming soon) for guidelines on adding new nodes, submitting verified examples, or contributing evaluation runs.
+
+If you use C33D in your research, please cite it:
+
+```bibtex
+@software{poturak_2026_c33d,
+  author       = {Poturak, Semir},
+  title        = {C33D: AI-Native Parametric CAD},
+  year         = 2026,
+  url          = {https://github.com/3esign/c33d}
+}
+```
+
+---
+*C33D — Copyright 2026 Semir Poturak, PhD*

@@ -26,6 +26,7 @@ dist-ssr
 # Agent-generated data (keep local, back up separately)
 intelligence_log.json
 .agents/EVAL_RESULTS.json
+.agents/EXAMPLES.json
 
 # Raw session dumps / scratch — do not commit
 transcript_tail.txt
