@@ -45,6 +45,13 @@ export const ChatPanel: React.FC = () => {
       setInput('');
       
       await processUserIntent(userText);
+    } catch (err: any) {
+      console.error("Agent execution failed:", err);
+      addMessage({
+        id: generateUUID(),
+        role: 'system',
+        content: `Error running agent: ${err.message || err}`
+      });
     } finally {
       setIsLoading(false);
     }

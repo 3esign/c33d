@@ -9,17 +9,24 @@ import { retrieveSimilarExamples, formatExampleForPrompt, condenseGraph } from '
 import { checkGeometrySanity, formatGeometryReport, runVisionVerification } from './verification';
 import { validateGraphStructure } from './graphValidation';
 import { captureViewportSnapshot } from '../utils/snapshot';
+import { isSystemError } from '../utils/errors';
 
 const MAX_AGENT_TURNS = 8;
 const MAX_AUTO_REPAIRS = 2;
 
 // ---------- JSON repair (legacy fallback path) ----------
 function robustJSONParse(text: string): any {
+  if (typeof text !== 'string') {
+    throw new Error("AI did not return any text response.");
+  }
   const jsonMatch = text.match(/\{[\s\S]*\}/);
   if (!jsonMatch) {
     throw new Error("AI did not return valid JSON. Response was: " + text);
   }
   let jsonStr = jsonMatch[0];
+  if (!jsonStr) {
+    throw new Error("AI returned empty JSON match.");
+  }
   jsonStr = jsonStr.replace(/\/\*[\s\S]*?\*\//g, '');
   jsonStr = jsonStr.split('\n')
     .map(line => {
@@ -158,26 +165,36 @@ function addAssistantMessage(content: string) {
 // returns { error, report, sanity } — the agent's percepts.
 async function applyAndPerceive(graph: WorkingGraph) {
   const store = useStore.getState();
+
+  // Run structural validation first
+  const structural = validateGraphStructure(graph.nodes as any[], graph.edges as any[], store.episodeRatios);
+  const structuralErrors = structural.filter(s => s.severity === 'error').map(s => s.message);
+  const structuralWarnings = structural.filter(s => s.severity === 'warning').map(s => s.message);
+
+  if (structuralErrors.length > 0) {
+    // Skip worker evaluation entirely on structural errors!
+    return {
+      error: 'Structural validation failed',
+      report: null,
+      sanity: {
+        sane: false,
+        issues: structuralErrors,
+        warnings: structuralWarnings
+      },
+      isStructural: true
+    };
+  }
+
   const laidOut = autoLayout(graph.nodes as any[], graph.edges as any[]);
   store.setNodes(laidOut as any[]);
   store.setEdges(graph.edges as any[]);
   const outcome = await waitForEvaluation();
   const sanity = checkGeometrySanity(outcome.report, outcome.error);
 
-  // Structural (kernel-free) validation runs first: missing solid inputs and
-  // unconnected Expression variables are the root cause of the null/collapse
-  // cascade, so we surface them ahead of the downstream geometry symptoms.
-  const structural = validateGraphStructure(graph.nodes as any[], graph.edges as any[], store.episodeRatios);
-  if (structural.length > 0) {
-    const structuralMsgs = structural.filter(s => s.severity === 'error').map(s => s.message);
-    if (structuralMsgs.length > 0) {
-      sanity.issues = [...structuralMsgs, ...sanity.issues];
-      sanity.sane = false;
-    }
-    const warningMsgs = structural.filter(s => s.severity === 'warning').map(s => s.message);
-    if (warningMsgs.length > 0) sanity.warnings = warningMsgs;
+  if (structuralWarnings.length > 0) {
+    sanity.warnings = [...(sanity.warnings || []), ...structuralWarnings];
   }
-  return { ...outcome, sanity };
+  return { ...outcome, sanity, isStructural: false };
 }
 
 function formatCompactGraphState(nodes: any[], edges: any[]): string {
@@ -449,12 +466,18 @@ async function runToolLoop(modifiedUserText: string, originalText: string, optio
       }
 
       if (!percept.sanity.sane) {
-        repairs++;
-        if (repairs > MAX_AUTO_REPAIRS) {
-          addSystemMessage(`Auto-repair limit reached. Remaining issues: ${percept.sanity.issues.join('; ')}`);
-          break;
+        if (percept.isStructural) {
+          addSystemMessage(`Structural validation error (does not count against repair budget): ${percept.sanity.issues.slice(0, 3).join('; ')}`);
+        } else if (isSystemError(percept.error)) {
+          addSystemMessage(`Engine fault (does not count against repair budget): ${percept.error}. Retrying...`);
+        } else {
+          repairs++;
+          if (repairs > MAX_AUTO_REPAIRS) {
+            addSystemMessage(`Auto-repair limit reached. Remaining issues: ${percept.sanity.issues.join('; ')}`);
+            break;
+          }
+          addSystemMessage(`Issues detected (repair attempt ${repairs}/${MAX_AUTO_REPAIRS}): ${percept.sanity.issues.slice(0, 3).join('; ')}`);
         }
-        addSystemMessage(`Issues detected (repair attempt ${repairs}/${MAX_AUTO_REPAIRS}): ${percept.sanity.issues.slice(0, 3).join('; ')}`);
         continue; // let the model react to the report
       }
     }
@@ -541,7 +564,11 @@ async function runLegacyJson(modifiedUserText: string, originalText: string, opt
     if (responseText.includes('/*__TRUNCATED__*/')) {
       addSystemMessage('Response was truncated (output limit hit). Asking the model to rebuild more compactly.');
       if (attempt < MAX_AUTO_REPAIRS) {
-        apiMessages.push({ role: 'user' as const, content: 'Your previous response was cut off before completing. Rebuild the FULL graph but be compact: omit sourceHandle/targetHandle/id for standard single-solid edges (give only {"source","target"}), and keep reasoning to one short sentence. Respond ONLY with JSON.' });
+        const compactState = formatCompactGraphState(useStore.getState().nodes, useStore.getState().edges);
+        apiMessages.push({
+          role: 'user' as const,
+          content: `${compactState}\n\nYour previous response was cut off before completing. Rebuild the FULL graph but be compact: omit sourceHandle/targetHandle/id for standard single-solid edges (give only {"source","target"}), and keep reasoning to one short sentence. Respond ONLY with JSON.`
+        });
         continue;
       }
     }
@@ -608,8 +635,23 @@ async function runLegacyJson(modifiedUserText: string, originalText: string, opt
       break;
     }
 
+    let isBudgetExempt = false;
+    if (percept.isStructural) {
+      addSystemMessage(`Structural validation error (does not count against repair budget) — asking the model to fix.`);
+      isBudgetExempt = true;
+    } else if (isSystemError(percept.error)) {
+      addSystemMessage(`Engine fault (does not count against repair budget) — retrying.`);
+      isBudgetExempt = true;
+    }
+
+    if (isBudgetExempt) {
+      attempt--;
+    }
+
     if (attempt < MAX_AUTO_REPAIRS) {
-      addSystemMessage(`Issues detected (auto-repair ${attempt + 1}/${MAX_AUTO_REPAIRS}): ${percept.sanity.issues.slice(0, 3).join('; ')}`);
+      if (!isBudgetExempt) {
+        addSystemMessage(`Issues detected (auto-repair ${attempt + 1}/${MAX_AUTO_REPAIRS}): ${percept.sanity.issues.slice(0, 3).join('; ')}`);
+      }
       const compactState = formatCompactGraphState(graph.nodes, graph.edges);
       const reportText = formatGeometryReport(percept.report, percept.error) +
         `\nISSUES:\n${percept.sanity.issues.map(i => '- ' + i).join('\n')}` +

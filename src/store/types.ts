@@ -19,6 +19,9 @@ export type GeometryReport = {
   sliders?: Record<string, number>;
   nodeCount?: number;
   edgeCount?: number;
+  transformCount?: number;
+  nodesPerLeafRatio?: number;
+  nodeEconomyWarning?: boolean;
   selections?: Record<
     string,
     {

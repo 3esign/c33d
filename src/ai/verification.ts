@@ -4,6 +4,7 @@
 import type { GeometryReport } from '../store/useStore';
 import { useStore } from '../store/useStore';
 import { chatCompletionVision } from './api';
+import { isSystemError } from '../utils/errors';
 
 export interface SanityResult {
   sane: boolean;
@@ -121,7 +122,13 @@ function analyzeSpatialRelations(report: GeometryReport): { contained: string[];
 
 export function checkGeometrySanity(report: GeometryReport | null, evalError: string | null): SanityResult {
   const issues: string[] = [];
-  if (evalError) issues.push(`Evaluation error: ${evalError}`);
+  if (evalError) {
+    if (isSystemError(evalError)) {
+      issues.push(`Engine fault — not caused by your design. Do not modify the graph to work around it; the system is retrying.`);
+    } else {
+      issues.push(`Evaluation error: ${evalError}`);
+    }
+  }
   if (!report) return { sane: issues.length === 0, issues };
 
   if (report.meshedLeafCount === 0 && report.leaves.length > 0) {
@@ -240,16 +247,26 @@ export function checkGeometrySanity(report: GeometryReport | null, evalError: st
     }
   }
 
+  if (report.nodeEconomyWarning) {
+    issues.push(`Node economy warning: This graph has too many transform nodes (${report.transformCount}) relative to the number of rendered leaves (${report.leaves.length}). Use list-driven transforms, patterns (LinearPattern/CircularPattern), or instancers (PlaceOnVertices/ScatterOnSurface) to repeat shapes instead of duplicating Translate/Rotate/Scale nodes.`);
+  }
   return { sane: issues.length === 0, issues };
 }
 
 // Compact textual report for the model — symbolic percepts, not raw dumps.
 export function formatGeometryReport(report: GeometryReport | null, evalError: string | null): string {
-  if (evalError) return `EVALUATION FAILED: ${evalError}`;
+  if (evalError) {
+    if (isSystemError(evalError)) {
+      return `EVALUATION FAILED: Engine fault — not caused by your design. Do not modify the graph to work around it; the system is retrying.`;
+    }
+    return `EVALUATION FAILED: ${evalError}`;
+  }
   if (!report) return 'No geometry report available.';
   const lines: string[] = [];
   lines.push(`Meshed leaves: ${report.meshedLeafCount}/${report.leaves.length}`);
-  if (report.nodeCount !== undefined) {
+  if (report.nodesPerLeafRatio !== undefined) {
+    lines.push(`Node-per-leaf ratio: ${report.nodesPerLeafRatio.toFixed(2)} (Total: ${report.nodeCount} nodes, Transforms: ${report.transformCount}, Leaves: ${report.leaves.length})`);
+  } else if (report.nodeCount !== undefined) {
     lines.push(`Graph size: ${report.nodeCount} nodes, ${report.edgeCount ?? '?'} edges. If this grew across repair rounds without the design getting richer, you likely left stale duplicate nodes behind — remove them.`);
   }
   const sliderEntries = Object.entries(report.sliders || {});

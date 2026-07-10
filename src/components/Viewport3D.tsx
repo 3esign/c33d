@@ -7,6 +7,7 @@ import { Outliner } from './Outliner';
 import { useStore } from '../store/useStore';
 import type { SceneObject } from '../store/useStore';
 import { registerViewportCanvas } from '../utils/snapshot';
+import { isSystemError } from '../utils/errors';
 
 const BoundsController: React.FC = () => {
   const bounds = useBounds();
@@ -77,7 +78,7 @@ const GeometryMesh: React.FC<{ object: SceneObject }> = ({ object }) => {
 };
 
 export const Viewport3D: React.FC = () => {
-  const { sceneObjects, zoomToFit, openSaveModal, nodes } = useStore();
+  const { sceneObjects, zoomToFit, openSaveModal, nodes, lastEvaluationError } = useStore();
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -151,7 +152,7 @@ export const Viewport3D: React.FC = () => {
         Zoom to Fit
       </button>
 
-      {nodes.length > 0 && (
+      {nodes.length > 0 && !isSystemError(lastEvaluationError) && (
         <button
           onClick={() => openSaveModal(null)}
           className="absolute top-4 left-36 bg-emerald-700/90 hover:bg-emerald-600 text-white font-medium px-3 py-1.5 rounded-lg border border-emerald-600 shadow-lg flex items-center gap-1.5 text-xs transition-colors z-50 pointer-events-auto cursor-pointer"

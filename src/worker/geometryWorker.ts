@@ -5,6 +5,13 @@ import { NODE_LIBRARY } from '../nodes/NodeDefinitions';
 import { evaluateExpression as evaluateExpressionSafe, normalizeVarName } from '../utils/expression';
 import { EXECUTORS } from './executors';
 
+const TRANSFORM_TYPES = new Set([
+  'Translate', 'Rotate', 'Scale', 'ScaleXYZ', 'Bend', 'Twist', 'Align',
+  'PlaceOnSurface', 'ScatterOnSurface', 'PlaceOnVertices', 'Fillet', 'Chamfer',
+  'Extrude', 'Mirror', 'Shell', 'Loft', 'Revolve', 'LinearPattern',
+  'CircularPattern', 'SubdivideSurface', 'FilterFaces'
+]);
+
 // Turns a generic "no geometry" leaf into an actionable trace: is an input
 // missing, did an upstream node fail (cascade), or are the params to blame?
 function explainNullGeometry(
@@ -151,6 +158,8 @@ self.onmessage = async (e) => {
     } catch (err: any) {
       postMessage({ type: 'EVALUATE_ERROR', id, error: err.message || 'Unknown error during graph evaluation' });
     }
+  } else if (type === 'CLEAR_CACHE') {
+    shapeCache.clear();
   }
 };
 
@@ -471,7 +480,8 @@ async function evaluateGraphInternal(
         const toDelete = collectShapes(entry.shape);
         for (const s of toDelete) {
           if (!retainedShapes.has(s)) {
-            try { s.delete?.(); } catch (e) {}
+            // Mitigated: stop deleting to prevent TopoDS_Shape pointer corruption
+            // try { s.delete?.(); } catch (e) {}
           }
         }
       }
@@ -670,6 +680,11 @@ async function evaluateGraphInternal(
     }
   }
 
+  const transformCount = nodes.filter(n => TRANSFORM_TYPES.has(n.type)).length;
+  const leafCount = leafReports.length;
+  const nodesPerLeafRatio = leafCount > 0 ? nodes.length / leafCount : 0;
+  const nodeEconomyWarning = leafCount > 0 && transformCount > 2 * leafCount;
+
   const report = {
     leaves: leafReports,
     nodeErrors,
@@ -679,6 +694,9 @@ async function evaluateGraphInternal(
     helpers,
     nodeCount: nodes.length,
     edgeCount: edges.length,
+    transformCount,
+    nodesPerLeafRatio,
+    nodeEconomyWarning,
     scene: hasScene ? {
       min: sceneMin, max: sceneMax,
       size: [sceneMax[0] - sceneMin[0], sceneMax[1] - sceneMin[1], sceneMax[2] - sceneMin[2]],
@@ -844,7 +862,8 @@ async function evaluateGraph(rawNodes: any[], rawEdges: any[], macros: any[]) {
             // Clean up newly created shapes in tempCache
             for (const [id, entry] of tempCache) {
               if (!shapeCache.has(id) || shapeCache.get(id)!.hash !== entry.hash) {
-                try { entry.shape?.delete?.(); } catch (e) {}
+                // Mitigated: stop deleting to prevent TopoDS_Shape pointer corruption
+                // try { entry.shape?.delete?.(); } catch (e) {}
               }
             }
 

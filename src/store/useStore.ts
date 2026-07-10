@@ -24,6 +24,7 @@ import type {
   AgentSlot,
 } from './types';
 import { DEFAULT_GUIDELINES } from './guidelines';
+import { isSystemError } from '../utils/errors';
 
 // Web worker lifecycle (recreatable — OCCT WASM leaks are contained by recycling)
 const createGeometryWorker = () =>
@@ -119,6 +120,7 @@ type AppState = {
 
   // Geometry report from the last evaluation (percepts for the agent)
   lastGeometryReport: GeometryReport | null;
+  hasRetriedDeleted: boolean;
 
   // Episode tracking (prompts + plan of the current design, for the success library)
   episodePrompts: string[];
@@ -221,7 +223,7 @@ export const useStore = create<AppState>()(
               error: evaluationError
             });
           }
-          set({ sceneObjects: newObjects, isEvaluating: false, lastEvaluationError: evaluationError, lastGeometryReport: report || null });
+          set({ sceneObjects: newObjects, isEvaluating: false, lastEvaluationError: evaluationError, lastGeometryReport: report || null, hasRetriedDeleted: false });
 
           // Recycle the worker periodically to contain OCCT WASM memory growth
           if (report?.recycleRecommended && !(window as any)._pendingEvaluation) {
@@ -237,6 +239,24 @@ export const useStore = create<AppState>()(
             resolveEvalWaiters({ error: evaluationError, report: report || null });
           }
         } else if (type === 'EVALUATE_ERROR') {
+          const errStr = String(error || 'Unknown error during graph evaluation');
+          if (isSystemError(errStr) && !get().hasRetriedDeleted) {
+            console.warn("Detected system/kernel deletion error. Respawning worker and retrying evaluation once...", errStr);
+            set({ hasRetriedDeleted: true });
+            try { worker.terminate(); } catch (err) {}
+            worker = createGeometryWorker();
+            bindWorker(worker);
+            
+            // Re-post message to restart the evaluation
+            const { nodes, edges, macros } = get();
+            worker.postMessage({
+              type: 'EVALUATE_GRAPH',
+              id: id || generateUUID(),
+              payload: { nodes, edges, macros }
+            });
+            return;
+          }
+
           console.error('Graph Evaluation Error:', error);
           get().addPerformanceLog({
             model: 'System',
@@ -245,17 +265,18 @@ export const useStore = create<AppState>()(
             responseTimeMs: 0,
             nodeCount: get().nodes.length,
             edgeCount: get().edges.length,
-            error: String(error)
+            error: errStr
           });
           set({
             isEvaluating: false,
-            lastEvaluationError: String(error)
+            lastEvaluationError: errStr,
+            hasRetriedDeleted: false
           });
           if ((window as any)._pendingEvaluation) {
             (window as any)._pendingEvaluation = false;
             get().evaluateGraph();
           } else {
-            resolveEvalWaiters({ error: String(error), report: null });
+            resolveEvalWaiters({ error: errStr, report: null });
           }
         }
       };
@@ -502,9 +523,13 @@ export const useStore = create<AppState>()(
         },
         clearGraph: () => {
           set({ nodes: [], edges: [], sceneObjects: [], lastEvaluationError: null, lastGeometryReport: null });
+          try {
+            worker.postMessage({ type: 'CLEAR_CACHE' });
+          } catch (e) {}
         },
         lastEvaluationError: null,
         clearLastEvaluationError: () => set({ lastEvaluationError: null }),
+        hasRetriedDeleted: false,
         
         // Agent Guidelines
         agentGuidelines: DEFAULT_GUIDELINES,
@@ -601,7 +626,13 @@ export const useStore = create<AppState>()(
         // Save modal + nudge
         saveModalOpen: false,
         saveModalCandidate: null,
-        openSaveModal: (candidate = null) => set({ saveModalOpen: true, saveModalCandidate: candidate }),
+        openSaveModal: (candidate = null) => {
+          if (isSystemError(get().lastEvaluationError)) {
+            console.warn("Save blocked due to active system/kernel error.");
+            return;
+          }
+          set({ saveModalOpen: true, saveModalCandidate: candidate });
+        },
         closeSaveModal: () => set({ saveModalOpen: false, saveModalCandidate: null }),
         nudgeCandidate: null,
         setNudgeCandidate: (c) => set({ nudgeCandidate: c }),

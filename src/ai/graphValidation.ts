@@ -128,6 +128,7 @@ export function validateGraphStructure(
   // 0c. Plan ratio contract check.
   if (ratios && ratios.length > 0) {
     for (const r of ratios) {
+      if (!r || typeof r.param !== 'string') continue;
       const parts = r.param.split('.');
       if (parts.length !== 2) continue;
       const [nodeId, paramName] = parts;
