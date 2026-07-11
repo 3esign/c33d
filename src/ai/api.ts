@@ -98,13 +98,15 @@ export async function chatCompletion(messages: SimpleMessage[], systemPrompt: st
     const endpoint = `${url.replace(/\/$/, '')}/api/chat`;
     const ollamaModel = model || 'llama3';
 
-    const payload = {
+    const payload: any = {
       model: ollamaModel,
       messages: [{ role: 'system', content: systemPrompt }, ...messages],
       stream: false,
-      format: 'json',
       options: { num_predict: MAX_OUTPUT_TOKENS }
     };
+    if (!ollamaModel.toLowerCase().includes('cloud')) {
+      payload.format = 'json';
+    }
 
     const response = await fetch(endpoint, {
       method: 'POST',
@@ -408,15 +410,17 @@ export async function chatCompletionVision(prompt: string, imageDataUrls: string
 
   if (provider === 'ollama') {
     const url = (apiKey || 'http://localhost:11434').replace(/\/$/, '');
-    const payload = {
+    const payload: any = {
       model,
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: prompt, images: imageDataUrls.map(u => dataUrlToBase64(u).data) },
       ],
       stream: false,
-      format: 'json',
     };
+    if (!model.toLowerCase().includes('cloud')) {
+      payload.format = 'json';
+    }
     const response = await fetch(`${url}/api/chat`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
     if (!response.ok) throw new Error(`Ollama Vision Error: ${response.status}`);
     const data = await response.json();

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useStore, generateUUID } from '../store/useStore';
-import { Settings, Send, MessageSquare, BarChart2, BookOpen, Star, FlaskConical, Library, X } from 'lucide-react';
+import { Settings, Send, MessageSquare, BarChart2, BookOpen, Star, FlaskConical, Library, X, Brain } from 'lucide-react';
 import { processUserIntent } from '../ai/agent';
 import { LibraryPanel } from './LibraryPanel';
 import { EvalPanel } from './EvalPanel';
@@ -8,7 +8,7 @@ import { EvalPanel } from './EvalPanel';
 export const ChatPanel: React.FC = () => {
   const [input, setInput] = useState('');
   const [showSettings, setShowSettings] = useState(false);
-  const [activeTab, setActiveTab] = useState<'chat' | 'logs' | 'guidelines' | 'library' | 'evals'>('chat');
+  const [activeTab, setActiveTab] = useState<'chat' | 'reasoning' | 'logs' | 'guidelines' | 'library' | 'evals'>('chat');
   const [isLoading, setIsLoading] = useState(false);
 
   const {
@@ -29,6 +29,9 @@ export const ChatPanel: React.FC = () => {
     nudgeCandidate,
     setNudgeCandidate,
     openSaveModal,
+    episodePlan,
+    episodeRatios,
+    episodeDrivers,
   } = useStore();
 
   const handleSend = async () => {
@@ -125,6 +128,17 @@ export const ChatPanel: React.FC = () => {
         >
           <MessageSquare size={13} />
           Chat
+        </button>
+        <button
+          onClick={() => setActiveTab('reasoning')}
+          className={`flex-1 min-w-0 flex items-center justify-center gap-1 py-2 px-0.5 text-[11px] font-semibold border-b-2 transition-colors overflow-hidden whitespace-nowrap ${
+            activeTab === 'reasoning'
+              ? 'border-blue-500 text-blue-400 bg-slate-800/50'
+              : 'border-transparent text-slate-400 hover:text-slate-200 hover:bg-slate-800/30'
+          }`}
+        >
+          <Brain size={13} />
+          Reasoning
         </button>
         <button
           onClick={() => setActiveTab('guidelines')}
@@ -345,28 +359,111 @@ export const ChatPanel: React.FC = () => {
               <p className="text-xs mt-2">Example: "Design a stadium with 40k capacity and a box shape base"</p>
             </div>
           ) : (
-            [...messages].reverse().map((msg) => (
-              <div 
-                key={msg.id} 
-                className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'}`}
-              >
-                <div 
-                  className={`max-w-[85%] rounded-lg p-3 text-sm shadow-sm whitespace-pre-wrap
-                    ${msg.role === 'user' 
-                      ? 'bg-blue-600 text-white rounded-br-none' 
-                      : 'bg-slate-700 text-slate-200 rounded-bl-none'
-                    }`}
-                >
-                  {msg.role === 'assistant' && (
-                    <div className="text-[10px] text-blue-400 font-bold mb-1 uppercase tracking-wider">
-                      AI Response
+            [...messages].reverse().map((msg) => {
+              if (msg.role === 'system') {
+                return (
+                  <div key={msg.id} className="w-full flex justify-center my-1.5">
+                    <div className="bg-slate-800/80 border border-slate-700/60 text-slate-400 rounded-md px-3 py-1.5 text-[10.5px] font-mono max-w-[95%] whitespace-pre-wrap leading-relaxed shadow-sm">
+                      <span className="text-slate-500 font-bold uppercase tracking-wider mr-1.5">[System]</span>
+                      {msg.content}
                     </div>
-                  )}
-                  {msg.content}
+                  </div>
+                );
+              }
+              return (
+                <div 
+                  key={msg.id} 
+                  className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'} my-1`}
+                >
+                  <div 
+                    className={`max-w-[85%] rounded-lg p-3 text-sm shadow-sm whitespace-pre-wrap
+                      ${msg.role === 'user' 
+                        ? 'bg-blue-600 text-white rounded-br-none' 
+                        : 'bg-slate-700 text-slate-200 rounded-bl-none'
+                      }`}
+                  >
+                    {msg.role === 'assistant' && (
+                      <div className="text-[10px] text-blue-400 font-bold mb-1 uppercase tracking-wider">
+                        AI Response
+                      </div>
+                    )}
+                    {msg.content}
+                  </div>
+                </div>
+              );
+            })
+          )
+        ) : activeTab === 'reasoning' ? (
+          // Reasoning Tab
+          <div className="flex flex-col space-y-4 h-full min-h-[300px] text-xs">
+            <div>
+              <h3 className="text-sm font-semibold text-slate-200 flex items-center gap-1.5 mb-1.5">
+                <Brain size={14} className="text-blue-400" /> Active Design Plan
+              </h3>
+              {episodePlan ? (
+                <div className="bg-slate-900 border border-slate-700/60 rounded-lg p-3 font-mono text-[11px] leading-relaxed whitespace-pre-wrap text-slate-300 max-h-[160px] overflow-y-auto shadow-inner">
+                  {episodePlan}
+                </div>
+              ) : (
+                <div className="text-slate-500 italic py-2">No active plan recorded. Try generating a design in the chat.</div>
+              )}
+            </div>
+
+            {episodeRatios && episodeRatios.length > 0 && (
+              <div>
+                <h4 className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Governing Proportional Ratios</h4>
+                <div className="bg-slate-900 border border-slate-700/60 rounded-lg overflow-hidden shadow-inner">
+                  <table className="w-full text-left font-mono text-[10.5px]">
+                    <thead>
+                      <tr className="bg-slate-800/50 border-b border-slate-700 text-slate-400">
+                        <th className="p-2 font-semibold">Parameter</th>
+                        <th className="p-2 font-semibold">Formula / Value</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-800 text-slate-300">
+                      {episodeRatios.map((r, i) => (
+                        <tr key={i} className="hover:bg-slate-800/30">
+                          <td className="p-2 text-blue-300 font-semibold">{r.param}</td>
+                          <td className="p-2">{r.formula}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
               </div>
-            ))
-          )
+            )}
+
+            {episodeDrivers && episodeDrivers.length > 0 && (
+              <div>
+                <h4 className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Driver Sliders</h4>
+                <div className="flex flex-wrap gap-1.5 py-1">
+                  {episodeDrivers.map((d, i) => (
+                    <span key={i} className="bg-blue-950/40 border border-blue-900/60 text-blue-400 rounded-full px-2 py-0.5 text-[10px] font-mono font-medium">
+                      {d}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <div className="flex-1 flex flex-col min-h-[180px]">
+              <h3 className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Execution & Repair Logs</h3>
+              <div className="flex-1 bg-black/60 border border-slate-800 rounded-lg p-3 font-mono text-[10px] leading-relaxed text-slate-400 overflow-y-auto max-h-[300px] shadow-inner select-text">
+                {messages.filter(m => m.role === 'system').length === 0 ? (
+                  <div className="text-slate-600 italic">No system execution logs yet. Logs from the geometry kernel and repair loop will show up here.</div>
+                ) : (
+                  [...messages]
+                    .filter(m => m.role === 'system')
+                    .map((m, idx) => (
+                      <div key={m.id} className="mb-2 last:mb-0 border-b border-slate-900/60 pb-2 last:border-b-0">
+                        <span className="text-slate-650 font-bold mr-1.5">[LOG #{idx + 1}]</span>
+                        <span className="text-slate-300 whitespace-pre-wrap">{m.content}</span>
+                      </div>
+                    ))
+                )}
+              </div>
+            </div>
+          </div>
         ) : activeTab === 'guidelines' ? (
           // Guidelines Tab (static rules; the dynamic self-voted rules were retired
           // in favor of the verified success library — see Library tab)
