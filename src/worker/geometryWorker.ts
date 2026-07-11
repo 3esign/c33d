@@ -3,7 +3,7 @@ import opencascadeWasm from 'replicad-opencascadejs/src/replicad_single.wasm?url
 import * as replicad from 'replicad';
 import { NODE_LIBRARY } from '../nodes/NodeDefinitions';
 import { evaluateExpression as evaluateExpressionSafe, normalizeVarName } from '../utils/expression';
-import { EXECUTORS } from './executors';
+import { EXECUTORS, ensureText3DFont } from './executors';
 
 const TRANSFORM_TYPES = new Set([
   'Translate', 'Rotate', 'Scale', 'ScaleXYZ', 'Bend', 'Twist', 'Align',
@@ -153,6 +153,13 @@ self.onmessage = async (e) => {
 
   if (type === 'EVALUATE_GRAPH') {
     try {
+      // Text3D needs a font registered before its executor runs (executors are
+      // synchronous). Macros may hide Text3D nodes, so check their JSON too.
+      const needsFont =
+        (payload.nodes || []).some((n: any) => n.type === 'Text3D') ||
+        JSON.stringify(payload.macros || []).includes('"Text3D"');
+      if (needsFont) await ensureText3DFont();
+
       const { meshes, report, runPerturbation } = await evaluateGraph(payload.nodes, payload.edges, payload.macros || [], payload.disablePerturbation);
       postMessage({ type: 'EVALUATE_DONE', id, result: meshes, report });
       if (runPerturbation) {

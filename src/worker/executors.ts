@@ -10,6 +10,35 @@ import {
 import { parseSVGPath } from './svgPath.ts';
 import { evaluateSelectionQuery } from './selectionQuery.ts';
 
+// ---------- Text3D font loading ----------
+// replicad.sketchText requires a font registered via loadFont(); without it
+// every Text3D call dies with "Cannot read properties of undefined (reading
+// 'getPath')". The worker calls ensureText3DFont() before evaluating any graph
+// that contains a Text3D node. DejaVuSans.ttf is served from public/fonts/.
+let text3dFontReady = false;
+let text3dFontPromise: Promise<boolean> | null = null;
+
+export function ensureText3DFont(): Promise<boolean> {
+  if (text3dFontReady) return Promise.resolve(true);
+  if (!text3dFontPromise) {
+    const url = new URL('/fonts/DejaVuSans.ttf', (self as any).location?.origin || 'http://localhost').href;
+    text3dFontPromise = replicad
+      .loadFont(url)
+      .then(() => {
+        text3dFontReady = true;
+        return true;
+      })
+      .catch((err: any) => {
+        console.warn('Text3D font failed to load:', err);
+        text3dFontPromise = null; // allow a later retry
+        return false;
+      });
+  }
+  return text3dFontPromise;
+}
+
+export const isText3DFontReady = () => text3dFontReady;
+
 // NaN-safe numeric param read.
 function num(v: any, d: number): number {
   const p = parseFloat(v);
@@ -680,11 +709,22 @@ export const EXECUTORS: Record<
     const txt = params.text || "C33D";
     const size = parseFloat(params.size) || 10;
     const h = parseFloat(params.height) || 2;
+    if (!isText3DFontReady()) {
+      warn(
+        `Text3D unavailable: the text font could not be loaded (public/fonts/DejaVuSans.ttf missing or unreachable). Do not retry Text3D this session — build the label from primitives instead, or drop it.`
+      );
+      return null;
+    }
     try {
       return replicad.sketchText(txt, { fontSize: size }).extrude(h);
     } catch (err: any) {
       console.warn("Text3D failed:", err);
-      warn(`Text3D failed: ${String(err?.message || err)}.`);
+      const msg = String(err?.message || err);
+      warn(
+        msg.includes('getPath')
+          ? `Text3D failed: the font engine could not convert the text to outlines. Do not retry Text3D — build the label from primitives instead.`
+          : `Text3D failed: ${msg}.`
+      );
       return null;
     }
   },

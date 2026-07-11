@@ -106,6 +106,7 @@ ${macroLibraryText()}
 7c. SUB-SHAPE EDITING & SELECTIONS: use SelectFaces / SelectEdges (outputs "Selection") to target specific sub-faces or edges of a solid using a query predicate. Predicate queries support: "normal ~ +Z" (normal near direction), "center.z > 5" (face/edge centroid position), "parallel Z" (edge direction), "area > 10" (face area), "length < 5" (edge length), "coplanar" or "coaxial" checks. Boolean combinators (and, or, not) and parentheses are supported (e.g., "normal ~ +Z and center.z > 10"). Connect the Selection into ExtrudeFace (param height: positive to pull, negative to push/cut) or Fillet/Chamfer to modify the targeted sub-shapes. Use SplitLoop(solid, axis, at) to imprint edge loops (slice the outer face mesh into separate sub-faces) before selecting them; this allows localized extrusions/details on a single base solid. Note: Selection nodes output a Selection descriptor (resolved on execution); do not connect them to "solid" ports.
 8. Style: vary construction strategies and aesthetics between requests — do not repeat one formulaic design.
 9. When the user asks for a completely NEW object, clear the graph first so old geometry does not overlap.
+10. TEXT ANSWERS: when the user asks a question or requests feedback, critique, a report, an explanation, or advice, ANSWER IN TEXT and leave the graph alone. Do NOT build geometry to "represent" your answer — no 3D text banners, no "conceptual architecture" sculptures, no symbolic diagrams. Only build or modify geometry when the user asks for an object or a change to one.
 
 ### VERIFICATION LOOP:
 After graph changes you receive a GEOMETRY REPORT: per-leaf bounding boxes, volumes, node errors, scene extents, the slider inventory (names your formulas can reference), and graph size. READ IT. Compare sizes, positions and proportions against your plan (e.g. wheels bbox z-min should be at ground 0; parts should not be far from the scene bulk). Node errors saying a Fillet/Chamfer/Shell "passed the solid through" mean that feature silently did nothing — shrink its parameter instead of ignoring it. If the graph size grew across repairs, remove stale duplicate nodes rather than adding more. Fix discrepancies before declaring success.
@@ -124,14 +125,15 @@ ${store.nodes.length > 0 ? condenseGraph(store.nodes as any[], store.edges as an
 1. For a new design: call set_plan first (parts, attachments, governing ratios), then clear_graph if replacing, then add_nodes + connect (batch related calls), then read the geometry report, repair if needed, and call finish with a short summary.
 2. For modifications: update_nodes / connect / remove_nodes on the existing graph — do not rebuild everything.
 3. If the request is genuinely ambiguous, call ask_user with 1-3 targeted questions instead of guessing.
-4. Do NOT emit node positions — layout is automatic.`;
+4. Do NOT emit node positions — layout is automatic.
+5. For questions/feedback/reports (CORE RULE 10): reply in plain text with NO tool calls — that text is shown to the user directly.`;
   }
 
   return core + `
 
 ### OUTPUT PROTOCOL (respond ONLY with raw JSON, no markdown):
 {
-  "reasoning": "[string] your plan: parts, attachments, ratios, then verification notes",
+  "reasoning": "[string] your plan: parts, attachments, ratios, then verification notes. For questions/feedback/reports (CORE RULE 10) put your FULL text answer here and include NO graph fields at all — that is a complete, valid response.",
   "questions": ["clarifying questions, or empty array"],
   // OPTION A - PATCH (preferred for edits): "addedNodes": [{"id","type","data"}], "updatedNodes": [{"id","data"}], "removedNodeIds": [], "addedEdges": [{"source","target"}], "removedEdgeIds": []
   // OPTION B - NEW OBJECT: "clearGraph": true plus full "nodes": [{"id","type","data"}] and "edges": [...]
@@ -638,6 +640,7 @@ async function runToolLoop(modifiedUserText: string, originalText: string, optio
   let visionScore: number | undefined;
   let repairs = 0;
   let visionRepairUsed = false;
+  let consecutiveEngineFaults = 0;
 
   for (let turn = 0; turn < MAX_AGENT_TURNS; turn++) {
     const modelTurn = await chatCompletionWithTools(messages, systemPrompt, AGENT_TOOLS);
@@ -709,10 +712,19 @@ async function runToolLoop(modifiedUserText: string, originalText: string, optio
       }
 
       if (!percept.sanity.sane) {
+        if (!isSystemError(percept.error)) consecutiveEngineFaults = 0;
         if (percept.isStructural) {
           addSystemMessage(`Structural validation error (does not count against repair budget): ${percept.sanity.issues.slice(0, 3).join('; ')}`);
         } else if (isSystemError(percept.error)) {
-          addSystemMessage(`Engine fault (does not count against repair budget): ${percept.error}. Retrying...`);
+          // Circuit breaker: a kernel that faults on 3 consecutive evaluations
+          // will not be fixed by graph edits — stop burning model turns.
+          consecutiveEngineFaults++;
+          if (consecutiveEngineFaults >= 3) {
+            addSystemMessage(`Engine fault persisted across ${consecutiveEngineFaults} consecutive evaluations — stopping this episode. The kernel state may be corrupted; try again, Clear Graph, or reload the app.`);
+            lastError = percept.error || lastError;
+            break;
+          }
+          addSystemMessage(`Engine fault (does not count against repair budget, ${consecutiveEngineFaults}/3): ${percept.error}. Retrying...`);
         } else {
           repairs++;
           if (repairs > MAX_AUTO_REPAIRS) {
@@ -722,6 +734,8 @@ async function runToolLoop(modifiedUserText: string, originalText: string, optio
           addSystemMessage(`Issues detected (repair attempt ${repairs}/${MAX_AUTO_REPAIRS}): ${percept.sanity.issues.slice(0, 3).join('; ')}`);
         }
         continue; // let the model react to the report
+      } else {
+        consecutiveEngineFaults = 0;
       }
     }
 
@@ -798,6 +812,7 @@ async function runLegacyJson(modifiedUserText: string, originalText: string, opt
   let lastError: string | undefined;
   let visionScore: number | undefined;
   let structuralExemptions = 0;
+  let engineFaultExemptions = 0;
 
   for (let attempt = 0; attempt <= MAX_AUTO_REPAIRS; attempt++) {
     const responseText = await chatCompletion(apiMessages, systemPrompt);
@@ -859,6 +874,11 @@ async function runLegacyJson(modifiedUserText: string, originalText: string, opt
       percept.sanity.issues.push(...graphResult.droppedEdges.map((e: string) => `Dropped invalid edge: ${e}`));
       percept.sanity.sane = false;
     }
+    if (graphResult.patchNotes && graphResult.patchNotes.length > 0) {
+      // Non-blocking, but the model must see them (system messages don't reach it).
+      percept.sanity.warnings = [...(percept.sanity.warnings || []), ...graphResult.patchNotes];
+      graphResult.patchNotes.forEach((note: string) => addSystemMessage(`[Patch] ${note}`));
+    }
     evaluatedOk = !percept.error;
     geometrySane = percept.sanity.sane;
     lastError = percept.error || (percept.sanity.issues.length ? percept.sanity.issues.join(' | ') : undefined);
@@ -889,8 +909,18 @@ async function runLegacyJson(modifiedUserText: string, originalText: string, opt
         addSystemMessage(`Structural validation error (exemptions exhausted, counts against repair budget) — asking the model to fix.`);
       }
     } else if (isSystemError(percept.error)) {
-      addSystemMessage(`Engine fault (does not count against repair budget) — retrying.`);
-      isBudgetExempt = true;
+      // Engine faults are exempt from the repair budget, but ONLY a limited
+      // number of times. Without this cap a persistently faulting kernel put
+      // the loop into an infinite retry (attempt-- forever) while the model
+      // thrashed the graph chasing an error it never caused — see the Gemma
+      // transcript (15+ consecutive faults, graph degraded to rubble).
+      if (engineFaultExemptions < 3) {
+        engineFaultExemptions++;
+        addSystemMessage(`Engine fault (does not count against repair budget, ${engineFaultExemptions}/3) — retrying.`);
+        isBudgetExempt = true;
+      } else {
+        addSystemMessage(`Engine fault persisted after 3 exempt retries — the kernel appears unstable with this graph. Further faults now count against the repair budget. Consider Clear Graph or reloading the app.`);
+      }
     }
 
     if (isBudgetExempt) {
@@ -924,12 +954,18 @@ async function runLegacyJson(modifiedUserText: string, originalText: string, opt
 // Applies parsed JSON graph operations to a fresh working copy. Returns null if no ops.
 const NUMBER_OUTPUT_TYPES_JSON = new Set(['NumberSlider', 'Expression', 'Series', 'Range', 'ListItem', 'ListLength']);
 
-function applyParsedGraphOps(parsed: any, options?: { forEval?: boolean }): (WorkingGraph & { droppedEdges: string[] }) | null {
+function applyParsedGraphOps(parsed: any, options?: { forEval?: boolean }): (WorkingGraph & { droppedEdges: string[]; patchNotes: string[] }) | null {
   const store = useStore.getState();
   let nextNodes: any[] = JSON.parse(JSON.stringify(store.nodes));
   let nextEdges: any[] = JSON.parse(JSON.stringify(store.edges));
   let hasUpdates = false;
   const droppedEdges: string[] = [];
+  // Soft feedback channel: things the model asked for that did NOT happen
+  // (unmatched edge removals, skipped updates, type-change resets). These do
+  // not fail sanity, but MUST reach the model — silent no-ops are how the
+  // "phantom edge" repair spirals started: the model removed edges turn after
+  // turn, nothing matched, and it concluded the system was haunted.
+  const patchNotes: string[] = [];
 
   // Fill omitted edge handles the same way the tool path does, validating existence of nodes/handles
   const validateAndResolveEdge = (e: any, edgeList: any[]): { sourceHandle: string; targetHandle: string; isValid: boolean; error?: string } => {
@@ -1001,8 +1037,37 @@ function applyParsedGraphOps(parsed: any, options?: { forEval?: boolean }): (Wor
       nextEdges = nextEdges.filter(e => !toRemove.includes(e.source) && !toRemove.includes(e.target));
     }
     if (parsed.removedEdgeIds) {
-      const toRemove = parsed.removedEdgeIds.map(String);
-      nextEdges = nextEdges.filter(e => !toRemove.includes(e.id));
+      // Models rarely know real edge ids. Accept, in order: exact id,
+      // {source,target[,targetHandle]} objects, and "source->target[.handle]"
+      // strings (also → and =>). Report anything that matched nothing.
+      for (const raw of parsed.removedEdgeIds) {
+        let matched = 0;
+        const removeWhere = (pred: (e: any) => boolean) => {
+          nextEdges = nextEdges.filter(e => {
+            const hit = pred(e);
+            if (hit) matched++;
+            return !hit;
+          });
+        };
+        if (raw && typeof raw === 'object') {
+          const s = String(raw.source), t = String(raw.target);
+          const th = raw.targetHandle !== undefined && raw.targetHandle !== null ? String(raw.targetHandle) : undefined;
+          removeWhere(e => e.source === s && e.target === t && (!th || String(e.targetHandle) === th));
+        } else {
+          const idStr = String(raw);
+          removeWhere(e => e.id === idStr);
+          if (matched === 0) {
+            const m = idStr.match(/^(.+?)\s*(?:->|→|=>)\s*([^.:\s]+)(?:[.:]([\w:]+))?$/);
+            if (m) {
+              const [, s, t, th] = m;
+              removeWhere(e => e.source === s.trim() && e.target === t.trim() && (!th || String(e.targetHandle) === th));
+            }
+          }
+        }
+        if (matched === 0) {
+          patchNotes.push(`removedEdgeIds entry ${JSON.stringify(raw)} matched NO edge — nothing was removed. Use the edge ids shown in the graph state, {"source","target"} objects, or "source->target" strings.`);
+        }
+      }
     }
     if (parsed.addedNodes) {
       parsed.addedNodes.forEach((n: any) => {
@@ -1022,16 +1087,40 @@ function applyParsedGraphOps(parsed: any, options?: { forEval?: boolean }): (Wor
       parsed.updatedNodes.forEach((n: any) => {
         const id = String(n.id);
         const existing = nextNodes.find(x => x.id === id);
-        if (existing) {
-          const { warnings, errors, validatedData } = validateAndNormalizeNodeData(id, existing.type, n.data, store.macros);
-          if (errors.length > 0) {
-            droppedEdges.push(`Node "${id}" update has invalid data: ${errors.join(', ')}`);
-          }
-          if (warnings.length > 0) {
-            warnings.forEach(w => addSystemMessage(`[Warning] ${w}`));
-          }
+        if (!existing) {
+          // Previously a silent no-op — the model kept "updating" ghosts.
+          patchNotes.push(`updatedNodes entry "${id}" matched NO existing node — nothing was updated. Use addedNodes to create it.`);
+          return;
+        }
+        // Type change: validate params against the NEW type and RESET data.
+        // Merging old params across a type change is what produced kernel
+        // crashes ("Sphere" nodes still carrying Torus/Pipe params) and the
+        // model's "the system reports Sphere but claims Ellipsoid" confusion.
+        const requestedType = n.type !== undefined && n.type !== null ? String(n.type) : '';
+        const isTypeChange = !!requestedType && requestedType !== existing.type;
+        if (isTypeChange && !NODE_LIBRARY[requestedType]) {
+          patchNotes.push(`updatedNodes entry "${id}": unknown type "${requestedType}" — node left unchanged. Valid types are listed in the node library.`);
+          return;
+        }
+        const effectiveType = isTypeChange ? requestedType : existing.type;
+        const { warnings, errors, validatedData } = validateAndNormalizeNodeData(id, effectiveType, n.data, store.macros);
+        if (errors.length > 0) {
+          droppedEdges.push(`Node "${id}" update has invalid data: ${errors.join(', ')}`);
+        }
+        if (warnings.length > 0) {
+          warnings.forEach(w => addSystemMessage(`[Warning] ${w}`));
+        }
+        if (isTypeChange) {
+          const kept: Record<string, any> = {};
+          if (existing.data && existing.data.label !== undefined) kept.label = existing.data.label;
+          if (existing.data && existing.data.color !== undefined) kept.color = existing.data.color;
           nextNodes = nextNodes.map(ex => ex.id === id
-            ? { ...ex, ...n, id, data: { ...ex.data, ...validatedData } }
+            ? { ...ex, type: effectiveType, data: { ...kept, ...validatedData } }
+            : ex);
+          patchNotes.push(`Node "${id}" type changed ${existing.type} → ${effectiveType}; its old parameters were CLEARED (label/color kept). Supply all needed ${effectiveType} params.`);
+        } else {
+          nextNodes = nextNodes.map(ex => ex.id === id
+            ? { ...ex, id, type: existing.type, data: { ...ex.data, ...validatedData } }
             : ex);
         }
       });
@@ -1084,5 +1173,5 @@ function applyParsedGraphOps(parsed: any, options?: { forEval?: boolean }): (Wor
     nextEdges = rebuilt;
   }
 
-  return hasUpdates ? { nodes: nextNodes, edges: nextEdges, droppedEdges } : null;
+  return hasUpdates ? { nodes: nextNodes, edges: nextEdges, droppedEdges, patchNotes } : null;
 }

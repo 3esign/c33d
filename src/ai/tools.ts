@@ -65,7 +65,7 @@ export const AGENT_TOOLS: ToolDef[] = [
   },
   {
     name: 'update_nodes',
-    description: 'Update parameter values of existing nodes (merged into their data).',
+    description: 'Update parameter values of existing nodes (merged into their data). To change a node\'s TYPE, pass "type": the old params are then CLEARED (label/color kept) and data is validated against the new type — supply all params the new type needs.',
     parameters: {
       type: 'object',
       properties: {
@@ -73,7 +73,11 @@ export const AGENT_TOOLS: ToolDef[] = [
           type: 'array',
           items: {
             type: 'object',
-            properties: { id: { type: 'string' }, data: { type: 'object' } },
+            properties: {
+              id: { type: 'string' },
+              type: { type: 'string', description: 'Optional new node type. Changing type RESETS the node\'s params.' },
+              data: { type: 'object' },
+            },
             required: ['id', 'data'],
           },
         },
@@ -274,13 +278,33 @@ export function executeTool(
         const id = String(n.id);
         const existing = graph.nodes.find(x => x.id === id);
         if (!existing) { errors.push(`Node "${id}" not found.`); continue; }
-        const { warnings: nodeWarns, errors: nodeErrs, validatedData } = validateAndNormalizeNodeData(id, existing.type, n.data, macros);
+        // Optional type change: validate against the NEW type and RESET the
+        // node's data (label/color kept). Merging params across a type change
+        // leaves ghost params from the old type in the node, which crashes the
+        // kernel and desyncs the model's view of the graph.
+        const requestedType = n.type !== undefined && n.type !== null ? String(n.type) : '';
+        const isTypeChange = !!requestedType && requestedType !== existing.type;
+        if (isTypeChange && !NODE_LIBRARY[requestedType]) {
+          errors.push(`Node "${id}": unknown type "${requestedType}" — node left unchanged.`);
+          continue;
+        }
+        const effectiveType = isTypeChange ? requestedType : existing.type;
+        const { warnings: nodeWarns, errors: nodeErrs, validatedData } = validateAndNormalizeNodeData(id, effectiveType, n.data, macros);
         if (nodeErrs.length > 0) {
           errors.push(...nodeErrs);
           continue;
         }
         warnings.push(...nodeWarns);
-        existing.data = { ...existing.data, ...validatedData };
+        if (isTypeChange) {
+          const kept: Record<string, any> = {};
+          if (existing.data && existing.data.label !== undefined) kept.label = existing.data.label;
+          if (existing.data && existing.data.color !== undefined) kept.color = existing.data.color;
+          existing.type = effectiveType;
+          existing.data = { ...kept, ...validatedData };
+          warnings.push(`node "${id}" type changed to ${effectiveType}; old params were CLEARED (label/color kept) — supply all needed ${effectiveType} params`);
+        } else {
+          existing.data = { ...existing.data, ...validatedData };
+        }
         updated++;
       }
       return {
@@ -368,14 +392,20 @@ export function executeTool(
 
     case 'disconnect': {
       let removed = 0;
+      const noMatch: string[] = [];
       for (const e of args.edges || []) {
         const before = graph.edges.length;
         graph.edges = graph.edges.filter(x =>
           !(x.source === String(e.source) && x.target === String(e.target) &&
             (e.targetHandle === undefined || x.targetHandle === String(e.targetHandle))));
-        removed += before - graph.edges.length;
+        const n = before - graph.edges.length;
+        if (n === 0) noMatch.push(`${e.source}→${e.target}${e.targetHandle !== undefined ? '.' + e.targetHandle : ''}`);
+        removed += n;
       }
-      return { message: `${removed} connection(s) removed.`, mutatedGraph: removed > 0 };
+      return {
+        message: `${removed} connection(s) removed.${noMatch.length ? ` NO MATCH (nothing removed) for: ${noMatch.join(', ')} — check the current edges in the graph state.` : ''}`,
+        mutatedGraph: removed > 0,
+      };
     }
 
     case 'clear_graph': {
