@@ -6,7 +6,7 @@ import { AGENT_TOOLS, executeTool, geoInputHandles } from './tools';
 import type { WorkingGraph } from './tools';
 import { autoLayout } from '../layout/autoLayout';
 import { retrieveSimilarExamples, formatExampleForPrompt, condenseGraph } from './retrieval';
-import { checkGeometrySanity, formatGeometryReport, runVisionVerification } from './verification';
+import { checkGeometrySanity, formatGeometryReport, runVisionVerification, computeGraphShapeMetrics } from './verification';
 import { validateGraphStructure } from './graphValidation';
 import { captureViewportSnapshot } from '../utils/snapshot';
 import { isSystemError } from '../utils/errors';
@@ -96,7 +96,7 @@ ${macroLibraryText()}
 
 ### CORE RULES:
 1. Z is UP. The XY plane is the ground. The Plane node is a true 2D face on XY (Z=0); use Rotate (angle + axisX/axisY/axisZ) to orient shapes.
-2. Data flow: primitives output "solid"; transforms take a "solid" (or named) input and output "solid"; Boolean takes "target" + "tool". Every transform input MUST be connected. The solid chain (e.g. Cone→Translate→leaf) is usually the ONLY kind of edge you need.
+2. Data flow — TWO SPINES. (a) SOLID spine: primitives output "solid"; transforms take a "solid" (or named) input and output "solid"; Boolean takes "target" + "tool"; every transform input MUST be connected. (b) SKELETON spine: Point and Curve nodes are construction geometry that big forms DERIVE from — rails to loft (LoftCurves), paths to pipe/sweep (Pipe with its "path" input, SweepAlongCurve), boundaries to divide into placement points (DivideCurve → InstanceOnPoints), profiles to revolve/extrude (RevolveCurve, ExtrudeCurve). Large smooth forms, rhythms, and anything that must FOLLOW a shape belong on the skeleton spine; boxy mechanical assemblies belong on the solid spine.
 3. No loops exist. For repeated/scattered shapes use LinearPattern, CircularPattern, ScatterOnSurface, PlaceOnVertices — never dozens of duplicated nodes.
 4. PARAMETRIC DESIGN (essential — read carefully): create 2–5 NumberSlider nodes as the top-level design parameters, and give each a clear "label" (e.g. data {"label":"bodyRadius","value":6}). To make ANY numeric parameter depend on them, set that parameter's VALUE TO A FORMULA STRING referencing slider labels — NOT a separate node. Examples: a Cone with data {"radius1":"bodyRadius*1.3","radius2":"bodyRadius*0.6","height":"stage1Height*0.2"}; a Translate with data {"z":"stage1Height*0.6 + stage1Height/2"}. Formulas support + - * / ^ %, parentheses and functions (min, max, abs, sqrt, sin, cos, clamp, lerp, …). Do NOT build Expression nodes or "param:" edges for this kind of scalar math — inline formula strings are strongly preferred, need zero edges, and keep the graph small and robust. When a slider moves, every formula re-evaluates so the whole model rescales. (Expression / Series / Range nodes exist only for list/loop math, not for simple dimensions.) THE INTERCONNECTION IS THE DESIGN: derive parts from SHARED sliders so proportions are coupled (wheelRadius "carLength*0.09", cabin "carLength*0.45") — a slider that drives only one isolated shape, or a dimension typed as a bare number, is a design failure. Recommended slider labels: carLength, carWidth, carHeight, wheelRadius, wheelWidth (for cars); rockSize, rockRoughness, rockScale (for rocks); buildingHeight, buildingWidth, columnRadius, columnHeight, domeRadius (for buildings); stemHeight, stemRadius, petalCount, petalLength, petalWidth, centerRadius (for flowers). The geometry report will call out hard-coded dimensions and dead sliders; rewire them before finishing.
 5. Placement: RELATIVE, never arithmetic. Translate between parts is forbidden; use Align. Translate is only for small nudges, and its vector components must be formulas of a driver slider, never literals. To stack or attach a part next to another, use the Align node (inputs "shape" + "reference"; param mode: above/below/left/right/front/back/center/ground, plus offsetX/Y/Z) — it snaps the shape's bounding box against the reference's, so you never hand-compute stacking coordinates. Example rocket: nozzle at origin → Align(shape=stage1, reference=nozzle, mode "above") → Align(shape=stage2, reference=that Align, mode "above") → … A part used as an Align reference STILL renders as its own colored leaf (reference edges do not consume it). Chain each next Align's reference to the PREVIOUS Align node (not the raw part) so the stack stays connected when sliders move. Use mode "ground" (no reference needed) to sit a part on Z=0. For attaching onto curved surfaces use PlaceOnSurface u/v, PlaceOnVertices, ScatterOnSurface.
@@ -104,6 +104,7 @@ ${macroLibraryText()}
 7. Detailing: SubdivideSurface and FilterFaces carve panels/windows/facades out of base solids. Loft between profiles for tapered/organic forms. Revolve a Sketch profile for rotationally symmetric parts (vases, domes, wheels).
 7b. ORGANIC FORMS: use ScaleXYZ (non-uniform squash/stretch, isLocal default) to turn spheres into petals/leaves/discs/cushions — e.g. Sphere→ScaleXYZ(1, 0.4, 0.15) is a cupped petal, far better than a thin extruded sketch. Ellipsoid and Torus are direct primitives (seed heads, rings, tires, wreaths). CircularPattern supports startAngle (phase-offset interleaved petal rings), rise (z per copy → spirals/phyllotaxis), and scaleStart/scaleEnd (instances grade in size — natural, not mechanical). For a flower: petal = Ellipsoid or ScaleXYZ'd Sphere, tilted with Rotate(isLocal), Translate outward, CircularPattern with count=petalCount; second ring with startAngle "180/petalCount" and smaller scale.
 7c. SUB-SHAPE EDITING & SELECTIONS: use SelectFaces / SelectEdges (outputs "Selection") to target specific sub-faces or edges of a solid using a query predicate. Predicate queries support: "normal ~ +Z" (normal near direction), "center.z > 5" (face/edge centroid position), "parallel Z" (edge direction), "area > 10" (face area), "length < 5" (edge length), "coplanar" or "coaxial" checks. Boolean combinators (and, or, not) and parentheses are supported (e.g., "normal ~ +Z and center.z > 10"). Connect the Selection into ExtrudeFace (param height: positive to pull, negative to push/cut) or Fillet/Chamfer to modify the targeted sub-shapes. Use SplitLoop(solid, axis, at) to imprint edge loops (slice the outer face mesh into separate sub-faces) before selecting them; this allows localized extrusions/details on a single base solid. Note: Selection nodes output a Selection descriptor (resolved on execution); do not connect them to "solid" ports.
+7d. CONSTRUCTION LADDER — pick the strategy BEFORE picking nodes: shell/bowl/hull/organic skin → 2-3 rail curves at heights (EllipseCurve/SplineCurve + TransformCurve) → LoftCurves. tube/cable/rail/stem → curve → Pipe (connect the curve to its "path" input). repeated elements along a boundary (columns, windows, seats, spokes) → curve → DivideCurve → InstanceOnPoints (alignToTangent to follow the curve, scaleStart/scaleEnd to grade sizes). rotationally symmetric → profile curve → RevolveCurve. flat footprint/slab → closed curve → ExtrudeCurve. boxy/mechanical → primitives + Align. If ONE driving curve can generate the whole form, prefer it over assembling primitives — move one slider and everything follows. Curves and points are cheap construction geometry: they render as thin guides, never block leaves, and the report lists their coordinates.
 8. Style: vary construction strategies and aesthetics between requests — do not repeat one formulaic design.
 9. When the user asks for a completely NEW object, clear the graph first so old geometry does not overlap.
 10. TEXT ANSWERS: when the user asks a question or requests feedback, critique, a report, an explanation, or advice, ANSWER IN TEXT and leave the graph alone. Do NOT build geometry to "represent" your answer — no 3D text banners, no "conceptual architecture" sculptures, no symbolic diagrams. Only build or modify geometry when the user asks for an object or a change to one.
@@ -122,7 +123,7 @@ ${store.nodes.length > 0 ? condenseGraph(store.nodes as any[], store.edges as an
     return core + `
 
 ### HOW TO WORK (tools):
-1. For a new design: call set_plan first (parts, attachments, governing ratios), then clear_graph if replacing, then add_nodes + connect (batch related calls), then read the geometry report, repair if needed, and call finish with a short summary.
+1. For a new design: call set_plan first (SKELETON: the driving curves/points and what derives from each; then parts, attachments, governing ratios), then clear_graph if replacing, then add_nodes + connect (batch related calls), then read the geometry report, repair if needed, and call finish with a short summary.
 2. For modifications: update_nodes / connect / remove_nodes on the existing graph — do not rebuild everything.
 3. If the request is genuinely ambiguous, call ask_user with 1-3 targeted questions instead of guessing.
 4. Do NOT emit node positions — layout is automatic.
@@ -133,7 +134,7 @@ ${store.nodes.length > 0 ? condenseGraph(store.nodes as any[], store.edges as an
 
 ### OUTPUT PROTOCOL (respond ONLY with raw JSON, no markdown):
 {
-  "reasoning": "[string] your plan: parts, attachments, ratios, then verification notes. For questions/feedback/reports (CORE RULE 10) put your FULL text answer here and include NO graph fields at all — that is a complete, valid response.",
+  "reasoning": "[string] your plan: SKELETON first (driving curves/points and what derives from each), then parts, attachments, ratios, then verification notes. For questions/feedback/reports (CORE RULE 10) put your FULL text answer here and include NO graph fields at all — that is a complete, valid response.",
   "questions": ["clarifying questions, or empty array"],
   // OPTION A - PATCH (preferred for edits): "addedNodes": [{"id","type","data"}], "updatedNodes": [{"id","data"}], "removedNodeIds": [], "addedEdges": [{"source","target"}], "removedEdgeIds": []
   // OPTION B - NEW OBJECT: "clearGraph": true plus full "nodes": [{"id","type","data"}] and "edges": [...]
@@ -153,6 +154,11 @@ export interface IntentOutcome {
   durationMs: number;
   visionScore?: number;
   proportionalIntegrity?: number;
+  // Graph-shape metrics (Workstream C): trend these across models/builds to
+  // see whether derivation-based construction is actually improving.
+  derivationRatio?: number;
+  skeletonNodes?: number;
+  magicNumberCount?: number;
   error?: string;
 }
 
@@ -852,11 +858,15 @@ async function runToolLoop(modifiedUserText: string, originalText: string, optio
   }
 
   const s = useStore.getState();
+  const graphShape = computeGraphShapeMetrics(s.nodes as any[], s.edges as any[]);
   return {
     parsedOk, evaluatedOk, geometrySane,
     nodeCount: s.nodes.length, edgeCount: s.edges.length,
     durationMs: 0, visionScore, error: lastError,
-    proportionalIntegrity: s.lastGeometryReport?.proportionalIntegrity
+    proportionalIntegrity: s.lastGeometryReport?.proportionalIntegrity,
+    derivationRatio: graphShape.derivationRatio,
+    skeletonNodes: graphShape.skeletonNodes,
+    magicNumberCount: graphShape.magicNumberCount
   };
 }
 
@@ -1029,11 +1039,15 @@ async function runLegacyJson(modifiedUserText: string, originalText: string, opt
   }
 
   const s = useStore.getState();
+  const graphShape = computeGraphShapeMetrics(s.nodes as any[], s.edges as any[]);
   return {
     parsedOk, evaluatedOk, geometrySane,
     nodeCount: s.nodes.length, edgeCount: s.edges.length,
     durationMs: 0, visionScore, error: lastError,
-    proportionalIntegrity: s.lastGeometryReport?.proportionalIntegrity
+    proportionalIntegrity: s.lastGeometryReport?.proportionalIntegrity,
+    derivationRatio: graphShape.derivationRatio,
+    skeletonNodes: graphShape.skeletonNodes,
+    magicNumberCount: graphShape.magicNumberCount
   };
 }
 

@@ -82,7 +82,7 @@ export function condenseGraph(nodes: any[], edges: any[], maxNodes = 40): string
 
 export function formatExampleForPrompt(ex: SuccessExample, index: number): string {
   const g = ex.graphFinal;
-  return `--- Verified example ${index + 1} (user-confirmed successful design) ---
+  return `--- Verified example ${index + 1} (user-confirmed successful design${(ex as any).verifiedOnBuild ? `, verified ${(ex as any).verifiedOnBuild}` : ''}) ---
 Request(s): ${ex.prompts.slice(0, 3).join(' | ').slice(0, 300)}
 ${ex.comment ? `User comment: ${ex.comment.slice(0, 200)}` : ''}
 ${ex.plan ? `Plan: ${ex.plan.slice(0, 400)}` : ''}

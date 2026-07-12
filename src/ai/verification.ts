@@ -5,6 +5,7 @@ import type { GeometryReport } from '../store/useStore';
 import { useStore } from '../store/useStore';
 import { chatCompletionVision } from './api';
 import { isSystemError } from '../utils/errors';
+import { NODE_LIBRARY } from '../nodes/NodeDefinitions';
 
 export interface SanityResult {
   sane: boolean;
@@ -118,6 +119,85 @@ function analyzeSpatialRelations(report: GeometryReport): { contained: string[];
   }
 
   return { contained, detached, relations };
+}
+
+// ---------- Graph-shape metrics (Workstream C) ----------
+// Interconnectivity, measured. derivationRatio collapses toward 0 for
+// primitive collages (every node placed by literals) and rises when forms are
+// DERIVED from upstream geometry (curves, points, other solids).
+const METRIC_MATH_TYPES = new Set(['NumberSlider', 'Expression', 'Series', 'Range', 'ListItem', 'ListLength', 'group']);
+const SKELETON_TYPES = new Set([
+  'Point', 'DeconstructPoint', 'Centroid', 'Midpoint', 'PointBetween', 'Endpoints',
+  'VectorXYZ', 'DeconstructVector', 'Vector2Pt', 'VectorMath', 'ConstructPlane',
+  'Line', 'Arc', 'CircleCurve', 'EllipseCurve', 'PolylineCurve', 'SplineCurve', 'EdgesAsCurves',
+  'CurveLength', 'PointOnCurve', 'EvaluateCurve', 'DivideCurve', 'PointGrid', 'Jitter',
+  'TransformCurve', 'OffsetCurve',
+]);
+
+export interface GraphShapeMetrics {
+  derivationRatio: number;
+  skeletonNodes: number;
+  magicNumberCount: number;
+  maxDepth: number;
+  edgeNodeRatio: number;
+}
+
+export function computeGraphShapeMetrics(nodes: any[], edges: any[]): GraphShapeMetrics {
+  const geo = nodes.filter(n => !METRIC_MATH_TYPES.has(n.type));
+  const valueEdges = edges.filter(e => !String(e.targetHandle || '').startsWith('param:'));
+  const targetsWithGeoInput = new Set(valueEdges.map(e => e.target));
+  const geoWithInput = geo.filter(n => targetsWithGeoInput.has(n.id)).length;
+
+  const adj: Record<string, string[]> = {};
+  nodes.forEach(n => { adj[n.id] = []; });
+  valueEdges.forEach(e => { (adj[e.source] = adj[e.source] || []).push(e.target); });
+  const isLeaf = (id: string) => (adj[id] || []).length === 0;
+  const reachesLeaf = (start: string): boolean => {
+    const seen = new Set<string>();
+    const queue = [start];
+    while (queue.length > 0) {
+      const cur = queue.shift()!;
+      if (seen.has(cur)) continue;
+      seen.add(cur);
+      if (isLeaf(cur)) return true;
+      queue.push(...(adj[cur] || []));
+    }
+    return false;
+  };
+  const skeletonNodes = nodes.filter(n => SKELETON_TYPES.has(n.type) && reachesLeaf(n.id)).length;
+
+  let magicNumberCount = 0;
+  for (const n of geo) {
+    const def = NODE_LIBRARY[n.type];
+    if (!def) continue;
+    for (const p of def.params) {
+      if (p.type !== 'number') continue;
+      const v = (n.data || {})[p.name];
+      if (v === undefined || v === null || v === '') continue;
+      const parsed = parseFloat(v);
+      const isLiteral = typeof v !== 'string' || String(parsed) === String(v).trim();
+      if (isLiteral && isFinite(parsed) && Math.abs(parsed) > 1e-9 && parsed !== p.default) magicNumberCount++;
+    }
+  }
+
+  const memo: Record<string, number> = {};
+  const depthOf = (id: string): number => {
+    if (memo[id] !== undefined) return memo[id];
+    memo[id] = 1; // cycle guard
+    const upstream = valueEdges.filter(e => e.target === id).map(e => depthOf(e.source));
+    memo[id] = 1 + (upstream.length ? Math.max(...upstream) : 0);
+    return memo[id];
+  };
+  let maxDepth = 0;
+  nodes.forEach(n => { maxDepth = Math.max(maxDepth, depthOf(n.id)); });
+
+  return {
+    derivationRatio: geo.length ? geoWithInput / geo.length : 0,
+    skeletonNodes,
+    magicNumberCount,
+    maxDepth,
+    edgeNodeRatio: nodes.length ? edges.length / nodes.length : 0,
+  };
 }
 
 export function checkGeometrySanity(report: GeometryReport | null, evalError: string | null): SanityResult {
@@ -277,6 +357,11 @@ export function formatGeometryReport(report: GeometryReport | null, evalError: s
   } else if (report.nodeCount !== undefined) {
     lines.push(`Graph size: ${report.nodeCount} nodes, ${report.edgeCount ?? '?'} edges. If this grew across repair rounds without the design getting richer, you likely left stale duplicate nodes behind — remove them.`);
   }
+  try {
+    const { nodes: gNodes, edges: gEdges } = useStore.getState();
+    const gm = computeGraphShapeMetrics(gNodes as any[], gEdges as any[]);
+    lines.push(`Graph shape: derivation ratio ${gm.derivationRatio.toFixed(2)} (geometry nodes fed by upstream geometry), skeleton nodes on leaf paths ${gm.skeletonNodes}, magic numbers ${gm.magicNumberCount}, max chain depth ${gm.maxDepth}, edges/node ${gm.edgeNodeRatio.toFixed(2)}. Raise derivation by building from curves/points (LoftCurves, DivideCurve→InstanceOnPoints, Pipe "path") instead of hardcoded positions.`);
+  } catch { /* metrics are best-effort */ }
   const sliderEntries = Object.entries(report.sliders || {});
   if (sliderEntries.length > 0) {
     lines.push(`Design sliders (referenceable in inline formulas): ${sliderEntries.map(([k, v]) => `${k}=${fmt(v as number)}`).join(', ')}`);

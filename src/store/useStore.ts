@@ -666,7 +666,10 @@ export const useStore = create<AppState>()(
         successExamples: [],
         addSuccessExample: (ex: SuccessExample) => {
           set((state) => {
-            const successExamples = [ex, ...state.successExamples];
+            // C5: stamp capability provenance — retrieval shows the stamp so a
+            // stale success can't masquerade as current-environment truth.
+            const stamped = { ...ex, verifiedOnBuild: ex.verifiedOnBuild || new Date().toISOString().slice(0, 10) };
+            const successExamples = [stamped, ...state.successExamples];
             persistData('/api/examples', successExamples);
             return { successExamples };
           });

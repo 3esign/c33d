@@ -15,7 +15,7 @@ export interface WorkingGraph {
 export const AGENT_TOOLS: ToolDef[] = [
   {
     name: 'set_plan',
-    description: 'Record your design plan BEFORE building: named parts, their roles, attachment relationships, and governing proportions/ratios. Call this first for any new design.',
+    description: 'Record your design plan BEFORE building: SKELETON first (named driving curves/points and what derives from each), then named parts, their roles, attachment relationships, and governing proportions/ratios. Call this first for any new design.',
     parameters: {
       type: 'object',
       properties: {
@@ -36,6 +36,19 @@ export const AGENT_TOOLS: ToolDef[] = [
           type: 'array',
           description: 'Optional list of driver sliders/parameters.',
           items: { type: 'string' }
+        },
+        skeleton: {
+          type: 'array',
+          description: 'Datum construction geometry FIRST: named driving points/curves and what derives from each. Example: [{"name":"bowlRail","kind":"curve","drives":["seating bowl loft","column ring"]}]',
+          items: {
+            type: 'object',
+            properties: {
+              name: { type: 'string' },
+              kind: { type: 'string', description: '"point" or "curve"' },
+              drives: { type: 'array', items: { type: 'string' } }
+            },
+            required: ['name', 'kind']
+          }
         }
       },
       required: ['plan'],
@@ -228,10 +241,15 @@ export function executeTool(
 
   switch (name) {
     case 'set_plan': {
+      // C3: fold the skeleton into the recorded plan so the Reasoning tab and
+      // saved examples carry the derivation structure, not just the parts list.
+      const skeletonTxt = Array.isArray(args.skeleton) && args.skeleton.length
+        ? '\nSKELETON: ' + args.skeleton.map((s: any) => `${s.kind || 'curve'} "${s.name}"${Array.isArray(s.drives) && s.drives.length ? ` drives [${s.drives.join(', ')}]` : ''}`).join('; ')
+        : '';
       return {
         message: 'Plan recorded.',
         mutatedGraph: false,
-        plan: String(args.plan || ''),
+        plan: String(args.plan || '') + skeletonTxt,
         ratios: args.ratios,
         drivers: args.drivers
       };

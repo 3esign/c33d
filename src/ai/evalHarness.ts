@@ -54,6 +54,9 @@ export const EVAL_PROMPTS: EvalPrompt[] = [
   { id: 'L4-05', level: 4, prompt: 'Design a stylized tree: trunk, branching suggestion, and a scattered foliage canopy.' },
   { id: 'L4-06', level: 4, prompt: 'Create a sci-fi drone: central body with four rotor arms and rotor discs, multi-colored.' },
   { id: 'L4-07', level: 4, prompt: 'Design a parametric bookshelf where shelf count and spacing are driven by sliders.' },
+  // C7: the derivation benchmark — pass requires geometry sane AND a high
+  // derivation ratio (tracked via EvalResultEntry.derivationRatio).
+  { id: 'L4-08', level: 4, prompt: 'Design a recognizable stadium where every major part derives from at most 2 driving curves: build the boundary ellipse first, transform/offset it into rails, loft the seating bowl from the rails (LoftCurves), divide the boundary and instance columns on the points (DivideCurve then InstanceOnPoints), and run a roof ring along a curve (Pipe with its path input). Expose 2-3 driving sliders.' },
 ];
 
 let stopRequested = false;
@@ -116,6 +119,9 @@ export async function runEvalSuite(onProgress?: (done: number, total: number, cu
         durationMs: outcome.durationMs,
         visionScore: outcome.visionScore,
         proportionalIntegrity: outcome.proportionalIntegrity,
+        derivationRatio: outcome.derivationRatio,
+        skeletonNodes: outcome.skeletonNodes,
+        magicNumberCount: outcome.magicNumberCount,
         error: outcome.error,
       });
     }

@@ -1182,4 +1182,5 @@ export interface SuccessExample {
   model: string;
   tags: string[];
   embedding?: number[];     // optional provider embedding of prompts+comment
+  verifiedOnBuild?: string; // C5: provenance stamp — capability claims need dates
 }

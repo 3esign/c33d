@@ -66,6 +66,9 @@ export type EvalResultEntry = {
   durationMs: number;
   visionScore?: number;
   proportionalIntegrity?: number;
+  derivationRatio?: number;
+  skeletonNodes?: number;
+  magicNumberCount?: number;
   error?: string;
 };
 
