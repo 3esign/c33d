@@ -117,3 +117,14 @@ To prevent cascading failures in multi-turn editing and auto-repairs, the follow
 * Evaluate the dependency graph in topological order.
 * Detect cycles early and reject with an explicit warning.
 * Explicitly alert on unknown symbols (never silently default to `0`).
+
+---
+
+## 4. Current Sprint (2026-07-12)
+
+The active work is specified in two companion documents:
+
+* **`docs/stadium_transcript_analysis.md`** — forensics of the stadium/cat session: the kernel-poisoning blind spot (opaque numeric errors like `failed: 24` charged to the model's repair budget) and the curve/point layer's isolation (no curve→solid or points→instances bridges).
+* **`docs/kernel_health_and_curve_bridge_plan.md`** — the implementation plan: Workstream A (error taxonomy, canary, poisoned-eval respawn, diagnosis state), Workstream B (PipeOnCurve, ExtrudeCurve, LoftCurves, InstanceOnPoints, TransformCurve, OffsetCurve, SweepAlongCurve, RevolveCurve, geometric sockets), Workstream C (two-spines prompt, construction ladder, SKELETON plans, derivation metrics, node smoke matrix, golden exemplars, stadium benchmark).
+
+North star: **"a recognizable stadium where every part derives from at most 2 driving curves"** — everything starts with the point.
