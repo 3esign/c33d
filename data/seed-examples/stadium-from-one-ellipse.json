@@ -1,0 +1,38 @@
+{
+  "id": "stadium-from-one-ellipse",
+  "name": "Stadium from One Ellipse",
+  "description": "A recognizable stadium where every part derives from a single boundary ellipse, transformed into rails for a seating bowl loft, divided for columns, and piped for a roof ring.",
+  "prompt": "Design a recognizable stadium where every major part derives from at most 2 driving curves: build the boundary ellipse first, transform/offset it into rails, loft the seating bowl from the rails (LoftCurves), divide the boundary and instance columns on the points (DivideCurve then InstanceOnPoints), and run a roof ring along a curve (Pipe with its path input). Expose 2-3 driving sliders.",
+  "graph": {
+    "nodes": [
+      { "id": "n1", "type": "EllipseCurve", "position": { "x": 0, "y": 0 }, "data": { "width": 40, "height": 30 } },
+      { "id": "n2", "type": "TransformCurve", "position": { "x": 200, "y": 0 }, "data": { "tz": 15, "scale": 1.2 } },
+      { "id": "n3", "type": "LoftCurves", "position": { "x": 400, "y": 0 }, "data": { "ruled": false, "closed": false } },
+      { "id": "n4", "type": "DivideCurve", "position": { "x": 400, "y": 150 }, "data": { "count": 24 } },
+      { "id": "n5", "type": "Cylinder", "position": { "x": 400, "y": 300 }, "data": { "radius": 0.5, "height": 15 } },
+      { "id": "n6", "type": "Translate", "position": { "x": 600, "y": 300 }, "data": { "z": -7.5 } },
+      { "id": "n7", "type": "InstanceOnPoints", "position": { "x": 800, "y": 150 }, "data": { "alignToTangent": false, "scaleStart": 1, "scaleEnd": 1 } },
+      { "id": "n8", "type": "TransformCurve", "position": { "x": 200, "y": -150 }, "data": { "tz": 20, "scale": 1.3 } },
+      { "id": "n9", "type": "Pipe", "position": { "x": 400, "y": -150 }, "data": { "radius": 2 } },
+      { "id": "n10", "type": "Compound", "position": { "x": 1000, "y": 0 }, "data": { } }
+    ],
+    "edges": [
+      { "id": "e1", "source": "n1", "sourceHandle": "curve", "target": "n2", "targetHandle": "curve" },
+      { "id": "e2", "source": "n1", "sourceHandle": "curve", "target": "n3", "targetHandle": "curve1" },
+      { "id": "e3", "source": "n2", "sourceHandle": "curve", "target": "n3", "targetHandle": "curve2" },
+      { "id": "e4", "source": "n2", "sourceHandle": "curve", "target": "n4", "targetHandle": "curve" },
+      { "id": "e5", "source": "n5", "sourceHandle": "solid", "target": "n6", "targetHandle": "solid" },
+      { "id": "e6", "source": "n6", "sourceHandle": "solid", "target": "n7", "targetHandle": "shape" },
+      { "id": "e7", "source": "n4", "sourceHandle": "points", "target": "n7", "targetHandle": "points" },
+      { "id": "e8", "source": "n1", "sourceHandle": "curve", "target": "n8", "targetHandle": "curve" },
+      { "id": "e9", "source": "n8", "sourceHandle": "curve", "target": "n9", "targetHandle": "path" },
+      { "id": "e10", "source": "n3", "sourceHandle": "solid", "target": "n10", "targetHandle": "solid1" },
+      { "id": "e11", "source": "n7", "sourceHandle": "solid", "target": "n10", "targetHandle": "solid2" },
+      { "id": "e12", "source": "n9", "sourceHandle": "solid", "target": "n10", "targetHandle": "solid3" }
+    ]
+  },
+  "tags": ["stadium", "curves", "loft", "instance"],
+  "verifiedBy": "antigravity",
+  "verifiedAt": "2026-07-12",
+  "modelUsed": "gemini-3.1-pro"
+}

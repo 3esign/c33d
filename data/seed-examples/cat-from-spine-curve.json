@@ -1,0 +1,42 @@
+{
+  "id": "cat-from-spine-curve",
+  "name": "Cat from Spine Curve",
+  "description": "A cat derived from a single spine spline, lofting a body from circles, a head at the endpoint, and ears instanced on points.",
+  "prompt": "Build a cat from a spine curve (spine spline -> graded profile circles -> LoftCurves body; head at Endpoints; ears via InstanceOnPoints)",
+  "graph": {
+    "nodes": [
+      { "id": "n1", "type": "SplineCurve", "position": { "x": 0, "y": 0 }, "data": { "points": "[[0,0,0],[10,0,5],[20,0,0]]" } },
+      { "id": "n2", "type": "CircleCurve", "position": { "x": 0, "y": 150 }, "data": { "radius": 5 } },
+      { "id": "n3", "type": "TransformCurve", "position": { "x": 200, "y": 100 }, "data": { "tz": 10, "scale": 1.5 } },
+      { "id": "n4", "type": "TransformCurve", "position": { "x": 200, "y": 200 }, "data": { "tz": 20, "scale": 0.5 } },
+      { "id": "n5", "type": "LoftCurves", "position": { "x": 400, "y": 150 }, "data": { "ruled": false, "closed": false } },
+      { "id": "n6", "type": "Endpoints", "position": { "x": 400, "y": -150 }, "data": {} },
+      { "id": "n7", "type": "Sphere", "position": { "x": 600, "y": -150 }, "data": { "radius": 4 } },
+      { "id": "n8", "type": "Translate", "position": { "x": 800, "y": -150 }, "data": {} },
+      { "id": "n9", "type": "DivideCurve", "position": { "x": 600, "y": -300 }, "data": { "count": 2 } },
+      { "id": "n10", "type": "Cone", "position": { "x": 600, "y": -450 }, "data": { "radius1": 1, "radius2": 0.1, "height": 3 } },
+      { "id": "n11", "type": "InstanceOnPoints", "position": { "x": 800, "y": -300 }, "data": { "alignToTangent": false, "scaleStart": 1, "scaleEnd": 1 } },
+      { "id": "n12", "type": "Compound", "position": { "x": 1000, "y": 0 }, "data": {} }
+    ],
+    "edges": [
+      { "id": "e1", "source": "n2", "sourceHandle": "curve", "target": "n5", "targetHandle": "curve1" },
+      { "id": "e2", "source": "n2", "sourceHandle": "curve", "target": "n3", "targetHandle": "curve" },
+      { "id": "e3", "source": "n3", "sourceHandle": "curve", "target": "n5", "targetHandle": "curve2" },
+      { "id": "e4", "source": "n3", "sourceHandle": "curve", "target": "n4", "targetHandle": "curve" },
+      { "id": "e5", "source": "n4", "sourceHandle": "curve", "target": "n5", "targetHandle": "curve3" },
+      { "id": "e6", "source": "n1", "sourceHandle": "curve", "target": "n6", "targetHandle": "curve" },
+      { "id": "e7", "source": "n7", "sourceHandle": "solid", "target": "n8", "targetHandle": "solid" },
+      { "id": "e7b", "source": "n6", "sourceHandle": "end", "target": "n8", "targetHandle": "target" },
+      { "id": "e8", "source": "n1", "sourceHandle": "curve", "target": "n9", "targetHandle": "curve" },
+      { "id": "e9", "source": "n10", "sourceHandle": "solid", "target": "n11", "targetHandle": "shape" },
+      { "id": "e10", "source": "n9", "sourceHandle": "points", "target": "n11", "targetHandle": "points" },
+      { "id": "e11", "source": "n5", "sourceHandle": "solid", "target": "n12", "targetHandle": "solid1" },
+      { "id": "e12", "source": "n8", "sourceHandle": "solid", "target": "n12", "targetHandle": "solid2" },
+      { "id": "e13", "source": "n11", "sourceHandle": "solid", "target": "n12", "targetHandle": "solid3" }
+    ]
+  },
+  "tags": ["cat", "spline", "loft", "instance"],
+  "verifiedBy": "antigravity",
+  "verifiedAt": "2026-07-12",
+  "modelUsed": "gemini-3.1-pro"
+}
