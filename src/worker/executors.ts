@@ -74,6 +74,16 @@ function extractFirstTwoPathPoints(pathStr: string): [number, number][] {
   return pts;
 }
 
+// Kernel-aware error message: Emscripten/OCCT throw raw numbers that read as
+// meaningless codes ("24"). Never blame node parameters for those.
+function kernelAwareMsg(err: any): string {
+  const raw = String(err?.message ?? err);
+  if (typeof err === 'number' || /^\d+$/.test(raw.trim())) {
+    return `kernel exception (opaque code ${raw.trim()}) — engine state problem, NOT a parameter problem`;
+  }
+  return raw;
+}
+
 export const EXECUTORS: Record<
   string,
   (params: any, inputs: any[], warn: (msg: string) => void, scope?: Record<string, number>) => any
@@ -621,11 +631,14 @@ export const EXECUTORS: Record<
       return parseSVGPath(svgPath);
     } catch (err: any) {
       console.warn("Sketch failed:", err);
-      warn(
-        `Sketch failed: ${String(
-          err?.message || err
-        )}. Check the svgPath string (supported: M L H V C Q Z).`
-      );
+      // A2: only blame the svgPath for actual parse/draw errors — kernel-class
+      // failures (numeric throws) sent models rewriting perfectly valid paths.
+      const rawMsg = String(err?.message ?? err);
+      if (typeof err === 'number' || /^\d+$/.test(rawMsg.trim())) {
+        warn(`Sketch failed: ${kernelAwareMsg(err)}.`);
+      } else {
+        warn(`Sketch failed: ${rawMsg}. Check the svgPath string (supported: M L H V C Q Z).`);
+      }
       return null;
     }
   },

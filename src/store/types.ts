@@ -10,12 +10,15 @@ export type LeafReport = {
 
 export type GeometryReport = {
   leaves: LeafReport[];
-  nodeErrors: { id: string; error: string }[];
+  nodeErrors: { id: string; error: string; cls?: string }[];
   numbers: Record<string, number | number[]>;
   scene: { min: number[]; max: number[]; size: number[] } | null;
   meshedLeafCount: number;
   evalCount: number;
   recycleRecommended: boolean;
+  kernelHealth?: 'ok' | 'failed' | 'unknown';
+  kernelSuspect?: boolean;
+  kernelFaultCount?: number;
   sliders?: Record<string, number>;
   nodeCount?: number;
   edgeCount?: number;

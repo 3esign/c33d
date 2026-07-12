@@ -4,6 +4,7 @@ import * as replicad from 'replicad';
 import { NODE_LIBRARY } from '../nodes/NodeDefinitions';
 import { evaluateExpression as evaluateExpressionSafe, normalizeVarName } from '../utils/expression';
 import { EXECUTORS, ensureText3DFont } from './executors';
+import { classifyNodeError, isKernelClass } from './errorClass';
 
 const TRANSFORM_TYPES = new Set([
   'Translate', 'Rotate', 'Scale', 'ScaleXYZ', 'Bend', 'Twist', 'Align',
@@ -124,7 +125,8 @@ async function initReplicad() {
       locateFile: () => opencascadeWasm,
     });
     replicad.setOC(OC);
-    postMessage({ type: 'INIT_DONE' });
+    kernelHealth = runKernelCanary();
+    postMessage({ type: 'INIT_DONE', kernelHealth });
   } catch (err: any) {
     console.error('Failed to initialize OpenCascade:', err);
     postMessage({ type: 'INIT_ERROR', error: err.message || 'Unknown initialization error' });
@@ -232,7 +234,35 @@ function expandMacros(nodes: any[], edges: any[], macros: any[]): { nodes: any[]
 // ---------- Memoization cache (persists across evaluations) ----------
 const shapeCache: Map<string, { hash: string; shape: any; mesh: any | null }> = new Map();
 let evalCounter = 0;
-const WORKER_RECYCLE_HINT = 400; // after this many evals, suggest recycle to main thread
+const WORKER_RECYCLE_HINT = 50; // after this many evals, suggest recycle to main thread.
+// Shape deletion is disabled (see the eviction mitigation below), so WASM heap
+// growth is contained ONLY by recycling — 400 was calibrated for nothing.
+
+// ---------- Kernel health (canary + poisoned-instance detection) ----------
+// Node types that produced a real shape at least once in this worker's
+// lifetime. If such a type later fails with a kernel-class error, the WASM
+// instance has regressed (heap corruption / OOM), not the graph.
+const succeededTypesThisWorker = new Set<string>();
+
+let kernelHealth: 'ok' | 'failed' | 'unknown' = 'unknown';
+
+// Evaluates a hardcoded Box completely outside the user graph. If THIS fails,
+// no graph edit can succeed — the report says so explicitly, which removes the
+// entire "which primitive still works" search space from the model.
+function runKernelCanary(): 'ok' | 'failed' {
+  try {
+    const box = (EXECUTORS as any).Box({ width: 10, length: 10, height: 10 }, [], () => {}, {});
+    if (!box) return 'failed';
+    try {
+      box.mesh({ tolerance: 0.5, angularTolerance: 30 });
+    } catch {
+      return 'failed';
+    }
+    return 'ok';
+  } catch {
+    return 'failed';
+  }
+}
 
 function stableHash(obj: any): string {
   // Order-stable JSON for plain param objects
@@ -256,7 +286,9 @@ async function evaluateGraphInternal(
 
   const nodeCache: Record<string, any> = {};
   const numberCache: Record<string, number | number[]> = {};
-  const nodeErrors: { id: string; error: string }[] = [];
+  const nodeErrors: { id: string; error: string; cls?: string }[] = [];
+  let kernelFaultCount = 0;
+  let kernelRegression = false;
 
   // Scope for inline parametric formulas: slider values keyed by (normalized)
   // label AND id, so a param like "bodyRadius*0.2" resolves without any edges.
@@ -458,6 +490,7 @@ async function evaluateGraphInternal(
         sliderScope
       );
       nodeCache[node.id] = val;
+      if (val) succeededTypesThisWorker.add(node.type);
       if (val && typeof val === 'object') {
         val.sourceNodeId = node.id;
         const ancestors = new Set<string>();
@@ -473,7 +506,14 @@ async function evaluateGraphInternal(
       }
     } catch (err: any) {
       nodeCache[node.id] = null;
-      nodeErrors.push({ id: node.id, error: String(err.message || err) });
+      // A1: classify at the catch site — Emscripten throws raw numbers
+      // (exception pointers) that would otherwise surface as opaque "24".
+      const { cls, msg } = classifyNodeError(err);
+      if (isKernelClass(cls)) {
+        kernelFaultCount++;
+        if (succeededTypesThisWorker.has(node.type)) kernelRegression = true;
+      }
+      nodeErrors.push({ id: node.id, error: `[${cls}] ${msg}`, cls });
     }
     customShapeCache.set(node.id, { hash, shape: nodeCache[node.id], mesh: null });
   }
@@ -597,7 +637,9 @@ async function evaluateGraphInternal(
           }
           if (entry) entry.mesh = meshData;
         } catch (err: any) {
-          meshError = String(err.message || err);
+          const meshCls = classifyNodeError(err);
+          if (isKernelClass(meshCls.cls)) kernelFaultCount++;
+          meshError = `[${meshCls.cls}] ${meshCls.msg}`;
           console.warn(`Failed to mesh node ${id}:`, err);
         }
       }
@@ -725,6 +767,11 @@ async function evaluateGraphInternal(
       size: [sceneMax[0] - sceneMin[0], sceneMax[1] - sceneMin[1], sceneMax[2] - sceneMin[2]],
     } : null,
     meshedLeafCount: finalMeshes.length,
+    // A3/A4: poisoned-instance signal + canary state. kernelSuspect triggers a
+    // worker respawn + replay on the main thread (never the repair budget).
+    kernelFaultCount,
+    kernelSuspect: kernelFaultCount >= 2 || kernelRegression,
+    kernelHealth,
   };
 
   return { meshes: finalMeshes, report };

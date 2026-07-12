@@ -265,6 +265,12 @@ export function formatGeometryReport(report: GeometryReport | null, evalError: s
   }
   if (!report) return 'No geometry report available.';
   const lines: string[] = [];
+  const kh = (report as any).kernelHealth;
+  if (kh === 'ok') {
+    lines.push('Kernel health: OK (canary passed) — any node errors below are caused by the graph, not the engine.');
+  } else if (kh === 'failed') {
+    lines.push('Kernel health: FAILED — engine restart required; graph edits will not help.');
+  }
   lines.push(`Meshed leaves: ${report.meshedLeafCount}/${report.leaves.length}`);
   if (report.nodesPerLeafRatio !== undefined) {
     lines.push(`Node-per-leaf ratio: ${report.nodesPerLeafRatio.toFixed(2)} (Total: ${report.nodeCount} nodes, Transforms: ${report.transformCount}, Leaves: ${report.leaves.length})`);

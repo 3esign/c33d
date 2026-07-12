@@ -170,6 +170,44 @@ export const useStore = create<AppState>()(
       w.onmessage = (e) => {
         const { type, result, error, report, id } = e.data;
         if (type === 'EVALUATE_DONE') {
+          // A3: poisoned-kernel detection. Per-node kernel-class failures never
+          // reach EVALUATE_ERROR (the evaluation "succeeds"), so a corrupted
+          // WASM instance would otherwise keep serving failing evals while the
+          // agent burned its repair budget on graph edits (see
+          // docs/stadium_transcript_analysis.md). Respawn + replay once.
+          const kernelSuspect = !!(report && ((report as any).kernelSuspect || (report as any).kernelHealth === 'failed'));
+          if (kernelSuspect && !get().hasRetriedDeleted) {
+            console.warn('Kernel-class node failures detected — respawning worker and replaying evaluation once...');
+            set({ hasRetriedDeleted: true });
+            try { worker.terminate(); } catch (err) { /* noop */ }
+            worker = createGeometryWorker();
+            bindWorker(worker);
+            const { nodes, edges, macros } = get();
+            worker.postMessage({
+              type: 'EVALUATE_GRAPH',
+              id: id || generateUUID(),
+              payload: { nodes, edges, macros, disablePerturbation: true }
+            });
+            return;
+          }
+          // A4: the fresh worker ran a Box canary at init. If even that fails
+          // after a respawn, no graph edit can help — surface an honest system
+          // error instead of a repairable-looking report.
+          if (report && (report as any).kernelHealth === 'failed') {
+            const errStr = 'OpenCascade kernel canary failed after worker restart — engine restart required; graph edits will not help. Reload the app if this persists.';
+            get().addPerformanceLog({
+              model: 'System',
+              request: 'Graph Evaluation (Kernel Canary Failed)',
+              success: false,
+              responseTimeMs: 0,
+              nodeCount: get().nodes.length,
+              edgeCount: get().edges.length,
+              error: errStr
+            });
+            set({ isEvaluating: false, lastEvaluationError: errStr, lastGeometryReport: report || null, hasRetriedDeleted: false });
+            resolveEvalWaiters({ error: errStr, report: report || null });
+            return;
+          }
           const currentObjects = get().sceneObjects;
           const newObjects = result.map((res: any) => {
             const existing = currentObjects.find(o => o.id === res.id);
@@ -536,9 +574,18 @@ export const useStore = create<AppState>()(
         },
         clearGraph: () => {
           set({ nodes: [], edges: [], sceneObjects: [], lastEvaluationError: null, lastGeometryReport: null });
-          try {
-            worker.postMessage({ type: 'CLEAR_CACHE' });
-          } catch (e) {}
+          // A5: a clean slate gets a fresh kernel. "Try from a clean graph" is
+          // the instinctive recovery move (users and models both reach for it)
+          // — it must actually reset the engine, not just the node list.
+          if (!get().isEvaluating) {
+            try { worker.terminate(); } catch (e) { /* noop */ }
+            worker = createGeometryWorker();
+            bindWorker(worker);
+          } else {
+            try {
+              worker.postMessage({ type: 'CLEAR_CACHE' });
+            } catch (e) { /* noop */ }
+          }
         },
         lastEvaluationError: null,
         clearLastEvaluationError: () => set({ lastEvaluationError: null }),
