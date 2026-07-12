@@ -504,7 +504,7 @@ function updateDiagnosis(diag: RepairDiagnosis, actionSummary: string, issues: s
 }
 // After a node has failed twice, evaluate it ALONE with default params —
 // harness-side, costing no model turn — and report causal attribution.
-async function maybeMinimalRepro(diag: RepairDiagnosis, issues: string[]): Promise<string | null> {
+async function maybeMinimalRepro(diag: RepairDiagnosis): Promise<string | null> {
   const store = useStore.getState();
   for (const [nodeId, streak] of Object.entries(diag.nodeFailStreak)) {
     if (streak < 2 || diag.reproDone.has(nodeId)) continue;
@@ -814,7 +814,7 @@ async function runToolLoop(modifiedUserText: string, originalText: string, optio
           // A8: remember what was tried; attribute causes with a minimal repro.
           const diagBlock = updateDiagnosis(toolDiagnosis, 'tool-batch graph changes', percept.sanity.issues);
           messages.push({ role: 'user', content: diagBlock });
-          const repro = await maybeMinimalRepro(toolDiagnosis, percept.sanity.issues);
+          const repro = await maybeMinimalRepro(toolDiagnosis);
           if (repro) messages.push({ role: 'user', content: repro });
         }
         continue; // let the model react to the report
@@ -1030,7 +1030,7 @@ async function runLegacyJson(modifiedUserText: string, originalText: string, opt
       // A8: remember what was tried across repair rounds; attribute causes
       // with a harness-side minimal repro when the same node keeps failing.
       const diagBlock = updateDiagnosis(jsonDiagnosis, summarizePatchForDiagnosis(parsed), percept.sanity.issues);
-      const repro = await maybeMinimalRepro(jsonDiagnosis, percept.sanity.issues);
+      const repro = await maybeMinimalRepro(jsonDiagnosis);
       apiMessages.push({ role: 'assistant' as const, content: responseText.slice(0, 4000) });
       apiMessages.push({ role: 'user' as const, content: `${compactState}\n\nGEOMETRY REPORT after your last change:\n${reportText}\n\n${diagBlock}${repro ? `\n\n${repro}` : ''}\n\nFix these issues. Respond ONLY with JSON using the patch protocol (addedNodes/updatedNodes/removedNodeIds/addedEdges/removedEdgeIds).` });
     } else {

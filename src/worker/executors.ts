@@ -2084,7 +2084,7 @@ export const EXECUTORS: Record<
     }
   },
 
-  SweepAlongCurve: (params, inputs, warn) => {
+  SweepAlongCurve: (_params, inputs, warn) => {
     const rail = inputs.find((i: any) => i.targetHandle === 'rail')?.value;
     const profileIn = inputs.find((i: any) => i.targetHandle === 'profile')?.value;
     if (!rail || rail.type !== 'Curve') {
