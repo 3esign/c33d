@@ -453,6 +453,74 @@ function formatCompactGraphState(nodes: any[], edges: any[]): string {
   return `CURRENT CANVAS GRAPH STATE:\nNodes (${nodes.length}):\n${nodeStrs.join('\n') || '(no nodes)'}\nEdges (${edges.length}):\n${edgeStrs.join('\n') || '(no edges)'}`;
 }
 
+// ---------- A8: cross-attempt diagnosis state ----------
+// The stadium transcript showed six consecutive tests of the SAME hypothesis
+// (swap the node type) because nothing tracked what had been tried across
+// repair rounds. The harness — not the model — is responsible for remembering.
+interface RepairDiagnosis {
+  tried: string[];
+  lastIssueSig: string | null;
+  nodeFailStreak: Record<string, number>;
+  reproDone: Set<string>;
+}
+function newRepairDiagnosis(): RepairDiagnosis {
+  return { tried: [], lastIssueSig: null, nodeFailStreak: {}, reproDone: new Set() };
+}
+function summarizePatchForDiagnosis(parsed: any): string {
+  const bits: string[] = [];
+  if (parsed.clearGraph || (Array.isArray(parsed.nodes) && parsed.nodes.length > 0)) {
+    bits.push(`rebuilt graph (${(parsed.nodes || []).length} nodes)`);
+  }
+  if (Array.isArray(parsed.addedNodes) && parsed.addedNodes.length) {
+    const types = [...new Set(parsed.addedNodes.map((n: any) => String(n.type)))].slice(0, 4);
+    bits.push(`added ${parsed.addedNodes.length} node(s) [${types.join(', ')}]`);
+  }
+  if (Array.isArray(parsed.updatedNodes) && parsed.updatedNodes.length) {
+    const typeChanges = parsed.updatedNodes.filter((n: any) => n.type).map((n: any) => `${n.id}→${n.type}`).slice(0, 4);
+    bits.push(`updated ${parsed.updatedNodes.length} node(s)${typeChanges.length ? ` (type changes: ${typeChanges.join(', ')})` : ''}`);
+  }
+  if (Array.isArray(parsed.removedNodeIds) && parsed.removedNodeIds.length) bits.push(`removed ${parsed.removedNodeIds.length} node(s)`);
+  if (Array.isArray(parsed.addedEdges) && parsed.addedEdges.length) bits.push(`added ${parsed.addedEdges.length} edge(s)`);
+  if (Array.isArray(parsed.removedEdgeIds) && parsed.removedEdgeIds.length) bits.push(`removed ${parsed.removedEdgeIds.length} edge(s)`);
+  return bits.join('; ') || 'no graph changes';
+}
+function updateDiagnosis(diag: RepairDiagnosis, actionSummary: string, issues: string[]): string {
+  const sig = issues.slice(0, 2).join(' | ');
+  const noEffect = diag.lastIssueSig !== null && sig === diag.lastIssueSig;
+  diag.lastIssueSig = sig;
+  diag.tried.push(`${actionSummary}${noEffect ? ' → NO EFFECT (identical issues)' : ''}`);
+  for (const iss of issues) {
+    const m = iss.match(/Node "([^"]+)" failed/);
+    if (m) diag.nodeFailStreak[m[1]] = (diag.nodeFailStreak[m[1]] || 0) + 1;
+  }
+  const lines = diag.tried.slice(-4).map((t, i) => `  ${i + 1}. ${t}`);
+  return `DIAGNOSIS STATE (harness-maintained):\n${lines.join('\n')}\nRULE: do NOT repeat an approach marked NO EFFECT — change hypothesis (different wiring, a different construction strategy, or leave the graph alone if the errors are [KERNEL]/[RUNTIME] class — those are engine faults the system handles).`;
+}
+// After a node has failed twice, evaluate it ALONE with default params —
+// harness-side, costing no model turn — and report causal attribution.
+async function maybeMinimalRepro(diag: RepairDiagnosis, issues: string[]): Promise<string | null> {
+  const store = useStore.getState();
+  for (const [nodeId, streak] of Object.entries(diag.nodeFailStreak)) {
+    if (streak < 2 || diag.reproDone.has(nodeId)) continue;
+    const node = store.nodes.find((n: any) => n.id === nodeId) as any;
+    if (!node) continue;
+    diag.reproDone.add(nodeId);
+    try {
+      const iso = await store.evaluateScratch([{ id: '__repro', type: node.type, data: {}, position: { x: 0, y: 0 } }]);
+      const isoErrors = iso.report?.nodeErrors || [];
+      const isoOk = !iso.error && isoErrors.length === 0;
+      if (isoOk) {
+        return `MINIMAL REPRO (harness ran it for you): a lone ${node.type} with default params evaluates FINE — the failure of "${nodeId}" is caused by YOUR graph's inputs/params/wiring for it, not by the node type or the engine.`;
+      }
+      const firstErr = iso.error || isoErrors[0]?.error || 'unknown';
+      return `MINIMAL REPRO (harness ran it for you): a lone ${node.type} with default params ALSO fails (${String(firstErr).slice(0, 160)}) — this is NOT caused by your graph. Do not rewire; the system handles engine faults.`;
+    } catch {
+      return null;
+    }
+  }
+  return null;
+}
+
 // Nudge: before the graph is wiped for a new object, offer to save the old design.
 function maybeSetNudgeCandidate() {
   const store = useStore.getState();
@@ -641,6 +709,7 @@ async function runToolLoop(modifiedUserText: string, originalText: string, optio
   let repairs = 0;
   let visionRepairUsed = false;
   let consecutiveEngineFaults = 0;
+  const toolDiagnosis = newRepairDiagnosis();
 
   for (let turn = 0; turn < MAX_AGENT_TURNS; turn++) {
     const modelTurn = await chatCompletionWithTools(messages, systemPrompt, AGENT_TOOLS);
@@ -712,10 +781,14 @@ async function runToolLoop(modifiedUserText: string, originalText: string, optio
       }
 
       if (!percept.sanity.sane) {
-        if (!isSystemError(percept.error)) consecutiveEngineFaults = 0;
+        // A1/A3 follow-through: per-node kernel-class failures (report.
+        // kernelFaultCount) are engine faults even though the evaluation
+        // itself "succeeded" — never charge them to the repair budget.
+        const kernelClassFailure = !percept.isStructural && !isSystemError(percept.error) && !!(percept.report as any)?.kernelFaultCount;
+        if (!isSystemError(percept.error) && !kernelClassFailure) consecutiveEngineFaults = 0;
         if (percept.isStructural) {
           addSystemMessage(`Structural validation error (does not count against repair budget): ${percept.sanity.issues.slice(0, 3).join('; ')}`);
-        } else if (isSystemError(percept.error)) {
+        } else if (isSystemError(percept.error) || kernelClassFailure) {
           // Circuit breaker: a kernel that faults on 3 consecutive evaluations
           // will not be fixed by graph edits — stop burning model turns.
           consecutiveEngineFaults++;
@@ -732,6 +805,11 @@ async function runToolLoop(modifiedUserText: string, originalText: string, optio
             break;
           }
           addSystemMessage(`Issues detected (repair attempt ${repairs}/${MAX_AUTO_REPAIRS}): ${percept.sanity.issues.slice(0, 3).join('; ')}`);
+          // A8: remember what was tried; attribute causes with a minimal repro.
+          const diagBlock = updateDiagnosis(toolDiagnosis, 'tool-batch graph changes', percept.sanity.issues);
+          messages.push({ role: 'user', content: diagBlock });
+          const repro = await maybeMinimalRepro(toolDiagnosis, percept.sanity.issues);
+          if (repro) messages.push({ role: 'user', content: repro });
         }
         continue; // let the model react to the report
       } else {
@@ -813,6 +891,7 @@ async function runLegacyJson(modifiedUserText: string, originalText: string, opt
   let visionScore: number | undefined;
   let structuralExemptions = 0;
   let engineFaultExemptions = 0;
+  const jsonDiagnosis = newRepairDiagnosis();
 
   for (let attempt = 0; attempt <= MAX_AUTO_REPAIRS; attempt++) {
     const responseText = await chatCompletion(apiMessages, systemPrompt);
@@ -900,6 +979,9 @@ async function runLegacyJson(modifiedUserText: string, originalText: string, opt
     }
 
     let isBudgetExempt = false;
+    // Per-node kernel-class failures are engine faults even though the
+    // evaluation "succeeded" — see report.kernelFaultCount (Workstream A).
+    const kernelClassFailure = !percept.isStructural && !isSystemError(percept.error) && !!(percept.report as any)?.kernelFaultCount;
     if (percept.isStructural) {
       if (structuralExemptions < 3) {
         addSystemMessage(`Structural validation error (does not count against repair budget, ${structuralExemptions + 1}/3) — asking the model to fix.`);
@@ -908,7 +990,7 @@ async function runLegacyJson(modifiedUserText: string, originalText: string, opt
       } else {
         addSystemMessage(`Structural validation error (exemptions exhausted, counts against repair budget) — asking the model to fix.`);
       }
-    } else if (isSystemError(percept.error)) {
+    } else if (isSystemError(percept.error) || kernelClassFailure) {
       // Engine faults are exempt from the repair budget, but ONLY a limited
       // number of times. Without this cap a persistently faulting kernel put
       // the loop into an infinite retry (attempt-- forever) while the model
@@ -935,8 +1017,12 @@ async function runLegacyJson(modifiedUserText: string, originalText: string, opt
       const reportText = formatGeometryReport(percept.report, percept.error) +
         `\nISSUES:\n${aggregateAndRankIssues(percept.sanity.issues).map(i => '- ' + i).join('\n')}` +
         (percept.sanity.warnings?.length ? `\nWARNINGS (non-blocking):\n${percept.sanity.warnings.map(w => '- ' + w).join('\n')}` : '');
+      // A8: remember what was tried across repair rounds; attribute causes
+      // with a harness-side minimal repro when the same node keeps failing.
+      const diagBlock = updateDiagnosis(jsonDiagnosis, summarizePatchForDiagnosis(parsed), percept.sanity.issues);
+      const repro = await maybeMinimalRepro(jsonDiagnosis, percept.sanity.issues);
       apiMessages.push({ role: 'assistant' as const, content: responseText.slice(0, 4000) });
-      apiMessages.push({ role: 'user' as const, content: `${compactState}\n\nGEOMETRY REPORT after your last change:\n${reportText}\n\nFix these issues. Respond ONLY with JSON using the patch protocol (addedNodes/updatedNodes/removedNodeIds/addedEdges/removedEdgeIds).` });
+      apiMessages.push({ role: 'user' as const, content: `${compactState}\n\nGEOMETRY REPORT after your last change:\n${reportText}\n\n${diagBlock}${repro ? `\n\n${repro}` : ''}\n\nFix these issues. Respond ONLY with JSON using the patch protocol (addedNodes/updatedNodes/removedNodeIds/addedEdges/removedEdgeIds).` });
     } else {
       addSystemMessage(`Auto-repair limit reached. Remaining issues: ${(lastError || '').slice(0, 300)}`);
     }
@@ -1065,7 +1151,23 @@ function applyParsedGraphOps(parsed: any, options?: { forEval?: boolean }): (Wor
           }
         }
         if (matched === 0) {
-          patchNotes.push(`removedEdgeIds entry ${JSON.stringify(raw)} matched NO edge — nothing was removed. Use the edge ids shown in the graph state, {"source","target"} objects, or "source->target" strings.`);
+          // A9: list the real edges touching the referenced nodes so the model
+          // corrects on the next turn instead of retrying the same wrong id.
+          const refIds = new Set<string>();
+          if (raw && typeof raw === 'object') {
+            refIds.add(String((raw as any).source));
+            refIds.add(String((raw as any).target));
+          } else {
+            String(raw).split(/->|→|=>|[.\s]+/).forEach(part => {
+              const p = part.trim();
+              if (p) refIds.add(p);
+            });
+          }
+          const candidates = nextEdges
+            .filter(e => refIds.has(String(e.source)) || refIds.has(String(e.target)))
+            .slice(0, 6)
+            .map(e => `${e.source}->${e.target}${e.targetHandle ? `.${e.targetHandle}` : ''}`);
+          patchNotes.push(`removedEdgeIds entry ${JSON.stringify(raw)} matched NO edge — nothing was removed. Use the edge ids shown in the graph state, {"source","target"} objects, or "source->target" strings.${candidates.length ? ` Current edges touching those nodes: ${candidates.join(', ')}` : ''}`);
         }
       }
     }

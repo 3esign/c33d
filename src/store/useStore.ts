@@ -53,6 +53,10 @@ async function persistData(endpoint: string, payload: any, isText = false) {
   }
 }
 
+// Scratch evaluations (isolated single-node repros for the agent's diagnosis
+// loop) — routed by id, never touching scene state.
+const scratchWaiters = new Map<string, (outcome: EvaluationOutcome) => void>();
+
 // Waiters allow the agent to await the outcome of the next evaluation
 let evalWaiters: ((outcome: EvaluationOutcome) => void)[] = [];
 const resolveEvalWaiters = (outcome: EvaluationOutcome) => {
@@ -107,6 +111,7 @@ type AppState = {
   toggleObjectVisibility: (id: string) => void;
   isEvaluating: boolean;
   evaluateGraph: () => void;
+  evaluateScratch: (nodes: any[]) => Promise<EvaluationOutcome>;
   clearGraph: () => void;
   lastEvaluationError: string | null;
   clearLastEvaluationError: () => void;
@@ -169,6 +174,14 @@ export const useStore = create<AppState>()(
       const bindWorker = (w: Worker) => {
       w.onmessage = (e) => {
         const { type, result, error, report, id } = e.data;
+        if (type === 'SCRATCH_DONE') {
+          const waiter = scratchWaiters.get(id);
+          if (waiter) {
+            scratchWaiters.delete(id);
+            waiter({ error: error || null, report: report || null });
+          }
+          return;
+        }
         if (type === 'EVALUATE_DONE') {
           // A3: poisoned-kernel detection. Per-node kernel-class failures never
           // reach EVALUATE_ERROR (the evaluation "succeeds"), so a corrupted
@@ -571,6 +584,28 @@ export const useStore = create<AppState>()(
               payload: { nodes, edges, macros }
             });
           }, 50);
+        },
+        evaluateScratch: (nodes: any[]) => {
+          // A8: evaluate a tiny synthetic graph in the worker without touching
+          // the user's scene — used for harness-side minimal repros.
+          return new Promise<EvaluationOutcome>((resolve) => {
+            const id = generateUUID();
+            const timer = setTimeout(() => {
+              scratchWaiters.delete(id);
+              resolve({ error: 'Scratch evaluation timed out', report: null });
+            }, 15000);
+            scratchWaiters.set(id, (outcome) => {
+              clearTimeout(timer);
+              resolve(outcome);
+            });
+            try {
+              worker.postMessage({ type: 'EVALUATE_SCRATCH', id, payload: { nodes, edges: [], macros: [] } });
+            } catch (e: any) {
+              scratchWaiters.delete(id);
+              clearTimeout(timer);
+              resolve({ error: String(e?.message || e), report: null });
+            }
+          });
         },
         clearGraph: () => {
           set({ nodes: [], edges: [], sceneObjects: [], lastEvaluationError: null, lastGeometryReport: null });

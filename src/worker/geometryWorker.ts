@@ -170,6 +170,16 @@ self.onmessage = async (e) => {
     } catch (err: any) {
       postMessage({ type: 'EVALUATE_ERROR', id, error: err.message || 'Unknown error during graph evaluation' });
     }
+  } else if (type === 'EVALUATE_SCRATCH') {
+    // A8: isolated minimal-repro evaluation for the agent's diagnosis loop —
+    // fresh cache, no meshing, no perturbation, no scene side effects.
+    try {
+      const { report } = await evaluateGraphInternal(payload.nodes || [], payload.edges || [], payload.macros || [], null, new Map(), true);
+      (report as any).kernelHealth = kernelHealth;
+      postMessage({ type: 'SCRATCH_DONE', id, report });
+    } catch (err: any) {
+      postMessage({ type: 'SCRATCH_DONE', id, error: err.message || String(err) });
+    }
   } else if (type === 'CLEAR_CACHE') {
     shapeCache.clear();
   }
