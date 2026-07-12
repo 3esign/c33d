@@ -29,7 +29,12 @@ function requiredGeoInputs(type: string): { handles: string[]; minConnected: num
   const geoHandles = def.inputs.filter(i => i.type !== 'number').map(i => i.name);
   if (geoHandles.length === 0) return null; // primitives, number nodes
   if (type === 'Loft') return { handles: geoHandles, minConnected: 2 };
+  if (type === 'LoftCurves') return { handles: geoHandles, minConnected: 2 };
   if (type === 'Compound') return { handles: geoHandles, minConnected: 1 };
+  // Pipe: the Curve input is optional — pathSvg param is the fallback.
+  if (type === 'Pipe') return null;
+  // Translate: "target" Point is an optional geometric-socket override.
+  if (type === 'Translate') return { handles: ['solid'], minConnected: 1 };
   // Align: "shape" is required; "reference" is optional (mode "ground" needs none).
   if (type === 'Align') return { handles: ['shape'], minConnected: 1 };
   // Fillet, Chamfer, Shell: selection is optional, solid is required.

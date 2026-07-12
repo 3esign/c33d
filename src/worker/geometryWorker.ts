@@ -10,7 +10,8 @@ const TRANSFORM_TYPES = new Set([
   'Translate', 'Rotate', 'Scale', 'ScaleXYZ', 'Bend', 'Twist', 'Align',
   'PlaceOnSurface', 'ScatterOnSurface', 'PlaceOnVertices', 'Fillet', 'Chamfer',
   'Extrude', 'Mirror', 'Shell', 'Loft', 'Revolve', 'LinearPattern',
-  'CircularPattern', 'SubdivideSurface', 'FilterFaces'
+  'CircularPattern', 'SubdivideSurface', 'FilterFaces',
+  'ExtrudeCurve', 'LoftCurves', 'SweepAlongCurve', 'RevolveCurve', 'InstanceOnPoints'
 ]);
 
 // Turns a generic "no geometry" leaf into an actionable trace: is an input

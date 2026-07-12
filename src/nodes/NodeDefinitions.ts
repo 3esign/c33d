@@ -193,7 +193,12 @@ export const NODE_LIBRARY: Record<string, NodeDefinition> = {
     type: 'Translate',
     label: 'Translate',
     category: 'transform',
-    inputs: [{ name: 'solid', type: 'Solid' }],
+    // B9 (geometric sockets): optional "target" Point overrides x/y/z so
+    // positions can be DERIVED from geometry instead of typed as literals.
+    inputs: [
+      { name: 'solid', type: 'Solid' },
+      { name: 'target', type: 'Point' },
+    ],
     outputs: [{ name: 'solid', type: 'Solid' }],
     params: [
       { name: 'x', type: 'number', default: 0, min: -100, max: 100, step: 0.1 },
@@ -352,7 +357,10 @@ export const NODE_LIBRARY: Record<string, NodeDefinition> = {
     type: 'Pipe',
     label: 'Pipe (Tube Along Path)',
     category: 'geometry',
-    inputs: [],
+    // B1 (curve bridge): optional Curve input overrides pathSvg — any curve
+    // (Ellipse, Spline-through-points, transformed/offset/divided curves)
+    // becomes a visible tube.
+    inputs: [{ name: 'path', type: 'Curve' }],
     outputs: [{ name: 'solid', type: 'Solid' }],
     // A circular-cross-section tube swept along an SVG-style path on the XY
     // plane (same M/L/C/Q syntax as Sketch — just leave off the closing Z).
@@ -1021,6 +1029,109 @@ export const NODE_LIBRARY: Record<string, NodeDefinition> = {
     params: [
       { name: 'amount', type: 'number', default: 0.5, min: 0, max: 20, step: 0.01 },
       { name: 'seed', type: 'number', default: 1, min: 1, max: 100, step: 1 },
+    ],
+  },
+  // ---------- Curve → Solid bridges (Workstream B) ----------
+  // These close the loop that made the curve/point layer an island: curves
+  // become solids (extrude/loft/sweep/revolve/pipe-with-path) and point
+  // streams become instances. See docs/kernel_health_and_curve_bridge_plan.md.
+  ExtrudeCurve: {
+    type: 'ExtrudeCurve',
+    label: 'Extrude Curve (Closed → Solid)',
+    category: 'transform',
+    inputs: [{ name: 'curve', type: 'Curve' }],
+    outputs: [{ name: 'solid', type: 'Solid' }],
+    params: [
+      { name: 'height', type: 'number', default: 10, min: 0.1, max: 200, step: 0.1 },
+      { name: 'color', type: 'string', default: '#3b82f6' },
+    ],
+  },
+  LoftCurves: {
+    type: 'LoftCurves',
+    label: 'Loft Curves (Rails → Solid)',
+    category: 'transform',
+    inputs: [
+      { name: 'curve1', type: 'Curve' },
+      { name: 'curve2', type: 'Curve' },
+      { name: 'curve3', type: 'Curve' },
+      { name: 'curve4', type: 'Curve' },
+      { name: 'curve5', type: 'Curve' },
+      { name: 'curve6', type: 'Curve' },
+    ],
+    outputs: [{ name: 'solid', type: 'Solid' }],
+    params: [
+      { name: 'ruled', type: 'boolean', default: false },
+      { name: 'closed', type: 'boolean', default: false },
+      { name: 'color', type: 'string', default: '#3b82f6' },
+    ],
+  },
+  SweepAlongCurve: {
+    type: 'SweepAlongCurve',
+    label: 'Sweep Along Curve',
+    category: 'transform',
+    inputs: [
+      { name: 'rail', type: 'Curve' },
+      { name: 'profile', type: 'Solid' },
+    ],
+    outputs: [{ name: 'solid', type: 'Solid' }],
+    params: [
+      { name: 'color', type: 'string', default: '#3b82f6' },
+    ],
+  },
+  RevolveCurve: {
+    type: 'RevolveCurve',
+    label: 'Revolve Curve (Profile → Solid)',
+    category: 'transform',
+    inputs: [{ name: 'profile', type: 'Curve' }],
+    outputs: [{ name: 'solid', type: 'Solid' }],
+    params: [
+      { name: 'angle', type: 'number', default: 360, min: 1, max: 360, step: 1 },
+      { name: 'axis', type: 'string', default: 'Z' },
+      { name: 'color', type: 'string', default: '#3b82f6' },
+    ],
+  },
+  InstanceOnPoints: {
+    type: 'InstanceOnPoints',
+    label: 'Instance On Points',
+    category: 'transform',
+    inputs: [
+      { name: 'shape', type: 'Solid' },
+      { name: 'points', type: 'Point' },
+    ],
+    outputs: [{ name: 'solid', type: 'Solid' }],
+    params: [
+      { name: 'alignToTangent', type: 'boolean', default: false },
+      { name: 'scaleStart', type: 'number', default: 1, min: 0.05, max: 5, step: 0.05 },
+      { name: 'scaleEnd', type: 'number', default: 1, min: 0.05, max: 5, step: 0.05 },
+      { name: 'everyNth', type: 'number', default: 1, min: 1, max: 20, step: 1 },
+      { name: 'maxCount', type: 'number', default: 100, min: 1, max: 200, step: 1 },
+      { name: 'color', type: 'string', default: '#3b82f6' },
+    ],
+  },
+  TransformCurve: {
+    type: 'TransformCurve',
+    label: 'Transform Curve (Move/Rotate/Scale)',
+    category: 'geometry',
+    inputs: [{ name: 'curve', type: 'Curve' }],
+    outputs: [{ name: 'curve', type: 'Curve' }],
+    params: [
+      { name: 'tx', type: 'number', default: 0, min: -200, max: 200, step: 0.1 },
+      { name: 'ty', type: 'number', default: 0, min: -200, max: 200, step: 0.1 },
+      { name: 'tz', type: 'number', default: 0, min: -200, max: 200, step: 0.1 },
+      { name: 'rotate', type: 'number', default: 0, min: -360, max: 360, step: 1 },
+      { name: 'scale', type: 'number', default: 1, min: 0.05, max: 20, step: 0.05 },
+      { name: 'color', type: 'string', default: '#3b82f6' },
+    ],
+  },
+  OffsetCurve: {
+    type: 'OffsetCurve',
+    label: 'Offset Curve (Parallel)',
+    category: 'geometry',
+    inputs: [{ name: 'curve', type: 'Curve' }],
+    outputs: [{ name: 'curve', type: 'Curve' }],
+    params: [
+      { name: 'distance', type: 'number', default: 2, min: -100, max: 100, step: 0.1 },
+      { name: 'color', type: 'string', default: '#3b82f6' },
     ],
   },
   Macro: {

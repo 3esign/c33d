@@ -84,6 +84,94 @@ function kernelAwareMsg(err: any): string {
   return raw;
 }
 
+// ---------- Curve-bridge helpers (Workstream B) ----------
+// Curve payloads are heterogeneous: replicad Drawings (drawCircle/drawEllipse),
+// Sketches (parseSVGPath) and Edges/Wires (makeLine/assembleWire/spline).
+// These normalize them for sweeps, lofts and faces.
+function curveToWire(curveVal: any): any | null {
+  const v = curveVal && curveVal.type === 'Curve' ? curveVal.value : curveVal;
+  if (!v) return null;
+  try {
+    if (typeof v.sketchOnPlane === 'function') {
+      const sk: any = v.sketchOnPlane('XY');
+      if (sk) {
+        if (typeof sk.wires === 'function') {
+          const w = sk.wires();
+          return Array.isArray(w) ? w[0] : w;
+        }
+        if (sk.wire) return sk.wire;
+      }
+      return null;
+    }
+    if (typeof v.wires === 'function') {
+      const w = v.wires();
+      return Array.isArray(w) ? w[0] : w;
+    }
+    return v; // already an Edge/Wire shape
+  } catch {
+    return null;
+  }
+}
+
+function curveToFace(curveVal: any): any | null {
+  const v = curveVal && curveVal.type === 'Curve' ? curveVal.value : curveVal;
+  if (!v) return null;
+  try {
+    if (typeof v.sketchOnPlane === 'function') {
+      const sk: any = v.sketchOnPlane('XY');
+      if (sk && typeof sk.face === 'function') return sk.face();
+    }
+    if (typeof v.face === 'function') return v.face();
+    const wire = curveToWire(curveVal);
+    if (wire) return (replicad as any).makeFace(wire);
+  } catch {
+    /* fall through */
+  }
+  return null;
+}
+
+function wireStartFrame(wireShape: any): { point: [number, number, number]; tangent: [number, number, number] | null } {
+  let point: [number, number, number] = [0, 0, 0];
+  let tangent: [number, number, number] | null = null;
+  try {
+    const p = typeof wireShape.pointAt === 'function' ? wireShape.pointAt(0) : null;
+    if (p) point = [p[0] ?? p.x ?? 0, p[1] ?? p.y ?? 0, p[2] ?? p.z ?? 0];
+  } catch { /* best-effort */ }
+  try {
+    const t = typeof wireShape.tangentAt === 'function' ? wireShape.tangentAt(0) : null;
+    if (t) {
+      const len = Math.sqrt((t[0] || 0) ** 2 + (t[1] || 0) ** 2 + (t[2] || 0) ** 2);
+      if (len > 1e-9) tangent = [t[0] / len, t[1] / len, t[2] / len];
+    }
+  } catch { /* best-effort */ }
+  return { point, tangent };
+}
+
+// Shared by Pipe's curve path: circular profile swept along a wire, profile
+// oriented to the wire's start tangent when it is available.
+function sweepCircleAlongWire(wireShape: any, radius: number): any {
+  const wire = wireShape.wrapped ?? wireShape;
+  const { point, tangent } = wireStartFrame(wireShape);
+  let profile: any = null;
+  if (tangent) {
+    try {
+      const plane = new (replicad as any).Plane(point, undefined, tangent);
+      profile = (replicad.drawCircle(radius).sketchOnPlane(plane) as any).face();
+    } catch {
+      profile = null;
+    }
+  }
+  if (!profile) {
+    profile = (replicad.drawCircle(radius).sketchOnPlane('YZ') as any).face();
+    if (point[0] || point[1] || point[2]) profile = safeTranslate(profile, point);
+  }
+  const OC = (replicad as any).getOC();
+  const maker = new OC.BRepOffsetAPI_MakePipe_1(wire, profile.wrapped);
+  const shape = replicad.cast(maker.Shape());
+  maker.delete();
+  return shape;
+}
+
 export const EXECUTORS: Record<
   string,
   (params: any, inputs: any[], warn: (msg: string) => void, scope?: Record<string, number>) => any
@@ -419,6 +507,13 @@ export const EXECUTORS: Record<
     const solidInput = inputs.find((i) => i.targetHandle === 'solid')?.value;
     if (!solidInput) return null;
 
+    // B9 (geometric sockets): a connected Point overrides x/y/z — the position
+    // is DERIVED from geometry instead of typed as literal coordinates.
+    const target = inputs.find((i) => i.targetHandle === 'target')?.value;
+    if (target && target.type === 'Point') {
+      return safeTranslate(solidInput, [target.x || 0, target.y || 0, target.z || 0]);
+    }
+
     const xVal = parseParamToNumberOrList(params.x, 0);
     const yVal = parseParamToNumberOrList(params.y, 0);
     const zVal = parseParamToNumberOrList(params.z, 0);
@@ -643,9 +738,27 @@ export const EXECUTORS: Record<
     }
   },
 
-  Pipe: (params, _inputs, warn) => {
-    const pathSvg = String(params.pathSvg || 'M 0 0 C 5 10 15 10 20 0');
+  Pipe: (params, inputs, warn) => {
     const radius = Math.max(0.02, num(params.radius, 1));
+    // B1 (curve bridge): a connected Curve overrides pathSvg — any curve
+    // (Ellipse, Spline-through-points, transformed/offset/divided curves)
+    // becomes a visible tube.
+    const curveIn = inputs.find((i: any) => i.targetHandle === 'path')?.value;
+    if (curveIn && curveIn.type === 'Curve') {
+      try {
+        const wireShape = curveToWire(curveIn);
+        if (!wireShape) {
+          warn('Pipe: the connected path curve produced no wire.');
+          return null;
+        }
+        return sweepCircleAlongWire(wireShape, radius);
+      } catch (err: any) {
+        console.warn('Pipe (curve path) failed:', err);
+        warn(`Pipe along connected curve failed: ${kernelAwareMsg(err)}`);
+        return null;
+      }
+    }
+    const pathSvg = String(params.pathSvg || 'M 0 0 C 5 10 15 10 20 0');
     try {
       const pathSketch = parseSVGPath(pathSvg);
       const wiresRaw = (pathSketch as any).wires();
@@ -1682,14 +1795,22 @@ export const EXECUTORS: Record<
   CircleCurve: (params) => {
     const r = Math.max(0.001, num(params.radius, 5));
     try {
-       const circle = replicad.drawCircle(r);
-       return { type: 'Curve', value: circle };
+       // Emit the WIRE, not the Drawing: Drawings have no pointAt/tangentAt,
+       // which silently broke DivideCurve/Endpoints/EvaluateCurve and curve
+       // leaf rendering on circles (verified against the kernel, Jul 2026).
+       const sk: any = replicad.drawCircle(r).sketchOnPlane('XY');
+       const w = typeof sk.wires === 'function' ? sk.wires() : sk.wire;
+       return { type: 'Curve', value: Array.isArray(w) ? w[0] : w };
     } catch { return null; }
   },
   EllipseCurve: (params) => {
     const rx = Math.max(0.001, num(params.radiusX, 5));
     const ry = Math.max(0.001, num(params.radiusY, 3));
-    try { return { type: 'Curve', value: replicad.drawEllipse(rx, ry) }; } catch { return null; }
+    try {
+       const sk: any = replicad.drawEllipse(rx, ry).sketchOnPlane('XY');
+       const w = typeof sk.wires === 'function' ? sk.wires() : sk.wire;
+       return { type: 'Curve', value: Array.isArray(w) ? w[0] : w };
+    } catch { return null; }
   },
   PolylineCurve: (_params, inputs) => {
     const pts = inputs.find(i => i.targetHandle === 'points')?.value;
@@ -1842,7 +1963,14 @@ export const EXECUTORS: Record<
          for (let i = 0; i < count; i++) {
            const t = i / (count - 1);
            const pt = curve.value.pointAt(t);
-           pts.push({ type: 'Point', x: pt[0], y: pt[1], z: pt[2] });
+           // B4a: per-point channels (t, index, tangent) let InstanceOnPoints
+           // align instances to the curve and grade per-instance scale.
+           let tangent: number[] | undefined;
+           try {
+             const tg = typeof curve.value.tangentAt === 'function' ? curve.value.tangentAt(t) : null;
+             if (tg) tangent = [tg[0], tg[1], tg[2]];
+           } catch { /* tangent is best-effort */ }
+           pts.push({ type: 'Point', x: pt[0], y: pt[1], z: pt[2], t, index: i, ...(tangent ? { tangent } : {}) });
          }
        } catch {}
     }
@@ -1886,5 +2014,236 @@ export const EXECUTORS: Record<
        return p;
     });
     return { __multi: true, values: { points: jpts } };
+  },
+
+  // ---------------------------------------------------------
+  // CURVE → SOLID BRIDGES (Workstream B)
+  // ---------------------------------------------------------
+  ExtrudeCurve: (params, inputs, warn) => {
+    const curveIn = inputs.find((i: any) => i.targetHandle === 'curve')?.value;
+    if (!curveIn || curveIn.type !== 'Curve') {
+      warn('ExtrudeCurve: connect a Curve to "curve" (Circle/Ellipse curve or a CLOSED Polyline/Spline).');
+      return null;
+    }
+    const h = num(params.height, 10);
+    try {
+      const v = curveIn.value;
+      if (v && typeof v.sketchOnPlane === 'function') {
+        const sk: any = v.sketchOnPlane('XY');
+        if (sk && typeof sk.extrude === 'function') return sk.extrude(h);
+      }
+      const face = curveToFace(curveIn);
+      if (!face) {
+        warn('ExtrudeCurve: the curve must be CLOSED and planar to form a face (use closed:true on Polyline/Spline, or Circle/Ellipse curves).');
+        return null;
+      }
+      if (typeof face.extrude === 'function') return face.extrude(h);
+      if ((replicad as any).basicFaceExtrusion) return (replicad as any).basicFaceExtrusion(face, [0, 0, h]);
+      warn('ExtrudeCurve: no extrusion method available for this curve type.');
+      return null;
+    } catch (err: any) {
+      console.warn('ExtrudeCurve failed:', err);
+      warn(`ExtrudeCurve failed: ${kernelAwareMsg(err)}`);
+      return null;
+    }
+  },
+
+  LoftCurves: (params, inputs, warn) => {
+    const curves = ['curve1', 'curve2', 'curve3', 'curve4', 'curve5', 'curve6']
+      .map((h) => inputs.find((i: any) => i.targetHandle === h)?.value)
+      .filter((c: any) => c && c.type === 'Curve');
+    if (curves.length < 2) {
+      warn('LoftCurves needs at least 2 connected curves (sections in order, e.g. bottom-to-top rails).');
+      return null;
+    }
+    try {
+      const wires = curves.map((c: any) => curveToWire(c)).filter(Boolean);
+      if (wires.length < 2) {
+        warn('LoftCurves: the connected curves did not produce usable wires.');
+        return null;
+      }
+      const ruled = params.ruled === true || params.ruled === 'true';
+      const closed = params.closed === true || params.closed === 'true';
+      const OC = (replicad as any).getOC();
+      const Ctor = OC.BRepOffsetAPI_ThruSections_1 ?? OC.BRepOffsetAPI_ThruSections;
+      const maker = new Ctor(true, ruled, 1e-6);
+      for (const w of wires) maker.AddWire(w.wrapped ?? w);
+      if (closed) maker.AddWire(wires[0].wrapped ?? wires[0]);
+      try {
+        maker.Build(new OC.Message_ProgressRange_1());
+      } catch {
+        try { maker.Build(); } catch { /* Shape() may still build lazily */ }
+      }
+      const shape = replicad.cast(maker.Shape());
+      maker.delete();
+      return shape;
+    } catch (err: any) {
+      console.warn('LoftCurves failed:', err);
+      warn(`LoftCurves failed: ${kernelAwareMsg(err)}. All section curves must be CLOSED (Circle/Ellipse/closed Spline) and listed in order.`);
+      return null;
+    }
+  },
+
+  SweepAlongCurve: (params, inputs, warn) => {
+    const rail = inputs.find((i: any) => i.targetHandle === 'rail')?.value;
+    const profileIn = inputs.find((i: any) => i.targetHandle === 'profile')?.value;
+    if (!rail || rail.type !== 'Curve') {
+      warn('SweepAlongCurve: connect a Curve to "rail".');
+      return null;
+    }
+    if (!profileIn) {
+      warn('SweepAlongCurve: connect a profile (closed Curve, or a Sketch/Plane face) to "profile".');
+      return null;
+    }
+    try {
+      const railWire = curveToWire(rail);
+      if (!railWire) {
+        warn('SweepAlongCurve: the rail curve produced no wire.');
+        return null;
+      }
+      let profile: any = profileIn;
+      if (profileIn.type === 'Curve') {
+        profile = curveToFace(profileIn);
+        if (!profile) {
+          warn('SweepAlongCurve: a Curve profile must be CLOSED to form a face.');
+          return null;
+        }
+      }
+      // Move the profile to the rail start so sweeps behave predictably.
+      const { point } = wireStartFrame(railWire);
+      try {
+        const bb = profile.boundingBox;
+        if (bb && bb.center) {
+          profile = safeTranslate(profile, [point[0] - bb.center[0], point[1] - bb.center[1], point[2] - bb.center[2]]);
+        }
+      } catch { /* keep the profile where it is */ }
+      const OC = (replicad as any).getOC();
+      const maker = new OC.BRepOffsetAPI_MakePipe_1(railWire.wrapped ?? railWire, profile.wrapped);
+      const shape = replicad.cast(maker.Shape());
+      maker.delete();
+      return shape;
+    } catch (err: any) {
+      console.warn('SweepAlongCurve failed:', err);
+      warn(`SweepAlongCurve failed: ${kernelAwareMsg(err)}`);
+      return null;
+    }
+  },
+
+  RevolveCurve: (params, inputs, warn) => {
+    const curveIn = inputs.find((i: any) => i.targetHandle === 'profile')?.value;
+    if (!curveIn || curveIn.type !== 'Curve') {
+      warn('RevolveCurve: connect a Curve to "profile" (a CLOSED planar profile beside the axis).');
+      return null;
+    }
+    const angleDeg = Math.max(1, Math.min(360, num(params.angle, 360)));
+    const axisName = String(params.axis || 'Z').toUpperCase();
+    const axis: [number, number, number] = axisName === 'X' ? [1, 0, 0] : axisName === 'Y' ? [0, 1, 0] : [0, 0, 1];
+    try {
+      const face = curveToFace(curveIn);
+      if (!face) {
+        warn('RevolveCurve: the profile curve must be CLOSED and planar.');
+        return null;
+      }
+      if (angleDeg >= 360) return (face as any).revolve(axis);
+      return (face as any).revolve(axis, [0, 0, 0], { angle: angleDeg });
+    } catch (err: any) {
+      console.warn('RevolveCurve failed:', err);
+      warn(`RevolveCurve failed: ${kernelAwareMsg(err)}. The profile must not cross the revolve axis.`);
+      return null;
+    }
+  },
+
+  InstanceOnPoints: (params, inputs, warn) => {
+    const shape = inputs.find((i: any) => i.targetHandle === 'shape')?.value;
+    const raw = inputs.find((i: any) => i.targetHandle === 'points')?.value;
+    const pts = Array.isArray(raw) ? raw.filter((p: any) => p && p.type === 'Point') : [];
+    if (!shape) {
+      warn('InstanceOnPoints: connect a solid to "shape".');
+      return null;
+    }
+    if (pts.length === 0) {
+      warn('InstanceOnPoints: connect points (DivideCurve/PointGrid/Jitter) to "points".');
+      return null;
+    }
+    const everyNth = Math.max(1, Math.round(num(params.everyNth, 1)));
+    const maxCount = Math.max(1, Math.min(200, Math.round(num(params.maxCount, 100))));
+    const s0 = num(params.scaleStart, 1);
+    const s1 = num(params.scaleEnd, 1);
+    const align = params.alignToTangent === true || params.alignToTangent === 'true';
+    const sel = pts.filter((_: any, i: number) => i % everyNth === 0).slice(0, maxCount);
+    if (pts.length / everyNth > maxCount) {
+      warn(`InstanceOnPoints: input has ${pts.length} points; capped at ${maxCount} instances (raise maxCount if intended).`);
+    }
+    try {
+      const copies = sel.map((p: any, i: number) => {
+        let inst = shape.clone();
+        const f = sel.length > 1 ? i / (sel.length - 1) : 0;
+        const sc = s0 + (s1 - s0) * f;
+        if (Math.abs(sc - 1) > 1e-9) inst = safeScale(inst, sc);
+        if (align && Array.isArray(p.tangent)) {
+          const angleDeg = (Math.atan2(p.tangent[1] || 0, p.tangent[0] || 0) * 180) / Math.PI;
+          if (isFinite(angleDeg) && Math.abs(angleDeg) > 1e-9) inst = safeRotate(inst, angleDeg, [0, 0, 0], [0, 0, 1]);
+        }
+        return safeTranslate(inst, [p.x || 0, p.y || 0, p.z || 0]);
+      });
+      return replicad.makeCompound(copies);
+    } catch (err: any) {
+      console.warn('InstanceOnPoints failed:', err);
+      warn(`InstanceOnPoints failed: ${kernelAwareMsg(err)}`);
+      return null;
+    }
+  },
+
+  TransformCurve: (params, inputs, warn) => {
+    const curveIn = inputs.find((i: any) => i.targetHandle === 'curve')?.value;
+    if (!curveIn || curveIn.type !== 'Curve') {
+      warn('TransformCurve: connect a Curve.');
+      return null;
+    }
+    const tx = num(params.tx, 0);
+    const ty = num(params.ty, 0);
+    const tz = num(params.tz, 0);
+    const rot = num(params.rotate, 0);
+    const scl = num(params.scale, 1);
+    try {
+      let w: any = curveToWire(curveIn);
+      if (!w) {
+        warn('TransformCurve: the curve produced no wire.');
+        return null;
+      }
+      if (Math.abs(scl - 1) > 1e-9) w = safeScale(w, scl);
+      if (Math.abs(rot) > 1e-9) w = safeRotate(w, rot, [0, 0, 0], [0, 0, 1]);
+      if (tx || ty || tz) w = safeTranslate(w, [tx, ty, tz]);
+      return { type: 'Curve', value: w };
+    } catch (err: any) {
+      console.warn('TransformCurve failed:', err);
+      warn(`TransformCurve failed: ${kernelAwareMsg(err)}`);
+      return null;
+    }
+  },
+
+  OffsetCurve: (params, inputs, warn) => {
+    const curveIn = inputs.find((i: any) => i.targetHandle === 'curve')?.value;
+    if (!curveIn || curveIn.type !== 'Curve') {
+      warn('OffsetCurve: connect a Curve.');
+      return null;
+    }
+    const d = num(params.distance, 2);
+    try {
+      const v = curveIn.value;
+      if (v && typeof v.offset === 'function') {
+        return { type: 'Curve', value: v.offset(d) };
+      }
+      const w: any = curveToWire(curveIn);
+      if (w && typeof w.offset2D === 'function') {
+        return { type: 'Curve', value: w.offset2D(d) };
+      }
+      warn('OffsetCurve: this curve type does not support offsetting — Circle/Ellipse curves and closed sketches work best.');
+      return null;
+    } catch (err: any) {
+      console.warn('OffsetCurve failed:', err);
+      warn(`OffsetCurve failed: ${kernelAwareMsg(err)}`);
+      return null;
+    }
   }
 };
