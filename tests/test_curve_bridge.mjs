@@ -129,7 +129,57 @@ try {
   const off = wA.offset2D(2);
   assert.strictEqual(typeof off.pointAt, 'function', 'offset wire keeps pointAt');
 
-  console.log('test_curve_bridge: END-TO-END kernel assertions passed (loft/pipe/extrude/offset)');
+  // --- New List Mapping / Array tests ---
+  console.log('test_curve_bridge: Running list mapping and array tests...');
+  const { EXECUTORS } = await import('../src/worker/executors.ts');
+
+  // Test 1: Line with array of points
+  const p1s = [{ type: 'Point', x: 0, y: 0, z: 0 }, { type: 'Point', x: 10, y: 0, z: 0 }];
+  const p2s = [{ type: 'Point', x: 0, y: 10, z: 0 }, { type: 'Point', x: 10, y: 10, z: 0 }];
+  const linesCurve = EXECUTORS.Line({}, [
+    { targetHandle: 'start', value: p1s },
+    { targetHandle: 'end', value: p2s }
+  ]);
+  assert.ok(linesCurve && linesCurve.type === 'Curve', 'Line returns a Curve');
+  assert.ok(Array.isArray(linesCurve.value) && linesCurve.value.length === 2, 'Line returns an array of 2 wires');
+
+  // Test 2: Arc with array of points (tests middle and mid target handles)
+  const mids = [{ type: 'Point', x: 0, y: 5, z: 2 }, { type: 'Point', x: 10, y: 5, z: 2 }];
+  const arcsCurve = EXECUTORS.Arc({}, [
+    { targetHandle: 'start', value: p1s },
+    { targetHandle: 'middle', value: mids },
+    { targetHandle: 'end', value: p2s }
+  ]);
+  assert.ok(arcsCurve && arcsCurve.type === 'Curve', 'Arc returns a Curve');
+  assert.ok(Array.isArray(arcsCurve.value) && arcsCurve.value.length === 2, 'Arc returns an array of 2 wires');
+
+  // Test 3: TransformCurve with array of wires
+  const transformedArcs = EXECUTORS.TransformCurve({ tz: 5, scale: 1.5 }, [
+    { targetHandle: 'curve', value: arcsCurve }
+  ]);
+  assert.ok(transformedArcs && transformedArcs.type === 'Curve', 'TransformCurve returns a Curve');
+  assert.ok(Array.isArray(transformedArcs.value) && transformedArcs.value.length === 2, 'TransformCurve returns 2 transformed wires');
+
+  // Test 4: DivideCurve with array of wires
+  const dividedPointsVal = EXECUTORS.DivideCurve({ count: 5 }, [
+    { targetHandle: 'curve', value: arcsCurve }
+  ]);
+  const dividedPoints = dividedPointsVal.values.points;
+  assert.ok(Array.isArray(dividedPoints) && dividedPoints.length === 10, 'DivideCurve returns 10 points (5 per wire)');
+  assert.strictEqual(dividedPoints[0].wireIndex, 0);
+  assert.strictEqual(dividedPoints[5].wireIndex, 1);
+
+  // Test 5: SweepAlongCurve with array of wires
+  const smallProfile = { type: 'Curve', value: R.drawCircle(0.5).sketchOnPlane('XY').wire };
+  const sweepCompound = EXECUTORS.SweepAlongCurve({}, [
+    { targetHandle: 'rail', value: arcsCurve },
+    { targetHandle: 'profile', value: smallProfile }
+  ]);
+  assert.ok(sweepCompound, 'SweepAlongCurve returns a solid');
+  const sweepVol = R.measureVolume(sweepCompound);
+  assert.ok(sweepVol > 10, `Sweep volume ${sweepVol} is sane`);
+
+  console.log('test_curve_bridge: END-TO-END kernel assertions passed (loft/pipe/extrude/offset/list-mapping)');
 } catch (e) {
   if (String(e?.code) === 'ERR_MODULE_NOT_FOUND' || /Cannot find|ENOENT|fetch/.test(String(e?.message))) {
     console.log('test_curve_bridge: SKIPPED WASM audit (kernel not loadable in this environment): ' + String(e.message || e).slice(0, 120));

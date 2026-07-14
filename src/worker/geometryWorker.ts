@@ -630,14 +630,19 @@ async function evaluateGraphInternal(
             };
           } else if (value && value.type === 'Curve') {
             const steps = 50;
-            const vertices = [];
-            const indices = [];
-            for (let i = 0; i <= steps; i++) {
-              const pt = value.value.pointAt(i / steps);
-              vertices.push(pt[0], pt[1], pt[2]);
-              if (i < steps) {
-                indices.push(i, i + 1);
+            const vertices: number[] = [];
+            const indices: number[] = [];
+            const curvesList = Array.isArray(value.value) ? value.value : [value.value];
+            let vertOffset = 0;
+            for (const singleWire of curvesList) {
+              for (let i = 0; i <= steps; i++) {
+                const pt = singleWire.pointAt(i / steps);
+                vertices.push(pt[0], pt[1], pt[2]);
+                if (i < steps) {
+                  indices.push(vertOffset + i, vertOffset + i + 1);
+                }
               }
+              vertOffset += steps + 1;
             }
             meshData = { type: 'Line', vertices, indices, normals: [] };
           } else if (isHelper) {
