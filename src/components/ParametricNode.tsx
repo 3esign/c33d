@@ -23,7 +23,7 @@ export const ParametricNode: React.FC<NodeProps> = ({ id, type, data, isConnecta
     ? macroDef.exposedParams.map(ep => ({ name: ep.name, type: ep.type, default: ep.default, min: ep.min, max: ep.max, step: ep.step }))
     : definition.params;
 
-  const isNumberNode = type === 'NumberSlider' || type === 'Expression' || type === 'Series' || type === 'Range' || type === 'ListItem' || type === 'ListLength';
+  const isNumberNode = type === 'NumberSlider' || type === 'Expression' || type === 'Series' || type === 'Range' || type === 'ListItem' || type === 'ListLength' || type === 'ListConstant' || type === 'PointsFromLists' || type === 'RepeatEach' || type === 'Tile';
   const headerLabel = macroDef ? `★ ${macroDef.name}` : definition.label;
   const headerClass = macroDef
     ? 'bg-amber-900/60 text-amber-200'

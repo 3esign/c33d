@@ -411,7 +411,10 @@ async function evaluateGraphInternal(
         }
       }
       try {
-        numberCache[node.id] = evaluateExpressionWithLists(String(effectiveParams.formula ?? '0'), vars);
+        // Unified namespace: Expression formulas see slider labels directly
+        // (same contract as inline numeric params). Edge-fed vars (a,b,c,d)
+        // shadow sliders on name collision.
+        numberCache[node.id] = evaluateExpressionWithLists(String(effectiveParams.formula ?? '0'), { ...sliderScope, ...vars });
       } catch (err: any) {
         numberCache[node.id] = 0;
         nodeErrors.push({ id: node.id, error: `Expression error: ${err.message}` });
@@ -434,10 +437,47 @@ async function evaluateGraphInternal(
       const min = getNumericInputOrParam('min', 0, incoming, effectiveParams, numberCache, nodeCache);
       const max = getNumericInputOrParam('max', 10, incoming, effectiveParams, numberCache, nodeCache);
       const steps = Math.max(1, Math.round(getNumericInputOrParam('steps', 5, incoming, effectiveParams, numberCache, nodeCache)));
-      
+
       const values: number[] = [];
       for (let i = 0; i <= steps; i++) {
         values.push(min + (i / steps) * (max - min));
+      }
+      numberCache[node.id] = values;
+      continue;
+    }
+    if (node.type === 'RepeatEach' || node.type === 'Tile') {
+      // List combinatorics: cross products without data trees.
+      // RepeatEach [a,b]×3 → [a,a,a,b,b,b]; Tile [a,b]×3 → [a,b,a,b,a,b].
+      let listVal: number[] = [];
+      const listEdge = incoming.find(e => e.targetHandle === 'list');
+      if (listEdge) {
+        const v = resolveSourceValue(listEdge.source, listEdge.sourceHandle, nodeCache, numberCache);
+        if (v !== undefined) listVal = Array.isArray(v) ? v : [v];
+      }
+      const count = Math.max(1, Math.round(getNumericInputOrParam('count', 2, incoming, effectiveParams, numberCache, nodeCache)));
+      const values: number[] = [];
+      if (node.type === 'RepeatEach') {
+        for (const v of listVal) for (let i = 0; i < count; i++) values.push(v);
+      } else {
+        for (let i = 0; i < count; i++) for (const v of listVal) values.push(v);
+      }
+      numberCache[node.id] = values;
+      continue;
+    }
+    if (node.type === 'ListConstant') {
+      // Constant data list: comma/semicolon-separated entries; each entry may be
+      // a number or a formula referencing slider labels ("R*0.2, R*0.5, R").
+      const raw = String(effectiveParams.values ?? '');
+      const values: number[] = [];
+      for (const part of raw.split(/[,;]+/)) {
+        const s = part.trim();
+        if (!s) continue;
+        try {
+          values.push(evaluateExpressionSafe(s, sliderScope));
+        } catch (err: any) {
+          nodeErrors.push({ id: node.id, error: `ListConstant entry "${s}" error: ${err.message}` });
+          values.push(0);
+        }
       }
       numberCache[node.id] = values;
       continue;

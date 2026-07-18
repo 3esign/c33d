@@ -109,7 +109,7 @@ export const AGENT_TOOLS: ToolDef[] = [
   },
   {
     name: 'connect',
-    description: 'Connect node outputs to node inputs. You may OMIT sourceHandle/targetHandle: single-input targets default to their input, and multi-input targets auto-fill their first UNCONNECTED input in declared order (Boolean: target then tool; Align: shape then reference; Loft: profile1..4; PlaceOnSurface: surface then shape) — so connect the main/first input before the secondary one, or pass targetHandle explicitly to be safe. Param-driving edges always need explicit targetHandle "param:<paramName>" (e.g. "param:radius"). sourceHandle defaults to "value" for number/expression nodes.',
+    description: 'Connect node outputs to node inputs. You may OMIT sourceHandle/targetHandle — they are inferred. sourceHandle is inferred from the source node\'s output (Point→point, VectorXYZ→vector, CircleCurve/Line/Spline→curve, DivideCurve→points, primitives/transforms→solid, sliders→value), so you almost never need to pass it; only the few multi-output nodes (DeconstructPoint, BoundingBox, Endpoints, EvaluateCurve) need an explicit sourceHandle. targetHandle: single-input targets default to their input, and multi-input targets auto-fill their first UNCONNECTED input in declared order (Boolean: target then tool; Align: shape then reference; Loft: profile1..4; PlaceOnSurface: surface then shape) — so connect the main/first input before the secondary one, or pass targetHandle explicitly. Param-driving edges always need explicit targetHandle "param:<paramName>" (e.g. "param:radius").',
     parameters: {
       type: 'object',
       properties: {
@@ -119,7 +119,7 @@ export const AGENT_TOOLS: ToolDef[] = [
             type: 'object',
             properties: {
               source: { type: 'string' },
-              sourceHandle: { type: 'string', description: 'Optional; defaults to "solid" (or "value" for number nodes).' },
+              sourceHandle: { type: 'string', description: 'Optional; inferred from the source node\'s output (only needed for multi-output nodes like DeconstructPoint/BoundingBox).' },
               target: { type: 'string' },
               targetHandle: { type: 'string', description: 'Optional for single-solid-input targets (defaults to "solid"); required otherwise.' },
             },
@@ -210,8 +210,29 @@ export function geoInputHandles(type: string): string[] {
 }
 
 // Default sourceHandle for an edge leaving a node of the given type.
-function defaultSourceHandle(sourceType: string | undefined): string {
-  return sourceType && NUMBER_OUTPUT_TYPES.has(sourceType) ? 'value' : 'solid';
+//
+// The model is actively encouraged (tool/protocol docs) to OMIT sourceHandle to
+// save tokens, so this default MUST be the node's real output — otherwise every
+// skeleton edge (Point→'point', VectorXYZ→'vector', CircleCurve→'curve',
+// DivideCurve→'points', Line/Spline→'curve', …) got silently stamped 'solid',
+// a handle those nodes do not have, and the structural validator rejected it.
+// That single wrong default produced the recurring "validator defaulted to
+// 'solid'" repair loops AND the "spheres in the centre" cascade (the dropped
+// DivideCurve→InstanceOnPoints.points edge left the instancer with no points).
+//
+// Number/list nodes keep the 'value' alias (their executors expect it). Every
+// single-output node resolves to its actual output. Only genuinely multi-output
+// decomposition nodes (DeconstructPoint, BoundingBox, Endpoints, EvaluateCurve)
+// fall back to 'solid' and should be given an explicit handle by the caller.
+export function defaultSourceHandle(sourceType: string | undefined): string {
+  // Prefer the DECLARED output name: the structural validator only accepts
+  // declared names, and the old 'value' alias mis-stamped Series/Range edges
+  // (declared output "values") into a validation error. All single-output
+  // nodes — including every number/list node — resolve to their real handle.
+  const def = sourceType ? NODE_LIBRARY[sourceType] : undefined;
+  if (def && def.outputs.length === 1) return def.outputs[0].name;
+  if (sourceType && NUMBER_OUTPUT_TYPES.has(sourceType)) return 'value';
+  return 'solid';
 }
 
 function normalizeArgs(args: any): any {

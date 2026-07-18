@@ -28,11 +28,14 @@ export interface ModelTurn {
   truncated?: boolean;
 }
 
-// Output ceiling: generous enough to avoid truncating large graphs mid-`edges`,
-// but not so high it trips low-credit accounts' per-request affordability check
-// (OpenRouter returns 402 if max_tokens exceeds remaining credit). With inline
-// parametric formulas the graphs are much smaller, so 8000 is ample.
-const MAX_OUTPUT_TOKENS = 8000;
+// Output ceiling: generous enough to avoid truncating large graphs mid-`edges`.
+// The primary defense against truncation is the reasoning-field diet in the
+// system prompt (keep the plan to 1-2 sentences); this ceiling is the secondary
+// safety margin for genuinely large multi-part builds. It is only a CAP, not a
+// charge — providers bill actual usage — and the one provider that checks
+// max_tokens against remaining credit upfront (OpenRouter, HTTP 402) is handled
+// by the affordability retry below, which recomputes a cap it can afford.
+const MAX_OUTPUT_TOKENS = 12000;
 const MIN_OUTPUT_TOKENS = 2000;
 
 function getActiveAgent(): AgentSlot {
@@ -55,7 +58,20 @@ interface SimpleMessage {
   content: string;
 }
 
-export async function chatCompletion(messages: SimpleMessage[], systemPrompt: string) {
+export async function chatCompletion(
+  messages: SimpleMessage[],
+  systemPrompt: string,
+  opts?: {
+    /**
+     * Optional JSON Schema for schema-constrained decoding (e.g. the IR
+     * grammar from src/ai/ir/schema.ts). Applied where the provider supports
+     * it (OpenAI/OpenRouter json_schema, Ollama structured outputs); if the
+     * provider rejects the schema payload, the request is retried once in
+     * plain JSON mode so a schema problem can never take down the turn.
+     */
+    responseSchema?: any;
+  },
+) {
   const activeAgent = getActiveAgent();
   const { provider, apiKey, model } = activeAgent;
 
@@ -105,14 +121,25 @@ export async function chatCompletion(messages: SimpleMessage[], systemPrompt: st
       options: { num_predict: MAX_OUTPUT_TOKENS }
     };
     if (!ollamaModel.toLowerCase().includes('cloud')) {
-      payload.format = 'json';
+      // Ollama structured outputs: `format` accepts a full JSON Schema object
+      // (grammar-constrained sampling) — falls back to loose JSON mode below.
+      payload.format = opts?.responseSchema ?? 'json';
     }
 
-    const response = await fetch(endpoint, {
+    let response = await fetch(endpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     });
+
+    if (!response.ok && opts?.responseSchema && payload.format !== 'json') {
+      payload.format = 'json';
+      response = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+    }
 
     if (!response.ok) throw new Error(`Ollama Error: ${response.status} ${response.statusText}`);
 
@@ -134,14 +161,23 @@ export async function chatCompletion(messages: SimpleMessage[], systemPrompt: st
     throw new Error(`Unsupported provider: ${provider}`);
   }
 
-  const payload = {
+  const payload: any = {
     model: model,
     messages: [{ role: 'system', content: systemPrompt }, ...messages],
-    response_format: { type: 'json_object' },
+    response_format: opts?.responseSchema
+      // strict:false — the IR schema has free-form `args` objects, which the
+      // strict subset forbids; the op-name enum is the high-value constraint.
+      ? { type: 'json_schema', json_schema: { name: 'ir_program', strict: false, schema: opts.responseSchema } }
+      : { type: 'json_object' },
     max_tokens: MAX_OUTPUT_TOKENS
   };
 
-  const response = await fetch(endpoint, { method: 'POST', headers, body: JSON.stringify(payload) });
+  let response = await fetch(endpoint, { method: 'POST', headers, body: JSON.stringify(payload) });
+  if (!response.ok && opts?.responseSchema) {
+    // Model/provider without json_schema support: retry once in plain JSON mode.
+    payload.response_format = { type: 'json_object' };
+    response = await fetch(endpoint, { method: 'POST', headers, body: JSON.stringify(payload) });
+  }
   if (!response.ok) throw new Error(`API Error: ${response.status} ${response.statusText}`);
 
   const data = await response.json();

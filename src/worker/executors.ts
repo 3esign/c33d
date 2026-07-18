@@ -196,6 +196,65 @@ function sweepCircleAlongWire(wireShape: any, radius: number): any {
   return shape;
 }
 
+// Best-effort CLOSED-wire check. Sweeping a circular profile along a closed ring
+// (e.g. a CircleCurve) via BRepOffsetAPI_MakePipe is numerically unstable in
+// OCCT — it throws a raw kernel exception the model misreads as a parameter bug
+// and burns its whole engine-fault budget on. We detect closedness with the
+// native TopoDS_Shape::Closed() flag and route to the Torus recipe instead.
+// Unknown/unavailable ⇒ returns false, so an OPEN pipe is never wrongly blocked
+// (false negatives just fall through to the attempt + actionable catch message).
+function wireIsClosed(wireShape: any): boolean {
+  try {
+    const w = wireShape?.wrapped ?? wireShape;
+    if (w && typeof w.Closed === 'function') return !!w.Closed();
+  } catch { /* best-effort */ }
+  return false;
+}
+
+// Orient a planar wire from the XY plane onto a target normal, then move it to
+// a center point. Lets CircleCurve/EllipseCurve honor their declared
+// center/normal inputs (previously accepted by the validator but IGNORED by
+// the executor — circles silently rendered at the origin on XY).
+function orientAndPlaceWire(w: any, center?: any, normal?: any): any {
+  let out = w;
+  if (normal && typeof normal === 'object') {
+    const nx = Number(normal.x) || 0, ny = Number(normal.y) || 0, nz = Number(normal.z) || 0;
+    const len = Math.sqrt(nx * nx + ny * ny + nz * nz);
+    if (len > 1e-9) {
+      const uz = nz / len;
+      const angleDeg = (Math.acos(Math.max(-1, Math.min(1, uz))) * 180) / Math.PI;
+      if (angleDeg > 1e-6) {
+        // Rotation axis = Z × n (degenerate when n ∥ −Z: any horizontal axis works).
+        let ax = -(ny / len), ay = nx / len;
+        if (Math.sqrt(ax * ax + ay * ay) < 1e-9) { ax = 1; ay = 0; }
+        out = safeRotate(out, angleDeg, [0, 0, 0], [ax, ay, 0]);
+      }
+    }
+  }
+  if (center && typeof center === 'object') {
+    const cx = Number(center.x) || 0, cy = Number(center.y) || 0, cz = Number(center.z) || 0;
+    if (cx || cy || cz) out = safeTranslate(out, [cx, cy, cz]);
+  }
+  return out;
+}
+
+// Partition a point list into consecutive runs of equal channel value
+// (channels: 'row'/'col' from PointGrid, 'group' from PointsFromLists,
+// 'wireIndex' from DivideCurve). The list-of-sets primitive that lets curve
+// nodes interpolate one wire per set without data trees.
+function partitionByChannel(pts: any[], channel: string): any[][] {
+  if (!channel) return [pts];
+  const groups: any[][] = [];
+  let cur: any[] | null = null;
+  let curKey: any = undefined;
+  for (const p of pts) {
+    const k = p && typeof p === 'object' ? p[channel] : undefined;
+    if (!cur || k !== curKey) { cur = []; groups.push(cur); curKey = k; }
+    cur.push(p);
+  }
+  return groups;
+}
+
 export const EXECUTORS: Record<
   string,
   (params: any, inputs: any[], warn: (msg: string) => void, scope?: Record<string, number>) => any
@@ -775,10 +834,17 @@ export const EXECUTORS: Record<
           warn('Pipe: the connected path curve produced no wire.');
           return null;
         }
+        const wires = Array.isArray(wireShape) ? wireShape : [wireShape];
+        if (wires.some((w: any) => wireIsClosed(w))) {
+          // Route the common "sweep a small circle around a big circle" request
+          // to the primitive that does it robustly, instead of a kernel crash.
+          warn('Pipe cannot reliably sweep a CLOSED / ring path (OCCT fails at the seam). For a ring, use a Torus (majorRadius = the ring radius, minorRadius = the tube radius) — that IS a small circle swept around a big circle. Pipe is for OPEN paths (stems, cables, handles).');
+          return null;
+        }
         return sweepCircleAlongWire(wireShape, radius);
       } catch (err: any) {
         console.warn('Pipe (curve path) failed:', err);
-        warn(`Pipe along connected curve failed: ${kernelAwareMsg(err)}`);
+        warn(`Pipe along connected curve failed: ${kernelAwareMsg(err)}. If the path is a closed ring, use a Torus instead (majorRadius = ring radius, minorRadius = tube radius); Pipe is for open paths.`);
         return null;
       }
     }
@@ -821,9 +887,7 @@ export const EXECUTORS: Record<
     } catch (err: any) {
       console.warn("Pipe failed:", err);
       warn(
-        `Pipe failed: ${String(
-          err?.message || err
-        )}. Check the pathSvg string (M L C Q, no closing Z) and that radius is reasonable relative to the path's curvature.`
+        `Pipe failed: ${kernelAwareMsg(err)}. Check the pathSvg string (M L C Q, no closing Z) and that radius is reasonable relative to the path's curvature.`
       );
       return null;
     }
@@ -1727,13 +1791,14 @@ export const EXECUTORS: Record<
     }
   },
   Midpoint: (_params, inputs) => {
-    const p1 = inputs.find(i => i.targetHandle === 'pointA')?.value || { x: 0, y: 0, z: 0 };
-    const p2 = inputs.find(i => i.targetHandle === 'pointB')?.value || { x: 0, y: 0, z: 0 };
+    // Handle names must match NodeDefinitions ('a'/'b'); legacy 'pointA'/'pointB' kept for old graphs.
+    const p1 = inputs.find(i => i.targetHandle === 'a' || i.targetHandle === 'pointA')?.value || { x: 0, y: 0, z: 0 };
+    const p2 = inputs.find(i => i.targetHandle === 'b' || i.targetHandle === 'pointB')?.value || { x: 0, y: 0, z: 0 };
     return { type: 'Point', x: (p1.x + p2.x) / 2, y: (p1.y + p2.y) / 2, z: (p1.z + p2.z) / 2 };
   },
   PointBetween: (params, inputs) => {
-    const p1 = inputs.find(i => i.targetHandle === 'pointA')?.value || { x: 0, y: 0, z: 0 };
-    const p2 = inputs.find(i => i.targetHandle === 'pointB')?.value || { x: 0, y: 0, z: 0 };
+    const p1 = inputs.find(i => i.targetHandle === 'a' || i.targetHandle === 'pointA')?.value || { x: 0, y: 0, z: 0 };
+    const p2 = inputs.find(i => i.targetHandle === 'b' || i.targetHandle === 'pointB')?.value || { x: 0, y: 0, z: 0 };
     const t = num(params.t, 0.5);
     return { type: 'Point', x: p1.x + (p2.x - p1.x) * t, y: p1.y + (p2.y - p1.y) * t, z: p1.z + (p2.z - p1.z) * t };
   },
@@ -1767,19 +1832,32 @@ export const EXECUTORS: Record<
     return { __multi: true, values: { x: v.x, y: v.y, z: v.z } };
   },
   Vector2Pt: (_params, inputs) => {
-    const p1 = inputs.find(i => i.targetHandle === 'from')?.value || { x: 0, y: 0, z: 0 };
-    const p2 = inputs.find(i => i.targetHandle === 'to')?.value || { x: 0, y: 0, z: 0 };
+    const p1 = inputs.find(i => i.targetHandle === 'a' || i.targetHandle === 'from')?.value || { x: 0, y: 0, z: 0 };
+    const p2 = inputs.find(i => i.targetHandle === 'b' || i.targetHandle === 'to')?.value || { x: 0, y: 0, z: 0 };
     return { type: 'Vector', x: p2.x - p1.x, y: p2.y - p1.y, z: p2.z - p1.z };
   },
   VectorMath: (params, inputs, warn) => {
-    const v1 = inputs.find(i => i.targetHandle === 'vectorA')?.value || { x: 0, y: 0, z: 0 };
-    const v2 = inputs.find(i => i.targetHandle === 'vectorB')?.value || { x: 0, y: 0, z: 0 };
+    const v1 = inputs.find(i => i.targetHandle === 'a' || i.targetHandle === 'vectorA')?.value || { x: 0, y: 0, z: 0 };
+    const v2 = inputs.find(i => i.targetHandle === 'b' || i.targetHandle === 'vectorB')?.value || { x: 0, y: 0, z: 0 };
     const op = params.operation || 'add';
     
     if (op === 'add') return { __multi: true, values: { vector: { type: 'Vector', x: v1.x + v2.x, y: v1.y + v2.y, z: v1.z + v2.z }, value: 0 } };
     if (op === 'subtract') return { __multi: true, values: { vector: { type: 'Vector', x: v1.x - v2.x, y: v1.y - v2.y, z: v1.z - v2.z }, value: 0 } };
     if (op === 'dot') return { __multi: true, values: { vector: { type: 'Vector', x:0, y:0, z:0 }, value: v1.x * v2.x + v1.y * v2.y + v1.z * v2.z } };
     if (op === 'cross') return { __multi: true, values: { vector: { type: 'Vector', x: v1.y * v2.z - v1.z * v2.y, y: v1.z * v2.x - v1.x * v2.z, z: v1.x * v2.y - v1.y * v2.x }, value: 0 } };
+    if (op === 'scale') {
+      // Declared op that previously fell through to the zero-vector default.
+      const fRaw = inputs.find(i => i.targetHandle === 'factor')?.value;
+      const fVal = Array.isArray(fRaw) ? fRaw[0] : fRaw;
+      const f = fVal !== undefined ? num(fVal, 1) : num(params.factor, 1);
+      return { __multi: true, values: { vector: { type: 'Vector', x: v1.x * f, y: v1.y * f, z: v1.z * f }, value: f } };
+    }
+    if (op === 'angle') {
+      const dot = v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
+      const cx = v1.y * v2.z - v1.z * v2.y, cy = v1.z * v2.x - v1.x * v2.z, cz = v1.x * v2.y - v1.y * v2.x;
+      const angleDeg = (Math.atan2(Math.sqrt(cx * cx + cy * cy + cz * cz), dot) * 180) / Math.PI;
+      return { __multi: true, values: { vector: { type: 'Vector', x: 0, y: 0, z: 0 }, value: angleDeg } };
+    }
     if (op === 'normalize') {
       const len = Math.sqrt(v1.x*v1.x + v1.y*v1.y + v1.z*v1.z);
       if (len < 1e-6) { warn('Cannot normalize zero vector'); return { __multi: true, values: { vector: { type: 'Vector', x:0, y:0, z:0 }, value: 0 } }; }
@@ -1802,8 +1880,9 @@ export const EXECUTORS: Record<
   // CURVE NODES
   // ---------------------------------------------------------
   Line: (_params, inputs) => {
-    const p1Val = inputs.find(i => i.targetHandle === 'start')?.value || { x: 0, y: 0, z: 0 };
-    const p2Val = inputs.find(i => i.targetHandle === 'end')?.value || { x: 10, y: 10, z: 10 };
+    // Handle names must match NodeDefinitions ('a'/'b'); legacy 'start'/'end' kept for old graphs.
+    const p1Val = inputs.find(i => i.targetHandle === 'a' || i.targetHandle === 'start')?.value || { x: 0, y: 0, z: 0 };
+    const p2Val = inputs.find(i => i.targetHandle === 'b' || i.targetHandle === 'end')?.value || { x: 10, y: 10, z: 10 };
     try {
       const p1Arr = Array.isArray(p1Val) ? p1Val : [p1Val];
       const p2Arr = Array.isArray(p2Val) ? p2Val : [p2Val];
@@ -1836,57 +1915,85 @@ export const EXECUTORS: Record<
       return { type: 'Curve', value: wires.length === 1 ? wires[0] : wires };
     } catch { return null; }
   },
-  CircleCurve: (params) => {
+  CircleCurve: (params, inputs) => {
     const r = Math.max(0.001, num(params.radius, 5));
+    const center = inputs.find(i => i.targetHandle === 'center')?.value;
+    const normal = inputs.find(i => i.targetHandle === 'normal')?.value;
     try {
        // Emit the WIRE, not the Drawing: Drawings have no pointAt/tangentAt,
        // which silently broke DivideCurve/Endpoints/EvaluateCurve and curve
        // leaf rendering on circles (verified against the kernel, Jul 2026).
        const sk: any = replicad.drawCircle(r).sketchOnPlane('XY');
        const w = typeof sk.wires === 'function' ? sk.wires() : sk.wire;
-       return { type: 'Curve', value: Array.isArray(w) ? w[0] : w };
+       const placed = orientAndPlaceWire(Array.isArray(w) ? w[0] : w, center, normal);
+       return { type: 'Curve', value: placed };
     } catch { return null; }
   },
-  EllipseCurve: (params) => {
+  EllipseCurve: (params, inputs) => {
     const rx = Math.max(0.001, num(params.radiusX, 5));
     const ry = Math.max(0.001, num(params.radiusY, 3));
+    const center = inputs.find(i => i.targetHandle === 'center')?.value;
+    const normal = inputs.find(i => i.targetHandle === 'normal')?.value;
     try {
        const sk: any = replicad.drawEllipse(rx, ry).sketchOnPlane('XY');
        const w = typeof sk.wires === 'function' ? sk.wires() : sk.wire;
-       return { type: 'Curve', value: Array.isArray(w) ? w[0] : w };
+       const placed = orientAndPlaceWire(Array.isArray(w) ? w[0] : w, center, normal);
+       return { type: 'Curve', value: placed };
     } catch { return null; }
   },
-  PolylineCurve: (_params, inputs) => {
+  PolylineCurve: (params, inputs) => {
     const pts = inputs.find(i => i.targetHandle === 'points')?.value;
     if (!Array.isArray(pts) || pts.length < 2) return null;
     try {
-       const coords = pts.map(p => [p.x||0, p.y||0, p.z||0] as [number, number, number]);
-       const edges = [];
-       for (let i = 0; i < coords.length - 1; i++) {
-         edges.push(replicad.makeLine(coords[i], coords[i + 1]));
-       }
-       return { type: 'Curve', value: (replicad as any).assembleWire(edges) };
+       const groupBy = String(params.groupBy ?? '').trim();
+       const closed = params.closed === true || params.closed === 'true';
+       const nested: any[][] = Array.isArray(pts[0])
+         ? (pts as any[][])
+         : (groupBy ? partitionByChannel(pts, groupBy) : [pts]);
+       const wires = nested
+         .filter(sub => Array.isArray(sub) && sub.length >= 2)
+         .map((subPts: any[]) => {
+           const coords = subPts.map((p: any) => [p.x||0, p.y||0, p.z||0] as [number, number, number]);
+           if (closed) coords.push(coords[0]);
+           const edges = [];
+           for (let i = 0; i < coords.length - 1; i++) {
+             edges.push(replicad.makeLine(coords[i], coords[i + 1]));
+           }
+           return (replicad as any).assembleWire(edges);
+         });
+       if (wires.length === 0) return null;
+       return { type: 'Curve', value: wires.length === 1 ? wires[0] : wires };
     } catch { return null; }
   },
-  SplineCurve: (_params, inputs) => {
+  SplineCurve: (params, inputs) => {
     const pts = inputs.find(i => i.targetHandle === 'points')?.value;
     if (!Array.isArray(pts) || pts.length < 2) return null;
     try {
-       if (Array.isArray(pts[0])) {
-         const wires = pts.map((subPts: any) => {
+       // "Interpolate curves through SETS of points": groupBy names a per-point
+       // channel ('row' from PointGrid, 'group' from PointsFromLists, 'wireIndex'
+       // from DivideCurve); consecutive runs of equal value become separate
+       // splines — one Curve with many wires, ready for LoftCurves.
+       const groupBy = String(params.groupBy ?? '').trim();
+       const nested: any[][] = Array.isArray(pts[0])
+         ? (pts as any[][])
+         : (groupBy ? partitionByChannel(pts, groupBy) : [pts]);
+       const wires = nested
+         .filter(sub => Array.isArray(sub) && sub.length >= 2)
+         .map((subPts: any[]) => {
            const coords = subPts.map((p: any) => [p.x||0, p.y||0, p.z||0] as [number, number, number]);
            return (replicad as any).makeBSplineApproximation(coords);
          });
-         return { type: 'Curve', value: wires };
-       } else {
-         const coords = pts.map(p => [p.x||0, p.y||0, p.z||0] as [number, number, number]);
-         return { type: 'Curve', value: (replicad as any).makeBSplineApproximation(coords) };
-       }
+       if (wires.length === 0) return null;
+       return { type: 'Curve', value: wires.length === 1 ? wires[0] : wires };
     } catch { return null; }
   },
-  EdgesAsCurves: (_params, inputs) => {
-    const s = inputs.find(i => i.targetHandle === 'shape')?.value;
+  EdgesAsCurves: (_params, inputs, warn) => {
+    const s = inputs.find(i => i.targetHandle === 'shape' || i.targetHandle === 'selection')?.value;
     if (!s) return null;
+    if (s.type === 'Selection') {
+      warn('EdgesAsCurves: connect the SOLID itself to "shape" (a Selection record carries no geometry).');
+      return null;
+    }
     const edges = s.edges || [];
     if (edges.length === 0) return null;
     return edges.map((e: any) => ({ type: 'Curve', value: e }));
@@ -1928,8 +2035,8 @@ export const EXECUTORS: Record<
     return { __multi: true, values: { box, min, max, size: sz } };
   },
   DistanceMeasure: (_params, inputs) => {
-    const p1 = inputs.find(i => i.targetHandle === 'pointA')?.value || { x: 0, y: 0, z: 0 };
-    const p2 = inputs.find(i => i.targetHandle === 'pointB')?.value || { x: 0, y: 0, z: 0 };
+    const p1 = inputs.find(i => i.targetHandle === 'a' || i.targetHandle === 'pointA')?.value || { x: 0, y: 0, z: 0 };
+    const p2 = inputs.find(i => i.targetHandle === 'b' || i.targetHandle === 'pointB')?.value || { x: 0, y: 0, z: 0 };
     const dx = p1.x - p2.x, dy = p1.y - p2.y, dz = p1.z - p2.z;
     return { __multi: true, values: { distance: Math.sqrt(dx*dx + dy*dy + dz*dz), pointA: p1, pointB: p2 } };
   },
@@ -2051,10 +2158,56 @@ export const EXECUTORS: Record<
     const pts = [];
     const ox = -((nx - 1) * sx) / 2;
     const oy = -((ny - 1) * sy) / 2;
+    let g = 0;
     for (let i = 0; i < nx; i++) {
       for (let j = 0; j < ny; j++) {
-        pts.push({ type: 'Point', x: ox + i * sx, y: oy + j * sy, z: 0 });
+        // row/col channels: SplineCurve(groupBy:'row') interpolates one curve
+        // per grid row — the "sets of points → sets of curves" primitive.
+        pts.push({ type: 'Point', x: ox + i * sx, y: oy + j * sy, z: 0, row: i, col: j, index: j, globalIndex: g++ });
       }
+    }
+    return { __multi: true, values: { points: pts } };
+  },
+  // Data-driven point construction: builds a point list from number lists
+  // (Series/Range/ListConstant/Expression). Shorter lists broadcast (scalar → all,
+  // exhausted list → last value). The optional "scale" list attaches a per-point
+  // scale CHANNEL consumed by InstanceOnPoints for exact per-instance sizes.
+  PointsFromLists: (_params, inputs, warn) => {
+    const grab = (h: string) => inputs.find((i: any) => i.targetHandle === h)?.value;
+    const toList = (v: any): number[] => {
+      if (v === undefined || v === null) return [];
+      const arr = Array.isArray(v) ? v : [v];
+      return arr.map((n: any) => Number(n)).filter((n: number) => isFinite(n));
+    };
+    const xs = toList(grab('x'));
+    const ys = toList(grab('y'));
+    const zs = toList(grab('z'));
+    const ss = toList(grab('scale'));
+    const gs = toList(grab('group'));
+    const n = Math.max(xs.length, ys.length, zs.length, ss.length);
+    if (n === 0) {
+      warn('PointsFromLists: connect at least one number list (Series/Range/ListConstant/Expression) to x, y, z or scale.');
+      return null;
+    }
+    const pick = (arr: number[], i: number, fallback: number) => {
+      if (arr.length === 0) return fallback;
+      if (arr.length === 1) return arr[0];
+      return i < arr.length ? arr[i] : arr[arr.length - 1];
+    };
+    const pts = [];
+    for (let i = 0; i < n; i++) {
+      const scale = ss.length > 0 ? pick(ss, i, 1) : undefined;
+      const group = gs.length > 0 ? pick(gs, i, 0) : undefined;
+      pts.push({
+        type: 'Point',
+        x: pick(xs, i, 0),
+        y: pick(ys, i, 0),
+        z: pick(zs, i, 0),
+        index: i,
+        globalIndex: i,
+        ...(scale !== undefined ? { scale } : {}),
+        ...(group !== undefined ? { group } : {}),
+      });
     }
     return { __multi: true, values: { points: pts } };
   },
@@ -2072,7 +2225,9 @@ export const EXECUTORS: Record<
 
     const jpts = arr.map(p => {
        if (p && p.type === 'Point') {
-          return { type: 'Point', 
+          // Spread first: per-point channels (t/index/group/scale/tangent…)
+          // must survive derivation chains.
+          return { ...p, type: 'Point',
             x: p.x + (rand() * 2 - 1) * amount,
             y: p.y + (rand() * 2 - 1) * amount,
             z: p.z + (rand() * 2 - 1) * amount
@@ -2127,14 +2282,23 @@ export const EXECUTORS: Record<
     const curves = ['curve1', 'curve2', 'curve3', 'curve4', 'curve5', 'curve6']
       .map((h) => inputs.find((i: any) => i.targetHandle === h)?.value)
       .filter((c: any) => c && c.type === 'Curve');
-    if (curves.length < 2) {
-      warn('LoftCurves needs at least 2 connected curves (sections in order, e.g. bottom-to-top rails).');
+    if (curves.length < 1) {
+      warn('LoftCurves needs curve sections: either 2+ curves, or ONE multi-wire curve (e.g. SplineCurve with groupBy).');
       return null;
     }
     try {
-      const wires = curves.map((c: any) => curveToWire(c)).filter(Boolean);
+      // Flatten: a single Curve may carry MANY wires (grouped splines) — each
+      // wire is a loft section, in order. This is how "interpolate curves
+      // through point sets, then loft" becomes a 3-node curtain.
+      const wires: any[] = [];
+      for (const c of curves) {
+        const wv = curveToWire(c);
+        if (!wv) continue;
+        if (Array.isArray(wv)) wires.push(...wv);
+        else wires.push(wv);
+      }
       if (wires.length < 2) {
-        warn('LoftCurves: the connected curves did not produce usable wires.');
+        warn('LoftCurves: need at least 2 section wires after flattening (connect more curves or use a grouped multi-wire curve).');
         return null;
       }
       const ruled = params.ruled === true || params.ruled === 'true';
@@ -2268,7 +2432,9 @@ export const EXECUTORS: Record<
       return null;
     }
     const everyNth = Math.max(1, Math.round(num(params.everyNth, 1)));
-    const maxCount = Math.max(1, Math.min(200, Math.round(num(params.maxCount, 100))));
+    // Cap raised 200→500: dotted-orbit / dense-scatter patterns legitimately
+    // instance hundreds of small shapes.
+    const maxCount = Math.max(1, Math.min(500, Math.round(num(params.maxCount, 100))));
     const s0 = num(params.scaleStart, 1);
     const s1 = num(params.scaleEnd, 1);
     const align = params.alignToTangent === true || params.alignToTangent === 'true';
@@ -2280,7 +2446,9 @@ export const EXECUTORS: Record<
       const copies = sel.map((p: any, i: number) => {
         let inst = shape.clone();
         const f = sel.length > 1 ? i / (sel.length - 1) : 0;
-        const sc = s0 + (s1 - s0) * f;
+        // Per-point "scale" channel (e.g. from PointsFromLists) wins over the
+        // graded scaleStart→scaleEnd ramp — enables data-driven per-instance sizes.
+        const sc = (typeof p.scale === 'number' && isFinite(p.scale)) ? p.scale : s0 + (s1 - s0) * f;
         if (Math.abs(sc - 1) > 1e-9) inst = safeScale(inst, sc);
         if (align && Array.isArray(p.tangent)) {
           const angleDeg = (Math.atan2(p.tangent[1] || 0, p.tangent[0] || 0) * 180) / Math.PI;

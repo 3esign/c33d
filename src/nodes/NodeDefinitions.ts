@@ -103,6 +103,60 @@ export const NODE_LIBRARY: Record<string, NodeDefinition> = {
     outputs: [{ name: 'length', type: 'number' }],
     params: [],
   },
+  ListConstant: {
+    type: 'ListConstant',
+    label: 'List (Data)',
+    category: 'math',
+    inputs: [],
+    outputs: [{ name: 'values', type: 'number' }],
+    params: [
+      // Comma-separated entries; each entry may be a number OR a formula
+      // referencing slider labels (e.g. "R*0.2, R*0.5, R").
+      { name: 'values', type: 'string', default: '1, 2, 3, 4' },
+    ],
+  },
+  PointsFromLists: {
+    type: 'PointsFromLists',
+    label: 'Points From Lists',
+    category: 'math',
+    inputs: [
+      { name: 'x', type: 'number' },
+      { name: 'y', type: 'number' },
+      { name: 'z', type: 'number' },
+      { name: 'scale', type: 'number' },
+      // Optional per-point group id channel; SplineCurve/PolylineCurve with
+      // groupBy:"group" interpolate one curve per group.
+      { name: 'group', type: 'number' },
+    ],
+    outputs: [{ name: 'points', type: 'Point' }],
+    params: [],
+  },
+  RepeatEach: {
+    type: 'RepeatEach',
+    label: 'Repeat Each (List)',
+    category: 'math',
+    inputs: [
+      { name: 'list', type: 'number' },
+      { name: 'count', type: 'number' },
+    ],
+    outputs: [{ name: 'values', type: 'number' }],
+    params: [
+      { name: 'count', type: 'number', default: 2, min: 1, max: 200, step: 1 },
+    ],
+  },
+  Tile: {
+    type: 'Tile',
+    label: 'Tile / Cycle (List)',
+    category: 'math',
+    inputs: [
+      { name: 'list', type: 'number' },
+      { name: 'count', type: 'number' },
+    ],
+    outputs: [{ name: 'values', type: 'number' }],
+    params: [
+      { name: 'count', type: 'number', default: 2, min: 1, max: 200, step: 1 },
+    ],
+  },
   Box: {
     type: 'Box',
     label: 'Box',
@@ -876,6 +930,9 @@ export const NODE_LIBRARY: Record<string, NodeDefinition> = {
     outputs: [{ name: 'curve', type: 'Curve' }],
     params: [
       { name: 'closed', type: 'boolean', default: false },
+      // Name of a per-point channel ('row', 'group', 'wireIndex'): one
+      // polyline per consecutive run of equal channel value.
+      { name: 'groupBy', type: 'string', default: '' },
       { name: 'color', type: 'string', default: '#3b82f6' },
     ],
   },
@@ -887,6 +944,9 @@ export const NODE_LIBRARY: Record<string, NodeDefinition> = {
     outputs: [{ name: 'curve', type: 'Curve' }],
     params: [
       { name: 'closed', type: 'boolean', default: false },
+      // Name of a per-point channel ('row', 'group', 'wireIndex'): one spline
+      // per consecutive run of equal channel value → multi-wire Curve for Loft.
+      { name: 'groupBy', type: 'string', default: '' },
       { name: 'color', type: 'string', default: '#3b82f6' },
     ],
   },
@@ -894,7 +954,9 @@ export const NODE_LIBRARY: Record<string, NodeDefinition> = {
     type: 'EdgesAsCurves',
     label: 'Edges to Curves',
     category: 'geometry',
-    inputs: [{ name: 'selection', type: 'Selection' }],
+    // Executor extracts edges from a SOLID; the previous 'selection: Selection'
+    // declaration never worked (a Selection record carries no geometry).
+    inputs: [{ name: 'shape', type: 'Solid' }],
     outputs: [{ name: 'curve', type: 'Curve' }],
     params: [
       { name: 'color', type: 'string', default: '#3b82f6' },

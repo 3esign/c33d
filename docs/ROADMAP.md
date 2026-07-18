@@ -128,3 +128,15 @@ The active work is specified in two companion documents:
 * **`docs/kernel_health_and_curve_bridge_plan.md`** — the implementation plan: Workstream A (error taxonomy, canary, poisoned-eval respawn, diagnosis state), Workstream B (PipeOnCurve, ExtrudeCurve, LoftCurves, InstanceOnPoints, TransformCurve, OffsetCurve, SweepAlongCurve, RevolveCurve, geometric sockets), Workstream C (two-spines prompt, construction ladder, SKELETON plans, derivation metrics, node smoke matrix, golden exemplars, stadium benchmark).
 
 North star: **"a recognizable stadium where every part derives from at most 2 driving curves"** — everything starts with the point.
+
+---
+
+## 5. Architecture & Site-Context Vertical (proposed direction, 2026-07-16)
+
+A new product direction, orthogonal to the generic geometry engine: natural-language-driven architectural floor plans, grounded in a real site from the start (satellite/aerial imagery, real-world dimensions) rather than designed in a coordinate vacuum. Full plan: `docs/architecture_vertical_plan.md`.
+
+Six phases, each a dependency for the next: (0) `Site` node — geo anchor + true-north rotation + imagery, local ENU tangent-plane math, pluggable imagery provider list; (1) `Room` = rectangle primitive in the existing unified parameter namespace, adjacency read from geometry; (2) walls generated from room-boundary edges, never hand-placed; (3) openings via the sub-shape selection-by-query design; (4) energy/daylighting percepts using the Phase 0 anchor; (5) siting optimization over a parcel/setback envelope.
+
+**Sequencing dependency:** assumes the kernel-health hardening in Workstream A (`docs/kernel_health_and_curve_bridge_plan.md`) has landed — floor plans multiply wall/opening/room count per model well past current organic-shape benchmarks, and will amplify any open silent-failure class first.
+
+North star: **draw a real ~90m² house on its real site, from a brief, with true dimensions and true orientation** — everything grounded in one anchor point.

@@ -125,12 +125,12 @@ function analyzeSpatialRelations(report: GeometryReport): { contained: string[];
 // Interconnectivity, measured. derivationRatio collapses toward 0 for
 // primitive collages (every node placed by literals) and rises when forms are
 // DERIVED from upstream geometry (curves, points, other solids).
-const METRIC_MATH_TYPES = new Set(['NumberSlider', 'Expression', 'Series', 'Range', 'ListItem', 'ListLength', 'group']);
+const METRIC_MATH_TYPES = new Set(['NumberSlider', 'Expression', 'Series', 'Range', 'ListItem', 'ListLength', 'ListConstant', 'RepeatEach', 'Tile', 'group']);
 const SKELETON_TYPES = new Set([
   'Point', 'DeconstructPoint', 'Centroid', 'Midpoint', 'PointBetween', 'Endpoints',
   'VectorXYZ', 'DeconstructVector', 'Vector2Pt', 'VectorMath', 'ConstructPlane',
   'Line', 'Arc', 'CircleCurve', 'EllipseCurve', 'PolylineCurve', 'SplineCurve', 'EdgesAsCurves',
-  'CurveLength', 'PointOnCurve', 'EvaluateCurve', 'DivideCurve', 'PointGrid', 'Jitter',
+  'CurveLength', 'PointOnCurve', 'EvaluateCurve', 'DivideCurve', 'PointGrid', 'Jitter', 'PointsFromLists',
   'TransformCurve', 'OffsetCurve',
 ]);
 

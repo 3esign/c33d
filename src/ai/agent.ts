@@ -2,7 +2,7 @@ import { chatCompletion, chatCompletionWithTools, providerSupportsTools, provide
 import type { AgentMessage } from './api';
 import { useStore, generateUUID, waitForEvaluation } from '../store/useStore';
 import { NODE_LIBRARY } from '../nodes/NodeDefinitions';
-import { AGENT_TOOLS, executeTool, geoInputHandles } from './tools';
+import { AGENT_TOOLS, executeTool, geoInputHandles, defaultSourceHandle } from './tools';
 import type { WorkingGraph } from './tools';
 import { autoLayout } from '../layout/autoLayout';
 import { retrieveSimilarExamples, formatExampleForPrompt, condenseGraph } from './retrieval';
@@ -10,6 +10,10 @@ import { checkGeometrySanity, formatGeometryReport, runVisionVerification, compu
 import { validateGraphStructure } from './graphValidation';
 import { captureViewportSnapshot } from '../utils/snapshot';
 import { isSystemError } from '../utils/errors';
+import { compileIr } from './ir/compile';
+import { skillCatalogText } from './ir/skills';
+import { buildIrJsonSchema } from './ir/schema';
+import type { IrProgram } from './ir/types';
 
 const MAX_AGENT_TURNS = 8;
 const MAX_AUTO_REPAIRS = 2;
@@ -104,13 +108,20 @@ ${macroLibraryText()}
 7. Detailing: SubdivideSurface and FilterFaces carve panels/windows/facades out of base solids. Loft between profiles for tapered/organic forms. Revolve a Sketch profile for rotationally symmetric parts (vases, domes, wheels).
 7b. ORGANIC FORMS: use ScaleXYZ (non-uniform squash/stretch, isLocal default) to turn spheres into petals/leaves/discs/cushions — e.g. Sphere→ScaleXYZ(1, 0.4, 0.15) is a cupped petal, far better than a thin extruded sketch. Ellipsoid and Torus are direct primitives (seed heads, rings, tires, wreaths). CircularPattern supports startAngle (phase-offset interleaved petal rings), rise (z per copy → spirals/phyllotaxis), and scaleStart/scaleEnd (instances grade in size — natural, not mechanical). For a flower: petal = Ellipsoid or ScaleXYZ'd Sphere, tilted with Rotate(isLocal), Translate outward, CircularPattern with count=petalCount; second ring with startAngle "180/petalCount" and smaller scale.
 7c. SUB-SHAPE EDITING & SELECTIONS: use SelectFaces / SelectEdges (outputs "Selection") to target specific sub-faces or edges of a solid using a query predicate. Predicate queries support: "normal ~ +Z" (normal near direction), "center.z > 5" (face/edge centroid position), "parallel Z" (edge direction), "area > 10" (face area), "length < 5" (edge length), "coplanar" or "coaxial" checks. Boolean combinators (and, or, not) and parentheses are supported (e.g., "normal ~ +Z and center.z > 10"). Connect the Selection into ExtrudeFace (param height: positive to pull, negative to push/cut) or Fillet/Chamfer to modify the targeted sub-shapes. Use SplitLoop(solid, axis, at) to imprint edge loops (slice the outer face mesh into separate sub-faces) before selecting them; this allows localized extrusions/details on a single base solid. Note: Selection nodes output a Selection descriptor (resolved on execution); do not connect them to "solid" ports.
-7d. CONSTRUCTION LADDER — pick the strategy BEFORE picking nodes: shell/bowl/hull/organic skin → 2-3 rail curves at heights (EllipseCurve/SplineCurve + TransformCurve) → LoftCurves. tube/cable/rail/stem → curve → Pipe (connect the curve to its "path" input). repeated elements along a boundary (columns, windows, seats, spokes) → curve → DivideCurve → InstanceOnPoints (alignToTangent to follow the curve, scaleStart/scaleEnd to grade sizes). rotationally symmetric → profile curve → RevolveCurve. flat footprint/slab → closed curve → ExtrudeCurve. boxy/mechanical → primitives + Align. If ONE driving curve can generate the whole form, prefer it over assembling primitives — move one slider and everything follows. Curves and points are cheap construction geometry: they render as thin guides, never block leaves, and the report lists their coordinates.
+7d. CONSTRUCTION LADDER — pick the strategy BEFORE picking nodes: shell/bowl/hull/organic skin → 2-3 rail curves at heights (EllipseCurve/SplineCurve + TransformCurve) → LoftCurves. tube/cable/rail/stem → OPEN curve → Pipe (connect the curve to its "path" input). ring/torus/hoop (small circle swept around a big circle) → Torus (majorRadius, minorRadius) — NEVER Pipe along a closed CircleCurve; the kernel fails on closed paths. repeated elements along a boundary (columns, windows, seats, spokes) → curve → DivideCurve → InstanceOnPoints (alignToTangent to follow the curve, scaleStart/scaleEnd to grade sizes). rotationally symmetric → profile curve → RevolveCurve. flat footprint/slab → closed curve → ExtrudeCurve. boxy/mechanical → primitives + Align. If ONE driving curve can generate the whole form, prefer it over assembling primitives — move one slider and everything follows. Curves and points are cheap construction geometry: they render as thin guides, never block leaves, and the report lists their coordinates.
 8. Style: vary construction strategies and aesthetics between requests — do not repeat one formulaic design.
 9. When the user asks for a completely NEW object, clear the graph first so old geometry does not overlap.
 10. TEXT ANSWERS: when the user asks a question or requests feedback, critique, a report, an explanation, or advice, ANSWER IN TEXT and leave the graph alone. Do NOT build geometry to "represent" your answer — no 3D text banners, no "conceptual architecture" sculptures, no symbolic diagrams. Only build or modify geometry when the user asks for an object or a change to one.
 
 ### VERIFICATION LOOP:
 After graph changes you receive a GEOMETRY REPORT: per-leaf bounding boxes, volumes, node errors, scene extents, the slider inventory (names your formulas can reference), and graph size. READ IT. Compare sizes, positions and proportions against your plan (e.g. wheels bbox z-min should be at ground 0; parts should not be far from the scene bulk). Node errors saying a Fillet/Chamfer/Shell "passed the solid through" mean that feature silently did nothing — shrink its parameter instead of ignoring it. If the graph size grew across repairs, remove stale duplicate nodes rather than adding more. Fix discrepancies before declaring success.
+
+### COMMON CORRECTIONS (recurring traps — get these right the first time):
+- Ring/torus: to sweep a small circle around a bigger circle, use a Torus (majorRadius, minorRadius). Do NOT Pipe along a closed CircleCurve — the kernel fails on closed paths.
+- Scatter with random/graded sizes: InstanceOnPoints uses scaleStart and scaleEnd (NOT scaleMin/scaleMax/seed). Feed a Solid into "shape" and the DivideCurve points into "points"; its output is the scattered copies.
+- Points ON a circle: CircleCurve → DivideCurve(count) yields points on the circumference — wire those into InstanceOnPoints.points. A lone Sphere with no instancer just sits at the origin (this is the "spheres in the centre" mistake).
+- Edges: omit sourceHandle/targetHandle — they are inferred from the ports. Never put a "solid" output on a Point/Vector/Curve node.
+- Output budget: keep "reasoning" short and emit the graph compactly; an over-long plan truncates the JSON and fails the whole turn.
 ${examplesSection}
 
 ### USER GUIDELINES:
@@ -133,14 +144,29 @@ ${store.nodes.length > 0 ? condenseGraph(store.nodes as any[], store.edges as an
   return core + `
 
 ### OUTPUT PROTOCOL (respond ONLY with raw JSON, no markdown):
+
+PREFERRED — for a NEW design or a full rebuild, emit an IR PROGRAM. The compiler expands it into the graph deterministically: no node ids, no handles, no wiring — mistakes are impossible at that layer. Shape:
 {
-  "reasoning": "[string] your plan: SKELETON first (driving curves/points and what derives from each), then parts, attachments, ratios, then verification notes. For questions/feedback/reports (CORE RULE 10) put your FULL text answer here and include NO graph fields at all — that is a complete, valid response.",
+  "intent": "one sentence describing the design",
+  "params": [{"name":"totalHeight","value":40,"min":10,"max":100}],
+  "body": [
+    {"let":"profile","op":"circle","args":{"radius":"totalHeight*0.2"}},
+    {"let":"tower","op":"extrude","args":{"curve":"$profile","height":"totalHeight"}}
+  ],
+  "emit": [{"ref":"$tower","color":"#3b82f6"}]
+}
+IR RULES: each op binds its result to "let"; later args reference bindings as "$name". Numeric args accept literals (5), formulas of param names ("totalHeight*0.2"), or "$refs" to number bindings. Data lists are literals ([0.39, 0.72, 1.0]). Think DATA-FIRST: sort/remap real data into lists, derive point skeletons from the lists, and generate solids at the very END (one source shape + instances beats many primitives).
+AVAILABLE OPS (name(args, ?=optional) -> returns — meaning):
+${skillCatalogText()}
+
+For SMALL EDITS to the existing graph, use the legacy patch protocol instead:
+{
+  "reasoning": "[string] 1-2 sentences. EXCEPTION: for questions/feedback/reports (CORE RULE 10) put your FULL text answer here and include NO graph fields at all — that is a complete, valid response.",
   "questions": ["clarifying questions, or empty array"],
-  // OPTION A - PATCH (preferred for edits): "addedNodes": [{"id","type","data"}], "updatedNodes": [{"id","data"}], "removedNodeIds": [], "addedEdges": [{"source","target"}], "removedEdgeIds": []
+  // OPTION A - PATCH: "addedNodes": [{"id","type","data"}], "updatedNodes": [{"id","data"}], "removedNodeIds": [], "addedEdges": [{"source","target"}], "removedEdgeIds": [{"source","target"}]  (remove edges by their {source,target} — a bare "source->target" string also works)
   // OPTION B - NEW OBJECT: "clearGraph": true plus full "nodes": [{"id","type","data"}] and "edges": [...]
 }
-EDGES: just give {"source","target"} — handles are filled in automatically: single-input targets get their input, multi-input targets get their first unconnected input in declared order (Boolean: target then tool; Align: shape then reference; Loft: profile1..4), so LIST EDGES IN THAT ORDER, or include targetHandle explicitly to be safe. Param edges always need explicit targetHandle "param:<name>" (e.g. "param:radius"). Omitting required handles saves tokens and avoids truncation on large graphs.
-Do NOT include node positions — layout is automatic. Every node id must be unique.`;
+EDGES (patch protocol only): just give {"source","target"} — BOTH handles are inferred from the node library. Param edges need explicit targetHandle "param:<name>". Do NOT include node positions — layout is automatic. Every node id must be unique.`;
 }
 
 // ---------- Shared helpers ----------
@@ -168,6 +194,22 @@ function addSystemMessage(content: string) {
 function addAssistantMessage(content: string) {
   useStore.getState().addMessage({ id: generateUUID(), role: 'assistant', content });
 }
+
+// Cross-tool parameter synonyms (Grasshopper / other-CAD priors the model
+// reaches for). Keys and values are lowercased; a synonym only maps when THIS
+// node actually has the canonical param, so a real typo on an unrelated node
+// still surfaces as an error. Without this, one stray param made add_nodes
+// reject the ENTIRE node — the origin of the "spheres never instantiated" loop
+// (InstanceOnPoints "scaleMin"/"scaleMax"/"seed" → node dropped → no points).
+const PARAM_SYNONYMS: Record<string, string> = {
+  scalemin: 'scalestart', minscale: 'scalestart', startscale: 'scalestart', minsize: 'scalestart', sizemin: 'scalestart',
+  scalemax: 'scaleend', maxscale: 'scaleend', endscale: 'scaleend', maxsize: 'scaleend', sizemax: 'scaleend',
+  num: 'count', number: 'count', divisions: 'count', segments: 'count', samples: 'count', resolution: 'count', copies: 'count', instances: 'count',
+  major: 'majorradius', minor: 'minorradius', tuberadius: 'minorradius', tube: 'minorradius',
+};
+// Params expressing an intent this kernel realizes a different way. Drop with a
+// note instead of rejecting the whole node when the type doesn't have them.
+const BENIGN_DROP_PARAMS = new Set(['seed', 'random', 'randomize', 'randomseed', 'jitter']);
 
 export function validateAndNormalizeNodeData(
   id: string,
@@ -244,7 +286,19 @@ export function validateAndNormalizeNodeData(
         warnings.push(`parameter "${key}" on node "${id}" was auto-corrected to "${correctKey}"`);
       }
     } else {
-      errors.push(`unknown parameter "${key}" on node "${id}" (node type "${type}" does not support "${key}"). Valid parameters: ${validParams.join(', ') || '(none)'}`);
+      // A known synonym that THIS node actually supports? Map it rather than
+      // rejecting the whole node. (add_nodes skips any node with a param error,
+      // so an unmapped stray param silently deletes the node.)
+      const canonicalLower = PARAM_SYNONYMS[keyLower];
+      const resolved = canonicalLower ? validParamsLowerMap.get(canonicalLower) : undefined;
+      if (resolved) {
+        validatedData[resolved] = value;
+        warnings.push(`parameter "${key}" on node "${id}" was mapped to "${resolved}" (synonym).`);
+      } else if (BENIGN_DROP_PARAMS.has(keyLower)) {
+        warnings.push(`parameter "${key}" on node "${id}" is not supported by ${type} and was ignored — for per-instance size variation use scaleStart/scaleEnd.`);
+      } else {
+        errors.push(`unknown parameter "${key}" on node "${id}" (node type "${type}" does not support "${key}"). Valid parameters: ${validParams.join(', ') || '(none)'}`);
+      }
     }
   }
 
@@ -904,7 +958,16 @@ async function runLegacyJson(modifiedUserText: string, originalText: string, opt
   const jsonDiagnosis = newRepairDiagnosis();
 
   for (let attempt = 0; attempt <= MAX_AUTO_REPAIRS; attempt++) {
-    const responseText = await chatCompletion(apiMessages, systemPrompt);
+    // Schema-constrained decoding: on an empty canvas the expected output is an
+    // IR program, so constrain the sampler to the IR grammar (op-name enum kills
+    // "unknown op" and malformed-JSON failures at the decoder). With an existing
+    // graph the model may legitimately answer with the patch protocol instead,
+    // so no constraint is applied.
+    const emptyCanvas = useStore.getState().nodes.length === 0;
+    const responseText = await chatCompletion(
+      apiMessages, systemPrompt,
+      emptyCanvas ? { responseSchema: buildIrJsonSchema() } : undefined,
+    );
 
     // Truncation: the provider hit the output cap mid-response. Do NOT feed a
     // cut-off graph into the repair loop — ask the model to resend, more
@@ -936,6 +999,38 @@ async function runLegacyJson(modifiedUserText: string, originalText: string, opt
       throw parseErr;
     }
     parsedOk = true;
+
+    // IR PROGRAM path: a typed {params?, body, emit} program compiles
+    // deterministically into nodes/edges (src/ai/ir). Compile errors are
+    // model-repairable and do not touch the canvas.
+    if (parsed && Array.isArray(parsed.body) && Array.isArray(parsed.emit)
+        && !parsed.nodes && !parsed.addedNodes && !parsed.updatedNodes) {
+      if (parsed.body.length === 0 && parsed.questions?.length > 0) {
+        // Question-only response wearing the IR shape — hand to the question path.
+        parsed = { reasoning: parsed.intent || '', questions: parsed.questions };
+      } else {
+        const compiled = compileIr(parsed as IrProgram);
+        if (!compiled.graph) {
+          const msgs = compiled.issues.map(i => `${i.where}: ${i.message}`).join('\n');
+          if (attempt < MAX_AUTO_REPAIRS) {
+            addSystemMessage(`IR program had compile errors (attempt ${attempt + 1}/${MAX_AUTO_REPAIRS + 1}) — asking the model to fix.`);
+            apiMessages.push({ role: 'assistant' as const, content: responseText.slice(0, 4000) });
+            apiMessages.push({ role: 'user' as const, content: `Your IR program did not compile:\n${msgs}\nResend the FULL corrected program. Respond ONLY with JSON.` });
+            continue;
+          }
+          throw new Error(`IR compile failed: ${msgs}`);
+        }
+        compiled.notes.forEach(n => addSystemMessage(`[IR] ${n}`));
+        // Route through the existing full-rebuild path (validation, layout,
+        // evaluation, sanity) — the compiler's output is a complete graph.
+        parsed = {
+          reasoning: parsed.intent || 'Built from IR program.',
+          clearGraph: true,
+          nodes: compiled.graph.nodes,
+          edges: compiled.graph.edges,
+        };
+      }
+    }
 
     if (parsed.reasoning || parsed.questions?.length > 0) {
       const qs = parsed.questions?.length > 0
@@ -1052,7 +1147,8 @@ async function runLegacyJson(modifiedUserText: string, originalText: string, opt
 }
 
 // Applies parsed JSON graph operations to a fresh working copy. Returns null if no ops.
-const NUMBER_OUTPUT_TYPES_JSON = new Set(['NumberSlider', 'Expression', 'Series', 'Range', 'ListItem', 'ListLength']);
+// (Source-handle defaulting lives in tools.ts::defaultSourceHandle, shared with
+// the native tool path so both protocols resolve omitted handles identically.)
 
 function applyParsedGraphOps(parsed: any, options?: { forEval?: boolean }): (WorkingGraph & { droppedEdges: string[]; patchNotes: string[] }) | null {
   const store = useStore.getState();
@@ -1109,7 +1205,7 @@ function applyParsedGraphOps(parsed: any, options?: { forEval?: boolean }): (Wor
 
     const sourceHandle = e.sourceHandle !== undefined && e.sourceHandle !== null && String(e.sourceHandle)
       ? String(e.sourceHandle)
-      : (srcType && NUMBER_OUTPUT_TYPES_JSON.has(srcType) ? 'value' : 'solid');
+      : defaultSourceHandle(srcType);
 
     return { sourceHandle, targetHandle, isValid: true };
   };
