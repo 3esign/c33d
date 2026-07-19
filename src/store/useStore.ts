@@ -754,7 +754,12 @@ export const useStore = create<AppState>()(
         activeAgentId: state.activeAgentId,
         performanceLogs: state.performanceLogs.slice(-50),
         agentGuidelines: state.agentGuidelines,
-        evalResults: state.evalResults.slice(-200),
+        // Keep the newest 200 runs (evalResults is newest-first). Graph snapshots
+        // are large, so persist them only for the newest 30 — enough to click in
+        // and re-load recent designs without blowing the localStorage quota.
+        evalResults: state.evalResults.slice(0, 200).map((r, i) =>
+          i < 30 ? r : { ...r, graphSnapshot: undefined }
+        ),
       }),
     }
   )

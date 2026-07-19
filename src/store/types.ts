@@ -70,6 +70,13 @@ export type EvalResultEntry = {
   skeletonNodes?: number;
   magicNumberCount?: number;
   error?: string;
+  // Experience store (Jul 18): each run is stored as a re-loadable, model-tagged
+  // experience — not just a scalar score. graphSnapshot is the actual graph the
+  // model produced (captured before the harness clears the canvas for the next
+  // prompt); repairRounds/provider make regressions and cost visible.
+  repairRounds?: number;
+  provider?: string;
+  graphSnapshot?: { nodes: any[]; edges: any[] };
 };
 
 export type ChatMessage = {

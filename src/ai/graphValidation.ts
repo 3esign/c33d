@@ -39,6 +39,13 @@ function requiredGeoInputs(type: string): { handles: string[]; minConnected: num
   if (type === 'Align') return { handles: ['shape'], minConnected: 1 };
   // Fillet, Chamfer, Shell: selection is optional, solid is required.
   if (type === 'Fillet' || type === 'Chamfer' || type === 'Shell') return { handles: ['solid'], minConnected: 1 };
+  // CircleCurve / EllipseCurve: center and normal are OPTIONAL — the executor
+  // defaults them to the origin / +Z (orientAndPlaceWire). Hard-requiring them
+  // here was stricter than the engine and cost real repair rounds across models
+  // in the Jul-18 flower session ("missing required inputs: center, normal" on a
+  // circle that would have built fine). Radius drives the geometry; placement is
+  // an optional override.
+  if (type === 'CircleCurve' || type === 'EllipseCurve') return null;
   // Everything else (Translate, Rotate, Boolean, PlaceOnSurface, …) needs every
   // one of its geometry input handles connected.
   return { handles: geoHandles, minConnected: geoHandles.length };

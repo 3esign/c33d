@@ -18,6 +18,49 @@ import type { IrProgram } from './ir/types';
 const MAX_AGENT_TURNS = 8;
 const MAX_AUTO_REPAIRS = 2;
 
+// A provider/auth/quota/region error is NOT a graph or protocol problem — no
+// repair round, JSON fallback, or grammar change will fix it. Falling through to
+// the legacy JSON path just re-hits the same dead provider and burns credits
+// (the "403 key-limit" and region-lock loops in the Jul-18 session). Detect them
+// so processUserIntent can abort the episode cleanly instead.
+function isFatalProviderError(msg: string): boolean {
+  return /\b(401|402|403|429)\b/.test(msg)
+    || /key limit|limit exceeded|quota|rate.?limit|insufficient|only available in|unauthor|forbidden|payment required/i.test(msg);
+}
+function summarizeProviderError(msg: string): string {
+  if (/key limit|limit exceeded|quota/i.test(msg)) return 'API key limit / quota exceeded';
+  if (/only available in|region/i.test(msg)) return 'model is region-locked for your key';
+  if (/401|unauthor/i.test(msg)) return 'authentication failed — check the API key';
+  if (/429|rate.?limit/i.test(msg)) return 'rate limited — wait and retry';
+  if (/402|payment/i.test(msg)) return 'payment required';
+  if (/403|forbidden/i.test(msg)) return 'access forbidden';
+  return msg.slice(0, 120);
+}
+
+// Anti-anchoring (Jul-18): on open-ended creative briefs, retrieval injects a
+// stored exemplar's plan + graph and models re-render it near-verbatim — three
+// different providers produced identical "layered rose" plans. Nudge each
+// creative run down a different design axis with a per-run seed so the space
+// stays open. Only for real user turns (evals stay reproducible).
+function maybeVariationDirective(userText: string): string | null {
+  const t = userText.toLowerCase();
+  const creative = /\b(beautiful|stunning|elegant|organic|artistic|creative|interesting|unique|surprise|best|most|gorgeous|striking)\b/.test(t)
+    && !/\b\d+\s?(mm|cm|m|units?|degrees?|x)\b/.test(t); // dimensioned briefs are engineering, not creative
+  if (!creative) return null;
+  const axes = [
+    'silhouette: favour an asymmetric, off-balance composition this time',
+    'rhythm: use a non-uniform gradient (137.5° phyllotaxis or a golden-ratio taper) across repeated parts',
+    'proportion: exaggerate one dominant feature and keep the rest restrained',
+    'curvature: let primary lines sway/bend rather than run straight or perfectly radial',
+    'density: vary instance spacing/size with a field instead of copying identical parts',
+    'stance: introduce a deliberate lean or spiral rather than upright symmetry',
+    'contrast: pair one large gestural form with fine repeated detail',
+  ];
+  const seed = Math.floor(Math.random() * 1e6);
+  const axis = axes[seed % axes.length];
+  return `[Variation directive — seed ${seed}: This is a creative brief. Do NOT reproduce a previous/standard solution. Take a distinct interpretation. Emphasis this run — ${axis}. Keep it parametric (relations over magic numbers).]`;
+}
+
 // ---------- JSON repair (legacy fallback path) ----------
 function robustJSONParse(text: string): any {
   if (typeof text !== 'string') {
@@ -186,6 +229,7 @@ export interface IntentOutcome {
   skeletonNodes?: number;
   magicNumberCount?: number;
   error?: string;
+  repairRounds?: number;
 }
 
 function addSystemMessage(content: string) {
@@ -662,6 +706,10 @@ export async function processUserIntent(userText: string, options?: { forEval?: 
     modifiedUserText = `[System Notice: The previous graph evaluation failed with the error: "${store.lastEvaluationError}". Please diagnose and fix it as part of handling this request.]\n\nUser request: ${userText}`;
     store.clearLastEvaluationError();
   }
+  if (!options?.forEval) {
+    const vary = maybeVariationDirective(userText);
+    if (vary) modifiedUserText = `${modifiedUserText}\n\n${vary}`;
+  }
 
   const activeAgent = store.agentSlots.find(a => a.id === store.activeAgentId);
   if (!activeAgent) {
@@ -701,17 +749,28 @@ export async function processUserIntent(userText: string, options?: { forEval?: 
         // Provider rejected tool-calling (unsupported model, schema quirk, …):
         // fall back to the single-shot JSON protocol instead of failing.
         const errMsg = String(toolErr.message || toolErr);
-        // If the provider's tool-call grammar is fundamentally broken for this
-        // model (the Ollama "closing '}'" 400, or any 400 on the tools payload),
-        // stop retrying native tools for the rest of the session — every future
-        // turn would fail the same way and waste a round-trip.
-        if (/400|closing '\}'|tool|schema|grammar/i.test(errMsg) && !options?.forEval) {
-          useStore.getState().updateAgentSlot(activeAgent.id, { disableToolCalling: true });
-          addSystemMessage('Native tool-calling disabled for this agent (provider grammar error) — using the JSON protocol from now on.');
+        if (isFatalProviderError(errMsg)) {
+          // Auth/quota/region error — switching to the JSON protocol would just
+          // re-hit the same dead provider and burn more credits. Abort cleanly.
+          addSystemMessage(`Provider unavailable — ${summarizeProviderError(errMsg)}. Stopping this run (not a graph problem; no protocol fallback).`);
+          outcome = {
+            parsedOk: false, evaluatedOk: false, geometrySane: false,
+            nodeCount: useStore.getState().nodes.length, edgeCount: useStore.getState().edges.length,
+            durationMs: 0, error: errMsg.slice(0, 200),
+          };
         } else {
-          addSystemMessage(`Tool-calling unavailable (${errMsg.slice(0, 160)}) — falling back to JSON protocol.`);
+          // If the provider's tool-call grammar is fundamentally broken for this
+          // model (the Ollama "closing '}'" 400, or any 400 on the tools payload),
+          // stop retrying native tools for the rest of the session — every future
+          // turn would fail the same way and waste a round-trip.
+          if (/400|closing '\}'|tool|schema|grammar/i.test(errMsg) && !options?.forEval) {
+            useStore.getState().updateAgentSlot(activeAgent.id, { disableToolCalling: true });
+            addSystemMessage('Native tool-calling disabled for this agent (provider grammar error) — using the JSON protocol from now on.');
+          } else {
+            addSystemMessage(`Tool-calling unavailable (${errMsg.slice(0, 160)}) — falling back to JSON protocol.`);
+          }
+          outcome = await runLegacyJson(modifiedUserText, userText, options);
         }
-        outcome = await runLegacyJson(modifiedUserText, userText, options);
       }
     } else {
       outcome = await runLegacyJson(modifiedUserText, userText, options);
@@ -920,7 +979,8 @@ async function runToolLoop(modifiedUserText: string, originalText: string, optio
     proportionalIntegrity: s.lastGeometryReport?.proportionalIntegrity,
     derivationRatio: graphShape.derivationRatio,
     skeletonNodes: graphShape.skeletonNodes,
-    magicNumberCount: graphShape.magicNumberCount
+    magicNumberCount: graphShape.magicNumberCount,
+    repairRounds: repairs,
   };
 }
 
@@ -955,9 +1015,11 @@ async function runLegacyJson(modifiedUserText: string, originalText: string, opt
   let visionScore: number | undefined;
   let structuralExemptions = 0;
   let engineFaultExemptions = 0;
+  let repairsUsed = 0;
   const jsonDiagnosis = newRepairDiagnosis();
 
   for (let attempt = 0; attempt <= MAX_AUTO_REPAIRS; attempt++) {
+    repairsUsed = attempt;
     // Schema-constrained decoding: on an empty canvas the expected output is an
     // IR program, so constrain the sampler to the IR grammar (op-name enum kills
     // "unknown op" and malformed-JSON failures at the decoder). With an existing
@@ -1142,7 +1204,8 @@ async function runLegacyJson(modifiedUserText: string, originalText: string, opt
     proportionalIntegrity: s.lastGeometryReport?.proportionalIntegrity,
     derivationRatio: graphShape.derivationRatio,
     skeletonNodes: graphShape.skeletonNodes,
-    magicNumberCount: graphShape.magicNumberCount
+    magicNumberCount: graphShape.magicNumberCount,
+    repairRounds: repairsUsed,
   };
 }
 

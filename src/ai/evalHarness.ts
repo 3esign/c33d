@@ -70,10 +70,9 @@ export async function runEvalSuite(onProgress?: (done: number, total: number, cu
   store.setIsRunningEvals(true);
   stopRequested = false;
 
-  const modelName = (() => {
-    const a = store.agentSlots.find(s => s.id === store.activeAgentId);
-    return a ? `${a.name} (${a.model})` : 'Unknown';
-  })();
+  const activeSlot = store.agentSlots.find(s => s.id === store.activeAgentId);
+  const modelName = activeSlot ? `${activeSlot.name} (${activeSlot.model})` : 'Unknown';
+  const providerName = activeSlot?.provider ?? 'unknown';
 
   // Snapshot user state to restore afterwards
   const savedNodes = JSON.parse(JSON.stringify(store.nodes));
@@ -105,9 +104,18 @@ export async function runEvalSuite(onProgress?: (done: number, total: number, cu
         };
       }
 
+      // Capture the graph the model actually produced BEFORE the next iteration
+      // clears the canvas — this is what turns an eval score into a re-loadable,
+      // inspectable experience. Only store it when there's geometry worth keeping.
+      const live = useStore.getState();
+      const graphSnapshot = live.nodes.length > 0
+        ? { nodes: JSON.parse(JSON.stringify(live.nodes)), edges: JSON.parse(JSON.stringify(live.edges)) }
+        : undefined;
+
       useStore.getState().addEvalResult({
         timestamp: new Date().toISOString(),
         model: modelName,
+        provider: providerName,
         promptId: p.id,
         level: p.level,
         prompt: p.prompt,
@@ -122,7 +130,9 @@ export async function runEvalSuite(onProgress?: (done: number, total: number, cu
         derivationRatio: outcome.derivationRatio,
         skeletonNodes: outcome.skeletonNodes,
         magicNumberCount: outcome.magicNumberCount,
+        repairRounds: (outcome as any).repairRounds,
         error: outcome.error,
+        graphSnapshot,
       });
     }
     onProgress?.(EVAL_PROMPTS.length, EVAL_PROMPTS.length, 'done');
