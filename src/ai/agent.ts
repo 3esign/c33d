@@ -8,6 +8,7 @@ import { autoLayout } from '../layout/autoLayout';
 import { retrieveSimilarExamples, formatExampleForPrompt, condenseGraph } from './retrieval';
 import { checkGeometrySanity, formatGeometryReport, runVisionVerification, computeGraphShapeMetrics } from './verification';
 import { validateGraphStructure } from './graphValidation';
+import { validateGenome, scoreIntentRealization } from './genome';
 import { captureViewportSnapshot } from '../utils/snapshot';
 import { isSystemError } from '../utils/errors';
 import { compileIr } from './ir/compile';
@@ -177,7 +178,7 @@ ${store.nodes.length > 0 ? condenseGraph(store.nodes as any[], store.edges as an
     return core + `
 
 ### HOW TO WORK (tools):
-1. For a new design: call set_plan first (SKELETON: the driving curves/points and what derives from each; then parts, attachments, governing ratios), then clear_graph if replacing, then add_nodes + connect (batch related calls), then read the geometry report, repair if needed, and call finish with a short summary.
+1. For a new design: call set_plan first — include the GENOME (archetype + parts with roles/counts, e.g. petals count "petalCount" of petal on bloom) plus the SKELETON (driving curves/points and what derives from each), then parts, attachments, governing ratios. The genome records your intended detail so it is preserved even if repairs simplify the graph — if you plan 3 petal rings, build 3. Then clear_graph if replacing, then add_nodes + connect (batch related calls), then read the geometry report, repair if needed, and call finish with a short summary.
 2. For modifications: update_nodes / connect / remove_nodes on the existing graph — do not rebuild everything.
 3. If the request is genuinely ambiguous, call ask_user with 1-3 targeted questions instead of guessing.
 4. Do NOT emit node positions — layout is automatic.
@@ -191,6 +192,7 @@ ${store.nodes.length > 0 ? condenseGraph(store.nodes as any[], store.edges as an
 PREFERRED — for a NEW design or a full rebuild, emit an IR PROGRAM. The compiler expands it into the graph deterministically: no node ids, no handles, no wiring — mistakes are impossible at that layer. Shape:
 {
   "intent": "one sentence describing the design",
+  "genome": {"archetype":"tapered-tower","detailBudget":"medium","parts":[{"id":"tower","role":"focal"}]},
   "params": [{"name":"totalHeight","value":40,"min":10,"max":100}],
   "body": [
     {"let":"profile","op":"circle","args":{"radius":"totalHeight*0.2"}},
@@ -198,6 +200,7 @@ PREFERRED — for a NEW design or a full rebuild, emit an IR PROGRAM. The compil
   ],
   "emit": [{"ref":"$tower","color":"#3b82f6"}]
 }
+The optional "genome" field records WHAT you intend (archetype + parts with roles/counts) so your planned detail is preserved even if repairs simplify the graph. Include it for new designs.
 IR RULES: each op binds its result to "let"; later args reference bindings as "$name". Numeric args accept literals (5), formulas of param names ("totalHeight*0.2"), or "$refs" to number bindings. Data lists are literals ([0.39, 0.72, 1.0]). Think DATA-FIRST: sort/remap real data into lists, derive point skeletons from the lists, and generate solids at the very END (one source shape + instances beats many primitives).
 AVAILABLE OPS (name(args, ?=optional) -> returns — meaning):
 ${skillCatalogText()}
@@ -230,6 +233,8 @@ export interface IntentOutcome {
   magicNumberCount?: number;
   error?: string;
   repairRounds?: number;
+  realizationScore?: number;
+  deferredDetail?: string[];
 }
 
 function addSystemMessage(content: string) {
@@ -863,6 +868,7 @@ async function runToolLoop(modifiedUserText: string, originalText: string, optio
         useStore.getState().setEpisodePlan(result.plan);
         if (result.ratios) useStore.getState().setEpisodeRatios(result.ratios);
         if (result.drivers) useStore.getState().setEpisodeDrivers(result.drivers);
+        if (result.genome) useStore.getState().setEpisodeGenome(result.genome);
         addAssistantMessage(`Plan:\n${result.plan}`);
       }
       if (result.mutatedGraph) mutated = true;
@@ -972,6 +978,7 @@ async function runToolLoop(modifiedUserText: string, originalText: string, optio
 
   const s = useStore.getState();
   const graphShape = computeGraphShapeMetrics(s.nodes as any[], s.edges as any[]);
+  const intent = scoreIntentRealization(s.episodeGenome, s.lastGeometryReport);
   return {
     parsedOk, evaluatedOk, geometrySane,
     nodeCount: s.nodes.length, edgeCount: s.edges.length,
@@ -981,6 +988,8 @@ async function runToolLoop(modifiedUserText: string, originalText: string, optio
     skeletonNodes: graphShape.skeletonNodes,
     magicNumberCount: graphShape.magicNumberCount,
     repairRounds: repairs,
+    realizationScore: intent.realizationScore,
+    deferredDetail: intent.deferredDetail,
   };
 }
 
@@ -1061,6 +1070,13 @@ async function runLegacyJson(modifiedUserText: string, originalText: string, opt
       throw parseErr;
     }
     parsedOk = true;
+
+    // Capture the design genome (Pillar 1) BEFORE the IR path reassigns `parsed`
+    // below — so both IR programs and patch responses carry it into eval records.
+    if (parsed && parsed.genome) {
+      const { genome } = validateGenome(parsed.genome);
+      if (genome) useStore.getState().setEpisodeGenome(genome);
+    }
 
     // IR PROGRAM path: a typed {params?, body, emit} program compiles
     // deterministically into nodes/edges (src/ai/ir). Compile errors are
@@ -1181,9 +1197,11 @@ async function runLegacyJson(modifiedUserText: string, originalText: string, opt
         addSystemMessage(`Issues detected (auto-repair ${attempt + 1}/${MAX_AUTO_REPAIRS}): ${percept.sanity.issues.slice(0, 3).join('; ')}`);
       }
       const compactState = formatCompactGraphState(graph.nodes, graph.edges);
+      const intentGap = scoreIntentRealization(useStore.getState().episodeGenome, percept.report).deferredDetail;
       const reportText = formatGeometryReport(percept.report, percept.error) +
         `\nISSUES:\n${aggregateAndRankIssues(percept.sanity.issues).map(i => '- ' + i).join('\n')}` +
-        (percept.sanity.warnings?.length ? `\nWARNINGS (non-blocking):\n${percept.sanity.warnings.map(w => '- ' + w).join('\n')}` : '');
+        (percept.sanity.warnings?.length ? `\nWARNINGS (non-blocking):\n${percept.sanity.warnings.map(w => '- ' + w).join('\n')}` : '') +
+        (intentGap.length ? `\nDESIGN INTENT GAP (your planned genome is not fully realized — restore this detail, do not simplify further):\n${intentGap.map(d => '- ' + d).join('\n')}` : '');
       // A8: remember what was tried across repair rounds; attribute causes
       // with a harness-side minimal repro when the same node keeps failing.
       const diagBlock = updateDiagnosis(jsonDiagnosis, summarizePatchForDiagnosis(parsed), percept.sanity.issues);
@@ -1197,6 +1215,7 @@ async function runLegacyJson(modifiedUserText: string, originalText: string, opt
 
   const s = useStore.getState();
   const graphShape = computeGraphShapeMetrics(s.nodes as any[], s.edges as any[]);
+  const intent = scoreIntentRealization(s.episodeGenome, s.lastGeometryReport);
   return {
     parsedOk, evaluatedOk, geometrySane,
     nodeCount: s.nodes.length, edgeCount: s.edges.length,
@@ -1206,6 +1225,8 @@ async function runLegacyJson(modifiedUserText: string, originalText: string, opt
     skeletonNodes: graphShape.skeletonNodes,
     magicNumberCount: graphShape.magicNumberCount,
     repairRounds: repairsUsed,
+    realizationScore: intent.realizationScore,
+    deferredDetail: intent.deferredDetail,
   };
 }
 

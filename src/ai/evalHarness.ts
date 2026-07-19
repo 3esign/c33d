@@ -90,6 +90,7 @@ export async function runEvalSuite(onProgress?: (done: number, total: number, cu
       // Fresh canvas per prompt
       useStore.getState().clearGraph();
       useStore.getState().clearMessages();
+      useStore.getState().setEpisodeGenome(null); // avoid stale genome carryover between prompts
       useStore.getState().addMessage({ id: generateUUID(), role: 'user', content: `[EVAL ${p.id}] ${p.prompt}` });
 
       const t0 = performance.now();
@@ -111,6 +112,7 @@ export async function runEvalSuite(onProgress?: (done: number, total: number, cu
       const graphSnapshot = live.nodes.length > 0
         ? { nodes: JSON.parse(JSON.stringify(live.nodes)), edges: JSON.parse(JSON.stringify(live.edges)) }
         : undefined;
+      const genome = live.episodeGenome ? JSON.parse(JSON.stringify(live.episodeGenome)) : null;
 
       useStore.getState().addEvalResult({
         timestamp: new Date().toISOString(),
@@ -131,8 +133,11 @@ export async function runEvalSuite(onProgress?: (done: number, total: number, cu
         skeletonNodes: outcome.skeletonNodes,
         magicNumberCount: outcome.magicNumberCount,
         repairRounds: (outcome as any).repairRounds,
+        realizationScore: (outcome as any).realizationScore,
+        deferredDetail: (outcome as any).deferredDetail,
         error: outcome.error,
         graphSnapshot,
+        genome,
       });
     }
     onProgress?.(EVAL_PROMPTS.length, EVAL_PROMPTS.length, 'done');

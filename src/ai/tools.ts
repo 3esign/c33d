@@ -6,6 +6,8 @@ import { NODE_LIBRARY } from '../nodes/NodeDefinitions';
 import type { MacroDefinition } from '../nodes/NodeDefinitions';
 import type { ToolDef } from './api';
 import { validateAndNormalizeNodeData } from './agent';
+import { validateGenome, formatGenomeSummary } from './genome';
+import type { DesignGenome } from './genome';
 
 export interface WorkingGraph {
   nodes: any[];
@@ -48,6 +50,29 @@ export const AGENT_TOOLS: ToolDef[] = [
               drives: { type: 'array', items: { type: 'string' } }
             },
             required: ['name', 'kind']
+          }
+        },
+        genome: {
+          type: 'object',
+          description: 'The DESIGN GENOME — the compact "genotype" of what you are building, captured before geometry. Lets the system preserve your intended detail even if the graph is later simplified. Example: {"archetype":"radial-bloom-flower","detailBudget":"high","parts":[{"id":"stem","role":"support"},{"id":"bloom","role":"focal","on":"stem"},{"id":"petals","role":"repeated","of":"petal","count":"petalCount","on":"bloom"},{"id":"leaves","role":"repeated","count":2,"on":"stem"}]}',
+          properties: {
+            archetype: { type: 'string', description: 'concept/archetype, e.g. "radial-bloom-flower", "four-leg-table"' },
+            detailBudget: { type: 'string', description: '"low" | "medium" | "high" — how much detail this design should carry' },
+            parts: {
+              type: 'array',
+              description: 'the parts and how many. count may be a number or a slider label. of = instances of another part; on = attached to another part.',
+              items: {
+                type: 'object',
+                properties: {
+                  id: { type: 'string' },
+                  role: { type: 'string', description: 'support | focal | repeated | detail | shell | ...' },
+                  count: { type: 'string', description: 'a number or a slider label (e.g. "petalCount")' },
+                  of: { type: 'string' },
+                  on: { type: 'string' }
+                },
+                required: ['id']
+              }
+            }
           }
         }
       },
@@ -186,6 +211,7 @@ export interface ToolExecutionResult {
   plan?: string;
   ratios?: any[];
   drivers?: string[];
+  genome?: DesignGenome | null;
 }
 
 // Some providers (or schema sanitization for Gemini) deliver nested objects as
@@ -267,12 +293,17 @@ export function executeTool(
       const skeletonTxt = Array.isArray(args.skeleton) && args.skeleton.length
         ? '\nSKELETON: ' + args.skeleton.map((s: any) => `${s.kind || 'curve'} "${s.name}"${Array.isArray(s.drives) && s.drives.length ? ` drives [${s.drives.join(', ')}]` : ''}`).join('; ')
         : '';
+      // Pillar 1: parse + fold the design genome into the plan so intent is
+      // preserved and measurable (scoreIntentRealization) even after repairs.
+      const { genome } = validateGenome(args.genome);
+      const genomeTxt = genome ? '\n' + formatGenomeSummary(genome) : '';
       return {
         message: 'Plan recorded.',
         mutatedGraph: false,
-        plan: String(args.plan || '') + skeletonTxt,
+        plan: String(args.plan || '') + skeletonTxt + genomeTxt,
         ratios: args.ratios,
-        drivers: args.drivers
+        drivers: args.drivers,
+        genome,
       };
     }
 

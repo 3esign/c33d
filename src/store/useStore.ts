@@ -13,6 +13,7 @@ import type {
   NodeChange,
 } from '@xyflow/react';
 import type { MacroDefinition, SuccessExample } from '../nodes/NodeDefinitions';
+import type { DesignGenome } from '../ai/genome';
 import type {
   GeometryReport,
   EvaluationOutcome,
@@ -132,10 +133,12 @@ type AppState = {
   episodePlan: string;
   episodeRatios: { param: string; formula: string }[];
   episodeDrivers: string[];
+  episodeGenome: DesignGenome | null;
   addEpisodePrompt: (p: string) => void;
   setEpisodePlan: (p: string) => void;
   setEpisodeRatios: (ratios: { param: string; formula: string }[]) => void;
   setEpisodeDrivers: (drivers: string[]) => void;
+  setEpisodeGenome: (g: DesignGenome | null) => void;
   resetEpisode: () => void;
   lastAIGraph: { nodes: any[]; edges: any[] } | null;
   setLastAIGraph: (g: { nodes: any[]; edges: any[] } | null) => void;
@@ -654,11 +657,13 @@ export const useStore = create<AppState>()(
         episodePlan: '',
         episodeRatios: [],
         episodeDrivers: [],
+        episodeGenome: null,
         addEpisodePrompt: (p: string) => set((state) => ({ episodePrompts: [...state.episodePrompts, p] })),
         setEpisodePlan: (p: string) => set({ episodePlan: p }),
         setEpisodeRatios: (ratios) => set({ episodeRatios: ratios }),
         setEpisodeDrivers: (drivers) => set({ episodeDrivers: drivers }),
-        resetEpisode: () => set({ episodePrompts: [], episodePlan: '', episodeRatios: [], episodeDrivers: [], lastAIGraph: null }),
+        setEpisodeGenome: (g) => set({ episodeGenome: g }),
+        resetEpisode: () => set({ episodePrompts: [], episodePlan: '', episodeRatios: [], episodeDrivers: [], episodeGenome: null, lastAIGraph: null }),
         lastAIGraph: null,
         setLastAIGraph: (g) => set({ lastAIGraph: g }),
 

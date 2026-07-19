@@ -135,7 +135,20 @@ export const EvalPanel: React.FC = () => {
                     <span>Magic #s: <span className="text-slate-300">{r.magicNumberCount ?? '—'}</span></span>
                     <span>Proportional: <span className="text-slate-300">{r.proportionalIntegrity != null ? r.proportionalIntegrity.toFixed(2) : '—'}</span></span>
                     <span>Vision: <span className="text-slate-300">{r.visionScore ?? '—'}</span></span>
+                    <span>Realization: <span className={r.realizationScore != null && r.realizationScore < 1 ? 'text-amber-400' : 'text-slate-300'}>{r.realizationScore != null ? r.realizationScore.toFixed(2) : '—'}</span></span>
+                    <span>Archetype: <span className="text-slate-300">{r.genome?.archetype ?? '—'}</span></span>
                   </div>
+                  {r.genome && r.genome.parts?.length > 0 && (
+                    <div className="text-[9px] text-slate-500">
+                      Genome parts: <span className="text-slate-400">{r.genome.parts.map(p => `${p.id}${p.count != null ? `×${p.count}` : ''}`).join(', ')}</span>
+                    </div>
+                  )}
+                  {r.deferredDetail && r.deferredDetail.length > 0 && (
+                    <div className="text-[9px] text-amber-400/90 bg-amber-950/20 border border-amber-900/40 rounded p-1.5 space-y-0.5">
+                      <div className="font-semibold">Intent gap (planned detail not fully realized):</div>
+                      {r.deferredDetail.map((d, k) => <div key={k}>• {d}</div>)}
+                    </div>
+                  )}
                   {r.error && (
                     <div className="text-[9px] text-red-400/90 bg-red-950/30 border border-red-900/40 rounded p-1.5 break-words max-h-24 overflow-auto">
                       {r.error}

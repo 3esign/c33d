@@ -1,4 +1,6 @@
 
+import type { DesignGenome } from '../ai/genome';
+
 export type LeafReport = {
   id: string;
   bbox: { min: number[]; max: number[]; center: number[]; size: number[] } | null;
@@ -77,6 +79,12 @@ export type EvalResultEntry = {
   repairRounds?: number;
   provider?: string;
   graphSnapshot?: { nodes: any[]; edges: any[] };
+  // DesignGenome (Pillar 1): the planned genotype + how fully it was realized.
+  // realizationScore < 1 with deferredDetail entries means the model shipped a
+  // simplified form — the detail-loss the eval scores previously couldn't see.
+  genome?: DesignGenome | null;
+  realizationScore?: number;
+  deferredDetail?: string[];
 };
 
 export type ChatMessage = {
