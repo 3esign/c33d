@@ -162,16 +162,14 @@ export const Viewport3D: React.FC = () => {
           Zoom to Fit
         </button>
 
-        {nodes.length > 0 && (
-          <button
-            onClick={() => setShowExport(true)}
-            className="bg-slate-800/90 hover:bg-slate-750 text-slate-200 font-medium px-3 py-1.5 rounded-lg border border-slate-700 shadow-lg flex items-center gap-1.5 text-xs transition-colors cursor-pointer"
-            title="Export the graph, conversation, plan/genome and geometry report as one JSON file"
-          >
-            <Download size={14} />
-            Export JSON
-          </button>
-        )}
+        <button
+          onClick={() => setShowExport(true)}
+          className="bg-slate-800/90 hover:bg-slate-750 text-slate-200 font-medium px-3 py-1.5 rounded-lg border border-slate-700 shadow-lg flex items-center gap-1.5 text-xs transition-colors cursor-pointer"
+          title="Export the graph, conversation, plan/genome and geometry report as one JSON file"
+        >
+          <Download size={14} />
+          Export JSON
+        </button>
 
         {nodes.length > 0 && !isSystemError(lastEvaluationError) && (
           <button
