@@ -173,10 +173,15 @@ export async function chatCompletion(
   };
 
   let response = await fetch(endpoint, { method: 'POST', headers, body: JSON.stringify(payload) });
-  if (!response.ok && opts?.responseSchema) {
-    // Model/provider without json_schema support: retry once in plain JSON mode.
-    payload.response_format = { type: 'json_object' };
-    response = await fetch(endpoint, { method: 'POST', headers, body: JSON.stringify(payload) });
+  if (!response.ok) {
+    if (payload.response_format?.type === 'json_schema') {
+      payload.response_format = { type: 'json_object' };
+      response = await fetch(endpoint, { method: 'POST', headers, body: JSON.stringify(payload) });
+    }
+    if (!response.ok) {
+      delete payload.response_format;
+      response = await fetch(endpoint, { method: 'POST', headers, body: JSON.stringify(payload) });
+    }
   }
   if (!response.ok) throw new Error(`API Error: ${response.status} ${response.statusText}`);
 
@@ -287,7 +292,11 @@ async function openAIStyleToolCompletion(
     model,
     messages: apiMessages,
     tools: tools.map(t => {
-      const params = flavor === 'ollama' ? sanitizeSchema(t.parameters) : t.parameters;
+      const isOllamaOrAnthropic = flavor === 'ollama' || 
+                                  endpoint.includes('openrouter.ai') || 
+                                  model.toLowerCase().includes('claude') || 
+                                  model.toLowerCase().includes('anthropic');
+      const params = isOllamaOrAnthropic ? sanitizeSchema(t.parameters) : t.parameters;
       return { type: 'function', function: { name: t.name, description: t.description, parameters: params } };
     }),
   };
