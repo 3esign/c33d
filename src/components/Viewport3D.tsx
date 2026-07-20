@@ -1,13 +1,14 @@
-import React, { Suspense, useMemo, useEffect, useRef } from 'react';
+import React, { Suspense, useMemo, useEffect, useRef, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Grid, Bounds, useBounds } from '@react-three/drei';
 import * as THREE from 'three';
-import { Maximize, Star } from 'lucide-react';
+import { Maximize, Star, Download } from 'lucide-react';
 import { Outliner } from './Outliner';
 import { useStore } from '../store/useStore';
 import type { SceneObject } from '../store/useStore';
 import { registerViewportCanvas } from '../utils/snapshot';
 import { isSystemError } from '../utils/errors';
+import { downloadSessionExport } from '../utils/exportSession';
 
 const BoundsController: React.FC = () => {
   const bounds = useBounds();
@@ -79,6 +80,14 @@ const GeometryMesh: React.FC<{ object: SceneObject }> = ({ object }) => {
 
 export const Viewport3D: React.FC = () => {
   const { sceneObjects, zoomToFit, openSaveModal, nodes, lastEvaluationError } = useStore();
+  const [showExport, setShowExport] = useState(false);
+  const [exportComment, setExportComment] = useState('');
+
+  const doExport = () => {
+    downloadSessionExport(exportComment);
+    setShowExport(false);
+    setExportComment('');
+  };
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -143,24 +152,80 @@ export const Viewport3D: React.FC = () => {
       </Canvas>
 
       {/* Floating Action Buttons */}
-      <button
-        onClick={zoomToFit}
-        className="absolute top-4 left-4 bg-slate-800/90 hover:bg-slate-750 text-slate-200 font-medium px-3 py-1.5 rounded-lg border border-slate-700 shadow-lg flex items-center gap-1.5 text-xs transition-colors z-50 pointer-events-auto cursor-pointer"
-        title="Zoom to Fit (F)"
-      >
-        <Maximize size={14} />
-        Zoom to Fit
-      </button>
-
-      {nodes.length > 0 && !isSystemError(lastEvaluationError) && (
+      <div className="absolute top-4 left-4 flex items-center gap-2 z-50 pointer-events-auto">
         <button
-          onClick={() => openSaveModal(null)}
-          className="absolute top-4 left-36 bg-emerald-700/90 hover:bg-emerald-600 text-white font-medium px-3 py-1.5 rounded-lg border border-emerald-600 shadow-lg flex items-center gap-1.5 text-xs transition-colors z-50 pointer-events-auto cursor-pointer"
-          title="Save this design (graph + prompts + comment) as a verified successful example — it becomes AI knowledge"
+          onClick={zoomToFit}
+          className="bg-slate-800/90 hover:bg-slate-750 text-slate-200 font-medium px-3 py-1.5 rounded-lg border border-slate-700 shadow-lg flex items-center gap-1.5 text-xs transition-colors cursor-pointer"
+          title="Zoom to Fit (F)"
         >
-          <Star size={14} />
-          Save as Successful
+          <Maximize size={14} />
+          Zoom to Fit
         </button>
+
+        {nodes.length > 0 && (
+          <button
+            onClick={() => setShowExport(true)}
+            className="bg-slate-800/90 hover:bg-slate-750 text-slate-200 font-medium px-3 py-1.5 rounded-lg border border-slate-700 shadow-lg flex items-center gap-1.5 text-xs transition-colors cursor-pointer"
+            title="Export the graph, conversation, plan/genome and geometry report as one JSON file"
+          >
+            <Download size={14} />
+            Export JSON
+          </button>
+        )}
+
+        {nodes.length > 0 && !isSystemError(lastEvaluationError) && (
+          <button
+            onClick={() => openSaveModal(null)}
+            className="bg-emerald-700/90 hover:bg-emerald-600 text-white font-medium px-3 py-1.5 rounded-lg border border-emerald-600 shadow-lg flex items-center gap-1.5 text-xs transition-colors cursor-pointer"
+            title="Save this design (graph + prompts + comment) as a verified successful example — it becomes AI knowledge"
+          >
+            <Star size={14} />
+            Save as Successful
+          </button>
+        )}
+      </div>
+
+      {showExport && (
+        <div
+          className="absolute inset-0 z-[60] flex items-center justify-center bg-black/50 pointer-events-auto"
+          onClick={() => setShowExport(false)}
+        >
+          <div
+            className="bg-slate-800 border border-slate-700 rounded-xl p-5 w-[26rem] shadow-2xl"
+            onClick={e => e.stopPropagation()}
+          >
+            <h3 className="text-sm font-semibold text-slate-100 flex items-center gap-1.5 mb-1">
+              <Download size={15} className="text-blue-400" /> Export graph JSON
+            </h3>
+            <p className="text-[11px] text-slate-400 leading-relaxed mb-3">
+              Bundles the current graph (nodes + edges), the full conversation, the plan/genome
+              and the last geometry report into one JSON file.
+            </p>
+            <label className="text-[11px] font-medium text-slate-300">Comment (optional)</label>
+            <textarea
+              value={exportComment}
+              onChange={e => setExportComment(e.target.value)}
+              placeholder="Notes about this graph — what worked, what's wrong, what to look at…"
+              rows={3}
+              autoFocus
+              className="mt-1 w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-blue-500 resize-none"
+            />
+            <div className="flex items-center justify-end gap-2 mt-4">
+              <button
+                onClick={() => setShowExport(false)}
+                className="text-xs px-3 py-1.5 rounded-lg border border-slate-700 text-slate-300 hover:bg-slate-750"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={doExport}
+                className="text-xs px-3 py-1.5 rounded-lg bg-blue-700 hover:bg-blue-600 text-white font-medium flex items-center gap-1.5"
+              >
+                <Download size={13} /> Download JSON
+              </button>
+            </div>
+          </div>
+        </div>
       )}
 
       <Outliner />
