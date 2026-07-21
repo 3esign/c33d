@@ -1,0 +1,566 @@
+{
+  "c33dExport": 1,
+  "exportedAt": "2026-07-20T06:03:26.754Z",
+  "comment": "kimi 2.7 is usually good its an open source but good model but now two times graph does not give preview",
+  "agent": {
+    "name": "Ollama (Local)",
+    "provider": "ollama",
+    "model": "kimi-k2.7-code:cloud"
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "shipLength",
+        "type": "NumberSlider",
+        "data": {
+          "value": 60,
+          "min": 20,
+          "max": 120,
+          "step": 0.1,
+          "label": "shipLength"
+        },
+        "position": {
+          "x": 40,
+          "y": 1180
+        },
+        "measured": {
+          "width": 200,
+          "height": 327
+        }
+      },
+      {
+        "id": "shipWidth",
+        "type": "NumberSlider",
+        "data": {
+          "value": 24,
+          "min": 8,
+          "max": 60,
+          "step": 0.1,
+          "label": "shipWidth"
+        },
+        "position": {
+          "x": 40,
+          "y": 1370
+        },
+        "measured": {
+          "width": 200,
+          "height": 327
+        }
+      },
+      {
+        "id": "shipHeight",
+        "type": "NumberSlider",
+        "data": {
+          "value": 10,
+          "min": 3,
+          "max": 30,
+          "step": 0.1,
+          "label": "shipHeight"
+        },
+        "position": {
+          "x": 40,
+          "y": 990
+        },
+        "measured": {
+          "width": 200,
+          "height": 327
+        }
+      },
+      {
+        "id": "engineRadius",
+        "type": "NumberSlider",
+        "data": {
+          "value": 3,
+          "min": 1,
+          "max": 8,
+          "step": 0.1,
+          "label": "engineRadius"
+        },
+        "position": {
+          "x": 40,
+          "y": 230
+        },
+        "measured": {
+          "width": 200,
+          "height": 327
+        }
+      },
+      {
+        "id": "fuselageRaw",
+        "type": "Cone",
+        "data": {
+          "radius1": "shipWidth*0.25",
+          "radius2": "shipWidth*0.04",
+          "height": "shipLength",
+          "color": "#64748b"
+        },
+        "position": {
+          "x": 40,
+          "y": 610
+        },
+        "measured": {
+          "width": 200,
+          "height": 279
+        }
+      },
+      {
+        "id": "fuselageRot",
+        "type": "Rotate",
+        "data": {
+          "angle": 90,
+          "axisX": 0,
+          "axisY": 1,
+          "axisZ": 0
+        },
+        "position": {
+          "x": 270,
+          "y": 420
+        },
+        "measured": {
+          "width": 200,
+          "height": 349
+        }
+      },
+      {
+        "id": "fuselage",
+        "type": "Translate",
+        "data": {
+          "x": "-shipLength/2",
+          "y": 0,
+          "z": 0,
+          "color": "#94a3b8"
+        },
+        "position": {
+          "x": 500,
+          "y": 230
+        },
+        "measured": {
+          "width": 200,
+          "height": 333
+        }
+      },
+      {
+        "id": "cockpitRaw",
+        "type": "Sphere",
+        "data": {
+          "radius": "shipWidth*0.12",
+          "color": "#0ea5e9"
+        },
+        "position": {
+          "x": 40,
+          "y": 40
+        },
+        "measured": {
+          "width": 200,
+          "height": 183
+        }
+      },
+      {
+        "id": "cockpit",
+        "type": "Translate",
+        "data": {
+          "x": "shipLength*0.15",
+          "y": 0,
+          "z": "shipHeight*0.45",
+          "color": "#0ea5e9"
+        },
+        "position": {
+          "x": 270,
+          "y": 40
+        },
+        "measured": {
+          "width": 200,
+          "height": 333
+        }
+      },
+      {
+        "id": "wingRaw",
+        "type": "Cone",
+        "data": {
+          "radius1": "shipWidth*0.5",
+          "radius2": 0,
+          "height": "shipLength*0.9",
+          "color": "#475569"
+        },
+        "position": {
+          "x": 40,
+          "y": 1750
+        },
+        "measured": {
+          "width": 200,
+          "height": 279
+        }
+      },
+      {
+        "id": "wingRot",
+        "type": "Rotate",
+        "data": {
+          "angle": 90,
+          "axisX": 0,
+          "axisY": 1,
+          "axisZ": 0
+        },
+        "position": {
+          "x": 270,
+          "y": 990
+        },
+        "measured": {
+          "width": 200,
+          "height": 349
+        }
+      },
+      {
+        "id": "wingFlat",
+        "type": "ScaleXYZ",
+        "data": {
+          "factorX": 1,
+          "factorY": 1,
+          "factorZ": 0.02,
+          "isLocal": true
+        },
+        "position": {
+          "x": 500,
+          "y": 420
+        },
+        "measured": {
+          "width": 200,
+          "height": 301
+        }
+      },
+      {
+        "id": "wing",
+        "type": "Translate",
+        "data": {
+          "x": "-shipLength*0.5",
+          "y": 0,
+          "z": "-shipHeight*0.05",
+          "color": "#475569"
+        },
+        "position": {
+          "x": 730,
+          "y": 230
+        },
+        "measured": {
+          "width": 200,
+          "height": 333
+        }
+      },
+      {
+        "id": "engineRaw",
+        "type": "Cylinder",
+        "data": {
+          "radius": "engineRadius",
+          "height": "shipLength*0.3",
+          "color": "#f59e0b"
+        },
+        "position": {
+          "x": 40,
+          "y": 420
+        },
+        "measured": {
+          "width": 200,
+          "height": 231
+        }
+      },
+      {
+        "id": "engineRot",
+        "type": "Rotate",
+        "data": {
+          "angle": 90,
+          "axisX": 0,
+          "axisY": 1,
+          "axisZ": 0
+        },
+        "position": {
+          "x": 270,
+          "y": 230
+        },
+        "measured": {
+          "width": 200,
+          "height": 349
+        }
+      },
+      {
+        "id": "enginePair",
+        "type": "CircularPattern",
+        "data": {
+          "count": 2,
+          "radius": "shipWidth*0.4",
+          "angle": 360,
+          "startAngle": 0,
+          "rise": 0,
+          "scaleStart": 1,
+          "scaleEnd": 1
+        },
+        "position": {
+          "x": 500,
+          "y": 40
+        },
+        "measured": {
+          "width": 200,
+          "height": 448
+        }
+      },
+      {
+        "id": "engines",
+        "type": "Translate",
+        "data": {
+          "x": "-shipLength*0.25",
+          "y": 0,
+          "z": "-shipHeight*0.15",
+          "color": "#f59e0b"
+        },
+        "position": {
+          "x": 730,
+          "y": 40
+        },
+        "measured": {
+          "width": 200,
+          "height": 333
+        }
+      },
+      {
+        "id": "tailRaw",
+        "type": "Box",
+        "data": {
+          "width": "shipLength*0.18",
+          "length": "shipWidth*0.04",
+          "height": "shipHeight*0.7",
+          "color": "#64748b"
+        },
+        "position": {
+          "x": 40,
+          "y": 1560
+        },
+        "measured": {
+          "width": 200,
+          "height": 279
+        }
+      },
+      {
+        "id": "tail",
+        "type": "Translate",
+        "data": {
+          "x": "-shipLength*0.4",
+          "y": 0,
+          "z": "shipHeight*0.5",
+          "color": "#64748b"
+        },
+        "position": {
+          "x": 270,
+          "y": 800
+        },
+        "measured": {
+          "width": 200,
+          "height": 333
+        }
+      },
+      {
+        "id": "noseRaw",
+        "type": "Sphere",
+        "data": {
+          "radius": "engineRadius*0.8",
+          "color": "#cbd5e1"
+        },
+        "position": {
+          "x": 40,
+          "y": 800
+        },
+        "measured": {
+          "width": 200,
+          "height": 183
+        }
+      },
+      {
+        "id": "nose",
+        "type": "Translate",
+        "data": {
+          "x": "shipLength*0.5",
+          "y": 0,
+          "z": 0,
+          "color": "#cbd5e1"
+        },
+        "position": {
+          "x": 270,
+          "y": 610
+        },
+        "measured": {
+          "width": 200,
+          "height": 333
+        }
+      }
+    ],
+    "edges": [
+      {
+        "source": "fuselageRaw",
+        "target": "fuselageRot",
+        "id": "e_fuselageRaw_fuselageRot_solid",
+        "sourceHandle": "solid",
+        "targetHandle": "solid"
+      },
+      {
+        "source": "fuselageRot",
+        "target": "fuselage",
+        "id": "e_fuselageRot_fuselage_solid",
+        "sourceHandle": "solid",
+        "targetHandle": "solid"
+      },
+      {
+        "source": "cockpitRaw",
+        "target": "cockpit",
+        "id": "e_cockpitRaw_cockpit_solid",
+        "sourceHandle": "solid",
+        "targetHandle": "solid"
+      },
+      {
+        "source": "wingRaw",
+        "target": "wingRot",
+        "id": "e_wingRaw_wingRot_solid",
+        "sourceHandle": "solid",
+        "targetHandle": "solid"
+      },
+      {
+        "source": "wingRot",
+        "target": "wingFlat",
+        "id": "e_wingRot_wingFlat_solid",
+        "sourceHandle": "solid",
+        "targetHandle": "solid"
+      },
+      {
+        "source": "wingFlat",
+        "target": "wing",
+        "id": "e_wingFlat_wing_solid",
+        "sourceHandle": "solid",
+        "targetHandle": "solid"
+      },
+      {
+        "source": "engineRaw",
+        "target": "engineRot",
+        "id": "e_engineRaw_engineRot_solid",
+        "sourceHandle": "solid",
+        "targetHandle": "solid"
+      },
+      {
+        "source": "engineRot",
+        "target": "enginePair",
+        "id": "e_engineRot_enginePair_solid",
+        "sourceHandle": "solid",
+        "targetHandle": "solid"
+      },
+      {
+        "source": "enginePair",
+        "target": "engines",
+        "id": "e_enginePair_engines_solid",
+        "sourceHandle": "solid",
+        "targetHandle": "solid"
+      },
+      {
+        "source": "tailRaw",
+        "target": "tail",
+        "id": "e_tailRaw_tail_solid",
+        "sourceHandle": "solid",
+        "targetHandle": "solid"
+      },
+      {
+        "source": "noseRaw",
+        "target": "nose",
+        "id": "e_noseRaw_nose_solid",
+        "sourceHandle": "solid",
+        "targetHandle": "solid"
+      }
+    ]
+  },
+  "conversation": [
+    {
+      "role": "system",
+      "content": "Workspace cleared."
+    },
+    {
+      "role": "user",
+      "content": "make a space ship"
+    },
+    {
+      "role": "assistant",
+      "content": "Plan:\nHorizontal fighter-style spaceship along X axis. Fuselage is a tapered cone turned onto X; cockpit is an ellipsoid on top; delta wings (sketch+extrude) mirror left/right from the fuselage; twin cylindrical engines mirror under the wings; single vertical tail fin at the rear. All dimensions driven by shared sliders.\nGENOME [spaceship, detail:medium]: fuselage focal; cockpit focal on fuselage; wing repeated ×2 of wing on fuselage; engine repeated ×2 of engine on wings; tailFin accent on fuselage"
+    },
+    {
+      "role": "system",
+      "content": "Native tool-calling disabled for this agent (provider grammar error) — using the JSON protocol from now on."
+    },
+    {
+      "role": "system",
+      "content": "IR program had compile errors (attempt 1/3) — asking the model to fix."
+    },
+    {
+      "role": "system",
+      "content": "IR program had compile errors (attempt 2/3) — asking the model to fix."
+    },
+    {
+      "role": "assistant",
+      "content": "A horizontal fighter-style spaceship with a tapered fuselage, delta wings, cockpit bubble, twin engines, and a vertical tail fin — all driven by shared length/width/height sliders."
+    },
+    {
+      "role": "system",
+      "content": "Engine fault (does not count against repair budget, 1/3) — retrying."
+    },
+    {
+      "role": "assistant",
+      "content": "The IR compiler generated malformed PointsFromLists wiring (its input handles are actually x/y/z but the engine rejected the edges as invalid, likely because the source was ListConstant of formulas). Also an engine fault occurred which we should not workaround. I will rebuild the wing skeleton using a clean construction: three explicit Point nodes whose coordinates are formula-driven by the sliders, merged into a PolylineCurve, extruded, then translated. I also want to ensure the enginePair circular pattern with count=2 produces two engines at +/- Y; that is correct. I'll patch in the three Point nodes, wire them to wingProfile, and remove the broken ListConstant/PointsFromLists chain."
+    },
+    {
+      "role": "system",
+      "content": "[Patch] removedEdgeIds entry {\"source\":\"wingPts_x_3\",\"target\":\"wingProfile\"} matched NO edge — nothing was removed. Use the edge ids shown in the graph state, {\"source\",\"target\"} objects, or \"source->target\" strings. Current edges touching those nodes: wingProfile->wingExt.curve"
+    },
+    {
+      "role": "system",
+      "content": "[Patch] removedEdgeIds entry {\"source\":\"wingPts\",\"target\":\"wingPts_x_3\"} matched NO edge — nothing was removed. Use the edge ids shown in the graph state, {\"source\",\"target\"} objects, or \"source->target\" strings."
+    },
+    {
+      "role": "system",
+      "content": "[Patch] removedEdgeIds entry {\"source\":\"wingPts_x\",\"target\":\"wingPts_x_3\"} matched NO edge — nothing was removed. Use the edge ids shown in the graph state, {\"source\",\"target\"} objects, or \"source->target\" strings."
+    },
+    {
+      "role": "system",
+      "content": "[Patch] removedEdgeIds entry {\"source\":\"wingPts_x_2\",\"target\":\"wingPts_x_3\"} matched NO edge — nothing was removed. Use the edge ids shown in the graph state, {\"source\",\"target\"} objects, or \"source->target\" strings."
+    },
+    {
+      "role": "system",
+      "content": "Structural validation error (does not count against repair budget, 1/3) — asking the model to fix."
+    },
+    {
+      "role": "assistant",
+      "content": "The PolylineCurve/PointsFromLists path is broken in the current runtime, so I will replace the delta wing with a construction that needs no point lists: a sharp cone turned along X and flattened into a thin delta planform with ScaleXYZ. This is fully parametric via the same sliders and avoids the missing-points validation error."
+    },
+    {
+      "role": "system",
+      "content": "[Patch] removedEdgeIds entry \"wingProfile->wingExt\" matched NO edge — nothing was removed. Use the edge ids shown in the graph state, {\"source\",\"target\"} objects, or \"source->target\" strings."
+    },
+    {
+      "role": "system",
+      "content": "[Patch] removedEdgeIds entry \"wingExt->wing\" matched NO edge — nothing was removed. Use the edge ids shown in the graph state, {\"source\",\"target\"} objects, or \"source->target\" strings."
+    },
+    {
+      "role": "system",
+      "content": "Engine fault (does not count against repair budget, 2/3) — retrying."
+    },
+    {
+      "role": "assistant",
+      "content": "The evaluation failed with an engine fault, not a graph-validation error. Per the protocol, engine/runtime faults are handled by the system and should not be worked around by modifying the design. I am leaving the graph unchanged so the retry can proceed."
+    },
+    {
+      "role": "user",
+      "content": "make a space ship"
+    },
+    {
+      "role": "system",
+      "content": "Engine fault (does not count against repair budget, 1/3) — retrying."
+    },
+    {
+      "role": "assistant",
+      "content": "The geometry report identifies an engine fault, not a design-level issue, and explicitly instructs not to modify the graph to work around it because the system is retrying. Leaving the graph unchanged is the correct response."
+    }
+  ],
+  "plan": "The geometry report identifies an engine fault, not a design-level issue, and explicitly instructs not to modify the graph to work around it because the system is retrying. Leaving the graph unchanged is the correct response.",
+  "genome": null,
+  "geometryReport": null
+}
