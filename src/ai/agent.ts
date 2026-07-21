@@ -7,7 +7,7 @@ import type { WorkingGraph } from './tools';
 import { autoLayout } from '../layout/autoLayout';
 import { retrieveSimilarExamples, formatExampleForPrompt, condenseGraph } from './retrieval';
 import { checkGeometrySanity, formatGeometryReport, runVisionVerification, computeGraphShapeMetrics } from './verification';
-import { validateGraphStructure } from './graphValidation';
+import { validateGraphStructure, inferMissingEdges } from './graphValidation';
 import { validateGenome, scoreIntentRealization } from './genome';
 import { captureViewportSnapshot } from '../utils/snapshot';
 import { isSystemError } from '../utils/errors';
@@ -399,6 +399,25 @@ function autofixGraphStructure(graph: WorkingGraph) {
         }
       }
     }
+  }
+
+  // 3. Naming-convention dataflow auto-wire (edge-completion). Models emit the
+  //    nodes and formulas of a generative subsystem (angles → coord Expression →
+  //    PointsFromLists → InstanceOnPoints) but frequently omit the edges, leaving
+  //    it a disconnected island that collapses to nothing. Reconnect the
+  //    unambiguous links deterministically; only EMPTY handles are ever filled,
+  //    so this can never override the model's explicit wiring. Runs before
+  //    structural validation, so a fully reconnected subgraph evaluates normally.
+  const inferred = inferMissingEdges(graph.nodes as any[], graph.edges as any[]);
+  for (const e of inferred) {
+    graph.edges.push({
+      id: e.id,
+      source: e.source,
+      sourceHandle: e.sourceHandle,
+      target: e.target,
+      targetHandle: e.targetHandle,
+    });
+    addSystemMessage(`[Autofix] Wired "${e.source}" → "${e.target}":${e.targetHandle} (inferred from naming — ${e.reason}).`);
   }
 }
 

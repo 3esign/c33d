@@ -70,6 +70,107 @@ function referencedVars(formula: string): string[] {
   return out;
 }
 
+// ---- Naming-convention dataflow inference (edge-completion) --------------------
+// The Jul-21 transcripts showed models emit rich node sets with correct formulas
+// but omit the dataflow EDGES — the angles→coord-Expression→PointsFromLists→
+// InstanceOnPoints backbone ships as disconnected islands, so the generative
+// subsystem silently collapses to a few hand-wired singletons. Models name those
+// islands consistently (angles1 → x1_expr → points1 → …), so a conservative,
+// convention-driven inference reconnects the unambiguous cases deterministically.
+
+// Number/list producers and their default output handle.
+const SEQUENCE_TYPES = new Set(['Series', 'Range']);            // true iteration domains
+const LIST_PRODUCER_TYPES = new Set(['Series', 'Range', 'ListConstant', 'RepeatEach', 'Tile']);
+const NUMBER_PRODUCER_TYPES = new Set(['Expression', 'ListItem', 'ListLength', 'NumberSlider']);
+function defaultNumberOut(type: string): string {
+  return LIST_PRODUCER_TYPES.has(type) ? 'values' : 'value';
+}
+
+// Split an id into a role prefix + numeric group token: "x1_expr" → {role:"x",
+// group:"1"}, "angles1" → {role:"angles", group:"1"}. null when there is no
+// trailing group number to key on (so we never guess across ungrouped ids).
+function idParts(id: string): { role: string; group: string } | null {
+  const m = /^([a-zA-Z]+?)_?(\d+)(?:[_-].*)?$/.exec(id);
+  if (!m) return null;
+  return { role: m[1].toLowerCase(), group: m[2] };
+}
+function groupOf(id: string): string | null {
+  const p = idParts(id);
+  return p ? p.group : null;
+}
+function peersInGroup(nodes: GNode[], selfId: string, group: string): GNode[] {
+  return nodes.filter(n => n.id !== selfId && groupOf(n.id) === group);
+}
+
+export interface InferredEdge {
+  id: string;
+  source: string;
+  sourceHandle: string;
+  target: string;
+  targetHandle: string;
+  reason: string;
+}
+
+// Pure, deterministic inference of high-confidence MISSING dataflow edges.
+// Only ever fills EMPTY handles, only when a single unambiguous source exists —
+// it can never override the model's explicit wiring. Returns the edges to add
+// (each with a human reason for the [Autofix] log).
+export function inferMissingEdges(nodes: GNode[], edges: GEdge[]): InferredEdge[] {
+  const inferred: InferredEdge[] = [];
+  const occupied = (target: string, handle: string): boolean =>
+    edges.some(e => e.target === target && String(e.targetHandle ?? '') === handle) ||
+    inferred.some(e => e.target === target && e.targetHandle === handle);
+  const add = (src: GNode, target: string, handle: string, reason: string) => {
+    if (src.id === target || occupied(target, handle)) return;
+    inferred.push({
+      id: `${src.id}__to__${target}__${handle}`,
+      source: src.id,
+      sourceHandle: defaultNumberOut(src.type),
+      target,
+      targetHandle: handle,
+      reason,
+    });
+  };
+
+  // Rule A — an Expression's per-element variable a/b/c/d ← the one Series/Range
+  // in its id-group (the iteration domain the model forgot to wire).
+  for (const n of nodes) {
+    if (n.type !== 'Expression') continue;
+    const g = groupOf(n.id);
+    if (!g) continue;
+    const seqs = peersInGroup(nodes, n.id, g).filter(p => SEQUENCE_TYPES.has(p.type));
+    if (seqs.length !== 1) continue; // ambiguous → leave it to the validation nudge
+    for (const v of referencedVars(String(n.data?.formula ?? ''))) {
+      add(seqs[0], n.id, v, `"${n.id}" uses '${v}' but nothing was wired to it; "${seqs[0].id}" is the only sequence in group ${g}`);
+    }
+  }
+
+  // Rule B — PointsFromLists x/y/z/scale ← the sibling node whose role matches the
+  // channel (x1_expr → points1:x), when exactly one such sibling exists in-group.
+  for (const n of nodes) {
+    if (n.type !== 'PointsFromLists') continue;
+    const g = groupOf(n.id);
+    if (!g) continue;
+    for (const ch of ['x', 'y', 'z', 'scale']) {
+      if (occupied(n.id, ch)) continue;
+      const matches = peersInGroup(nodes, n.id, g).filter(
+        p => idParts(p.id)?.role === ch && (LIST_PRODUCER_TYPES.has(p.type) || NUMBER_PRODUCER_TYPES.has(p.type))
+      );
+      if (matches.length !== 1) continue;
+      add(matches[0], n.id, ch, `PointsFromLists "${n.id}" channel '${ch}' had no list; wired sibling "${matches[0].id}" (role '${ch}', group ${g})`);
+    }
+  }
+
+  return inferred;
+}
+
+// The single unambiguous source inferMissingEdges would wire into (target,handle),
+// for naming it in a validation message. Kept in lockstep with the rules above.
+function suggestSource(nodes: GNode[], edges: GEdge[], target: string, handle: string): string | null {
+  const hit = inferMissingEdges(nodes, edges).find(e => e.target === target && e.targetHandle === handle);
+  return hit ? hit.source : null;
+}
+
 export function validateGraphStructure(
   nodes: GNode[],
   edges: GEdge[],
@@ -214,7 +315,9 @@ export function validateGraphStructure(
     }
 
     // 2. Expression variables referenced but not connected → the silent a=0
-    //    collapse that pushes the whole model to the origin.
+    //    collapse that pushes the whole model to the origin. a/b/c/d are
+    //    per-element INPUT HANDLES, so the fix is an edge, not a formula edit —
+    //    the old "connect a value into a" phrasing let models swap in a slider.
     if (node.type === 'Expression') {
       const formula = String(node.data?.formula ?? '');
       const used = referencedVars(formula);
@@ -224,10 +327,50 @@ export function validateGraphStructure(
       );
       const missingVars = used.filter(v => !connectedVars.has(v));
       if (missingVars.length > 0) {
+        const hint = missingVars
+          .map(v => { const src = suggestSource(nodes, edges, node.id, v); return src ? `wire "${src}" → "${node.id}":${v}` : null; })
+          .filter(Boolean)
+          .join('; ');
         issues.push({
           nodeId: node.id,
           severity: 'error',
-          message: `Expression "${node.id}" uses ${missingVars.map(v => `"${v}"`).join(', ')} in formula "${formula}" but ${missingVars.length > 1 ? 'those inputs are' : 'that input is'} not connected — it will evaluate as 0 and collapse dependent positions. Connect a value into ${missingVars.map(v => `"${v}"`).join(', ')}.`,
+          message: `Expression "${node.id}" uses ${missingVars.map(v => `"${v}"`).join(', ')} in formula "${formula}" but ${missingVars.length > 1 ? 'those per-element inputs are' : 'that per-element input is'} not connected — a/b/c/d are supplied by wiring a number list into the matching input handle, NOT by a slider. Add the edge${missingVars.length > 1 ? 's' : ''}${hint ? ` (${hint})` : `: connect a Series/Range/Expression list into ${missingVars.map(v => `"${v}"`).join(', ')}`}. Left unwired ${missingVars.length > 1 ? 'they' : 'it'} evaluate${missingVars.length > 1 ? '' : 's'} as 0 and collapse dependent positions.`,
+        });
+      }
+    }
+
+    // 2b. PointsFromLists with no coordinate list → produces no points, so any
+    //     InstanceOnPoints downstream stays empty. NOT caught by requiredGeoInputs
+    //     (all its handles are number-typed and filtered out there). This is the
+    //     head of the collapse chain across the Jul-21 city/megapolis transcripts.
+    if (node.type === 'PointsFromLists') {
+      const listHandles = new Set(ins.map(e => String(e.targetHandle ?? '')));
+      const hasCoord = ['x', 'y', 'z', 'scale'].some(h => listHandles.has(h));
+      if (!hasCoord) {
+        const hints = ['x', 'y', 'z', 'scale']
+          .map(ch => { const s = suggestSource(nodes, edges, node.id, ch); return s ? `wire "${s}" → "${node.id}":${ch}` : null; })
+          .filter(Boolean)
+          .join('; ');
+        issues.push({
+          nodeId: node.id,
+          severity: 'error',
+          message: `PointsFromLists "${node.id}" has no number list on x/y/z/scale — it produces no points, so anything instanced on it stays empty. Wire a Series/Range/Expression list into x, y and/or z${hints ? ` (${hints})` : ''}.`,
+        });
+      }
+    }
+
+    // 2c. A pure number/list producer wired to nothing renders no geometry and
+    //     changes nothing — almost always a forgotten output edge (the
+    //     disconnected compute island). Warning: it does not block evaluation.
+    if ((NUMBER_PRODUCER_TYPES.has(node.type) || LIST_PRODUCER_TYPES.has(node.type)) && node.type !== 'NumberSlider') {
+      const feedsSomething = edges.some(e => e.source === node.id);
+      if (!feedsSomething) {
+        const g = groupOf(node.id);
+        const sink = g ? peersInGroup(nodes, node.id, g).find(p => p.type === 'PointsFromLists' || p.type === 'Expression') : undefined;
+        issues.push({
+          nodeId: node.id,
+          severity: 'warning',
+          message: `"${node.id}" (${node.type}) computes a number/list wired to nothing — it renders no geometry and changes nothing. Wire its output into a consumer${sink ? ` (e.g. "${sink.id}")` : ' (PointsFromLists x/y/z, an Expression a/b/c/d input, or a param:)'} or remove it.`,
         });
       }
     }

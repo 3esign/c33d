@@ -1,0 +1,1322 @@
+{
+  "c33dExport": 1,
+  "exportedAt": "2026-07-21T06:50:34.050Z",
+  "comment": "at the end the result was very bad i guess the model tried with different lattice system but failed to make it in 3d only the lower green long part is visible",
+  "agent": {
+    "name": "Ollama (Local)",
+    "provider": "ollama",
+    "model": "glm-5.2:cloud"
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "stemHeight",
+        "type": "NumberSlider",
+        "data": {
+          "value": 40,
+          "label": "stemHeight",
+          "min": 15,
+          "max": 80,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 2130
+        },
+        "measured": {
+          "width": 200,
+          "height": 327
+        }
+      },
+      {
+        "id": "bloomRadius",
+        "type": "NumberSlider",
+        "data": {
+          "value": 10,
+          "label": "bloomRadius",
+          "min": 5,
+          "max": 20,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 230
+        },
+        "measured": {
+          "width": 200,
+          "height": 327
+        }
+      },
+      {
+        "id": "petalBase",
+        "type": "NumberSlider",
+        "data": {
+          "value": 5,
+          "label": "petalBase",
+          "min": 4,
+          "max": 8,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 1750
+        },
+        "measured": {
+          "width": 200,
+          "height": 327
+        }
+      },
+      {
+        "id": "zAxis",
+        "type": "VectorXYZ",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": 1
+        },
+        "position": {
+          "x": 40,
+          "y": 2320
+        },
+        "measured": {
+          "width": 200,
+          "height": 321
+        }
+      },
+      {
+        "id": "stemCenter",
+        "type": "Point",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": "stemHeight*0.5"
+        },
+        "position": {
+          "x": 40,
+          "y": 1940
+        },
+        "measured": {
+          "width": 200,
+          "height": 321
+        }
+      },
+      {
+        "id": "bloomPt",
+        "type": "Point",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": "stemHeight"
+        },
+        "position": {
+          "x": 40,
+          "y": 40
+        },
+        "measured": {
+          "width": 200,
+          "height": 321
+        }
+      },
+      {
+        "id": "calyxCenter",
+        "type": "Point",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": "stemHeight - bloomRadius*0.1"
+        },
+        "position": {
+          "x": 40,
+          "y": 420
+        },
+        "measured": {
+          "width": 200,
+          "height": 321
+        }
+      },
+      {
+        "id": "stem",
+        "type": "Cylinder",
+        "data": {
+          "radius": "stemHeight*0.035",
+          "height": "stemHeight",
+          "color": "#2d5016"
+        },
+        "position": {
+          "x": 270,
+          "y": 1560
+        },
+        "measured": {
+          "width": 200,
+          "height": 295
+        }
+      },
+      {
+        "id": "calyx",
+        "type": "Cone",
+        "data": {
+          "radius1": "bloomRadius*0.05",
+          "radius2": "bloomRadius*0.35",
+          "height": "bloomRadius*0.4",
+          "color": "#3a6b1f"
+        },
+        "position": {
+          "x": 270,
+          "y": 990
+        },
+        "measured": {
+          "width": 200,
+          "height": 343
+        }
+      },
+      {
+        "id": "centerBud",
+        "type": "Sphere",
+        "data": {
+          "radius": "bloomRadius*0.13",
+          "color": "#7a0a1e"
+        },
+        "position": {
+          "x": 270,
+          "y": 40
+        },
+        "measured": {
+          "width": 200,
+          "height": 215
+        }
+      },
+      {
+        "id": "p1",
+        "type": "Sphere",
+        "data": {
+          "radius": "bloomRadius*0.12"
+        },
+        "position": {
+          "x": 40,
+          "y": 800
+        },
+        "measured": {
+          "width": 200,
+          "height": 215
+        }
+      },
+      {
+        "id": "p1s",
+        "type": "Scale",
+        "data": {
+          "factor": "bloomRadius*0.008"
+        },
+        "position": {
+          "x": 270,
+          "y": 420
+        },
+        "measured": {
+          "width": 200,
+          "height": 206
+        }
+      },
+      {
+        "id": "p1t",
+        "type": "Rotate",
+        "data": {
+          "angle": 15,
+          "axisX": 1,
+          "axisY": 0,
+          "axisZ": 0
+        },
+        "position": {
+          "x": 500,
+          "y": 230
+        },
+        "measured": {
+          "width": 200,
+          "height": 413
+        }
+      },
+      {
+        "id": "p1l",
+        "type": "Translate",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": "stemHeight + bloomRadius*0.08"
+        },
+        "position": {
+          "x": 730,
+          "y": 230
+        },
+        "measured": {
+          "width": 200,
+          "height": 333
+        }
+      },
+      {
+        "id": "ring1",
+        "type": "CircularPattern",
+        "data": {
+          "count": "petalBase",
+          "radius": "bloomRadius*0.12",
+          "startAngle": 0,
+          "color": "#a01020"
+        },
+        "position": {
+          "x": 960,
+          "y": 230
+        },
+        "measured": {
+          "width": 200,
+          "height": 448
+        }
+      },
+      {
+        "id": "p2",
+        "type": "Sphere",
+        "data": {
+          "radius": "bloomRadius*0.12"
+        },
+        "position": {
+          "x": 40,
+          "y": 990
+        },
+        "measured": {
+          "width": 200,
+          "height": 215
+        }
+      },
+      {
+        "id": "p2s",
+        "type": "Scale",
+        "data": {
+          "factor": "bloomRadius*0.01"
+        },
+        "position": {
+          "x": 270,
+          "y": 610
+        },
+        "measured": {
+          "width": 200,
+          "height": 206
+        }
+      },
+      {
+        "id": "p2t",
+        "type": "Rotate",
+        "data": {
+          "angle": 30,
+          "axisX": 1,
+          "axisY": 0,
+          "axisZ": 0
+        },
+        "position": {
+          "x": 500,
+          "y": 420
+        },
+        "measured": {
+          "width": 200,
+          "height": 413
+        }
+      },
+      {
+        "id": "p2l",
+        "type": "Translate",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": "stemHeight + bloomRadius*0.02"
+        },
+        "position": {
+          "x": 730,
+          "y": 420
+        },
+        "measured": {
+          "width": 200,
+          "height": 333
+        }
+      },
+      {
+        "id": "ring2",
+        "type": "CircularPattern",
+        "data": {
+          "count": "petalBase+1",
+          "radius": "bloomRadius*0.28",
+          "startAngle": "180/petalBase",
+          "color": "#c41828"
+        },
+        "position": {
+          "x": 960,
+          "y": 420
+        },
+        "measured": {
+          "width": 200,
+          "height": 448
+        }
+      },
+      {
+        "id": "p3",
+        "type": "Sphere",
+        "data": {
+          "radius": "bloomRadius*0.12"
+        },
+        "position": {
+          "x": 40,
+          "y": 1180
+        },
+        "measured": {
+          "width": 200,
+          "height": 215
+        }
+      },
+      {
+        "id": "p3s",
+        "type": "Scale",
+        "data": {
+          "factor": "bloomRadius*0.012"
+        },
+        "position": {
+          "x": 270,
+          "y": 800
+        },
+        "measured": {
+          "width": 200,
+          "height": 206
+        }
+      },
+      {
+        "id": "p3t",
+        "type": "Rotate",
+        "data": {
+          "angle": 50,
+          "axisX": 1,
+          "axisY": 0,
+          "axisZ": 0
+        },
+        "position": {
+          "x": 500,
+          "y": 610
+        },
+        "measured": {
+          "width": 200,
+          "height": 413
+        }
+      },
+      {
+        "id": "p3l",
+        "type": "Translate",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": "stemHeight - bloomRadius*0.03"
+        },
+        "position": {
+          "x": 730,
+          "y": 610
+        },
+        "measured": {
+          "width": 200,
+          "height": 333
+        }
+      },
+      {
+        "id": "ring3",
+        "type": "CircularPattern",
+        "data": {
+          "count": "petalBase+2",
+          "radius": "bloomRadius*0.45",
+          "startAngle": "360/(petalBase+1)",
+          "color": "#dc2638"
+        },
+        "position": {
+          "x": 960,
+          "y": 610
+        },
+        "measured": {
+          "width": 200,
+          "height": 448
+        }
+      },
+      {
+        "id": "p4",
+        "type": "Sphere",
+        "data": {
+          "radius": "bloomRadius*0.12"
+        },
+        "position": {
+          "x": 40,
+          "y": 1370
+        },
+        "measured": {
+          "width": 200,
+          "height": 215
+        }
+      },
+      {
+        "id": "p4s",
+        "type": "Scale",
+        "data": {
+          "factor": "bloomRadius*0.014"
+        },
+        "position": {
+          "x": 270,
+          "y": 1180
+        },
+        "measured": {
+          "width": 200,
+          "height": 206
+        }
+      },
+      {
+        "id": "p4t",
+        "type": "Rotate",
+        "data": {
+          "angle": 70,
+          "axisX": 1,
+          "axisY": 0,
+          "axisZ": 0
+        },
+        "position": {
+          "x": 500,
+          "y": 800
+        },
+        "measured": {
+          "width": 200,
+          "height": 413
+        }
+      },
+      {
+        "id": "p4l",
+        "type": "Translate",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": "stemHeight - bloomRadius*0.1"
+        },
+        "position": {
+          "x": 730,
+          "y": 800
+        },
+        "measured": {
+          "width": 200,
+          "height": 333
+        }
+      },
+      {
+        "id": "ring4",
+        "type": "CircularPattern",
+        "data": {
+          "count": "petalBase+3",
+          "radius": "bloomRadius*0.6",
+          "startAngle": "180/(petalBase+2)",
+          "color": "#e84050"
+        },
+        "position": {
+          "x": 960,
+          "y": 800
+        },
+        "measured": {
+          "width": 200,
+          "height": 448
+        }
+      },
+      {
+        "id": "p5",
+        "type": "Sphere",
+        "data": {
+          "radius": "bloomRadius*0.12"
+        },
+        "position": {
+          "x": 40,
+          "y": 1560
+        },
+        "measured": {
+          "width": 200,
+          "height": 215
+        }
+      },
+      {
+        "id": "p5s",
+        "type": "Scale",
+        "data": {
+          "factor": "bloomRadius*0.016"
+        },
+        "position": {
+          "x": 270,
+          "y": 1370
+        },
+        "measured": {
+          "width": 200,
+          "height": 206
+        }
+      },
+      {
+        "id": "p5t",
+        "type": "Rotate",
+        "data": {
+          "angle": 85,
+          "axisX": 1,
+          "axisY": 0,
+          "axisZ": 0
+        },
+        "position": {
+          "x": 500,
+          "y": 990
+        },
+        "measured": {
+          "width": 200,
+          "height": 413
+        }
+      },
+      {
+        "id": "p5l",
+        "type": "Translate",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": "stemHeight - bloomRadius*0.18"
+        },
+        "position": {
+          "x": 730,
+          "y": 990
+        },
+        "measured": {
+          "width": 200,
+          "height": 333
+        }
+      },
+      {
+        "id": "ring5",
+        "type": "CircularPattern",
+        "data": {
+          "count": "petalBase+4",
+          "radius": "bloomRadius*0.75",
+          "startAngle": "360/(petalBase+3)",
+          "color": "#f06070"
+        },
+        "position": {
+          "x": 960,
+          "y": 990
+        },
+        "measured": {
+          "width": 200,
+          "height": 448
+        }
+      },
+      {
+        "id": "leaf",
+        "type": "Sphere",
+        "data": {
+          "radius": "bloomRadius*0.12"
+        },
+        "position": {
+          "x": 40,
+          "y": 610
+        },
+        "measured": {
+          "width": 200,
+          "height": 215
+        }
+      },
+      {
+        "id": "leafS",
+        "type": "Scale",
+        "data": {
+          "factor": "bloomRadius*0.012"
+        },
+        "position": {
+          "x": 270,
+          "y": 230
+        },
+        "measured": {
+          "width": 200,
+          "height": 206
+        }
+      },
+      {
+        "id": "leafT",
+        "type": "Rotate",
+        "data": {
+          "angle": -25,
+          "axisX": 1,
+          "axisY": 0,
+          "axisZ": 0
+        },
+        "position": {
+          "x": 500,
+          "y": 40
+        },
+        "measured": {
+          "width": 200,
+          "height": 413
+        }
+      },
+      {
+        "id": "leafL",
+        "type": "Translate",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": "stemHeight*0.35"
+        },
+        "position": {
+          "x": 730,
+          "y": 40
+        },
+        "measured": {
+          "width": 200,
+          "height": 333
+        }
+      },
+      {
+        "id": "leaves",
+        "type": "CircularPattern",
+        "data": {
+          "count": 3,
+          "radius": "bloomRadius*0.15",
+          "startAngle": 0,
+          "color": "#3a6b1f"
+        },
+        "position": {
+          "x": 960,
+          "y": 40
+        },
+        "measured": {
+          "width": 200,
+          "height": 448
+        }
+      }
+    ],
+    "edges": [
+      {
+        "source": "stemCenter",
+        "sourceHandle": "point",
+        "target": "stem",
+        "targetHandle": "center",
+        "id": "e_stemCenter_stem_center"
+      },
+      {
+        "source": "zAxis",
+        "sourceHandle": "vector",
+        "target": "stem",
+        "targetHandle": "axis",
+        "id": "e_zAxis_stem_axis"
+      },
+      {
+        "source": "calyxCenter",
+        "sourceHandle": "point",
+        "target": "calyx",
+        "targetHandle": "center",
+        "id": "e_calyxCenter_calyx_center"
+      },
+      {
+        "source": "zAxis",
+        "sourceHandle": "vector",
+        "target": "calyx",
+        "targetHandle": "axis",
+        "id": "e_zAxis_calyx_axis"
+      },
+      {
+        "source": "bloomPt",
+        "sourceHandle": "point",
+        "target": "centerBud",
+        "targetHandle": "center",
+        "id": "e_bloomPt_centerBud_center"
+      },
+      {
+        "source": "p1",
+        "sourceHandle": "solid",
+        "target": "p1s",
+        "targetHandle": "solid",
+        "id": "e_p1_p1s_solid"
+      },
+      {
+        "source": "p1s",
+        "sourceHandle": "solid",
+        "target": "p1t",
+        "targetHandle": "solid",
+        "id": "e_p1s_p1t_solid"
+      },
+      {
+        "source": "p1t",
+        "sourceHandle": "solid",
+        "target": "p1l",
+        "targetHandle": "solid",
+        "id": "e_p1t_p1l_solid"
+      },
+      {
+        "source": "p1l",
+        "sourceHandle": "solid",
+        "target": "ring1",
+        "targetHandle": "solid",
+        "id": "e_p1l_ring1_solid"
+      },
+      {
+        "source": "p2",
+        "sourceHandle": "solid",
+        "target": "p2s",
+        "targetHandle": "solid",
+        "id": "e_p2_p2s_solid"
+      },
+      {
+        "source": "p2s",
+        "sourceHandle": "solid",
+        "target": "p2t",
+        "targetHandle": "solid",
+        "id": "e_p2s_p2t_solid"
+      },
+      {
+        "source": "p2t",
+        "sourceHandle": "solid",
+        "target": "p2l",
+        "targetHandle": "solid",
+        "id": "e_p2t_p2l_solid"
+      },
+      {
+        "source": "p2l",
+        "sourceHandle": "solid",
+        "target": "ring2",
+        "targetHandle": "solid",
+        "id": "e_p2l_ring2_solid"
+      },
+      {
+        "source": "p3",
+        "sourceHandle": "solid",
+        "target": "p3s",
+        "targetHandle": "solid",
+        "id": "e_p3_p3s_solid"
+      },
+      {
+        "source": "p3s",
+        "sourceHandle": "solid",
+        "target": "p3t",
+        "targetHandle": "solid",
+        "id": "e_p3s_p3t_solid"
+      },
+      {
+        "source": "p3t",
+        "sourceHandle": "solid",
+        "target": "p3l",
+        "targetHandle": "solid",
+        "id": "e_p3t_p3l_solid"
+      },
+      {
+        "source": "p3l",
+        "sourceHandle": "solid",
+        "target": "ring3",
+        "targetHandle": "solid",
+        "id": "e_p3l_ring3_solid"
+      },
+      {
+        "source": "p4",
+        "sourceHandle": "solid",
+        "target": "p4s",
+        "targetHandle": "solid",
+        "id": "e_p4_p4s_solid"
+      },
+      {
+        "source": "p4s",
+        "sourceHandle": "solid",
+        "target": "p4t",
+        "targetHandle": "solid",
+        "id": "e_p4s_p4t_solid"
+      },
+      {
+        "source": "p4t",
+        "sourceHandle": "solid",
+        "target": "p4l",
+        "targetHandle": "solid",
+        "id": "e_p4t_p4l_solid"
+      },
+      {
+        "source": "p4l",
+        "sourceHandle": "solid",
+        "target": "ring4",
+        "targetHandle": "solid",
+        "id": "e_p4l_ring4_solid"
+      },
+      {
+        "source": "p5",
+        "sourceHandle": "solid",
+        "target": "p5s",
+        "targetHandle": "solid",
+        "id": "e_p5_p5s_solid"
+      },
+      {
+        "source": "p5s",
+        "sourceHandle": "solid",
+        "target": "p5t",
+        "targetHandle": "solid",
+        "id": "e_p5s_p5t_solid"
+      },
+      {
+        "source": "p5t",
+        "sourceHandle": "solid",
+        "target": "p5l",
+        "targetHandle": "solid",
+        "id": "e_p5t_p5l_solid"
+      },
+      {
+        "source": "p5l",
+        "sourceHandle": "solid",
+        "target": "ring5",
+        "targetHandle": "solid",
+        "id": "e_p5l_ring5_solid"
+      },
+      {
+        "source": "leaf",
+        "sourceHandle": "solid",
+        "target": "leafS",
+        "targetHandle": "solid",
+        "id": "e_leaf_leafS_solid"
+      },
+      {
+        "source": "leafS",
+        "sourceHandle": "solid",
+        "target": "leafT",
+        "targetHandle": "solid",
+        "id": "e_leafS_leafT_solid"
+      },
+      {
+        "source": "leafT",
+        "sourceHandle": "solid",
+        "target": "leafL",
+        "targetHandle": "solid",
+        "id": "e_leafT_leafL_solid"
+      },
+      {
+        "source": "leafL",
+        "sourceHandle": "solid",
+        "target": "leaves",
+        "targetHandle": "solid",
+        "id": "e_leafL_leaves_solid"
+      }
+    ]
+  },
+  "conversation": [
+    {
+      "role": "system",
+      "content": "Workspace cleared."
+    },
+    {
+      "role": "user",
+      "content": "make a rose"
+    },
+    {
+      "role": "assistant",
+      "content": "Plan:\nROSE FLOWER — parametric, multi-color, organic\n\nSKELETON:\n- Central Z-axis: stem (cylinder) + bloom point at top\n- bloomPt at (0,0,stemHeight) — drives center bud, calyx, and all petal ring lifts\n- Petals: 3 concentric rings (inner cupped, middle opening, outer flat) using Ellipsoid → Rotate(tilt outward) → CircularPattern → Translate(lift to bloom height)\n- Each ring offset by startAngle for interleaved spiral\n\nDRIVERS:\n- stemHeight (default 35): stem length + bloom position\n- bloomRadius (default 9): governs all petal sizes, ring radii, calyx, leaves\n- petalCount (default 6): petals per ring\n\nPARTS & RATIOS:\n- Stem: Cylinder r=stemHeight*0.04, h=stemHeight, green #2d5016\n- Center bud: Ellipsoid r=bloomRadius*0.12, dark crimson #8b0000, at bloomPt\n- Calyx: Cone r1=bloomRadius*0.25 r2=bloomRadius*0.1 h=bloomRadius*0.3, green #3a6b1f, below bloom\n- Inner ring: 6 petals, r=bloomRadius*0.15, tilt 25°, z=stemHeight+0.05*bloomRadius, color #b91c3c\n- Middle ring: 6 petals, r=bloomRadius*0.4, tilt 55°, z=stemHeight-0.03*bloomRadius, startAngle=180/petalCount, color #dc143c\n- Outer ring: 6 petals, r=bloomRadius*0.65, tilt 80°, z=stemHeight-0.12*bloomRadius, color #e81123\n- Leaves: 3 Ellipsoid leaves bent, rotated outward, CircularPattern at stemHeight*0.35, green #3a6b1f\n\nATTACHMENT: all petal rings use CircularPattern(radius=ringR) around Z, then Translate(z=bloomHeight). Leaves use CircularPattern around stem. Center bud and calyx use Point(bloomPt) as center input.\nGENOME [cupped-bloom-flower-rose, detail:medium]: stem support; centerBud focal on stem; calyx detail on stem; innerRing repeated ×petalCount of petal on centerBud; midRing repeated ×petalCount of petal on centerBud; outerRing repeated ×petalCount of petal on centerBud; leaves repeated ×3 on stem"
+    },
+    {
+      "role": "system",
+      "content": "Native tool-calling disabled for this agent (provider grammar error) — using the JSON protocol from now on."
+    },
+    {
+      "role": "system",
+      "content": "IR program had compile errors (attempt 1/3) — asking the model to fix."
+    },
+    {
+      "role": "assistant",
+      "content": "A parametric rose flower with layered flat petals spiraling outward, calyx, stem, and leaves"
+    },
+    {
+      "role": "system",
+      "content": "Issues detected (auto-repair 2/2): Node \"innerPetal\" failed: ExtrudeCurve failed: Cannot read properties of undefined (reading '$$'); Node \"midPetal\" failed: ExtrudeCurve failed: Cannot read properties of undefined (reading '$$'); Node \"outerPetal\" failed: ExtrudeCurve failed: Cannot read properties of undefined (reading '$$')"
+    },
+    {
+      "role": "assistant",
+      "content": "A parametric rose flower with layered petals spiraling outward, calyx, stem, and leaves"
+    },
+    {
+      "role": "user",
+      "content": "this is terrible result can you make something more beautifful a more beautful rose"
+    },
+    {
+      "role": "system",
+      "content": "Response was not valid JSON (attempt 1/3) — asking the model to resend."
+    },
+    {
+      "role": "system",
+      "content": "IR program had compile errors (attempt 2/3) — asking the model to fix."
+    },
+    {
+      "role": "assistant",
+      "content": "A beautiful parametric rose with five spiraling rings of cupped sphere-petals, gradient colors from deep crimson to soft pink, organic calyx, stem, and leaves"
+    },
+    {
+      "role": "user",
+      "content": "this is worse"
+    },
+    {
+      "role": "system",
+      "content": "Response was not valid JSON (attempt 1/3) — asking the model to resend."
+    },
+    {
+      "role": "system",
+      "content": "Response was not valid JSON (attempt 2/3) — asking the model to resend."
+    },
+    {
+      "role": "system",
+      "content": "Error: AI did not return valid JSON. Response was: "
+    }
+  ],
+  "plan": "",
+  "genome": null,
+  "geometryReport": {
+    "leaves": [
+      {
+        "id": "stem",
+        "bbox": {
+          "min": [
+            -1.4477039431953047,
+            -1.4477039431953047,
+            -0.047703943195304487
+          ],
+          "max": [
+            1.4477039431953047,
+            1.4477039431953047,
+            40.0477039431953
+          ],
+          "center": [
+            0,
+            0,
+            19.999999999999996
+          ],
+          "size": [
+            2.8954078863906094,
+            2.8954078863906094,
+            40.0954078863906
+          ]
+        },
+        "volume": 246.3008640414398,
+        "meshOk": true,
+        "vertexCount": 50,
+        "error": null
+      },
+      {
+        "id": "centerBud",
+        "bbox": {
+          "min": [
+            -1.324144811973935,
+            -1.3241448119739347,
+            38.631558762201855
+          ],
+          "max": [
+            1.3684412377981459,
+            1.3241448119739347,
+            41.368441237798145
+          ],
+          "center": [
+            0.022148212912105558,
+            0,
+            40
+          ],
+          "size": [
+            2.692586049772081,
+            2.6482896239478695,
+            2.736882475596289
+          ]
+        },
+        "volume": 9.202772079915704,
+        "meshOk": true,
+        "vertexCount": 72,
+        "error": null
+      },
+      {
+        "id": "calyx",
+        "bbox": {
+          "min": [
+            -3.725676721786143,
+            -3.725676721786143,
+            36.774323278213856
+          ],
+          "max": [
+            3.725676721786143,
+            3.725676721786143,
+            41.225676721786144
+          ],
+          "center": [
+            0,
+            0,
+            39
+          ],
+          "size": [
+            7.451353443572286,
+            7.451353443572286,
+            4.4513534435722875
+          ]
+        },
+        "volume": 59.69026041820608,
+        "meshOk": true,
+        "vertexCount": 84,
+        "error": null
+      },
+      {
+        "id": "ring1",
+        "bbox": {
+          "min": [
+            -1.1224205781404608,
+            -1.2897411309812057,
+            40.64170617839309
+          ],
+          "max": [
+            1.3487033810464597,
+            1.2897411309812052,
+            40.9582938216069
+          ],
+          "center": [
+            0.11314140145299945,
+            -2.220446049250313e-16,
+            40.8
+          ],
+          "size": [
+            2.4711239591869205,
+            2.579482261962411,
+            0.3165876432138077
+          ]
+        },
+        "volume": 0.01852986745310951,
+        "meshOk": true,
+        "vertexCount": 55,
+        "error": null
+      },
+      {
+        "id": "ring2",
+        "bbox": {
+          "min": [
+            -2.7172349605617487,
+            -2.943052767593317,
+            40.044175092002796
+          ],
+          "max": [
+            2.717234960561749,
+            2.943052767593317,
+            40.35582490799721
+          ],
+          "center": [
+            0,
+            0,
+            40.2
+          ],
+          "size": [
+            5.4344699211234975,
+            5.886105535186634,
+            0.3116498159944143
+          ]
+        },
+        "volume": 0.0434293768432253,
+        "meshOk": true,
+        "vertexCount": 72,
+        "error": null
+      },
+      {
+        "id": "ring3",
+        "bbox": {
+          "min": [
+            -4.4977843648534535,
+            -4.678180002257368,
+            39.54515637275345
+          ],
+          "max": [
+            4.643556162090022,
+            4.38745162280491,
+            39.85484362724655
+          ],
+          "center": [
+            0.0728858986182841,
+            -0.14536418972622922,
+            39.7
+          ],
+          "size": [
+            9.141340526943475,
+            9.065631625062277,
+            0.30968725449309886
+          ]
+        },
+        "volume": 0.08755362371594204,
+        "meshOk": true,
+        "vertexCount": 84,
+        "error": null
+      },
+      {
+        "id": "ring4",
+        "bbox": {
+          "min": [
+            -5.8993605784842895,
+            -5.89936057848429,
+            38.81570764854241
+          ],
+          "max": [
+            5.8993605784842895,
+            5.8993605784842895,
+            39.18429235145759
+          ],
+          "center": [
+            0,
+            -8.881784197001252e-16,
+            39
+          ],
+          "size": [
+            11.798721156968579,
+            11.798721156968579,
+            0.36858470291518586
+          ]
+        },
+        "volume": 0.15889361341041353,
+        "meshOk": true,
+        "vertexCount": 96,
+        "error": null
+      },
+      {
+        "id": "ring5",
+        "bbox": {
+          "min": [
+            -7.473804347399585,
+            -7.473804347399586,
+            37.99009866583592
+          ],
+          "max": [
+            7.6894369325296354,
+            7.689436932529636,
+            38.40990133416408
+          ],
+          "center": [
+            0.10781629256502523,
+            0.10781629256502523,
+            38.2
+          ],
+          "size": [
+            15.16324127992922,
+            15.163241279929222,
+            0.4198026683281597
+          ]
+        },
+        "volume": 0.266830091324776,
+        "meshOk": true,
+        "vertexCount": 153,
+        "error": null
+      },
+      {
+        "id": "leaves",
+        "bbox": {
+          "min": [
+            -0.9431135983105442,
+            -1.4956436073765522,
+            13.80720946721504
+          ],
+          "max": [
+            1.6869898695966428,
+            1.4956436073765527,
+            14.19279053278496
+          ],
+          "center": [
+            0.37193813564304923,
+            2.220446049250313e-16,
+            14
+          ],
+          "size": [
+            2.630103467907187,
+            2.991287214753105,
+            0.38558106556991945
+          ]
+        },
+        "volume": 0.03752298159254665,
+        "meshOk": true,
+        "vertexCount": 36,
+        "error": null
+      }
+    ],
+    "nodeErrors": [],
+    "numbers": {
+      "stemHeight": 40,
+      "bloomRadius": 10,
+      "petalBase": 5
+    },
+    "sliders": {
+      "stemHeight": 40,
+      "bloomRadius": 10,
+      "petalBase": 5
+    },
+    "selections": {},
+    "helpers": {
+      "zAxis": {
+        "type": "Vector",
+        "x": 0,
+        "y": 0,
+        "z": 1,
+        "sourceNodeId": "zAxis",
+        "ancestorNodeIds": []
+      },
+      "stemCenter": {
+        "type": "Point",
+        "x": 0,
+        "y": 0,
+        "z": 20,
+        "sourceNodeId": "stemCenter",
+        "ancestorNodeIds": []
+      },
+      "bloomPt": {
+        "type": "Point",
+        "x": 0,
+        "y": 0,
+        "z": 40,
+        "sourceNodeId": "bloomPt",
+        "ancestorNodeIds": []
+      },
+      "calyxCenter": {
+        "type": "Point",
+        "x": 0,
+        "y": 0,
+        "z": 39,
+        "sourceNodeId": "calyxCenter",
+        "ancestorNodeIds": []
+      }
+    },
+    "nodeCount": 40,
+    "edgeCount": 29,
+    "transformCount": 24,
+    "nodesPerLeafRatio": 4.444444444444445,
+    "nodeEconomyWarning": true,
+    "placement": {
+      "anchored": [
+        "stem",
+        "centerBud",
+        "calyx",
+        "ring1",
+        "ring2",
+        "ring3",
+        "ring4",
+        "ring5",
+        "leaves"
+      ],
+      "literal": [],
+      "origin": [],
+      "literalNodeIds": [],
+      "ratio": 1
+    },
+    "scene": {
+      "min": [
+        -7.473804347399585,
+        -7.473804347399586,
+        -0.047703943195304487
+      ],
+      "max": [
+        7.6894369325296354,
+        7.689436932529636,
+        41.368441237798145
+      ],
+      "size": [
+        15.16324127992922,
+        15.163241279929222,
+        41.416145180993446
+      ]
+    },
+    "meshedLeafCount": 9,
+    "kernelFaultCount": 0,
+    "kernelSuspect": false,
+    "kernelHealth": "ok",
+    "evalCount": 3,
+    "recycleRecommended": false,
+    "perturbationIssues": [
+      "At bloomRadius decrease (0.6x), \"leaves\" becomes fully buried inside \"stem\".",
+      "At stemHeight increase (1.5x), \"leaves\" becomes fully buried inside \"stem\"."
+    ],
+    "proportionalIntegrity": 0.6666666666666666
+  }
+}

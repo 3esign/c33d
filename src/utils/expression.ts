@@ -131,6 +131,15 @@ export function evaluateExpression(formula: string, vars: Record<string, number>
       }
       if (normId in CONSTS) return CONSTS[normId];
       const available = Object.keys(normalizedVars).join(', ');
+      // a/b/c/d are the Expression node's per-element input handles. When one is
+      // referenced but unbound, the raw "unknown variable" message misleads the
+      // repair model into swapping it for a slider (which discards the per-element
+      // mapping). Name the true fix — wire a list into that handle — instead.
+      if (/^[a-d]$/.test(normId)) {
+        throw new Error(
+          `unknown variable '${t.value}': in an Expression, a/b/c/d are per-element variables supplied by wiring a number list (Series/Range/ListConstant/PointsFromLists/another Expression) into the '${t.value}' input handle. Nothing is wired to '${t.value}'. Add that edge — do NOT replace '${t.value}' with a slider name, which drops the per-element mapping. Sliders in scope: ${available || '(none)'}.`
+        );
+      }
       throw new Error(`unknown variable '${t.value}' — available: ${available || '(none)'}`);
     }
     throw new Error(`Unexpected token '${t.value}'`);

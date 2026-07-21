@@ -1,0 +1,1080 @@
+{
+  "c33dExport": 1,
+  "exportedAt": "2026-07-21T07:12:05.480Z",
+  "comment": "i think in general we are missing better conceptualization that is imagining of what is going to be produced we first need to have a rich image of what we want to achieve and that should be optimized per model and the graph here is terrible",
+  "agent": {
+    "name": "Ollama (Local)",
+    "provider": "ollama",
+    "model": "deepseek-v4-pro:cloud"
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "cityRadius",
+        "type": "NumberSlider",
+        "data": {
+          "value": 50,
+          "label": "cityRadius",
+          "min": 20,
+          "max": 100,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 800
+        },
+        "measured": {
+          "width": 200,
+          "height": 327
+        }
+      },
+      {
+        "id": "maxHeight",
+        "type": "NumberSlider",
+        "data": {
+          "value": 30,
+          "label": "maxHeight",
+          "min": 10,
+          "max": 80,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 1560
+        },
+        "measured": {
+          "width": 200,
+          "height": 327
+        }
+      },
+      {
+        "id": "density",
+        "type": "NumberSlider",
+        "data": {
+          "value": 12,
+          "label": "density",
+          "min": 6,
+          "max": 30,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 1180
+        },
+        "measured": {
+          "width": 200,
+          "height": 327
+        }
+      },
+      {
+        "id": "angles1",
+        "type": "Series",
+        "data": {
+          "start": 0,
+          "step": "2*pi/density",
+          "count": "density"
+        },
+        "position": {
+          "x": 40,
+          "y": 40
+        },
+        "measured": {
+          "width": 200,
+          "height": 321
+        }
+      },
+      {
+        "id": "x1_expr",
+        "type": "Expression",
+        "data": {
+          "formula": "(cityRadius*0.3)*cos(a)"
+        },
+        "position": {
+          "x": 40,
+          "y": 3460
+        },
+        "measured": {
+          "width": 171,
+          "height": 264
+        }
+      },
+      {
+        "id": "y1_expr",
+        "type": "Expression",
+        "data": {
+          "formula": "(cityRadius*0.3)*sin(a)"
+        },
+        "position": {
+          "x": 40,
+          "y": 4030
+        },
+        "measured": {
+          "width": 171,
+          "height": 264
+        }
+      },
+      {
+        "id": "z1_const",
+        "type": "ListConstant",
+        "data": {
+          "values": "0"
+        },
+        "position": {
+          "x": 40,
+          "y": 4600
+        },
+        "measured": {
+          "width": 171,
+          "height": 136
+        }
+      },
+      {
+        "id": "z1_repeat",
+        "type": "RepeatEach",
+        "data": {
+          "count": "density"
+        },
+        "position": {
+          "x": 40,
+          "y": 4790
+        },
+        "measured": {
+          "width": 200,
+          "height": 194
+        }
+      },
+      {
+        "id": "scale1_expr",
+        "type": "Expression",
+        "data": {
+          "formula": "1 + 0.2*sin(a*3)"
+        },
+        "position": {
+          "x": 40,
+          "y": 2320
+        },
+        "measured": {
+          "width": 171,
+          "height": 264
+        }
+      },
+      {
+        "id": "points1",
+        "type": "PointsFromLists",
+        "data": {},
+        "position": {
+          "x": 40,
+          "y": 1750
+        },
+        "measured": {
+          "width": 150,
+          "height": 234
+        }
+      },
+      {
+        "id": "jitter1",
+        "type": "Jitter",
+        "data": {
+          "amount": 2,
+          "seed": 1
+        },
+        "position": {
+          "x": 270,
+          "y": 230
+        },
+        "measured": {
+          "width": 200,
+          "height": 210
+        }
+      },
+      {
+        "id": "angles2",
+        "type": "Series",
+        "data": {
+          "start": 0,
+          "step": "2*pi/(density*1.5)",
+          "count": "density*1.5"
+        },
+        "position": {
+          "x": 40,
+          "y": 230
+        },
+        "measured": {
+          "width": 200,
+          "height": 321
+        }
+      },
+      {
+        "id": "x2_expr",
+        "type": "Expression",
+        "data": {
+          "formula": "(cityRadius*0.6)*cos(a)"
+        },
+        "position": {
+          "x": 40,
+          "y": 3650
+        },
+        "measured": {
+          "width": 171,
+          "height": 264
+        }
+      },
+      {
+        "id": "y2_expr",
+        "type": "Expression",
+        "data": {
+          "formula": "(cityRadius*0.6)*sin(a)"
+        },
+        "position": {
+          "x": 40,
+          "y": 4220
+        },
+        "measured": {
+          "width": 171,
+          "height": 264
+        }
+      },
+      {
+        "id": "z2_const",
+        "type": "ListConstant",
+        "data": {
+          "values": "0"
+        },
+        "position": {
+          "x": 40,
+          "y": 4980
+        },
+        "measured": {
+          "width": 171,
+          "height": 136
+        }
+      },
+      {
+        "id": "z2_repeat",
+        "type": "RepeatEach",
+        "data": {
+          "count": "density*1.5"
+        },
+        "position": {
+          "x": 40,
+          "y": 5170
+        },
+        "measured": {
+          "width": 200,
+          "height": 194
+        }
+      },
+      {
+        "id": "scale2_expr",
+        "type": "Expression",
+        "data": {
+          "formula": "1 + 0.2*sin(a*5)"
+        },
+        "position": {
+          "x": 40,
+          "y": 2510
+        },
+        "measured": {
+          "width": 171,
+          "height": 264
+        }
+      },
+      {
+        "id": "points2",
+        "type": "PointsFromLists",
+        "data": {},
+        "position": {
+          "x": 40,
+          "y": 1940
+        },
+        "measured": {
+          "width": 150,
+          "height": 234
+        }
+      },
+      {
+        "id": "jitter2",
+        "type": "Jitter",
+        "data": {
+          "amount": 3,
+          "seed": 2
+        },
+        "position": {
+          "x": 270,
+          "y": 420
+        },
+        "measured": {
+          "width": 200,
+          "height": 210
+        }
+      },
+      {
+        "id": "angles3",
+        "type": "Series",
+        "data": {
+          "start": 0,
+          "step": "2*pi/(density*2)",
+          "count": "density*2"
+        },
+        "position": {
+          "x": 40,
+          "y": 420
+        },
+        "measured": {
+          "width": 200,
+          "height": 321
+        }
+      },
+      {
+        "id": "x3_expr",
+        "type": "Expression",
+        "data": {
+          "formula": "(cityRadius*0.9)*cos(a)"
+        },
+        "position": {
+          "x": 40,
+          "y": 3840
+        },
+        "measured": {
+          "width": 171,
+          "height": 264
+        }
+      },
+      {
+        "id": "y3_expr",
+        "type": "Expression",
+        "data": {
+          "formula": "(cityRadius*0.9)*sin(a)"
+        },
+        "position": {
+          "x": 40,
+          "y": 4410
+        },
+        "measured": {
+          "width": 171,
+          "height": 264
+        }
+      },
+      {
+        "id": "z3_const",
+        "type": "ListConstant",
+        "data": {
+          "values": "0"
+        },
+        "position": {
+          "x": 40,
+          "y": 5360
+        },
+        "measured": {
+          "width": 171,
+          "height": 136
+        }
+      },
+      {
+        "id": "z3_repeat",
+        "type": "RepeatEach",
+        "data": {
+          "count": "density*2"
+        },
+        "position": {
+          "x": 40,
+          "y": 5550
+        },
+        "measured": {
+          "width": 200,
+          "height": 194
+        }
+      },
+      {
+        "id": "scale3_expr",
+        "type": "Expression",
+        "data": {
+          "formula": "1 + 0.2*sin(a*7)"
+        },
+        "position": {
+          "x": 40,
+          "y": 2700
+        },
+        "measured": {
+          "width": 171,
+          "height": 264
+        }
+      },
+      {
+        "id": "points3",
+        "type": "PointsFromLists",
+        "data": {},
+        "position": {
+          "x": 40,
+          "y": 2130
+        },
+        "measured": {
+          "width": 150,
+          "height": 234
+        }
+      },
+      {
+        "id": "jitter3",
+        "type": "Jitter",
+        "data": {
+          "amount": 4,
+          "seed": 3
+        },
+        "position": {
+          "x": 270,
+          "y": 610
+        },
+        "measured": {
+          "width": 200,
+          "height": 210
+        }
+      },
+      {
+        "id": "boxA",
+        "type": "Box",
+        "data": {
+          "width": 4,
+          "length": 4,
+          "height": "maxHeight*0.4"
+        },
+        "position": {
+          "x": 40,
+          "y": 610
+        },
+        "measured": {
+          "width": 200,
+          "height": 311
+        }
+      },
+      {
+        "id": "coneA",
+        "type": "Cone",
+        "data": {
+          "radius1": "maxHeight*0.1",
+          "radius2": 0,
+          "height": "maxHeight*0.1"
+        },
+        "position": {
+          "x": 40,
+          "y": 990
+        },
+        "measured": {
+          "width": 200,
+          "height": 343
+        }
+      },
+      {
+        "id": "alignA",
+        "type": "Align",
+        "data": {
+          "mode": "above"
+        },
+        "position": {
+          "x": 270,
+          "y": 40
+        },
+        "measured": {
+          "width": 200,
+          "height": 343
+        }
+      },
+      {
+        "id": "shapeA",
+        "type": "Compound",
+        "data": {},
+        "position": {
+          "x": 500,
+          "y": 40
+        },
+        "measured": {
+          "width": 150,
+          "height": 330
+        }
+      },
+      {
+        "id": "shapeB",
+        "type": "Cylinder",
+        "data": {
+          "radius": "maxHeight*0.08",
+          "height": "maxHeight*0.35"
+        },
+        "position": {
+          "x": 40,
+          "y": 2890
+        },
+        "measured": {
+          "width": 200,
+          "height": 295
+        }
+      },
+      {
+        "id": "shapeC",
+        "type": "Box",
+        "data": {
+          "width": 3,
+          "length": 3,
+          "height": "maxHeight*0.2"
+        },
+        "position": {
+          "x": 40,
+          "y": 3080
+        },
+        "measured": {
+          "width": 200,
+          "height": 311
+        }
+      },
+      {
+        "id": "spire",
+        "type": "Cone",
+        "data": {
+          "radius1": "maxHeight*0.06",
+          "radius2": 0,
+          "height": "maxHeight*1.5",
+          "color": "#ecc94b"
+        },
+        "position": {
+          "x": 40,
+          "y": 3270
+        },
+        "measured": {
+          "width": 200,
+          "height": 343
+        }
+      },
+      {
+        "id": "ground",
+        "type": "Box",
+        "data": {
+          "width": "cityRadius*2.2",
+          "length": "cityRadius*2.2",
+          "height": 0.2,
+          "color": "#4a5568"
+        },
+        "position": {
+          "x": 40,
+          "y": 1370
+        },
+        "measured": {
+          "width": 200,
+          "height": 311
+        }
+      },
+      {
+        "id": "buildings1",
+        "type": "InstanceOnPoints",
+        "data": {
+          "scaleStart": 1,
+          "scaleEnd": 1,
+          "alignToTangent": false,
+          "color": "#3182ce"
+        },
+        "position": {
+          "x": 730,
+          "y": 40
+        },
+        "measured": {
+          "width": 200,
+          "height": 434
+        }
+      },
+      {
+        "id": "buildings2",
+        "type": "InstanceOnPoints",
+        "data": {
+          "scaleStart": 1,
+          "scaleEnd": 1,
+          "alignToTangent": false,
+          "color": "#68d391"
+        },
+        "position": {
+          "x": 500,
+          "y": 230
+        },
+        "measured": {
+          "width": 200,
+          "height": 434
+        }
+      },
+      {
+        "id": "buildings3",
+        "type": "InstanceOnPoints",
+        "data": {
+          "scaleStart": 1,
+          "scaleEnd": 1,
+          "alignToTangent": false,
+          "color": "#f6ad55"
+        },
+        "position": {
+          "x": 500,
+          "y": 420
+        },
+        "measured": {
+          "width": 200,
+          "height": 434
+        }
+      }
+    ],
+    "edges": [
+      {
+        "source": "points1",
+        "target": "jitter1",
+        "targetHandle": "points",
+        "id": "e_points1_jitter1_points",
+        "sourceHandle": "points"
+      },
+      {
+        "source": "jitter1",
+        "target": "buildings1",
+        "targetHandle": "points",
+        "id": "e_jitter1_buildings1_points",
+        "sourceHandle": "points"
+      },
+      {
+        "source": "shapeA",
+        "target": "buildings1",
+        "targetHandle": "shape",
+        "id": "e_shapeA_buildings1_shape",
+        "sourceHandle": "solid"
+      },
+      {
+        "source": "points2",
+        "target": "jitter2",
+        "targetHandle": "points",
+        "id": "e_points2_jitter2_points",
+        "sourceHandle": "points"
+      },
+      {
+        "source": "jitter2",
+        "target": "buildings2",
+        "targetHandle": "points",
+        "id": "e_jitter2_buildings2_points",
+        "sourceHandle": "points"
+      },
+      {
+        "source": "shapeB",
+        "target": "buildings2",
+        "targetHandle": "shape",
+        "id": "e_shapeB_buildings2_shape",
+        "sourceHandle": "solid"
+      },
+      {
+        "source": "points3",
+        "target": "jitter3",
+        "targetHandle": "points",
+        "id": "e_points3_jitter3_points",
+        "sourceHandle": "points"
+      },
+      {
+        "source": "jitter3",
+        "target": "buildings3",
+        "targetHandle": "points",
+        "id": "e_jitter3_buildings3_points",
+        "sourceHandle": "points"
+      },
+      {
+        "source": "shapeC",
+        "target": "buildings3",
+        "targetHandle": "shape",
+        "id": "e_shapeC_buildings3_shape",
+        "sourceHandle": "solid"
+      },
+      {
+        "source": "coneA",
+        "target": "alignA",
+        "targetHandle": "shape",
+        "id": "e_coneA_alignA_shape",
+        "sourceHandle": "solid"
+      },
+      {
+        "source": "boxA",
+        "target": "alignA",
+        "targetHandle": "reference",
+        "id": "e_boxA_alignA_reference",
+        "sourceHandle": "solid"
+      },
+      {
+        "source": "boxA",
+        "target": "shapeA",
+        "targetHandle": "solid1",
+        "id": "e_boxA_shapeA_solid1",
+        "sourceHandle": "solid"
+      },
+      {
+        "source": "alignA",
+        "target": "shapeA",
+        "targetHandle": "solid2",
+        "id": "e_alignA_shapeA_solid2",
+        "sourceHandle": "solid"
+      }
+    ]
+  },
+  "conversation": [
+    {
+      "role": "system",
+      "content": "Workspace cleared."
+    },
+    {
+      "role": "user",
+      "content": "make a megapolis"
+    },
+    {
+      "role": "system",
+      "content": "IR program had compile errors (attempt 1/3) — asking the model to fix."
+    },
+    {
+      "role": "assistant",
+      "content": "A parametric megapolis skyline with concentric rings of varied buildings around a central spire, all on a large ground plane."
+    },
+    {
+      "role": "system",
+      "content": "Structural validation error (does not count against repair budget, 1/3) — asking the model to fix."
+    },
+    {
+      "role": "assistant",
+      "content": "Rebuilding the graph from scratch to fix all disconnected nodes and parametric coverage issues. Using a clean data-flow design with proper wiring for concentric building rings."
+    },
+    {
+      "role": "system",
+      "content": "Structural validation error (does not count against repair budget, 2/3) — asking the model to fix."
+    },
+    {
+      "role": "assistant",
+      "content": "Adding all missing edges to connect the data-flow: Series → Expressions → PointsFromLists → Jitter → InstanceOnPoints, and assembling shapeA via Align and Compound."
+    },
+    {
+      "role": "system",
+      "content": "Structural validation error (does not count against repair budget, 3/3) — asking the model to fix."
+    },
+    {
+      "role": "assistant",
+      "content": "The previous edge patches had no effect — the graph still shows 0 edges. Rebuilding the entire graph from scratch with all nodes AND edges explicitly specified in a single clearGraph operation to ensure proper wiring."
+    },
+    {
+      "role": "system",
+      "content": "Structural validation error (exemptions exhausted, counts against repair budget) — asking the model to fix."
+    },
+    {
+      "role": "system",
+      "content": "Issues detected (auto-repair 2/2): Expression \"x1_expr\" uses \"a\" in formula \"(cityRadius*0.3)*cos(a)\" but that input is not connected — it will evaluate as 0 and collapse dependent positions. Connect a value into \"a\".; Expression \"y1_expr\" uses \"a\" in formula \"(cityRadius*0.3)*sin(a)\" but that input is not connected — it will evaluate as 0 and collapse dependent positions. Connect a value into \"a\".; Expression \"scale1_expr\" uses \"a\" in formula \"1 + 0.2*sin(a*3)\" but that input is not connected — it will evaluate as 0 and collapse dependent positions. Connect a value into \"a\"."
+    },
+    {
+      "role": "assistant",
+      "content": "Adding the missing data-flow edges: Series outputs to Expression inputs, and all list connections to PointsFromLists. This completes the parametric wiring for all three building rings."
+    },
+    {
+      "role": "system",
+      "content": "Structural validation error (exemptions exhausted, counts against repair budget) — asking the model to fix."
+    },
+    {
+      "role": "system",
+      "content": "Auto-repair limit reached. Remaining issues: Structural validation failed"
+    }
+  ],
+  "plan": "Adding the missing data-flow edges: Series outputs to Expression inputs, and all list connections to PointsFromLists. This completes the parametric wiring for all three building rings.",
+  "genome": null,
+  "geometryReport": {
+    "leaves": [
+      {
+        "id": "points1",
+        "bbox": null,
+        "meshOk": false,
+        "vertexCount": 0,
+        "error": "Node \"points1\" (PointsFromLists) produced no geometry — check its parameters are valid numbers within range."
+      },
+      {
+        "id": "points2",
+        "bbox": null,
+        "meshOk": false,
+        "vertexCount": 0,
+        "error": "Node \"points2\" (PointsFromLists) produced no geometry — check its parameters are valid numbers within range."
+      },
+      {
+        "id": "points3",
+        "bbox": null,
+        "meshOk": false,
+        "vertexCount": 0,
+        "error": "Node \"points3\" (PointsFromLists) produced no geometry — check its parameters are valid numbers within range."
+      },
+      {
+        "id": "spire",
+        "bbox": {
+          "min": [
+            -1.9538925982456206,
+            -1.908762840172903,
+            -22.65389259824562
+          ],
+          "max": [
+            1.9538925982456206,
+            1.908762840172903,
+            22.65389259824562
+          ],
+          "center": [
+            0,
+            0,
+            0
+          ],
+          "size": [
+            3.907785196491241,
+            3.817525680345806,
+            45.30778519649124
+          ]
+        },
+        "volume": 152.76627309000062,
+        "meshOk": true,
+        "vertexCount": 292,
+        "error": null
+      },
+      {
+        "id": "ground",
+        "bbox": {
+          "min": [
+            -55.00000010000001,
+            -55.00000010000001,
+            -0.10000010000000002
+          ],
+          "max": [
+            55.00000010000001,
+            55.00000010000001,
+            0.10000010000000002
+          ],
+          "center": [
+            0,
+            0,
+            0
+          ],
+          "size": [
+            110.00000020000002,
+            110.00000020000002,
+            0.20000020000000004
+          ]
+        },
+        "volume": 2420.0000000000005,
+        "meshOk": true,
+        "vertexCount": 24,
+        "error": null
+      },
+      {
+        "id": "buildings2",
+        "bbox": null,
+        "meshOk": false,
+        "vertexCount": 0,
+        "error": "Node \"buildings2\" (InstanceOnPoints) produced no geometry despite connected inputs — likely invalid parameters (e.g. zero/negative size, self-intersecting fillet)."
+      },
+      {
+        "id": "buildings3",
+        "bbox": null,
+        "meshOk": false,
+        "vertexCount": 0,
+        "error": "Node \"buildings3\" (InstanceOnPoints) produced no geometry despite connected inputs — likely invalid parameters (e.g. zero/negative size, self-intersecting fillet)."
+      },
+      {
+        "id": "buildings1",
+        "bbox": null,
+        "meshOk": false,
+        "vertexCount": 0,
+        "error": "Node \"buildings1\" (InstanceOnPoints) produced no geometry despite connected inputs — likely invalid parameters (e.g. zero/negative size, self-intersecting fillet)."
+      }
+    ],
+    "nodeErrors": [
+      {
+        "id": "x1_expr",
+        "error": "Expression error: unknown variable 'a' — available: cityradius, maxheight, density"
+      },
+      {
+        "id": "y1_expr",
+        "error": "Expression error: unknown variable 'a' — available: cityradius, maxheight, density"
+      },
+      {
+        "id": "scale1_expr",
+        "error": "Expression error: unknown variable 'a' — available: cityradius, maxheight, density"
+      },
+      {
+        "id": "points1",
+        "error": "PointsFromLists: connect at least one number list (Series/Range/ListConstant/Expression) to x, y, z or scale."
+      },
+      {
+        "id": "x2_expr",
+        "error": "Expression error: unknown variable 'a' — available: cityradius, maxheight, density"
+      },
+      {
+        "id": "y2_expr",
+        "error": "Expression error: unknown variable 'a' — available: cityradius, maxheight, density"
+      },
+      {
+        "id": "scale2_expr",
+        "error": "Expression error: unknown variable 'a' — available: cityradius, maxheight, density"
+      },
+      {
+        "id": "points2",
+        "error": "PointsFromLists: connect at least one number list (Series/Range/ListConstant/Expression) to x, y, z or scale."
+      },
+      {
+        "id": "x3_expr",
+        "error": "Expression error: unknown variable 'a' — available: cityradius, maxheight, density"
+      },
+      {
+        "id": "y3_expr",
+        "error": "Expression error: unknown variable 'a' — available: cityradius, maxheight, density"
+      },
+      {
+        "id": "scale3_expr",
+        "error": "Expression error: unknown variable 'a' — available: cityradius, maxheight, density"
+      },
+      {
+        "id": "points3",
+        "error": "PointsFromLists: connect at least one number list (Series/Range/ListConstant/Expression) to x, y, z or scale."
+      },
+      {
+        "id": "buildings2",
+        "error": "InstanceOnPoints: connect points (DivideCurve/PointGrid/Jitter) to \"points\"."
+      },
+      {
+        "id": "buildings3",
+        "error": "InstanceOnPoints: connect points (DivideCurve/PointGrid/Jitter) to \"points\"."
+      },
+      {
+        "id": "buildings1",
+        "error": "InstanceOnPoints: connect points (DivideCurve/PointGrid/Jitter) to \"points\"."
+      }
+    ],
+    "numbers": {
+      "cityRadius": 50,
+      "maxHeight": 30,
+      "density": 12,
+      "angles1": [
+        0,
+        0.5235987755982988,
+        1.0471975511965976,
+        1.5707963267948966,
+        2.0943951023931953,
+        2.617993877991494,
+        3.141592653589793,
+        3.665191429188092,
+        4.1887902047863905,
+        4.71238898038469,
+        5.235987755982988,
+        5.759586531581287
+      ],
+      "x1_expr": 0,
+      "y1_expr": 0,
+      "z1_const": [
+        0
+      ],
+      "z1_repeat": [],
+      "scale1_expr": 0,
+      "angles2": [
+        0,
+        0.3490658503988659,
+        0.6981317007977318,
+        1.0471975511965976,
+        1.3962634015954636,
+        1.7453292519943295,
+        2.0943951023931953,
+        2.443460952792061,
+        2.792526803190927,
+        3.141592653589793,
+        3.490658503988659,
+        3.839724354387525,
+        4.1887902047863905,
+        4.537856055185257,
+        4.886921905584122,
+        5.235987755982989,
+        5.585053606381854,
+        5.93411945678072
+      ],
+      "x2_expr": 0,
+      "y2_expr": 0,
+      "z2_const": [
+        0
+      ],
+      "z2_repeat": [],
+      "scale2_expr": 0,
+      "angles3": [
+        0,
+        0.2617993877991494,
+        0.5235987755982988,
+        0.7853981633974483,
+        1.0471975511965976,
+        1.308996938995747,
+        1.5707963267948966,
+        1.832595714594046,
+        2.0943951023931953,
+        2.356194490192345,
+        2.617993877991494,
+        2.8797932657906435,
+        3.141592653589793,
+        3.4033920413889422,
+        3.665191429188092,
+        3.926990816987241,
+        4.1887902047863905,
+        4.45058959258554,
+        4.71238898038469,
+        4.974188368183839,
+        5.235987755982988,
+        5.497787143782138,
+        5.759586531581287,
+        6.021385919380436
+      ],
+      "x3_expr": 0,
+      "y3_expr": 0,
+      "z3_const": [
+        0
+      ],
+      "z3_repeat": [],
+      "scale3_expr": 0
+    },
+    "sliders": {
+      "cityRadius": 50,
+      "maxHeight": 30,
+      "density": 12
+    },
+    "selections": {},
+    "helpers": {},
+    "nodeCount": 38,
+    "edgeCount": 13,
+    "transformCount": 4,
+    "nodesPerLeafRatio": 4.75,
+    "nodeEconomyWarning": false,
+    "placement": {
+      "anchored": [
+        "buildings2",
+        "buildings3",
+        "buildings1"
+      ],
+      "literal": [],
+      "origin": [
+        "points1",
+        "points2",
+        "points3",
+        "spire",
+        "ground"
+      ],
+      "literalNodeIds": [],
+      "ratio": 1
+    },
+    "scene": {
+      "min": [
+        -55.00000010000001,
+        -55.00000010000001,
+        -22.65389259824562
+      ],
+      "max": [
+        55.00000010000001,
+        55.00000010000001,
+        22.65389259824562
+      ],
+      "size": [
+        110.00000020000002,
+        110.00000020000002,
+        45.30778519649124
+      ]
+    },
+    "meshedLeafCount": 2,
+    "kernelFaultCount": 0,
+    "kernelSuspect": false,
+    "kernelHealth": "ok",
+    "evalCount": 3,
+    "recycleRecommended": false
+  }
+}
