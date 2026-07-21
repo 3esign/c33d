@@ -132,32 +132,77 @@ export function inferMissingEdges(nodes: GNode[], edges: GEdge[]): InferredEdge[
     });
   };
 
+  // Graph-wide uniqueness fallbacks (Rules A2/B2): the Jul-21 simple-task
+  // graphs used BARE ids for a single generative group (t, x, y, z, radii,
+  // pts) — no trailing group number, so the grouped rules never fired. With
+  // exactly ONE sequence node (or one role-matched producer) in the WHOLE
+  // graph there is nothing to disambiguate; refusing to wire it was pure loss.
+  const allSequences = nodes.filter(p => SEQUENCE_TYPES.has(p.type));
+  // Role of a bare id: leading alpha run up to a camelCase/underscore/digit
+  // boundary — "xCoords"→"x", "y_vals"→"y", "scaleList"→"scale", "t"→"t".
+  const bareRole = (id: string): string | null => {
+    const m = /^([a-z]+)/.exec(id.startsWith('$') ? id.slice(1) : id);
+    if (!m) return null;
+    return m[1];
+  };
+
   // Rule A — an Expression's per-element variable a/b/c/d ← the one Series/Range
-  // in its id-group (the iteration domain the model forgot to wire).
+  // in its id-group (the iteration domain the model forgot to wire), or — A2 —
+  // the one Series/Range in the entire graph.
   for (const n of nodes) {
     if (n.type !== 'Expression') continue;
     const g = groupOf(n.id);
-    if (!g) continue;
-    const seqs = peersInGroup(nodes, n.id, g).filter(p => SEQUENCE_TYPES.has(p.type));
-    if (seqs.length !== 1) continue; // ambiguous → leave it to the validation nudge
+    let seq: GNode | undefined;
+    let why = '';
+    if (g) {
+      const seqs = peersInGroup(nodes, n.id, g).filter(p => SEQUENCE_TYPES.has(p.type));
+      if (seqs.length === 1) {
+        seq = seqs[0];
+        why = `"${seqs[0].id}" is the only sequence in group ${g}`;
+      }
+    }
+    if (!seq && allSequences.length === 1 && allSequences[0].id !== n.id) {
+      seq = allSequences[0]; // A2: unambiguous graph-wide
+      why = `"${allSequences[0].id}" is the only Series/Range in the graph`;
+    }
+    if (!seq) continue; // ambiguous → leave it to the validation nudge
     for (const v of referencedVars(String(n.data?.formula ?? ''))) {
-      add(seqs[0], n.id, v, `"${n.id}" uses '${v}' but nothing was wired to it; "${seqs[0].id}" is the only sequence in group ${g}`);
+      add(seq, n.id, v, `"${n.id}" uses '${v}' but nothing was wired to it; ${why}`);
     }
   }
 
   // Rule B — PointsFromLists x/y/z/scale ← the sibling node whose role matches the
-  // channel (x1_expr → points1:x), when exactly one such sibling exists in-group.
+  // channel (x1_expr → points1:x) when exactly one such sibling exists in-group,
+  // or — B2 — the unique role-named producer graph-wide when this is the only
+  // PointsFromLists in the graph (xCoords→x, y_vals→y, z→z).
+  const allPfl = nodes.filter(p => p.type === 'PointsFromLists');
   for (const n of nodes) {
     if (n.type !== 'PointsFromLists') continue;
     const g = groupOf(n.id);
-    if (!g) continue;
     for (const ch of ['x', 'y', 'z', 'scale']) {
       if (occupied(n.id, ch)) continue;
-      const matches = peersInGroup(nodes, n.id, g).filter(
-        p => idParts(p.id)?.role === ch && (LIST_PRODUCER_TYPES.has(p.type) || NUMBER_PRODUCER_TYPES.has(p.type))
-      );
-      if (matches.length !== 1) continue;
-      add(matches[0], n.id, ch, `PointsFromLists "${n.id}" channel '${ch}' had no list; wired sibling "${matches[0].id}" (role '${ch}', group ${g})`);
+      let src: GNode | undefined;
+      let why = '';
+      if (g) {
+        const matches = peersInGroup(nodes, n.id, g).filter(
+          p => idParts(p.id)?.role === ch && (LIST_PRODUCER_TYPES.has(p.type) || NUMBER_PRODUCER_TYPES.has(p.type))
+        );
+        if (matches.length === 1) {
+          src = matches[0];
+          why = `role '${ch}', group ${g}`;
+        }
+      }
+      if (!src && allPfl.length === 1) {
+        const matches = nodes.filter(
+          p => p.id !== n.id && bareRole(p.id) === ch && (LIST_PRODUCER_TYPES.has(p.type) || NUMBER_PRODUCER_TYPES.has(p.type))
+        );
+        if (matches.length === 1) {
+          src = matches[0]; // B2: unambiguous graph-wide
+          why = `"${matches[0].id}" is the only '${ch}'-named number producer and "${n.id}" the only PointsFromLists`;
+        }
+      }
+      if (!src) continue;
+      add(src, n.id, ch, `PointsFromLists "${n.id}" channel '${ch}' had no list; wired "${src.id}" (${why})`);
     }
   }
 

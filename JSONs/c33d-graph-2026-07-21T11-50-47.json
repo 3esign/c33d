@@ -1,0 +1,1881 @@
+{
+  "c33dExport": 1,
+  "exportedAt": "2026-07-21T11:50:47.388Z",
+  "comment": "interesting start but this is still exteremly primitive yet working previeable graph",
+  "agent": {
+    "name": "OpenRouter",
+    "provider": "openrouter",
+    "model": "nvidia/nemotron-3-ultra-550b-a55b:free"
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "lenFuse",
+        "type": "NumberSlider",
+        "position": {
+          "x": 40,
+          "y": 3840
+        },
+        "data": {
+          "label": "Fuselage Length",
+          "value": 70,
+          "min": 40,
+          "max": 100,
+          "step": 0.5
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "fuseDia",
+        "type": "NumberSlider",
+        "position": {
+          "x": 40,
+          "y": 990
+        },
+        "data": {
+          "label": "Fuselage Diameter",
+          "value": 6.5,
+          "min": 4,
+          "max": 10,
+          "step": 0.1
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "upperDeckFrac",
+        "type": "NumberSlider",
+        "position": {
+          "x": 40,
+          "y": 4030
+        },
+        "data": {
+          "label": "Upper Deck Length Frac",
+          "value": 0.35,
+          "min": 0.2,
+          "max": 0.5,
+          "step": 0.01
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "upperDeckHeight",
+        "type": "NumberSlider",
+        "position": {
+          "x": 40,
+          "y": 4220
+        },
+        "data": {
+          "label": "Upper Deck Height",
+          "value": 1.8,
+          "min": 1,
+          "max": 3,
+          "step": 0.1
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "upperDeckWidth",
+        "type": "NumberSlider",
+        "position": {
+          "x": 40,
+          "y": 4410
+        },
+        "data": {
+          "label": "Upper Deck Width",
+          "value": 5.5,
+          "min": 3,
+          "max": 7,
+          "step": 0.1
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "wingSpan",
+        "type": "NumberSlider",
+        "position": {
+          "x": 40,
+          "y": 6690
+        },
+        "data": {
+          "label": "Wing Span (half)",
+          "value": 32,
+          "min": 20,
+          "max": 50,
+          "step": 0.5
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "wingRootChord",
+        "type": "NumberSlider",
+        "position": {
+          "x": 40,
+          "y": 6310
+        },
+        "data": {
+          "label": "Wing Root Chord",
+          "value": 12,
+          "min": 6,
+          "max": 18,
+          "step": 0.5
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "wingTipChord",
+        "type": "NumberSlider",
+        "position": {
+          "x": 40,
+          "y": 7070
+        },
+        "data": {
+          "label": "Wing Tip Chord",
+          "value": 3.5,
+          "min": 2,
+          "max": 8,
+          "step": 0.5
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "wingSweep",
+        "type": "NumberSlider",
+        "position": {
+          "x": 40,
+          "y": 6880
+        },
+        "data": {
+          "label": "Wing Sweep (deg)",
+          "value": 37.5,
+          "min": 25,
+          "max": 45,
+          "step": 0.5
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "wingDihedral",
+        "type": "NumberSlider",
+        "position": {
+          "x": 40,
+          "y": 5740
+        },
+        "data": {
+          "label": "Wing Dihedral (deg)",
+          "value": 6,
+          "min": 0,
+          "max": 15,
+          "step": 0.5
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "wingletHeight",
+        "type": "NumberSlider",
+        "position": {
+          "x": 40,
+          "y": 6120
+        },
+        "data": {
+          "label": "Winglet Height",
+          "value": 1.8,
+          "min": 0.5,
+          "max": 4,
+          "step": 0.1
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "engineDia",
+        "type": "NumberSlider",
+        "position": {
+          "x": 40,
+          "y": 420
+        },
+        "data": {
+          "label": "Engine Diameter",
+          "value": 2.5,
+          "min": 1.5,
+          "max": 4,
+          "step": 0.1
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "engineLen",
+        "type": "NumberSlider",
+        "position": {
+          "x": 40,
+          "y": 610
+        },
+        "data": {
+          "label": "Engine Length",
+          "value": 5,
+          "min": 3,
+          "max": 8,
+          "step": 0.5
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "enginePos",
+        "type": "NumberSlider",
+        "position": {
+          "x": 40,
+          "y": 800
+        },
+        "data": {
+          "label": "Engine Position (frac span)",
+          "value": 0.3,
+          "min": 0.15,
+          "max": 0.5,
+          "step": 0.01
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "hTailSpan",
+        "type": "NumberSlider",
+        "position": {
+          "x": 40,
+          "y": 3080
+        },
+        "data": {
+          "label": "Horizontal Tail Span (half)",
+          "value": 9,
+          "min": 5,
+          "max": 15,
+          "step": 0.5
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "hTailRootChord",
+        "type": "NumberSlider",
+        "position": {
+          "x": 40,
+          "y": 2700
+        },
+        "data": {
+          "label": "H-Tail Root Chord",
+          "value": 6,
+          "min": 3,
+          "max": 10,
+          "step": 0.5
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "hTailTipChord",
+        "type": "NumberSlider",
+        "position": {
+          "x": 40,
+          "y": 3460
+        },
+        "data": {
+          "label": "H-Tail Tip Chord",
+          "value": 2.5,
+          "min": 1,
+          "max": 5,
+          "step": 0.5
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "hTailSweep",
+        "type": "NumberSlider",
+        "position": {
+          "x": 40,
+          "y": 3270
+        },
+        "data": {
+          "label": "H-Tail Sweep (deg)",
+          "value": 30,
+          "min": 20,
+          "max": 45,
+          "step": 0.5
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "vTailHeight",
+        "type": "NumberSlider",
+        "position": {
+          "x": 40,
+          "y": 4600
+        },
+        "data": {
+          "label": "Vertical Tail Height",
+          "value": 19,
+          "min": 10,
+          "max": 30,
+          "step": 0.5
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "vTailRootChord",
+        "type": "NumberSlider",
+        "position": {
+          "x": 40,
+          "y": 4790
+        },
+        "data": {
+          "label": "V-Tail Root Chord",
+          "value": 12,
+          "min": 6,
+          "max": 20,
+          "step": 0.5
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "vTailTipChord",
+        "type": "NumberSlider",
+        "position": {
+          "x": 40,
+          "y": 5360
+        },
+        "data": {
+          "label": "V-Tail Tip Chord",
+          "value": 4,
+          "min": 2,
+          "max": 8,
+          "step": 0.5
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "vTailSweep",
+        "type": "NumberSlider",
+        "position": {
+          "x": 40,
+          "y": 5170
+        },
+        "data": {
+          "label": "V-Tail Sweep (deg)",
+          "value": 45,
+          "min": 30,
+          "max": 60,
+          "step": 0.5
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "fuseNoseLen",
+        "type": "NumberSlider",
+        "position": {
+          "x": 40,
+          "y": 1750
+        },
+        "data": {
+          "label": "Nose Length",
+          "value": 8,
+          "min": 4,
+          "max": 15,
+          "step": 0.5
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "fuseTailLen",
+        "type": "NumberSlider",
+        "position": {
+          "x": 40,
+          "y": 2130
+        },
+        "data": {
+          "label": "Tail Cone Length",
+          "value": 10,
+          "min": 5,
+          "max": 20,
+          "step": 0.5
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "fuseNoseBlunt",
+        "type": "NumberSlider",
+        "position": {
+          "x": 40,
+          "y": 1370
+        },
+        "data": {
+          "label": "Nose Bluntness",
+          "value": 0.3,
+          "min": 0.1,
+          "max": 0.6,
+          "step": 0.05
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "fuseUpperDeckStart",
+        "type": "NumberSlider",
+        "position": {
+          "x": 40,
+          "y": 2320
+        },
+        "data": {
+          "label": "Upper Deck Start (frac)",
+          "value": 0.15,
+          "min": 0.05,
+          "max": 0.3,
+          "step": 0.01
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "fuseNoseEllipse",
+        "type": "EllipseCurve",
+        "position": {
+          "x": 40,
+          "y": 1560
+        },
+        "data": {
+          "radiusX": "fuseDia/2",
+          "radiusY": "fuseDia/2",
+          "color": "#e8e8e8"
+        },
+        "measured": {
+          "width": 201,
+          "height": 296
+        }
+      },
+      {
+        "id": "fuseMidEllipse",
+        "type": "EllipseCurve",
+        "position": {
+          "x": 40,
+          "y": 1180
+        },
+        "data": {
+          "radiusX": "fuseDia/2",
+          "radiusY": "fuseDia/2",
+          "color": "#e8e8e8"
+        },
+        "measured": {
+          "width": 201,
+          "height": 296
+        }
+      },
+      {
+        "id": "fuseUpperEllipse",
+        "type": "EllipseCurve",
+        "position": {
+          "x": 40,
+          "y": 2510
+        },
+        "data": {
+          "radiusX": "upperDeckWidth/2",
+          "radiusY": "fuseDia/2",
+          "color": "#c8c8c8"
+        },
+        "measured": {
+          "width": 201,
+          "height": 296
+        }
+      },
+      {
+        "id": "fuseTailEllipse",
+        "type": "EllipseCurve",
+        "position": {
+          "x": 40,
+          "y": 1940
+        },
+        "data": {
+          "radiusX": "fuseDia/2",
+          "radiusY": "fuseDia/2",
+          "color": "#e8e8e8"
+        },
+        "measured": {
+          "width": 201,
+          "height": 296
+        }
+      },
+      {
+        "id": "fuseLoft",
+        "type": "LoftCurves",
+        "position": {
+          "x": 500,
+          "y": 230
+        },
+        "data": {
+          "ruled": false,
+          "closed": false,
+          "color": "#e8e8e8"
+        },
+        "measured": {
+          "width": 192,
+          "height": 416
+        }
+      },
+      {
+        "id": "upperDeckLoft",
+        "type": "LoftCurves",
+        "position": {
+          "x": 500,
+          "y": 420
+        },
+        "data": {
+          "ruled": false,
+          "closed": false,
+          "color": "#c8c8c8"
+        },
+        "measured": {
+          "width": 192,
+          "height": 416
+        }
+      },
+      {
+        "id": "fuseCompound",
+        "type": "Compound",
+        "position": {
+          "x": 730,
+          "y": 40
+        },
+        "data": {
+          "color": "#e8e8e8"
+        },
+        "measured": {
+          "width": 150,
+          "height": 330
+        }
+      },
+      {
+        "id": "wingRootEllipse",
+        "type": "EllipseCurve",
+        "position": {
+          "x": 40,
+          "y": 6500
+        },
+        "data": {
+          "radiusX": "wingRootChord/2",
+          "radiusY": "wingRootChord/8",
+          "color": "#b8b8b8"
+        },
+        "measured": {
+          "width": 201,
+          "height": 296
+        }
+      },
+      {
+        "id": "wingTipEllipse",
+        "type": "EllipseCurve",
+        "position": {
+          "x": 40,
+          "y": 7260
+        },
+        "data": {
+          "radiusX": "wingTipChord/2",
+          "radiusY": "wingTipChord/8",
+          "color": "#b8b8b8"
+        },
+        "measured": {
+          "width": 201,
+          "height": 296
+        }
+      },
+      {
+        "id": "wingletEllipse",
+        "type": "EllipseCurve",
+        "position": {
+          "x": 40,
+          "y": 5930
+        },
+        "data": {
+          "radiusX": "wingTipChord/2",
+          "radiusY": "wingTipChord/8",
+          "color": "#b8b8b8"
+        },
+        "measured": {
+          "width": 201,
+          "height": 296
+        }
+      },
+      {
+        "id": "wingLeftLoft",
+        "type": "LoftCurves",
+        "position": {
+          "x": 500,
+          "y": 800
+        },
+        "data": {
+          "ruled": false,
+          "closed": false,
+          "color": "#b8b8b8"
+        },
+        "measured": {
+          "width": 192,
+          "height": 416
+        }
+      },
+      {
+        "id": "wingRightLoft",
+        "type": "LoftCurves",
+        "position": {
+          "x": 500,
+          "y": 1370
+        },
+        "data": {
+          "ruled": false,
+          "closed": false,
+          "color": "#b8b8b8"
+        },
+        "measured": {
+          "width": 192,
+          "height": 416
+        }
+      },
+      {
+        "id": "wingletLeftLoft",
+        "type": "LoftCurves",
+        "position": {
+          "x": 500,
+          "y": 990
+        },
+        "data": {
+          "ruled": false,
+          "closed": false,
+          "color": "#b8b8b8"
+        },
+        "measured": {
+          "width": 192,
+          "height": 416
+        }
+      },
+      {
+        "id": "wingletRightLoft",
+        "type": "LoftCurves",
+        "position": {
+          "x": 500,
+          "y": 1180
+        },
+        "data": {
+          "ruled": false,
+          "closed": false,
+          "color": "#b8b8b8"
+        },
+        "measured": {
+          "width": 192,
+          "height": 416
+        }
+      },
+      {
+        "id": "wingCompound",
+        "type": "Compound",
+        "position": {
+          "x": 730,
+          "y": 420
+        },
+        "data": {
+          "color": "#b8b8b8"
+        },
+        "measured": {
+          "width": 150,
+          "height": 330
+        }
+      },
+      {
+        "id": "hTailRootEllipse",
+        "type": "EllipseCurve",
+        "position": {
+          "x": 40,
+          "y": 2890
+        },
+        "data": {
+          "radiusX": "hTailRootChord/2",
+          "radiusY": "hTailRootChord/10",
+          "color": "#b8b8b8"
+        },
+        "measured": {
+          "width": 201,
+          "height": 296
+        }
+      },
+      {
+        "id": "hTailTipEllipse",
+        "type": "EllipseCurve",
+        "position": {
+          "x": 40,
+          "y": 3650
+        },
+        "data": {
+          "radiusX": "hTailTipChord/2",
+          "radiusY": "hTailTipChord/10",
+          "color": "#b8b8b8"
+        },
+        "measured": {
+          "width": 201,
+          "height": 296
+        }
+      },
+      {
+        "id": "hTailLeftLoft",
+        "type": "LoftCurves",
+        "position": {
+          "x": 500,
+          "y": 610
+        },
+        "data": {
+          "ruled": false,
+          "closed": false,
+          "color": "#b8b8b8"
+        },
+        "measured": {
+          "width": 192,
+          "height": 416
+        }
+      },
+      {
+        "id": "hTailRightLoft",
+        "type": "LoftCurves",
+        "position": {
+          "x": 270,
+          "y": 1560
+        },
+        "data": {
+          "ruled": false,
+          "closed": false,
+          "color": "#b8b8b8"
+        },
+        "measured": {
+          "width": 192,
+          "height": 416
+        }
+      },
+      {
+        "id": "hTailCompound",
+        "type": "Compound",
+        "position": {
+          "x": 730,
+          "y": 230
+        },
+        "data": {
+          "color": "#b8b8b8"
+        },
+        "measured": {
+          "width": 150,
+          "height": 330
+        }
+      },
+      {
+        "id": "vTailRootEllipse",
+        "type": "EllipseCurve",
+        "position": {
+          "x": 40,
+          "y": 4980
+        },
+        "data": {
+          "radiusX": "vTailRootChord/2",
+          "radiusY": "vTailRootChord/12",
+          "color": "#b8b8b8"
+        },
+        "measured": {
+          "width": 201,
+          "height": 296
+        }
+      },
+      {
+        "id": "vTailTipEllipse",
+        "type": "EllipseCurve",
+        "position": {
+          "x": 40,
+          "y": 5550
+        },
+        "data": {
+          "radiusX": "vTailTipChord/2",
+          "radiusY": "vTailTipChord/12",
+          "color": "#b8b8b8"
+        },
+        "measured": {
+          "width": 201,
+          "height": 296
+        }
+      },
+      {
+        "id": "vTailLoft",
+        "type": "LoftCurves",
+        "position": {
+          "x": 500,
+          "y": 1560
+        },
+        "data": {
+          "ruled": false,
+          "closed": false,
+          "color": "#b8b8b8"
+        },
+        "measured": {
+          "width": 192,
+          "height": 416
+        }
+      },
+      {
+        "id": "engineCyl",
+        "type": "Cylinder",
+        "position": {
+          "x": 40,
+          "y": 230
+        },
+        "data": {
+          "radius": "engineDia/2",
+          "height": "engineLen",
+          "color": "#555555"
+        },
+        "measured": {
+          "width": 201,
+          "height": 296
+        }
+      },
+      {
+        "id": "engineCone",
+        "type": "Cone",
+        "position": {
+          "x": 40,
+          "y": 40
+        },
+        "data": {
+          "radius1": "engineDia/2",
+          "radius2": "engineDia/4",
+          "height": "engineLen/3",
+          "color": "#333333"
+        },
+        "measured": {
+          "width": 201,
+          "height": 344
+        }
+      },
+      {
+        "id": "engineCompound",
+        "type": "Compound",
+        "position": {
+          "x": 500,
+          "y": 40
+        },
+        "data": {
+          "color": "#555555"
+        },
+        "measured": {
+          "width": 150,
+          "height": 330
+        }
+      },
+      {
+        "id": "aircraftCompound",
+        "type": "Compound",
+        "position": {
+          "x": 960,
+          "y": 40
+        },
+        "data": {
+          "color": "#e8e8e8"
+        },
+        "measured": {
+          "width": 150,
+          "height": 330
+        }
+      },
+      {
+        "id": "fuseNosePos",
+        "type": "TransformCurve",
+        "position": {
+          "x": 270,
+          "y": 610
+        },
+        "data": {
+          "color": "#e8e8e8",
+          "tx": 0,
+          "ty": 0,
+          "tz": 0
+        },
+        "measured": {
+          "width": 265,
+          "height": 408
+        }
+      },
+      {
+        "id": "fuseMidPos",
+        "type": "TransformCurve",
+        "position": {
+          "x": 270,
+          "y": 420
+        },
+        "data": {
+          "color": "#e8e8e8",
+          "tx": "fuseNoseLen",
+          "ty": 0,
+          "tz": 0
+        },
+        "measured": {
+          "width": 265,
+          "height": 408
+        }
+      },
+      {
+        "id": "fuseUpperPos",
+        "type": "TransformCurve",
+        "position": {
+          "x": 270,
+          "y": 1180
+        },
+        "data": {
+          "color": "#c8c8c8",
+          "tx": "fuseNoseLen + lenFuse * fuseUpperDeckStart",
+          "ty": "upperDeckHeight",
+          "tz": 0
+        },
+        "measured": {
+          "width": 265,
+          "height": 408
+        }
+      },
+      {
+        "id": "fuseTailPos",
+        "type": "TransformCurve",
+        "position": {
+          "x": 270,
+          "y": 800
+        },
+        "data": {
+          "color": "#e8e8e8",
+          "tx": "lenFuse - fuseTailLen",
+          "ty": 0,
+          "tz": 0
+        },
+        "measured": {
+          "width": 265,
+          "height": 408
+        }
+      },
+      {
+        "id": "fuseTailTipPos",
+        "type": "TransformCurve",
+        "position": {
+          "x": 270,
+          "y": 990
+        },
+        "data": {
+          "color": "#e8e8e8",
+          "tx": "lenFuse",
+          "ty": 0,
+          "tz": 0
+        },
+        "measured": {
+          "width": 265,
+          "height": 408
+        }
+      },
+      {
+        "id": "wingRootPos",
+        "type": "TransformCurve",
+        "position": {
+          "x": 270,
+          "y": 2320
+        },
+        "data": {
+          "color": "#b8b8b8",
+          "tx": 0,
+          "ty": 0,
+          "tz": 0
+        },
+        "measured": {
+          "width": 265,
+          "height": 408
+        }
+      },
+      {
+        "id": "wingTipPos",
+        "type": "TransformCurve",
+        "position": {
+          "x": 270,
+          "y": 2890
+        },
+        "data": {
+          "color": "#b8b8b8",
+          "tx": "wingRootChord * tan(wingSweep)",
+          "ty": "wingSpan",
+          "tz": "wingSpan * tan(wingDihedral)"
+        },
+        "measured": {
+          "width": 265,
+          "height": 408
+        }
+      },
+      {
+        "id": "wingletPos",
+        "type": "TransformCurve",
+        "position": {
+          "x": 270,
+          "y": 2130
+        },
+        "data": {
+          "color": "#b8b8b8",
+          "tx": "wingRootChord * tan(wingSweep) + wingletHeight * tan(wingDihedral)",
+          "ty": "wingSpan",
+          "tz": "wingSpan * tan(wingDihedral) + wingletHeight"
+        },
+        "measured": {
+          "width": 265,
+          "height": 408
+        }
+      },
+      {
+        "id": "wingTipPosR",
+        "type": "TransformCurve",
+        "position": {
+          "x": 270,
+          "y": 2510
+        },
+        "data": {
+          "color": "#b8b8b8",
+          "tx": "-wingRootChord * tan(wingSweep)",
+          "ty": "-wingSpan",
+          "tz": "wingSpan * tan(wingDihedral)"
+        },
+        "measured": {
+          "width": 265,
+          "height": 408
+        }
+      },
+      {
+        "id": "wingletPosR",
+        "type": "TransformCurve",
+        "position": {
+          "x": 270,
+          "y": 2700
+        },
+        "data": {
+          "color": "#b8b8b8",
+          "tx": "-wingRootChord * tan(wingSweep) - wingletHeight * tan(wingDihedral)",
+          "ty": "-wingSpan",
+          "tz": "wingSpan * tan(wingDihedral) + wingletHeight"
+        },
+        "measured": {
+          "width": 265,
+          "height": 408
+        }
+      },
+      {
+        "id": "vTailTipPos",
+        "type": "TransformCurve",
+        "position": {
+          "x": 270,
+          "y": 1940
+        },
+        "data": {
+          "color": "#b8b8b8",
+          "tx": "lenFuse - fuseTailLen + vTailRootChord * tan(vTailSweep)",
+          "ty": 0,
+          "tz": "vTailHeight"
+        },
+        "measured": {
+          "width": 265,
+          "height": 408
+        }
+      },
+      {
+        "id": "hTailTipPosL",
+        "type": "TransformCurve",
+        "position": {
+          "x": 270,
+          "y": 1750
+        },
+        "data": {
+          "color": "#b8b8b8",
+          "tx": "lenFuse - fuseTailLen + hTailRootChord * tan(hTailSweep)",
+          "ty": "hTailSpan",
+          "tz": 0
+        },
+        "measured": {
+          "width": 265,
+          "height": 408
+        }
+      },
+      {
+        "id": "hTailTipPosR",
+        "type": "TransformCurve",
+        "position": {
+          "x": 270,
+          "y": 1370
+        },
+        "data": {
+          "color": "#b8b8b8",
+          "tx": "lenFuse - fuseTailLen + hTailRootChord * tan(hTailSweep)",
+          "ty": "-hTailSpan",
+          "tz": 0
+        },
+        "measured": {
+          "width": 265,
+          "height": 408
+        }
+      },
+      {
+        "id": "enginePosL",
+        "type": "Translate",
+        "position": {
+          "x": 270,
+          "y": 40
+        },
+        "data": {
+          "x": "lenFuse - fuseTailLen + engineLen/2",
+          "y": "enginePos * wingSpan",
+          "z": "-engineDia/2"
+        },
+        "measured": {
+          "width": 201,
+          "height": 334
+        }
+      },
+      {
+        "id": "enginePosR",
+        "type": "Translate",
+        "position": {
+          "x": 270,
+          "y": 230
+        },
+        "data": {
+          "x": "lenFuse - fuseTailLen + engineLen/2",
+          "y": "-enginePos * wingSpan",
+          "z": "-engineDia/2"
+        },
+        "measured": {
+          "width": 201,
+          "height": 334
+        }
+      }
+    ],
+    "edges": [
+      {
+        "id": "e_fuseNoseEllipse_fuseNosePos_curve",
+        "source": "fuseNoseEllipse",
+        "sourceHandle": "curve",
+        "target": "fuseNosePos",
+        "targetHandle": "curve"
+      },
+      {
+        "id": "e_fuseMidEllipse_fuseMidPos_curve",
+        "source": "fuseMidEllipse",
+        "sourceHandle": "curve",
+        "target": "fuseMidPos",
+        "targetHandle": "curve"
+      },
+      {
+        "id": "e_fuseUpperEllipse_fuseUpperPos_curve",
+        "source": "fuseUpperEllipse",
+        "sourceHandle": "curve",
+        "target": "fuseUpperPos",
+        "targetHandle": "curve"
+      },
+      {
+        "id": "e_fuseTailEllipse_fuseTailPos_curve",
+        "source": "fuseTailEllipse",
+        "sourceHandle": "curve",
+        "target": "fuseTailPos",
+        "targetHandle": "curve"
+      },
+      {
+        "id": "e_fuseTailEllipse_fuseTailTipPos_curve",
+        "source": "fuseTailEllipse",
+        "sourceHandle": "curve",
+        "target": "fuseTailTipPos",
+        "targetHandle": "curve"
+      },
+      {
+        "id": "e_fuseNosePos_fuseLoft_curve1",
+        "source": "fuseNosePos",
+        "sourceHandle": "curve",
+        "target": "fuseLoft",
+        "targetHandle": "curve1"
+      },
+      {
+        "id": "e_fuseMidPos_fuseLoft_curve2",
+        "source": "fuseMidPos",
+        "sourceHandle": "curve",
+        "target": "fuseLoft",
+        "targetHandle": "curve2"
+      },
+      {
+        "id": "e_fuseTailPos_fuseLoft_curve3",
+        "source": "fuseTailPos",
+        "sourceHandle": "curve",
+        "target": "fuseLoft",
+        "targetHandle": "curve3"
+      },
+      {
+        "id": "e_fuseTailTipPos_fuseLoft_curve4",
+        "source": "fuseTailTipPos",
+        "sourceHandle": "curve",
+        "target": "fuseLoft",
+        "targetHandle": "curve4"
+      },
+      {
+        "id": "e_fuseLoft_fuseCompound_solid1",
+        "source": "fuseLoft",
+        "sourceHandle": "solid",
+        "target": "fuseCompound",
+        "targetHandle": "solid1"
+      },
+      {
+        "id": "e_fuseUpperPos_upperDeckLoft_curve1",
+        "source": "fuseUpperPos",
+        "sourceHandle": "curve",
+        "target": "upperDeckLoft",
+        "targetHandle": "curve1"
+      },
+      {
+        "id": "e_fuseTailPos_upperDeckLoft_curve2",
+        "source": "fuseTailPos",
+        "sourceHandle": "curve",
+        "target": "upperDeckLoft",
+        "targetHandle": "curve2"
+      },
+      {
+        "id": "e_upperDeckLoft_fuseCompound_solid2",
+        "source": "upperDeckLoft",
+        "sourceHandle": "solid",
+        "target": "fuseCompound",
+        "targetHandle": "solid2"
+      },
+      {
+        "id": "e_wingRootEllipse_wingRootPos_curve",
+        "source": "wingRootEllipse",
+        "sourceHandle": "curve",
+        "target": "wingRootPos",
+        "targetHandle": "curve"
+      },
+      {
+        "id": "e_wingTipEllipse_wingTipPos_curve",
+        "source": "wingTipEllipse",
+        "sourceHandle": "curve",
+        "target": "wingTipPos",
+        "targetHandle": "curve"
+      },
+      {
+        "id": "e_wingletEllipse_wingletPos_curve",
+        "source": "wingletEllipse",
+        "sourceHandle": "curve",
+        "target": "wingletPos",
+        "targetHandle": "curve"
+      },
+      {
+        "id": "e_wingRootEllipse_wingTipPosR_curve",
+        "source": "wingRootEllipse",
+        "sourceHandle": "curve",
+        "target": "wingTipPosR",
+        "targetHandle": "curve"
+      },
+      {
+        "id": "e_wingTipEllipse_wingletPosR_curve",
+        "source": "wingTipEllipse",
+        "sourceHandle": "curve",
+        "target": "wingletPosR",
+        "targetHandle": "curve"
+      },
+      {
+        "id": "e_wingRootPos_wingLeftLoft_curve1",
+        "source": "wingRootPos",
+        "sourceHandle": "curve",
+        "target": "wingLeftLoft",
+        "targetHandle": "curve1"
+      },
+      {
+        "id": "e_wingTipPos_wingLeftLoft_curve2",
+        "source": "wingTipPos",
+        "sourceHandle": "curve",
+        "target": "wingLeftLoft",
+        "targetHandle": "curve2"
+      },
+      {
+        "id": "e_wingletPos_wingLeftLoft_curve3",
+        "source": "wingletPos",
+        "sourceHandle": "curve",
+        "target": "wingLeftLoft",
+        "targetHandle": "curve3"
+      },
+      {
+        "id": "e_wingRootPos_wingRightLoft_curve1",
+        "source": "wingRootPos",
+        "sourceHandle": "curve",
+        "target": "wingRightLoft",
+        "targetHandle": "curve1"
+      },
+      {
+        "id": "e_wingTipPosR_wingRightLoft_curve2",
+        "source": "wingTipPosR",
+        "sourceHandle": "curve",
+        "target": "wingRightLoft",
+        "targetHandle": "curve2"
+      },
+      {
+        "id": "e_wingletPosR_wingRightLoft_curve3",
+        "source": "wingletPosR",
+        "sourceHandle": "curve",
+        "target": "wingRightLoft",
+        "targetHandle": "curve3"
+      },
+      {
+        "id": "e_wingRootPos_wingletLeftLoft_curve1",
+        "source": "wingRootPos",
+        "sourceHandle": "curve",
+        "target": "wingletLeftLoft",
+        "targetHandle": "curve1"
+      },
+      {
+        "id": "e_wingTipPos_wingletLeftLoft_curve2",
+        "source": "wingTipPos",
+        "sourceHandle": "curve",
+        "target": "wingletLeftLoft",
+        "targetHandle": "curve2"
+      },
+      {
+        "id": "e_wingletPos_wingletLeftLoft_curve3",
+        "source": "wingletPos",
+        "sourceHandle": "curve",
+        "target": "wingletLeftLoft",
+        "targetHandle": "curve3"
+      },
+      {
+        "id": "e_wingRootPos_wingletRightLoft_curve1",
+        "source": "wingRootPos",
+        "sourceHandle": "curve",
+        "target": "wingletRightLoft",
+        "targetHandle": "curve1"
+      },
+      {
+        "id": "e_wingTipPosR_wingletRightLoft_curve2",
+        "source": "wingTipPosR",
+        "sourceHandle": "curve",
+        "target": "wingletRightLoft",
+        "targetHandle": "curve2"
+      },
+      {
+        "id": "e_wingletPosR_wingletRightLoft_curve3",
+        "source": "wingletPosR",
+        "sourceHandle": "curve",
+        "target": "wingletRightLoft",
+        "targetHandle": "curve3"
+      },
+      {
+        "id": "e_wingLeftLoft_wingCompound_solid1",
+        "source": "wingLeftLoft",
+        "sourceHandle": "solid",
+        "target": "wingCompound",
+        "targetHandle": "solid1"
+      },
+      {
+        "id": "e_wingRightLoft_wingCompound_solid2",
+        "source": "wingRightLoft",
+        "sourceHandle": "solid",
+        "target": "wingCompound",
+        "targetHandle": "solid2"
+      },
+      {
+        "id": "e_wingletLeftLoft_wingCompound_solid3",
+        "source": "wingletLeftLoft",
+        "sourceHandle": "solid",
+        "target": "wingCompound",
+        "targetHandle": "solid3"
+      },
+      {
+        "id": "e_wingletRightLoft_wingCompound_solid4",
+        "source": "wingletRightLoft",
+        "sourceHandle": "solid",
+        "target": "wingCompound",
+        "targetHandle": "solid4"
+      },
+      {
+        "id": "e_hTailRootEllipse_hTailTipPosR_curve",
+        "source": "hTailRootEllipse",
+        "sourceHandle": "curve",
+        "target": "hTailTipPosR",
+        "targetHandle": "curve"
+      },
+      {
+        "id": "e_hTailTipEllipse_hTailTipPosL_curve",
+        "source": "hTailTipEllipse",
+        "sourceHandle": "curve",
+        "target": "hTailTipPosL",
+        "targetHandle": "curve"
+      },
+      {
+        "id": "e_hTailTipPosL_hTailLeftLoft_curve1",
+        "source": "hTailTipPosL",
+        "sourceHandle": "curve",
+        "target": "hTailLeftLoft",
+        "targetHandle": "curve1"
+      },
+      {
+        "id": "e_hTailTipPosR_hTailLeftLoft_curve2",
+        "source": "hTailTipPosR",
+        "sourceHandle": "curve",
+        "target": "hTailLeftLoft",
+        "targetHandle": "curve2"
+      },
+      {
+        "id": "e_hTailRootEllipse_hTailRightLoft_curve1",
+        "source": "hTailRootEllipse",
+        "sourceHandle": "curve",
+        "target": "hTailRightLoft",
+        "targetHandle": "curve1"
+      },
+      {
+        "id": "e_hTailTipEllipse_hTailRightLoft_curve2",
+        "source": "hTailTipEllipse",
+        "sourceHandle": "curve",
+        "target": "hTailRightLoft",
+        "targetHandle": "curve2"
+      },
+      {
+        "id": "e_hTailLeftLoft_hTailCompound_solid1",
+        "source": "hTailLeftLoft",
+        "sourceHandle": "solid",
+        "target": "hTailCompound",
+        "targetHandle": "solid1"
+      },
+      {
+        "id": "e_hTailRightLoft_hTailCompound_solid2",
+        "source": "hTailRightLoft",
+        "sourceHandle": "solid",
+        "target": "hTailCompound",
+        "targetHandle": "solid2"
+      },
+      {
+        "id": "e_vTailTipEllipse_vTailTipPos_curve",
+        "source": "vTailTipEllipse",
+        "sourceHandle": "curve",
+        "target": "vTailTipPos",
+        "targetHandle": "curve"
+      },
+      {
+        "id": "e_vTailTipPos_vTailLoft_curve1",
+        "source": "vTailTipPos",
+        "sourceHandle": "curve",
+        "target": "vTailLoft",
+        "targetHandle": "curve1"
+      },
+      {
+        "id": "e_vTailRootEllipse_vTailLoft_curve2",
+        "source": "vTailRootEllipse",
+        "sourceHandle": "curve",
+        "target": "vTailLoft",
+        "targetHandle": "curve2"
+      },
+      {
+        "id": "e_vTailLoft_aircraftCompound_solid1",
+        "source": "vTailLoft",
+        "sourceHandle": "solid",
+        "target": "aircraftCompound",
+        "targetHandle": "solid1"
+      },
+      {
+        "id": "e_engineCyl_enginePosL_solid",
+        "source": "engineCyl",
+        "sourceHandle": "solid",
+        "target": "enginePosL",
+        "targetHandle": "solid"
+      },
+      {
+        "id": "e_engineCone_engineCompound_solid1",
+        "source": "engineCone",
+        "sourceHandle": "solid",
+        "target": "engineCompound",
+        "targetHandle": "solid1"
+      },
+      {
+        "id": "e_engineCyl_engineCompound_solid2",
+        "source": "engineCyl",
+        "sourceHandle": "solid",
+        "target": "engineCompound",
+        "targetHandle": "solid2"
+      },
+      {
+        "id": "e_enginePosL_engineCompound_solid3",
+        "source": "enginePosL",
+        "sourceHandle": "solid",
+        "target": "engineCompound",
+        "targetHandle": "solid3"
+      },
+      {
+        "id": "e_enginePosR_engineCompound_solid4",
+        "source": "enginePosR",
+        "sourceHandle": "solid",
+        "target": "engineCompound",
+        "targetHandle": "solid4"
+      },
+      {
+        "id": "e_fuseCompound_aircraftCompound_solid2",
+        "source": "fuseCompound",
+        "sourceHandle": "solid",
+        "target": "aircraftCompound",
+        "targetHandle": "solid2"
+      },
+      {
+        "id": "e_wingCompound_aircraftCompound_solid3",
+        "source": "wingCompound",
+        "sourceHandle": "solid",
+        "target": "aircraftCompound",
+        "targetHandle": "solid3"
+      },
+      {
+        "id": "e_hTailCompound_aircraftCompound_solid4",
+        "source": "hTailCompound",
+        "sourceHandle": "solid",
+        "target": "aircraftCompound",
+        "targetHandle": "solid4"
+      },
+      {
+        "id": "e_engineCompound_aircraftCompound_solid5",
+        "source": "engineCompound",
+        "sourceHandle": "solid",
+        "target": "aircraftCompound",
+        "targetHandle": "solid5"
+      },
+      {
+        "id": "e_engineCyl_enginePosR_solid",
+        "source": "engineCyl",
+        "sourceHandle": "solid",
+        "target": "enginePosR",
+        "targetHandle": "solid"
+      }
+    ]
+  },
+  "conversation": [
+    {
+      "role": "system",
+      "content": "Workspace cleared."
+    },
+    {
+      "role": "user",
+      "content": "make a procedural city"
+    },
+    {
+      "role": "assistant",
+      "content": "Plan:\nProcedural city on a rectangular grid. Skeleton: PointGrid defines building lot centers. Each lot gets a Box building with randomized height/footprint driven by sliders. Streets are ground planes between lots. A central park plaza and a landmark tower anchor the composition. All dimensions derive from 5-6 top-level sliders so the whole city rescales coherently.\nSKELETON: point \"lotGrid\" drives [building positions, street grid]; curve \"mainAvenue\" drives [central boulevard, landmark placement]\nGENOME [procedural-city-grid, detail:high]: groundPlane shell; streetGrid repeated ×streetCount on groundPlane; building repeated ×buildingCount on lotGrid; centralPark focal on groundPlane; landmarkTower focal on centralPark"
+    },
+    {
+      "role": "system",
+      "content": "Structural validation error (does not count against repair budget): \"streetsX\" (InstanceOnPoints) is missing required inputs: \"shape\", \"points\". Connect an upstream solid to these handles, or the node produces no geometry.; \"streetsY\" (InstanceOnPoints) is missing required inputs: \"shape\", \"points\". Connect an upstream solid to these handles, or the node produces no geometry.; \"buildings\" (InstanceOnPoints) is missing required inputs: \"shape\", \"points\". Connect an upstream solid to these handles, or the node produces no geometry."
+    },
+    {
+      "role": "system",
+      "content": "Structural validation error (does not count against repair budget): \"streetsX\" (InstanceOnPoints) is missing required inputs: \"shape\", \"points\". Connect an upstream solid to these handles, or the node produces no geometry.; \"streetsY\" (InstanceOnPoints) is missing required inputs: \"shape\", \"points\". Connect an upstream solid to these handles, or the node produces no geometry.; \"buildings\" (InstanceOnPoints) is missing required inputs: \"shape\", \"points\". Connect an upstream solid to these handles, or the node produces no geometry."
+    },
+    {
+      "role": "system",
+      "content": "Issues detected (repair attempt 1/2): Node \"buildingFootprint\" failed: Expression error: unknown variable 'lotsize' — available: citysize, blocksize, buildingdensity, maxbuildingheight, maxheight, minbuildingheight, minheight, landmarkheight, seed, jitterseed, buildingvariance, jitteramount; Node \"buildingCount\" failed: Expression error: unknown variable 'gridcount' — available: citysize, blocksize, buildingdensity, maxbuildingheight, maxheight, minbuildingheight, minheight, landmarkheight, seed, jitterseed, buildingvariance, jitteramount; Node \"buildingScaleX\" failed: Expression error: unknown variable 'buildingfootprint' — available: citysize, blocksize, buildingdensity, maxbuildingheight, maxheight, minbuildingheight, minheight, landmarkheight, seed, jitterseed, buildingvariance, jitteramount"
+    },
+    {
+      "role": "user",
+      "content": "make a boeing 747"
+    },
+    {
+      "role": "assistant",
+      "content": "Plan:\nBoeing 747 airliner: parametric wide-body with signature upper-deck hump, four underwing engines, swept wings with winglets, and conventional tail. All dimensions driven by 6-7 sliders.\nSKELETON: curve \"fuseSpine\" drives [fuselage loft profiles, wing root attach, tail attach, engine pylons]; curve \"wingSpar\" drives [wing loft (root→tip), engine positions, winglet]; curve \"hTailSpar\" drives [horizontal stabilizer loft]; curve \"vTailSpar\" drives [vertical stabilizer loft]\nGENOME [boeing-747-airliner, detail:high]: fuseMain shell; fuseUpper shell on fuseMain; wingL shell on fuseMain; wingR shell on fuseMain; engine1 repeated ×4 of engine on wingL; engine2 repeated ×4 of engine on wingR; hTail shell on fuseMain; vTail shell on fuseMain; gearMain detail on fuseMain; gearNose detail on fuseMain"
+    },
+    {
+      "role": "system",
+      "content": "Structural validation error (does not count against repair budget): \"fuseLoft\" (LoftCurves) needs at least 2 connected inputs (has 0). Connect its curve1/curve2/curve3/curve4/curve5/curve6 handles.; \"upperDeckLoft\" (LoftCurves) needs at least 2 connected inputs (has 0). Connect its curve1/curve2/curve3/curve4/curve5/curve6 handles.; \"wingRootTransform\" (TransformCurve) is missing required input: \"curve\". Connect an upstream solid to handle \"curve\", or the node produces no geometry."
+    },
+    {
+      "role": "assistant",
+      "content": "Plan:\nBoeing 747 airliner: parametric wide-body with signature upper-deck hump, four underwing engines, swept wings with winglets, and conventional tail. All dimensions driven by sliders. Use EllipseCurve + LoftCurves for fuselage, SplineCurve airfoil profiles + LoftCurves for wings/tail, Cylinder+Cone for engines.\nSKELETON: curve \"fuseSpine\" drives [fuselage loft profiles, wing root attach, tail attach, engine pylons]; curve \"wingSpar\" drives [wing loft (root→tip), engine positions, winglet]; curve \"hTailSpar\" drives [horizontal stabilizer loft]; curve \"vTailSpar\" drives [vertical stabilizer loft]\nGENOME [boeing-747-airliner, detail:high]: fuseMain shell; fuseUpper shell on fuseMain; wingL shell on fuseMain; wingR shell on fuseMain; engine1 repeated ×4 of engine on wingL; engine2 repeated ×4 of engine on wingR; hTail shell on fuseMain; vTail shell on fuseMain; gearMain detail on fuseMain; gearNose detail on fuseMain"
+    },
+    {
+      "role": "user",
+      "content": "make a boeing 747"
+    },
+    {
+      "role": "system",
+      "content": "Structural validation error (does not count against repair budget): \"fuseLoft\" (LoftCurves) needs at least 2 connected inputs (has 0). Connect its curve1/curve2/curve3/curve4/curve5/curve6 handles.; \"upperDeckLoft\" (LoftCurves) needs at least 2 connected inputs (has 0). Connect its curve1/curve2/curve3/curve4/curve5/curve6 handles.; \"fuseCompound\" (Compound) needs at least 1 connected input (has 0). Connect its solid1/solid2/solid3/solid4/solid5/solid6/solid7/solid8 handles."
+    },
+    {
+      "role": "system",
+      "content": "Structural validation error (does not count against repair budget): \"fuseLoft\" (LoftCurves) needs at least 2 connected inputs (has 0). Connect its curve1/curve2/curve3/curve4/curve5/curve6 handles.; \"upperDeckLoft\" (LoftCurves) needs at least 2 connected inputs (has 0). Connect its curve1/curve2/curve3/curve4/curve5/curve6 handles.; \"fuseCompound\" (Compound) needs at least 1 connected input (has 0). Connect its solid1/solid2/solid3/solid4/solid5/solid6/solid7/solid8 handles."
+    },
+    {
+      "role": "system",
+      "content": "Structural validation error (does not count against repair budget): \"fuseLoft\" (LoftCurves) needs at least 2 connected inputs (has 0). Connect its curve1/curve2/curve3/curve4/curve5/curve6 handles.; \"upperDeckLoft\" (LoftCurves) needs at least 2 connected inputs (has 0). Connect its curve1/curve2/curve3/curve4/curve5/curve6 handles.; \"fuseCompound\" (Compound) needs at least 1 connected input (has 0). Connect its solid1/solid2/solid3/solid4/solid5/solid6/solid7/solid8 handles."
+    },
+    {
+      "role": "system",
+      "content": "Structural validation error (does not count against repair budget): \"enginePosR\" (Translate) is missing required input: \"solid\". Connect an upstream solid to handle \"solid\", or the node produces no geometry."
+    },
+    {
+      "role": "user",
+      "content": "ok i see something in 3d and i see intentionality but this is a very very poor output result can you try lofting circles to get a proper body"
+    },
+    {
+      "role": "system",
+      "content": "Tool-calling unavailable (Model returned an empty response (no text, no actions).) — falling back to JSON protocol."
+    },
+    {
+      "role": "system",
+      "content": "IR program had compile errors (attempt 1/3) — asking the model to fix."
+    },
+    {
+      "role": "user",
+      "content": "try something different"
+    },
+    {
+      "role": "system",
+      "content": "Tool-calling unavailable (Model returned an empty response (no text, no actions).) — falling back to JSON protocol."
+    },
+    {
+      "role": "system",
+      "content": "IR program had compile errors (attempt 1/3) — asking the model to fix."
+    },
+    {
+      "role": "system",
+      "content": "IR program had compile errors (attempt 2/3) — asking the model to fix."
+    },
+    {
+      "role": "system",
+      "content": "Error: IR compile failed: body[39] (wingRootEllL = ellipse): Argument \"radiusX\" references \"$rootChord/2\", which is not bound. Bindings so far: fuseLen, fuseDia, noseLen, tailLen, upperLen, upperH, upperW, wingSpan, wingRootC, wingTipC, wingSweep, wingDihedral, wingletH, engDia, engLen, engPos, hTailSpan, hTailRootC, hTailTipC, hTailSweep, vTailH, vTailRootC, vTailTipC, vTailSweep, xAxis, yAxis, zAxis, sweepRad, dihedRad, secX, noseR, bodyR, tailR, secR, centers, circles, fuse, upperSecX, upperZ, upperCenters, upperWid, upperHei, upperEllipses, upperDeck, rootX, rootY, rootZ, tipX, tipY, tipZ, wingletX, wingletY, wingletZ, rootPtL, tipPtL, wingletPtL, rootPtR, tipPtR, wingletPtR, rootChord, tipChord, rootThick, tipThick."
+    }
+  ],
+  "plan": "",
+  "genome": {
+    "archetype": "airliner",
+    "parts": [
+      {
+        "id": "fuse",
+        "role": "focal"
+      },
+      {
+        "id": "upper",
+        "role": "focal"
+      },
+      {
+        "id": "wingL",
+        "role": "repeated"
+      },
+      {
+        "id": "wingR",
+        "role": "repeated"
+      },
+      {
+        "id": "engine",
+        "role": "repeated",
+        "count": 4
+      },
+      {
+        "id": "hTail",
+        "role": "focal"
+      },
+      {
+        "id": "vTail",
+        "role": "focal"
+      }
+    ],
+    "detailBudget": "high"
+  },
+  "geometryReport": {
+    "leaves": [
+      {
+        "id": "aircraftCompound",
+        "bbox": {
+          "min": [
+            -13.829262270454283,
+            -34.028230605028014,
+            -15.407143967469706
+          ],
+          "max": [
+            81.80498882416447,
+            32.78748504972032,
+            19.36768653763812
+          ],
+          "center": [
+            33.987863276855094,
+            -0.6203727776538486,
+            1.9802712850842088
+          ],
+          "size": [
+            95.63425109461875,
+            66.81571565474833,
+            34.77483050510783
+          ]
+        },
+        "volume": 2684.621792419373,
+        "meshOk": true,
+        "vertexCount": 3561,
+        "error": null
+      }
+    ],
+    "nodeErrors": [],
+    "numbers": {
+      "lenFuse": 70,
+      "fuseDia": 6.5,
+      "upperDeckFrac": 0.35,
+      "upperDeckHeight": 1.8,
+      "upperDeckWidth": 5.5,
+      "wingSpan": 32,
+      "wingRootChord": 12,
+      "wingTipChord": 3.5,
+      "wingSweep": 37.5,
+      "wingDihedral": 6,
+      "wingletHeight": 1.8,
+      "engineDia": 2.5,
+      "engineLen": 5,
+      "enginePos": 0.3,
+      "hTailSpan": 9,
+      "hTailRootChord": 6,
+      "hTailTipChord": 2.5,
+      "hTailSweep": 30,
+      "vTailHeight": 19,
+      "vTailRootChord": 12,
+      "vTailTipChord": 4,
+      "vTailSweep": 45,
+      "fuseNoseLen": 8,
+      "fuseTailLen": 10,
+      "fuseNoseBlunt": 0.3,
+      "fuseUpperDeckStart": 0.15
+    },
+    "sliders": {
+      "Fuselage Length": 70,
+      "Fuselage Diameter": 6.5,
+      "Upper Deck Length Frac": 0.35,
+      "Upper Deck Height": 1.8,
+      "Upper Deck Width": 5.5,
+      "Wing Span (half)": 32,
+      "Wing Root Chord": 12,
+      "Wing Tip Chord": 3.5,
+      "Wing Sweep (deg)": 37.5,
+      "Wing Dihedral (deg)": 6,
+      "Winglet Height": 1.8,
+      "Engine Diameter": 2.5,
+      "Engine Length": 5,
+      "Engine Position (frac span)": 0.3,
+      "Horizontal Tail Span (half)": 9,
+      "H-Tail Root Chord": 6,
+      "H-Tail Tip Chord": 2.5,
+      "H-Tail Sweep (deg)": 30,
+      "Vertical Tail Height": 19,
+      "V-Tail Root Chord": 12,
+      "V-Tail Tip Chord": 4,
+      "V-Tail Sweep (deg)": 45,
+      "Nose Length": 8,
+      "Tail Cone Length": 10,
+      "Nose Bluntness": 0.3,
+      "Upper Deck Start (frac)": 0.15
+    },
+    "selections": {},
+    "helpers": {},
+    "nodeCount": 68,
+    "edgeCount": 56,
+    "transformCount": 11,
+    "nodesPerLeafRatio": 68,
+    "nodeEconomyWarning": true,
+    "placement": {
+      "anchored": [
+        "aircraftCompound"
+      ],
+      "literal": [],
+      "origin": [],
+      "literalNodeIds": [],
+      "ratio": 1
+    },
+    "scene": {
+      "min": [
+        -13.829262270454283,
+        -34.028230605028014,
+        -15.407143967469706
+      ],
+      "max": [
+        81.80498882416447,
+        32.78748504972032,
+        19.36768653763812
+      ],
+      "size": [
+        95.63425109461875,
+        66.81571565474833,
+        34.77483050510783
+      ]
+    },
+    "meshedLeafCount": 1,
+    "kernelFaultCount": 0,
+    "kernelSuspect": false,
+    "kernelHealth": "ok",
+    "evalCount": 8,
+    "recycleRecommended": false,
+    "perturbationIssues": [],
+    "proportionalIntegrity": 1
+  }
+}

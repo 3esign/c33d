@@ -235,6 +235,47 @@ export function geoInputHandles(type: string): string[] {
   return def.inputs.filter(i => i.type !== 'number').map(i => i.name);
 }
 
+// NUMBER-typed input handles (list/per-element sockets: Expression a/b/c/d,
+// PointsFromLists x/y/z/scale, Point x/y/z, EvaluateCurve t, …).
+export function numberInputHandles(type: string): string[] {
+  const def = NODE_LIBRARY[type];
+  if (!def) return [];
+  return def.inputs.filter(i => i.type === 'number').map(i => i.name);
+}
+
+// EVERY declared input handle of a node type — the wireability whitelist.
+//
+// THE NUMBER-INPUT WIRING WALL (root cause of the Jul-21 simple-task failures):
+// both AI edge paths validated targetHandle against geoInputHandles(), which
+// deliberately EXCLUDES number-typed inputs. Expression a/b/c/d and
+// PointsFromLists x/y/z/scale therefore "did not exist" to the validator —
+// every Series→Expression.a / Expression→PointsFromLists.x edge the model (or
+// the IR compiler!) emitted was dropped as "no input handle", while structural
+// validation simultaneously demanded exactly those edges. Edge acceptance must
+// check ALL declared inputs; geoInputHandles remains for geometry-only logic
+// (auto-pick fallbacks, minConnected counting).
+export function allInputHandles(type: string): string[] {
+  const def = NODE_LIBRARY[type];
+  if (!def) return [];
+  return def.inputs.map(i => i.name);
+}
+
+// One honest sentence describing what CAN be wired into a node type — used by
+// every edge-rejection message so the model learns the real socket inventory
+// instead of "Valid inputs: (none)".
+export function describeWireableInputs(type: string): string {
+  const def = NODE_LIBRARY[type];
+  if (!def) return 'unknown node type';
+  const geo = geoInputHandles(type);
+  const num = numberInputHandles(type);
+  const params = def.params.filter(p => p.type === 'number').map(p => p.name);
+  const parts: string[] = [];
+  if (geo.length) parts.push(`geometry inputs: ${geo.join(', ')}`);
+  if (num.length) parts.push(`number/list inputs: ${num.join(', ')}`);
+  if (params.length) parts.push(`numeric params (targetHandle "param:<name>"): ${params.join(', ')}`);
+  return parts.length ? parts.join('; ') : 'no inputs — it is a pure source node';
+}
+
 // Default sourceHandle for an edge leaving a node of the given type.
 //
 // The model is actively encouraged (tool/protocol docs) to OMIT sourceHandle to
@@ -286,7 +327,19 @@ export function pickTargetHandle(
   const srcDef = sourceType ? NODE_LIBRARY[sourceType] : undefined;
   const shName = sourceHandle || defaultSourceHandle(sourceType);
   const srcOutType = srcDef?.outputs.find(o => o.name === shName)?.type;
-  if (!srcOutType || srcOutType === 'number') return undefined;
+  if (!srcOutType) return undefined;
+  if (srcOutType === 'number') {
+    // Number/list source with an omitted targetHandle: land on the first FREE
+    // number-typed input in declaration order (Expression a→b→c→d,
+    // PointsFromLists x→y→z→scale). Previously this returned undefined, fell
+    // through to the geometry-only legacy fallback, got stamped 'solid' and was
+    // rejected — the model could not wire the list layer at all without an
+    // explicit handle. Declaration order matches the UI's port order; models
+    // that need a specific channel still pass targetHandle explicitly.
+    const numHandles = targetDef.inputs.filter(i => i.type === 'number').map(i => i.name);
+    if (numHandles.length === 0) return undefined; // let legacy geometry fallback run
+    return numHandles.find(h => !takenHandles.has(h)) ?? undefined;
+  }
   const typedHandles = targetDef.inputs.filter(i => i.type === srcOutType).map(i => i.name);
   if (typedHandles.length === 0) return null;
   return typedHandles.find(h => !takenHandles.has(h)) ?? undefined;
@@ -451,7 +504,7 @@ export function executeTool(
             th = picked;
             if (geoHandles.length > 1) autoNote = ` (auto-assigned to input "${picked}" by type — pass targetHandle to choose a different input)`;
           } else if (picked === null) {
-            skipped.push(`${source}→${target}: "${targetType}" has no input accepting what "${source}" outputs. Valid inputs: ${geoHandles.join(', ') || '(none)'}; numeric params need targetHandle "param:<name>".`);
+            skipped.push(`${source}→${target}: "${targetType}" has no input accepting what "${source}" outputs. It accepts — ${describeWireableInputs(targetType)}.`);
             continue;
           } else if (geoHandles.length === 1) {
             th = geoHandles[0];
@@ -471,15 +524,21 @@ export function executeTool(
           }
         }
 
-        // Validate the handle actually exists (param or geometry).
+        // Validate the handle actually exists (param, geometry, or number input).
         if (th.startsWith('param:')) {
           const pName = th.slice(6);
           if (targetDef && targetType !== 'Macro' && !targetDef.params.some(p => p.name === pName && p.type === 'number')) {
-            skipped.push(`${source}→${target}: "${targetType}" has no numeric param "${pName}". Numeric params: ${targetDef.params.filter(p => p.type === 'number').map(p => p.name).join(', ') || '(none)'}.`);
+            // Common confusion: number INPUTS (a/b/c/d, x/y/z/scale) are wired
+            // with the bare handle name, not the "param:" prefix.
+            const bare = numberInputHandles(targetType);
+            const hint = bare.includes(pName)
+              ? ` "${pName}" IS a number input on "${targetType}" — use targetHandle "${pName}" (no "param:" prefix).`
+              : '';
+            skipped.push(`${source}→${target}: "${targetType}" has no numeric param "${pName}".${hint} It accepts — ${describeWireableInputs(targetType)}.`);
             continue;
           }
-        } else if (targetDef && targetType !== 'Macro' && !geoHandles.includes(th)) {
-          skipped.push(`${source}→${target}: "${targetType}" has no input handle "${th}". Valid inputs: ${geoHandles.join(', ') || '(none)'}.`);
+        } else if (targetDef && targetType !== 'Macro' && !allInputHandles(targetType).includes(th)) {
+          skipped.push(`${source}→${target}: "${targetType}" has no input handle "${th}". It accepts — ${describeWireableInputs(targetType)}.`);
           continue;
         }
 

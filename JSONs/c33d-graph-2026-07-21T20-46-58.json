@@ -1,0 +1,1378 @@
+{
+  "c33dExport": 1,
+  "exportedAt": "2026-07-21T20:46:58.949Z",
+  "comment": "interesting result\n",
+  "agent": {
+    "name": "Ollama (Local)",
+    "provider": "ollama",
+    "model": "glm-5.2:cloud"
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "bodyLength",
+        "type": "NumberSlider",
+        "data": {
+          "value": 28,
+          "min": 12,
+          "max": 60,
+          "step": 0.1,
+          "label": "bodyLength"
+        },
+        "position": {
+          "x": 40,
+          "y": 420
+        },
+        "measured": {
+          "width": 200,
+          "height": 327
+        }
+      },
+      {
+        "id": "wingSpan",
+        "type": "NumberSlider",
+        "data": {
+          "value": 52,
+          "min": 20,
+          "max": 100,
+          "step": 0.1,
+          "label": "wingSpan"
+        },
+        "position": {
+          "x": 40,
+          "y": 3080
+        },
+        "measured": {
+          "width": 200,
+          "height": 327
+        }
+      },
+      {
+        "id": "bodyRadius",
+        "type": "NumberSlider",
+        "data": {
+          "value": 5,
+          "min": 2,
+          "max": 12,
+          "step": 0.1,
+          "label": "bodyRadius"
+        },
+        "position": {
+          "x": 40,
+          "y": 800
+        },
+        "measured": {
+          "width": 200,
+          "height": 327
+        }
+      },
+      {
+        "id": "zAxis",
+        "type": "VectorXYZ",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": 1
+        },
+        "position": {
+          "x": 40,
+          "y": 3270
+        },
+        "measured": {
+          "width": 200,
+          "height": 321
+        }
+      },
+      {
+        "id": "neckAxis",
+        "type": "VectorXYZ",
+        "data": {
+          "x": 0.85,
+          "y": 0,
+          "z": 0.45
+        },
+        "position": {
+          "x": 40,
+          "y": 2320
+        },
+        "measured": {
+          "width": 200,
+          "height": 321
+        }
+      },
+      {
+        "id": "beakAxis",
+        "type": "VectorXYZ",
+        "data": {
+          "x": 1,
+          "y": 0,
+          "z": -0.12
+        },
+        "position": {
+          "x": 40,
+          "y": 40
+        },
+        "measured": {
+          "width": 200,
+          "height": 321
+        }
+      },
+      {
+        "id": "crestAxis",
+        "type": "VectorXYZ",
+        "data": {
+          "x": -0.4,
+          "y": 0,
+          "z": 0.6
+        },
+        "position": {
+          "x": 40,
+          "y": 990
+        },
+        "measured": {
+          "width": 200,
+          "height": 321
+        }
+      },
+      {
+        "id": "bodyPt",
+        "type": "Point",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": "bodyRadius*1.8"
+        },
+        "position": {
+          "x": 40,
+          "y": 610
+        },
+        "measured": {
+          "width": 200,
+          "height": 321
+        }
+      },
+      {
+        "id": "body",
+        "type": "Ellipsoid",
+        "data": {
+          "radiusX": "bodyLength*0.42",
+          "radiusY": "bodyRadius*0.5",
+          "radiusZ": "bodyRadius",
+          "color": "#2563eb"
+        },
+        "position": {
+          "x": 270,
+          "y": 230
+        },
+        "measured": {
+          "width": 200,
+          "height": 311
+        }
+      },
+      {
+        "id": "headPt",
+        "type": "Point",
+        "data": {
+          "x": "bodyLength*0.36",
+          "y": 0,
+          "z": "bodyRadius*2.6"
+        },
+        "position": {
+          "x": 40,
+          "y": 1750
+        },
+        "measured": {
+          "width": 200,
+          "height": 321
+        }
+      },
+      {
+        "id": "head",
+        "type": "Sphere",
+        "data": {
+          "radius": "bodyRadius*0.52",
+          "color": "#2563eb"
+        },
+        "position": {
+          "x": 270,
+          "y": 990
+        },
+        "measured": {
+          "width": 200,
+          "height": 215
+        }
+      },
+      {
+        "id": "neckPt",
+        "type": "Point",
+        "data": {
+          "x": "bodyLength*0.28",
+          "y": 0,
+          "z": "bodyRadius*2.25"
+        },
+        "position": {
+          "x": 40,
+          "y": 2510
+        },
+        "measured": {
+          "width": 200,
+          "height": 321
+        }
+      },
+      {
+        "id": "neck",
+        "type": "Cone",
+        "data": {
+          "radius1": "bodyRadius*0.32",
+          "radius2": "bodyRadius*0.22",
+          "height": "bodyRadius*0.85",
+          "color": "#2563eb"
+        },
+        "position": {
+          "x": 270,
+          "y": 1180
+        },
+        "measured": {
+          "width": 200,
+          "height": 343
+        }
+      },
+      {
+        "id": "beakPt",
+        "type": "Point",
+        "data": {
+          "x": "bodyLength*0.36+bodyRadius*0.6",
+          "y": 0,
+          "z": "bodyRadius*2.45"
+        },
+        "position": {
+          "x": 40,
+          "y": 230
+        },
+        "measured": {
+          "width": 200,
+          "height": 321
+        }
+      },
+      {
+        "id": "beak",
+        "type": "Cone",
+        "data": {
+          "radius1": "bodyRadius*0.16",
+          "radius2": 0.05,
+          "height": "bodyRadius*1.4",
+          "color": "#f59e0b"
+        },
+        "position": {
+          "x": 270,
+          "y": 40
+        },
+        "measured": {
+          "width": 200,
+          "height": 343
+        }
+      },
+      {
+        "id": "crestPt",
+        "type": "Point",
+        "data": {
+          "x": "bodyLength*0.33",
+          "y": 0,
+          "z": "bodyRadius*2.7+bodyRadius*0.25"
+        },
+        "position": {
+          "x": 40,
+          "y": 1180
+        },
+        "measured": {
+          "width": 200,
+          "height": 321
+        }
+      },
+      {
+        "id": "crest",
+        "type": "Cone",
+        "data": {
+          "radius1": "bodyRadius*0.1",
+          "radius2": 0.04,
+          "height": "bodyRadius*0.7",
+          "color": "#1e40af"
+        },
+        "position": {
+          "x": 270,
+          "y": 420
+        },
+        "measured": {
+          "width": 200,
+          "height": 343
+        }
+      },
+      {
+        "id": "eyePtL",
+        "type": "Point",
+        "data": {
+          "x": "bodyLength*0.38",
+          "y": "bodyRadius*0.36",
+          "z": "bodyRadius*2.78"
+        },
+        "position": {
+          "x": 40,
+          "y": 1370
+        },
+        "measured": {
+          "width": 200,
+          "height": 321
+        }
+      },
+      {
+        "id": "eyeL",
+        "type": "Sphere",
+        "data": {
+          "radius": "bodyRadius*0.11",
+          "color": "#1e293b"
+        },
+        "position": {
+          "x": 270,
+          "y": 610
+        },
+        "measured": {
+          "width": 200,
+          "height": 215
+        }
+      },
+      {
+        "id": "eyePtR",
+        "type": "Point",
+        "data": {
+          "x": "bodyLength*0.38",
+          "y": "-bodyRadius*0.36",
+          "z": "bodyRadius*2.78"
+        },
+        "position": {
+          "x": 40,
+          "y": 1560
+        },
+        "measured": {
+          "width": 200,
+          "height": 321
+        }
+      },
+      {
+        "id": "eyeR",
+        "type": "Sphere",
+        "data": {
+          "radius": "bodyRadius*0.11",
+          "color": "#1e293b"
+        },
+        "position": {
+          "x": 270,
+          "y": 800
+        },
+        "measured": {
+          "width": 200,
+          "height": 215
+        }
+      },
+      {
+        "id": "wingPt",
+        "type": "Point",
+        "data": {
+          "x": "bodyLength*0.05",
+          "y": 0,
+          "z": "bodyRadius*2.1"
+        },
+        "position": {
+          "x": 40,
+          "y": 2890
+        },
+        "measured": {
+          "width": 200,
+          "height": 321
+        }
+      },
+      {
+        "id": "wingShape",
+        "type": "Ellipsoid",
+        "data": {
+          "radiusX": "bodyLength*0.16",
+          "radiusY": "wingSpan*0.45",
+          "radiusZ": "bodyRadius*0.05",
+          "color": "#1d4ed8"
+        },
+        "position": {
+          "x": 270,
+          "y": 1940
+        },
+        "measured": {
+          "width": 200,
+          "height": 311
+        }
+      },
+      {
+        "id": "wingBend",
+        "type": "Bend",
+        "data": {
+          "axis": "Y",
+          "angle": 25
+        },
+        "position": {
+          "x": 500,
+          "y": 40
+        },
+        "measured": {
+          "width": 200,
+          "height": 215
+        }
+      },
+      {
+        "id": "wingSweep",
+        "type": "Rotate",
+        "data": {
+          "angle": -18,
+          "axisX": 0,
+          "axisY": 0,
+          "axisZ": 1,
+          "color": "#1d4ed8"
+        },
+        "position": {
+          "x": 730,
+          "y": 40
+        },
+        "measured": {
+          "width": 200,
+          "height": 413
+        }
+      },
+      {
+        "id": "tailPt",
+        "type": "Point",
+        "data": {
+          "x": "-bodyLength*0.36",
+          "y": 0,
+          "z": "bodyRadius*2.0"
+        },
+        "position": {
+          "x": 40,
+          "y": 2700
+        },
+        "measured": {
+          "width": 200,
+          "height": 321
+        }
+      },
+      {
+        "id": "tailShape",
+        "type": "Ellipsoid",
+        "data": {
+          "radiusX": "bodyLength*0.16",
+          "radiusY": "bodyRadius*0.95",
+          "radiusZ": "bodyRadius*0.04",
+          "color": "#1e40af"
+        },
+        "position": {
+          "x": 270,
+          "y": 1750
+        },
+        "measured": {
+          "width": 200,
+          "height": 311
+        }
+      },
+      {
+        "id": "tailTilt",
+        "type": "Rotate",
+        "data": {
+          "angle": 28,
+          "axisX": 0,
+          "axisY": 1,
+          "axisZ": 0,
+          "isLocal": true,
+          "color": "#1e40af"
+        },
+        "position": {
+          "x": 500,
+          "y": 230
+        },
+        "measured": {
+          "width": 200,
+          "height": 413
+        }
+      },
+      {
+        "id": "legPtL",
+        "type": "Point",
+        "data": {
+          "x": "-bodyLength*0.06",
+          "y": "bodyRadius*0.3",
+          "z": "bodyRadius*0.4"
+        },
+        "position": {
+          "x": 40,
+          "y": 1940
+        },
+        "measured": {
+          "width": 200,
+          "height": 321
+        }
+      },
+      {
+        "id": "legL",
+        "type": "Cylinder",
+        "data": {
+          "radius": "bodyRadius*0.06",
+          "height": "bodyRadius*0.8",
+          "color": "#f59e0b"
+        },
+        "position": {
+          "x": 270,
+          "y": 1370
+        },
+        "measured": {
+          "width": 200,
+          "height": 295
+        }
+      },
+      {
+        "id": "legPtR",
+        "type": "Point",
+        "data": {
+          "x": "-bodyLength*0.06",
+          "y": "-bodyRadius*0.3",
+          "z": "bodyRadius*0.4"
+        },
+        "position": {
+          "x": 40,
+          "y": 2130
+        },
+        "measured": {
+          "width": 200,
+          "height": 321
+        }
+      },
+      {
+        "id": "legR",
+        "type": "Cylinder",
+        "data": {
+          "radius": "bodyRadius*0.06",
+          "height": "bodyRadius*0.8",
+          "color": "#f59e0b"
+        },
+        "position": {
+          "x": 270,
+          "y": 1560
+        },
+        "measured": {
+          "width": 200,
+          "height": 295
+        }
+      }
+    ],
+    "edges": [
+      {
+        "source": "bodyPt",
+        "target": "body",
+        "id": "e_bodyPt_body_center",
+        "sourceHandle": "point",
+        "targetHandle": "center"
+      },
+      {
+        "source": "headPt",
+        "target": "head",
+        "id": "e_headPt_head_center",
+        "sourceHandle": "point",
+        "targetHandle": "center"
+      },
+      {
+        "source": "neckPt",
+        "target": "neck",
+        "id": "e_neckPt_neck_center",
+        "sourceHandle": "point",
+        "targetHandle": "center"
+      },
+      {
+        "source": "neckAxis",
+        "target": "neck",
+        "id": "e_neckAxis_neck_axis",
+        "sourceHandle": "vector",
+        "targetHandle": "axis"
+      },
+      {
+        "source": "beakPt",
+        "target": "beak",
+        "id": "e_beakPt_beak_center",
+        "sourceHandle": "point",
+        "targetHandle": "center"
+      },
+      {
+        "source": "beakAxis",
+        "target": "beak",
+        "id": "e_beakAxis_beak_axis",
+        "sourceHandle": "vector",
+        "targetHandle": "axis"
+      },
+      {
+        "source": "crestPt",
+        "target": "crest",
+        "id": "e_crestPt_crest_center",
+        "sourceHandle": "point",
+        "targetHandle": "center"
+      },
+      {
+        "source": "crestAxis",
+        "target": "crest",
+        "id": "e_crestAxis_crest_axis",
+        "sourceHandle": "vector",
+        "targetHandle": "axis"
+      },
+      {
+        "source": "eyePtL",
+        "target": "eyeL",
+        "id": "e_eyePtL_eyeL_center",
+        "sourceHandle": "point",
+        "targetHandle": "center"
+      },
+      {
+        "source": "eyePtR",
+        "target": "eyeR",
+        "id": "e_eyePtR_eyeR_center",
+        "sourceHandle": "point",
+        "targetHandle": "center"
+      },
+      {
+        "source": "wingPt",
+        "target": "wingShape",
+        "id": "e_wingPt_wingShape_center",
+        "sourceHandle": "point",
+        "targetHandle": "center"
+      },
+      {
+        "source": "wingShape",
+        "target": "wingBend",
+        "id": "e_wingShape_wingBend_solid",
+        "sourceHandle": "solid",
+        "targetHandle": "solid"
+      },
+      {
+        "source": "wingBend",
+        "target": "wingSweep",
+        "id": "e_wingBend_wingSweep_solid",
+        "sourceHandle": "solid",
+        "targetHandle": "solid"
+      },
+      {
+        "source": "wingPt",
+        "target": "wingSweep",
+        "id": "e_wingPt_wingSweep_pivot",
+        "sourceHandle": "point",
+        "targetHandle": "pivot"
+      },
+      {
+        "source": "tailPt",
+        "target": "tailShape",
+        "id": "e_tailPt_tailShape_center",
+        "sourceHandle": "point",
+        "targetHandle": "center"
+      },
+      {
+        "source": "tailShape",
+        "target": "tailTilt",
+        "id": "e_tailShape_tailTilt_solid",
+        "sourceHandle": "solid",
+        "targetHandle": "solid"
+      },
+      {
+        "source": "tailPt",
+        "target": "tailTilt",
+        "id": "e_tailPt_tailTilt_pivot",
+        "sourceHandle": "point",
+        "targetHandle": "pivot"
+      },
+      {
+        "source": "legPtL",
+        "target": "legL",
+        "id": "e_legPtL_legL_center",
+        "sourceHandle": "point",
+        "targetHandle": "center"
+      },
+      {
+        "source": "zAxis",
+        "target": "legL",
+        "id": "e_zAxis_legL_axis",
+        "sourceHandle": "vector",
+        "targetHandle": "axis"
+      },
+      {
+        "source": "legPtR",
+        "target": "legR",
+        "id": "e_legPtR_legR_center",
+        "sourceHandle": "point",
+        "targetHandle": "center"
+      },
+      {
+        "source": "zAxis",
+        "target": "legR",
+        "id": "e_zAxis_legR_axis",
+        "sourceHandle": "vector",
+        "targetHandle": "axis"
+      }
+    ]
+  },
+  "conversation": [
+    {
+      "role": "system",
+      "content": "Workspace cleared."
+    },
+    {
+      "role": "user",
+      "content": "make a boeing 747"
+    },
+    {
+      "role": "system",
+      "content": "Response was not valid JSON (attempt 1/3) — asking the model to resend."
+    },
+    {
+      "role": "system",
+      "content": "Response was not valid JSON (attempt 2/3) — asking the model to resend."
+    },
+    {
+      "role": "system",
+      "content": "Error: AI did not return valid JSON. Response was: "
+    },
+    {
+      "role": "user",
+      "content": "make a boeing 747 be the engineer"
+    },
+    {
+      "role": "system",
+      "content": "Response was not valid JSON (attempt 1/3) — asking the model to resend."
+    },
+    {
+      "role": "system",
+      "content": "Response was not valid JSON (attempt 2/3) — asking the model to resend."
+    },
+    {
+      "role": "system",
+      "content": "Error: AI did not return valid JSON. Response was: "
+    },
+    {
+      "role": "user",
+      "content": "make a bird"
+    },
+    {
+      "role": "system",
+      "content": "Response was not valid JSON (attempt 1/3) — asking the model to resend."
+    },
+    {
+      "role": "system",
+      "content": "Response was not valid JSON (attempt 2/3) — asking the model to resend."
+    },
+    {
+      "role": "system",
+      "content": "Error: IR compile failed: body[0] (bodyShape = ellipsoid): Unknown op \"ellipsoid\". Available ops: list, series, range, remap, expr, item, repeat_each, tile, point, vector, midpoint, points, on_circle, grid, jitter, line, line_sdl, circle, ellipse, arc, polyline, spline, divide, box, sphere, cylinder, cone, torus, ring, extrude, loft, sweep, pipe, revolve, translate, move_to, rotate, scale, instances, linear_pattern, circular_pattern, union, difference, intersect, compound."
+    },
+    {
+      "role": "user",
+      "content": "try again"
+    },
+    {
+      "role": "assistant",
+      "content": "A parametric bird with an egg-shaped body lofted from circular sections, broad spread wings, a crested head with orange beak, fanned tail, and slender legs"
+    },
+    {
+      "role": "system",
+      "content": "Issues detected (auto-repair 1/2): Node \"wingFlat\" failed: ExtrudeCurve failed: Cannot read properties of undefined (reading '$$'); Node \"tailFlat\" failed: ExtrudeCurve failed: Cannot read properties of undefined (reading '$$'); Leaf \"wingFlat\" could not be meshed: Node \"wingFlat\" (ExtrudeCurve) produced no geometry despite connected inputs — likely invalid parameters (e.g. zero/negative size, self-intersecting fillet).."
+    },
+    {
+      "role": "assistant",
+      "content": "ExtrudeCurve fails on EllipseCurve (embind wire error). Switching wings/tail to thin Ellipsoids placed directly at wingPt/tailPt via center input — eliminates the curve→extrude chain entirely. Also nudging eyes outward so they protrude from the head instead of being buried inside."
+    },
+    {
+      "role": "system",
+      "content": "[Patch] removedEdgeIds entry {\"source\":\"wingPt\",\"target\":\"wingCurve\"} matched NO edge — nothing was removed. Use the edge ids shown in the graph state, {\"source\",\"target\"} objects, or \"source->target\" strings. Current edges touching those nodes: wingPt->wingTilt.pivot, wingPt->wingSweep.pivot"
+    },
+    {
+      "role": "system",
+      "content": "[Patch] removedEdgeIds entry {\"source\":\"zUp\",\"target\":\"wingCurve\"} matched NO edge — nothing was removed. Use the edge ids shown in the graph state, {\"source\",\"target\"} objects, or \"source->target\" strings. Current edges touching those nodes: zUp->legL.axis, zUp->legR.axis"
+    },
+    {
+      "role": "system",
+      "content": "[Patch] removedEdgeIds entry {\"source\":\"wingCurve\",\"target\":\"wingFlat\"} matched NO edge — nothing was removed. Use the edge ids shown in the graph state, {\"source\",\"target\"} objects, or \"source->target\" strings."
+    },
+    {
+      "role": "system",
+      "content": "[Patch] removedEdgeIds entry {\"source\":\"wingFlat\",\"target\":\"wingTilt\"} matched NO edge — nothing was removed. Use the edge ids shown in the graph state, {\"source\",\"target\"} objects, or \"source->target\" strings. Current edges touching those nodes: wingPt->wingTilt.pivot, wingTilt->wingSweep.solid"
+    },
+    {
+      "role": "system",
+      "content": "[Patch] removedEdgeIds entry {\"source\":\"tailPt\",\"target\":\"tailCurve\"} matched NO edge — nothing was removed. Use the edge ids shown in the graph state, {\"source\",\"target\"} objects, or \"source->target\" strings. Current edges touching those nodes: tailPt->tail.pivot"
+    },
+    {
+      "role": "system",
+      "content": "[Patch] removedEdgeIds entry {\"source\":\"zUp\",\"target\":\"tailCurve\"} matched NO edge — nothing was removed. Use the edge ids shown in the graph state, {\"source\",\"target\"} objects, or \"source->target\" strings. Current edges touching those nodes: zUp->legL.axis, zUp->legR.axis"
+    },
+    {
+      "role": "system",
+      "content": "[Patch] removedEdgeIds entry {\"source\":\"tailCurve\",\"target\":\"tailFlat\"} matched NO edge — nothing was removed. Use the edge ids shown in the graph state, {\"source\",\"target\"} objects, or \"source->target\" strings."
+    },
+    {
+      "role": "system",
+      "content": "[Patch] removedEdgeIds entry {\"source\":\"tailFlat\",\"target\":\"tail\"} matched NO edge — nothing was removed. Use the edge ids shown in the graph state, {\"source\",\"target\"} objects, or \"source->target\" strings. Current edges touching those nodes: tailPt->tail.pivot"
+    },
+    {
+      "role": "user",
+      "content": "parts are not positioned well"
+    },
+    {
+      "role": "assistant",
+      "content": "Head, wings, tail were floating at z=bodyRadius*3 while body center sits at z=0. Re-anchoring all parts to the body surface: head at front-top (z=bodyRadius*0.6), wings at mid-top (z=bodyRadius*0.2), tail at back-top (z=bodyRadius*0.25), legs hanging below body (z=-bodyRadius*0.5). Adjusted beak and eyes to match head position."
+    },
+    {
+      "role": "user",
+      "content": "that is better "
+    },
+    {
+      "role": "assistant",
+      "content": "Glad the re-anchoring fixed the positioning! The bird is looking good now. Let me know if you'd like any tweaks — different colors, a longer wingspan, a more dramatic tail fan, or a different style of bird (e.g. an eagle, owl, or hummingbird)."
+    },
+    {
+      "role": "user",
+      "content": "but this is still very very bad"
+    },
+    {
+      "role": "assistant",
+      "content": "Complete rebuild: body raised to z=bodyRadius*1.8 for leg clearance, head connected via neck cone, wings get Bend for airfoil curvature + sweep rotation, tail tilted up like a real fan, legs actually reach the ground. All parts anchored to geometric points derived from sliders."
+    }
+  ],
+  "plan": "",
+  "genome": null,
+  "geometryReport": {
+    "leaves": [
+      {
+        "id": "body",
+        "bbox": {
+          "min": [
+            -11.760000100000005,
+            -2.5000001000000043,
+            3.9999998999999957
+          ],
+          "max": [
+            11.760000100000005,
+            2.5000001000000043,
+            14.000000100000005
+          ],
+          "center": [
+            0,
+            0,
+            9
+          ],
+          "size": [
+            23.52000020000001,
+            5.0000002000000086,
+            10.00000020000001
+          ]
+        },
+        "volume": 581.1157960484327,
+        "meshOk": true,
+        "vertexCount": 696,
+        "error": null
+      },
+      {
+        "id": "head",
+        "bbox": {
+          "min": [
+            7.400479336687132,
+            -2.6685980210430227,
+            10.280979494518872
+          ],
+          "max": [
+            12.799020505481128,
+            2.6685980210430222,
+            15.719020505481128
+          ],
+          "center": [
+            10.099749921084129,
+            0,
+            13
+          ],
+          "size": [
+            5.3985411687939955,
+            5.337196042086045,
+            5.438041010962255
+          ]
+        },
+        "volume": 73.6221766393256,
+        "meshOk": true,
+        "vertexCount": 146,
+        "error": null
+      },
+      {
+        "id": "neck",
+        "bbox": {
+          "min": [
+            5.1314541761176535,
+            -1.641760808465306,
+            8.759801778979869
+          ],
+          "max": [
+            10.314601963672832,
+            1.641760808465306,
+            13.298304262846601
+          ],
+          "center": [
+            7.723028069895243,
+            0,
+            11.029053020913235
+          ],
+          "size": [
+            5.183147787555178,
+            3.283521616930612,
+            4.538502483866733
+          ]
+        },
+        "volume": 24.611760446998048,
+        "meshOk": true,
+        "vertexCount": 80,
+        "error": null
+      },
+      {
+        "id": "beak",
+        "bbox": {
+          "min": [
+            9.42749974511542,
+            -0.8429603567217321,
+            11.701232742225537
+          ],
+          "max": [
+            16.643141339420758,
+            0.8429603567217321,
+            13.543424886639654
+          ],
+          "center": [
+            13.035320542268089,
+            0,
+            12.622328814432596
+          ],
+          "size": [
+            7.215641594305339,
+            1.6859207134434642,
+            1.842192144414117
+          ]
+        },
+        "volume": 5.002986300841749,
+        "meshOk": true,
+        "vertexCount": 84,
+        "error": null
+      },
+      {
+        "id": "crest",
+        "bbox": {
+          "min": [
+            8.151653147318813,
+            -0.5843394975135231,
+            12.932222389282636
+          ],
+          "max": [
+            10.711089988076596,
+            0.5843394975135231,
+            16.312615520453758
+          ],
+          "center": [
+            9.431371567697704,
+            0,
+            14.622418954868197
+          ],
+          "size": [
+            2.559436840757783,
+            1.1686789950270462,
+            3.3803931311711217
+          ]
+        },
+        "volume": 0.9954659921674864,
+        "meshOk": true,
+        "vertexCount": 48,
+        "error": null
+      },
+      {
+        "id": "eyeL",
+        "bbox": {
+          "min": [
+            10.025859990013872,
+            1.1858599900138727,
+            13.28585999001387
+          ],
+          "max": [
+            11.254140009986129,
+            2.4141400099861268,
+            14.514140009986127
+          ],
+          "center": [
+            10.64,
+            1.7999999999999998,
+            13.899999999999999
+          ],
+          "size": [
+            1.2282800199722566,
+            1.2282800199722541,
+            1.2282800199722566
+          ]
+        },
+        "volume": 0.696909970321336,
+        "meshOk": true,
+        "vertexCount": 33,
+        "error": null
+      },
+      {
+        "id": "eyeR",
+        "bbox": {
+          "min": [
+            10.025859990013872,
+            -2.4141400099861268,
+            13.28585999001387
+          ],
+          "max": [
+            11.254140009986129,
+            -1.1858599900138727,
+            14.514140009986127
+          ],
+          "center": [
+            10.64,
+            -1.7999999999999998,
+            13.899999999999999
+          ],
+          "size": [
+            1.2282800199722566,
+            1.2282800199722541,
+            1.2282800199722566
+          ]
+        },
+        "volume": 0.6969099703213361,
+        "meshOk": true,
+        "vertexCount": 33,
+        "error": null
+      },
+      {
+        "id": "legL",
+        "bbox": {
+          "min": [
+            -2.0201924788646686,
+            1.1999998999999997,
+            -0.04019247886466854
+          ],
+          "max": [
+            -1.3398075211353313,
+            1.8000001,
+            4.040192478864668
+          ],
+          "center": [
+            -1.68,
+            1.5,
+            1.9999999999999996
+          ],
+          "size": [
+            0.6803849577293373,
+            0.6000002000000004,
+            4.080384957729336
+          ]
+        },
+        "volume": 1.1309733552923256,
+        "meshOk": true,
+        "vertexCount": 26,
+        "error": null
+      },
+      {
+        "id": "legR",
+        "bbox": {
+          "min": [
+            -2.0201924788646686,
+            -1.8000001000000003,
+            -0.04019247886466854
+          ],
+          "max": [
+            -1.3398075211353313,
+            -1.1999999,
+            4.040192478864668
+          ],
+          "center": [
+            -1.68,
+            -1.5,
+            1.9999999999999996
+          ],
+          "size": [
+            0.6803849577293373,
+            0.6000002000000004,
+            4.080384957729336
+          ]
+        },
+        "volume": 1.1309733552923256,
+        "meshOk": true,
+        "vertexCount": 26,
+        "error": null
+      },
+      {
+        "id": "tailTilt",
+        "bbox": {
+          "min": [
+            -14.035605316007999,
+            -4.750000100000005,
+            7.896767298719205
+          ],
+          "max": [
+            -6.124394683992003,
+            4.750000100000005,
+            12.103232701280797
+          ],
+          "center": [
+            -10.080000000000002,
+            0,
+            10
+          ],
+          "size": [
+            7.911210632015996,
+            9.50000020000001,
+            4.206465402561593
+          ]
+        },
+        "volume": 16.824685904640354,
+        "meshOk": true,
+        "vertexCount": 696,
+        "error": null
+      },
+      {
+        "id": "wingSweep",
+        "bbox": {
+          "min": [
+            -6.86594035522406,
+            -22.078601198227144,
+            10.249999899999995
+          ],
+          "max": [
+            9.66594035522406,
+            22.078601198227144,
+            13.042435828539691
+          ],
+          "center": [
+            1.4000000000000004,
+            0,
+            11.646217864269843
+          ],
+          "size": [
+            16.53188071044812,
+            44.15720239645429,
+            2.792435928539696
+          ]
+        },
+        "volume": 103.54862927768542,
+        "meshOk": true,
+        "vertexCount": 696,
+        "error": null
+      }
+    ],
+    "nodeErrors": [],
+    "numbers": {
+      "bodyLength": 28,
+      "wingSpan": 52,
+      "bodyRadius": 5
+    },
+    "sliders": {
+      "bodyLength": 28,
+      "wingSpan": 52,
+      "bodyRadius": 5
+    },
+    "selections": {},
+    "helpers": {
+      "zAxis": {
+        "type": "Vector",
+        "x": 0,
+        "y": 0,
+        "z": 1,
+        "sourceNodeId": "zAxis",
+        "ancestorNodeIds": []
+      },
+      "neckAxis": {
+        "type": "Vector",
+        "x": 0.85,
+        "y": 0,
+        "z": 0.45,
+        "sourceNodeId": "neckAxis",
+        "ancestorNodeIds": []
+      },
+      "beakAxis": {
+        "type": "Vector",
+        "x": 1,
+        "y": 0,
+        "z": -0.12,
+        "sourceNodeId": "beakAxis",
+        "ancestorNodeIds": []
+      },
+      "crestAxis": {
+        "type": "Vector",
+        "x": -0.4,
+        "y": 0,
+        "z": 0.6,
+        "sourceNodeId": "crestAxis",
+        "ancestorNodeIds": []
+      },
+      "bodyPt": {
+        "type": "Point",
+        "x": 0,
+        "y": 0,
+        "z": 9,
+        "sourceNodeId": "bodyPt",
+        "ancestorNodeIds": []
+      },
+      "headPt": {
+        "type": "Point",
+        "x": 10.08,
+        "y": 0,
+        "z": 13,
+        "sourceNodeId": "headPt",
+        "ancestorNodeIds": []
+      },
+      "neckPt": {
+        "type": "Point",
+        "x": 7.840000000000001,
+        "y": 0,
+        "z": 11.25,
+        "sourceNodeId": "neckPt",
+        "ancestorNodeIds": []
+      },
+      "beakPt": {
+        "type": "Point",
+        "x": 13.08,
+        "y": 0,
+        "z": 12.25,
+        "sourceNodeId": "beakPt",
+        "ancestorNodeIds": []
+      },
+      "crestPt": {
+        "type": "Point",
+        "x": 9.24,
+        "y": 0,
+        "z": 14.75,
+        "sourceNodeId": "crestPt",
+        "ancestorNodeIds": []
+      },
+      "eyePtL": {
+        "type": "Point",
+        "x": 10.64,
+        "y": 1.7999999999999998,
+        "z": 13.899999999999999,
+        "sourceNodeId": "eyePtL",
+        "ancestorNodeIds": []
+      },
+      "eyePtR": {
+        "type": "Point",
+        "x": 10.64,
+        "y": -1.7999999999999998,
+        "z": 13.899999999999999,
+        "sourceNodeId": "eyePtR",
+        "ancestorNodeIds": []
+      },
+      "wingPt": {
+        "type": "Point",
+        "x": 1.4000000000000001,
+        "y": 0,
+        "z": 10.5,
+        "sourceNodeId": "wingPt",
+        "ancestorNodeIds": []
+      },
+      "tailPt": {
+        "type": "Point",
+        "x": -10.08,
+        "y": 0,
+        "z": 10,
+        "sourceNodeId": "tailPt",
+        "ancestorNodeIds": []
+      },
+      "legPtL": {
+        "type": "Point",
+        "x": -1.68,
+        "y": 1.5,
+        "z": 2,
+        "sourceNodeId": "legPtL",
+        "ancestorNodeIds": []
+      },
+      "legPtR": {
+        "type": "Point",
+        "x": -1.68,
+        "y": -1.5,
+        "z": 2,
+        "sourceNodeId": "legPtR",
+        "ancestorNodeIds": []
+      }
+    },
+    "nodeCount": 32,
+    "edgeCount": 21,
+    "transformCount": 3,
+    "nodesPerLeafRatio": 2.909090909090909,
+    "nodeEconomyWarning": false,
+    "placement": {
+      "anchored": [
+        "body",
+        "head",
+        "neck",
+        "beak",
+        "crest",
+        "eyeL",
+        "eyeR",
+        "legL",
+        "legR",
+        "tailTilt",
+        "wingSweep"
+      ],
+      "literal": [],
+      "origin": [],
+      "literalNodeIds": [],
+      "ratio": 1
+    },
+    "scene": {
+      "min": [
+        -14.035605316007999,
+        -22.078601198227144,
+        -0.04019247886466854
+      ],
+      "max": [
+        16.643141339420758,
+        22.078601198227144,
+        16.312615520453758
+      ],
+      "size": [
+        30.678746655428757,
+        44.15720239645429,
+        16.352807999318426
+      ]
+    },
+    "meshedLeafCount": 11,
+    "kernelFaultCount": 0,
+    "kernelSuspect": false,
+    "kernelHealth": "ok",
+    "evalCount": 4,
+    "recycleRecommended": false,
+    "perturbationIssues": [
+      "At bodyRadius decrease (0.6x), \"neck\" detaches from \"beak\". Check that their positions are driven by formulas or Align rather than absolute coordinates.",
+      "At bodyRadius decrease (0.6x), \"neck\" detaches from \"eyeL\". Check that their positions are driven by formulas or Align rather than absolute coordinates.",
+      "At bodyRadius decrease (0.6x), \"neck\" detaches from \"eyeR\". Check that their positions are driven by formulas or Align rather than absolute coordinates.",
+      "At bodyRadius increase (1.5x), \"neck\" detaches from \"eyeL\". Check that their positions are driven by formulas or Align rather than absolute coordinates.",
+      "At bodyRadius increase (1.5x), \"neck\" detaches from \"eyeR\". Check that their positions are driven by formulas or Align rather than absolute coordinates.",
+      "At bodyRadius increase (1.5x), \"crest\" detaches from \"wingSweep\". Check that their positions are driven by formulas or Align rather than absolute coordinates.",
+      "At bodyLength decrease (0.6x), \"neck\" detaches from \"eyeL\". Check that their positions are driven by formulas or Align rather than absolute coordinates.",
+      "At bodyLength decrease (0.6x), \"neck\" detaches from \"eyeR\". Check that their positions are driven by formulas or Align rather than absolute coordinates.",
+      "At bodyLength decrease (0.6x), \"head\" shifts non-proportionally relative to the assembly center (deviation 10%). Derive its position from the driver sliders or use Align.",
+      "At bodyLength decrease (0.6x), \"neck\" shifts non-proportionally relative to the assembly center (deviation 9%). Derive its position from the driver sliders or use Align.",
+      "At bodyLength decrease (0.6x), \"crest\" shifts non-proportionally relative to the assembly center (deviation 9%). Derive its position from the driver sliders or use Align.",
+      "At bodyLength decrease (0.6x), \"eyeL\" shifts non-proportionally relative to the assembly center (deviation 10%). Derive its position from the driver sliders or use Align.",
+      "At bodyLength decrease (0.6x), \"eyeR\" shifts non-proportionally relative to the assembly center (deviation 10%). Derive its position from the driver sliders or use Align.",
+      "At bodyLength increase (1.5x), \"head\" detaches from \"wingSweep\". Check that their positions are driven by formulas or Align rather than absolute coordinates.",
+      "At bodyLength increase (1.5x), \"neck\" detaches from \"beak\". Check that their positions are driven by formulas or Align rather than absolute coordinates.",
+      "At bodyLength increase (1.5x), \"neck\" detaches from \"eyeL\". Check that their positions are driven by formulas or Align rather than absolute coordinates.",
+      "At bodyLength increase (1.5x), \"neck\" detaches from \"eyeR\". Check that their positions are driven by formulas or Align rather than absolute coordinates.",
+      "At bodyLength increase (1.5x), \"beak\" detaches from \"wingSweep\". Check that their positions are driven by formulas or Align rather than absolute coordinates.",
+      "At bodyLength increase (1.5x), \"crest\" detaches from \"wingSweep\". Check that their positions are driven by formulas or Align rather than absolute coordinates.",
+      "At bodyLength increase (1.5x), \"tailTilt\" detaches from \"wingSweep\". Check that their positions are driven by formulas or Align rather than absolute coordinates.",
+      "At wingSpan decrease (0.6x), \"beak\" detaches from \"wingSweep\". Check that their positions are driven by formulas or Align rather than absolute coordinates.",
+      "At wingSpan decrease (0.6x), \"crest\" detaches from \"wingSweep\". Check that their positions are driven by formulas or Align rather than absolute coordinates.",
+      "At wingSpan decrease (0.6x), \"tailTilt\" detaches from \"wingSweep\". Check that their positions are driven by formulas or Align rather than absolute coordinates."
+    ],
+    "proportionalIntegrity": 0.16666666666666666
+  }
+}

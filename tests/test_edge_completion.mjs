@@ -39,23 +39,40 @@ function inferMissingEdges(nodes, edges) {
     if (src.id === target || occupied(target, handle)) return;
     inferred.push({ id: `${src.id}__to__${target}__${handle}`, source: src.id, sourceHandle: defaultNumberOut(src.type), target, targetHandle: handle, reason });
   };
+  const allSequences = nodes.filter(p => SEQUENCE_TYPES.has(p.type));
+  const bareRole = (id) => {
+    const m = /^([a-z]+)/.exec(id.startsWith('$') ? id.slice(1) : id);
+    return m ? m[1] : null;
+  };
   for (const n of nodes) {
     if (n.type !== 'Expression') continue;
     const g = groupOf(n.id);
-    if (!g) continue;
-    const seqs = peersInGroup(nodes, n.id, g).filter(p => SEQUENCE_TYPES.has(p.type));
-    if (seqs.length !== 1) continue;
-    for (const v of referencedVars(String((n.data && n.data.formula) ?? ''))) add(seqs[0], n.id, v, 'ruleA');
+    let seq;
+    if (g) {
+      const seqs = peersInGroup(nodes, n.id, g).filter(p => SEQUENCE_TYPES.has(p.type));
+      if (seqs.length === 1) seq = seqs[0];
+    }
+    if (!seq && allSequences.length === 1 && allSequences[0].id !== n.id) seq = allSequences[0]; // A2
+    if (!seq) continue;
+    for (const v of referencedVars(String((n.data && n.data.formula) ?? ''))) add(seq, n.id, v, 'ruleA');
   }
+  const allPfl = nodes.filter(p => p.type === 'PointsFromLists');
   for (const n of nodes) {
     if (n.type !== 'PointsFromLists') continue;
     const g = groupOf(n.id);
-    if (!g) continue;
     for (const ch of ['x', 'y', 'z', 'scale']) {
       if (occupied(n.id, ch)) continue;
-      const matches = peersInGroup(nodes, n.id, g).filter(p => idParts(p.id)?.role === ch && (LIST_PRODUCER_TYPES.has(p.type) || NUMBER_PRODUCER_TYPES.has(p.type)));
-      if (matches.length !== 1) continue;
-      add(matches[0], n.id, ch, 'ruleB');
+      let src;
+      if (g) {
+        const matches = peersInGroup(nodes, n.id, g).filter(p => idParts(p.id)?.role === ch && (LIST_PRODUCER_TYPES.has(p.type) || NUMBER_PRODUCER_TYPES.has(p.type)));
+        if (matches.length === 1) src = matches[0];
+      }
+      if (!src && allPfl.length === 1) {
+        const matches = nodes.filter(p => p.id !== n.id && bareRole(p.id) === ch && (LIST_PRODUCER_TYPES.has(p.type) || NUMBER_PRODUCER_TYPES.has(p.type)));
+        if (matches.length === 1) src = matches[0]; // B2
+      }
+      if (!src) continue;
+      add(src, n.id, ch, 'ruleB');
     }
   }
   return inferred;
@@ -122,15 +139,53 @@ const ambiguous = {
 };
 assert.strictEqual(inferMissingEdges(ambiguous.nodes, ambiguous.edges).length, 0, 'two sequences in group → no guess');
 
-// --- ungrouped ids are never wired across ----------------------------------
-const ungrouped = {
+// --- A2: bare ids + a UNIQUE sequence graph-wide ARE wired ------------------
+// (Jul-21 update: the simple-task graphs — t, x, y, z, radii, pts — used no
+// group numbers at all; with one Series in the whole graph there is nothing to
+// disambiguate, so refusing to wire was pure loss.)
+const bare = {
+  nodes: [
+    { id: 't', type: 'Series', data: {} },
+    { id: 'x', type: 'Expression', data: { formula: 'curveLength * a' } },
+    { id: 'y', type: 'Expression', data: { formula: 'sin(a * 6.283)' } },
+    { id: 'radii', type: 'Expression', data: { formula: 'lerp(1, 2, abs(sin(a)))' } },
+    { id: 'pts', type: 'PointsFromLists', data: {} },
+  ],
+  edges: [],
+};
+const bareGot = inferMissingEdges(bare.nodes, bare.edges);
+assert.ok(has(bareGot, 't', 'x', 'a'), 't → x:a (A2 unique sequence graph-wide)');
+assert.ok(has(bareGot, 't', 'y', 'a'), 't → y:a');
+assert.ok(has(bareGot, 't', 'radii', 'a'), 't → radii:a');
+// B2: unique PointsFromLists + role-named producers wire by bare role.
+assert.ok(has(bareGot, 'x', 'pts', 'x'), 'x → pts:x (B2)');
+assert.ok(has(bareGot, 'y', 'pts', 'y'), 'y → pts:y (B2)');
+assert.ok(!bareGot.some(e => e.target === 'pts' && e.targetHandle === 'scale'), 'radii does not guess into scale');
+
+// --- A2 refuses when TWO sequences exist graph-wide and none share a group --
+const twoSeqs = {
   nodes: [
     { id: 'angles', type: 'Series', data: {} },
+    { id: 'steps', type: 'Range', data: {} },
     { id: 'xExpr', type: 'Expression', data: { formula: 'cos(a)' } },
   ],
   edges: [],
 };
-assert.strictEqual(inferMissingEdges(ungrouped.nodes, ungrouped.edges).length, 0, 'no group number → no cross-guess');
+assert.strictEqual(inferMissingEdges(twoSeqs.nodes, twoSeqs.edges).length, 0, 'two graph-wide sequences → no guess');
+
+// --- B2 camel/underscore roles resolve (xCoords → x, y_vals → y) ------------
+const camel = {
+  nodes: [
+    { id: 'angles', type: 'Series', data: {} },
+    { id: 'xCoords', type: 'Expression', data: { formula: 'cos(a)' } },
+    { id: 'y_vals', type: 'Expression', data: { formula: 'sin(a)' } },
+    { id: 'points', type: 'PointsFromLists', data: {} },
+  ],
+  edges: [],
+};
+const camelGot = inferMissingEdges(camel.nodes, camel.edges);
+assert.ok(has(camelGot, 'xCoords', 'points', 'x'), 'xCoords → points:x');
+assert.ok(has(camelGot, 'y_vals', 'points', 'y'), 'y_vals → points:y');
 
 // --- structural predicates (mirror of the 2b / 2c checks) ------------------
 const pointsHasNoCoord = (node, edges) => {

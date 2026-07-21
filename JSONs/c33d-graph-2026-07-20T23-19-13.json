@@ -1,0 +1,64 @@
+{
+  "c33dExport": 1,
+  "exportedAt": "2026-07-20T23:19:13.622Z",
+  "comment": "nothing",
+  "agent": {
+    "name": "Ollama (Local)",
+    "provider": "ollama",
+    "model": "deepseek-v4-pro:cloud"
+  },
+  "graph": {
+    "nodes": [],
+    "edges": []
+  },
+  "conversation": [
+    {
+      "role": "system",
+      "content": "Workspace cleared."
+    },
+    {
+      "role": "user",
+      "content": "make a Boeing 747 "
+    },
+    {
+      "role": "system",
+      "content": "Response was not valid JSON (attempt 1/3) — asking the model to resend."
+    },
+    {
+      "role": "system",
+      "content": "IR program had compile errors (attempt 2/3) — asking the model to fix."
+    },
+    {
+      "role": "system",
+      "content": "Error: AI did not return valid JSON. Response was: "
+    }
+  ],
+  "plan": "",
+  "genome": {
+    "archetype": "airliner",
+    "parts": [
+      {
+        "id": "fuselage",
+        "role": "body"
+      },
+      {
+        "id": "wings",
+        "role": "lift"
+      },
+      {
+        "id": "tail",
+        "role": "stabilizer"
+      },
+      {
+        "id": "engines",
+        "role": "propulsion"
+      },
+      {
+        "id": "landing_gear",
+        "role": "support"
+      }
+    ],
+    "detailBudget": "high"
+  },
+  "geometryReport": null
+}

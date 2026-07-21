@@ -2,7 +2,7 @@ import { chatCompletion, chatCompletionWithTools, providerSupportsTools, provide
 import type { AgentMessage } from './api';
 import { useStore, generateUUID, waitForEvaluation } from '../store/useStore';
 import { NODE_LIBRARY } from '../nodes/NodeDefinitions';
-import { AGENT_TOOLS, executeTool, geoInputHandles, defaultSourceHandle, pickTargetHandle } from './tools';
+import { AGENT_TOOLS, executeTool, geoInputHandles, allInputHandles, numberInputHandles, describeWireableInputs, defaultSourceHandle, pickTargetHandle } from './tools';
 import type { WorkingGraph } from './tools';
 import { autoLayout } from '../layout/autoLayout';
 import { retrieveSimilarExamples, formatExampleForPrompt, condenseGraph } from './retrieval';
@@ -355,6 +355,11 @@ export function validateAndNormalizeNodeData(
         warnings.push(`parameter "${key}" on node "${id}" was mapped to "${resolved}" (synonym).`);
       } else if (BENIGN_DROP_PARAMS.has(keyLower)) {
         warnings.push(`parameter "${key}" on node "${id}" is not supported by ${type} and was ignored — for per-instance size variation use scaleStart/scaleEnd.`);
+      } else if ((NODE_LIBRARY[type]?.inputs || []).some(inp => inp.name.toLowerCase() === keyLower)) {
+        // The name IS a socket, just not a data param (e.g. Rotate's "pivot",
+        // a Sphere's "center"): say so, or the model concludes the capability
+        // does not exist at all and abandons it.
+        warnings.push(`"${key}" on node "${id}" is an INPUT SOCKET of ${type}, not a data parameter — it was ignored here. Wire an edge into it instead: {"source": <node>, "target": "${id}", "targetHandle": "${key}"}.`);
       } else {
         errors.push(`unknown parameter "${key}" on node "${id}" (node type "${type}" does not support "${key}"). Valid parameters: ${validParams.join(', ') || '(none)'}`);
       }
@@ -428,12 +433,19 @@ export function aggregateAndRankIssues(issues: string[]): string[] {
   const containment: string[] = [];
   const proportional: string[] = [];
   const others: string[] = [];
+  const dropped: string[] = [];
 
   const propRegex = /At (.*?) (?:increase|decrease) \(.*?x\), "(.*?)" shifts non-proportionally.*\(deviation (\d+)%\)/i;
   const propBySlider: Record<string, { parts: Set<string>; worstPart: string; worstDev: number }> = {};
 
   for (const issue of issues) {
     const lower = issue.toLowerCase();
+    // Rejected-edge lines are aggregated by reason below so eight identical
+    // rejections cost one line of the 5-issue cap instead of falling off it.
+    if (lower.startsWith('dropped invalid edge')) {
+      dropped.push(issue);
+      continue;
+    }
     const match = issue.match(propRegex);
     if (match) {
       const slider = match[1];
@@ -461,6 +473,13 @@ export function aggregateAndRankIssues(issues: string[]): string[] {
       lower.includes('does not exist') ||
       lower.includes('does not output') ||
       lower.includes('target handle') ||
+      // A rejected edge is the single most actionable fact in a repair round —
+      // it must outrank downstream null-geometry noise, not fall off the
+      // 5-issue cap in the "others" bucket (which is how models fought the
+      // wiring wall blind: told to add an edge, never told why it vanished).
+      lower.includes('dropped invalid edge') ||
+      lower.includes('no input handle') ||
+      lower.includes('no numeric param') ||
       lower.includes('expression') && lower.includes('not connected')
     ) {
       structural.push(issue);
@@ -520,7 +539,21 @@ export function aggregateAndRankIssues(issues: string[]): string[] {
     filteredContainment.push(`${duplicateCount} pairs of leaves occupy the exact same space (stale duplicates). Remove one of them.`);
   }
 
+  // Aggregate rejected edges by reason: the reason is the actionable part, and
+  // it must lead the list — a model that never learns WHY its edge vanished
+  // re-sends it forever (the Jul-21 wiring-wall spiral).
+  const dropByReason: Record<string, string[]> = {};
+  for (const d of dropped) {
+    const m = d.match(/^Dropped invalid edge: (.*?) \((.*)\)$/s);
+    const reason = m ? m[2] : d.replace(/^Dropped invalid edge:\s*/i, '');
+    const edge = m ? m[1] : '(see reason)';
+    (dropByReason[reason] = dropByReason[reason] || []).push(edge);
+  }
+  const droppedFormatted = Object.entries(dropByReason).map(([reason, es]) =>
+    `${es.length} edge(s) REJECTED, not added — ${reason}. Affected: ${es.slice(0, 4).join(', ')}${es.length > 4 ? ` (+${es.length - 4} more)` : ''}`);
+
   const ordered = [
+    ...droppedFormatted,
     ...structural,
     ...nullGeometry,
     ...engine,
@@ -1195,12 +1228,18 @@ async function runLegacyJson(modifiedUserText: string, originalText: string, opt
     // evaluation "succeeded" — see report.kernelFaultCount (Workstream A).
     const kernelClassFailure = !percept.isStructural && !isSystemError(percept.error) && !!(percept.report as any)?.kernelFaultCount;
     if (percept.isStructural) {
+      // Name the actual issues in the visible transcript: the opaque one-liner
+      // made exported sessions (and the user watching) blind to WHY every
+      // repair round failed — the Jul-21 exports recorded 6 identical
+      // "Structural validation error" lines while the real story (edges
+      // rejected by the handle whitelist) was never captured anywhere.
+      const structuralPeek = percept.sanity.issues.slice(0, 2).map(i => i.slice(0, 160)).join(' | ') || 'no detail';
       if (structuralExemptions < 3) {
-        addSystemMessage(`Structural validation error (does not count against repair budget, ${structuralExemptions + 1}/3) — asking the model to fix.`);
+        addSystemMessage(`Structural validation error (does not count against repair budget, ${structuralExemptions + 1}/3): ${structuralPeek}`);
         isBudgetExempt = true;
         structuralExemptions++;
       } else {
-        addSystemMessage(`Structural validation error (exemptions exhausted, counts against repair budget) — asking the model to fix.`);
+        addSystemMessage(`Structural validation error (exemptions exhausted, counts against repair budget): ${structuralPeek}`);
       }
     } else if (isSystemError(percept.error) || kernelClassFailure) {
       // Engine faults are exempt from the repair budget, but ONLY a limited
@@ -1303,7 +1342,7 @@ function applyParsedGraphOps(parsed: any, options?: { forEval?: boolean }): (Wor
       if (typeof picked === 'string') {
         targetHandle = picked;
       } else if (picked === null) {
-        return { sourceHandle: '', targetHandle: '', isValid: false, error: `"${tgtType}" has no input accepting what "${source}" outputs (inputs: ${gh.join(', ') || 'none'}; numeric params need targetHandle "param:<name>")` };
+        return { sourceHandle: '', targetHandle: '', isValid: false, error: `"${tgtType}" has no input accepting what "${source}" outputs. It accepts — ${describeWireableInputs(tgtType)}` };
       } else if (gh.length === 1) {
         targetHandle = gh[0];
       } else if (gh.length > 1) {
@@ -1313,14 +1352,22 @@ function applyParsedGraphOps(parsed: any, options?: { forEval?: boolean }): (Wor
       }
     }
 
-    // Check target handle validity
+    // Check target handle validity. IMPORTANT: the whitelist is ALL declared
+    // inputs — number-typed sockets (Expression a/b/c/d, PointsFromLists
+    // x/y/z/scale, Point x/y/z, …) included. Validating against geometry-only
+    // handles was the "number-input wiring wall": it dropped every list-layer
+    // edge the model or the IR compiler emitted, while structural validation
+    // demanded those same edges — an unwinnable repair loop.
     if (targetHandle.startsWith('param:')) {
       const pName = targetHandle.slice(6);
       if (targetDef && tgtType !== 'Macro' && !targetDef.params.some(p => p.name === pName && p.type === 'number')) {
-        return { sourceHandle: '', targetHandle: '', isValid: false, error: `"${tgtType}" has no numeric param "${pName}"` };
+        const hint = numberInputHandles(tgtType).includes(pName)
+          ? ` — "${pName}" IS a number input on "${tgtType}"; use targetHandle "${pName}" without the "param:" prefix`
+          : ` (it accepts — ${describeWireableInputs(tgtType)})`;
+        return { sourceHandle: '', targetHandle: '', isValid: false, error: `"${tgtType}" has no numeric param "${pName}"${hint}` };
       }
-    } else if (targetDef && tgtType !== 'Macro' && !geoHandles.includes(targetHandle)) {
-      return { sourceHandle: '', targetHandle: '', isValid: false, error: `"${tgtType}" has no input handle "${targetHandle}"` };
+    } else if (targetDef && tgtType !== 'Macro' && !allInputHandles(tgtType).includes(targetHandle)) {
+      return { sourceHandle: '', targetHandle: '', isValid: false, error: `"${tgtType}" has no input handle "${targetHandle}" (it accepts — ${describeWireableInputs(tgtType)})` };
     }
 
     const sourceHandle = e.sourceHandle !== undefined && e.sourceHandle !== null && String(e.sourceHandle)

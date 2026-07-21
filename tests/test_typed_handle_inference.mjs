@@ -31,6 +31,11 @@ const NODE_LIBRARY = {
     inputs: [{ name: 'target', type: 'Solid' }, { name: 'tool', type: 'Solid' }],
     outputs: [{ name: 'solid', type: 'Solid' }],
   },
+  Series: { inputs: [{ name: 'start', type: 'number' }, { name: 'step', type: 'number' }, { name: 'count', type: 'number' }], outputs: [{ name: 'values', type: 'number' }] },
+  Expression: {
+    inputs: [{ name: 'a', type: 'number' }, { name: 'b', type: 'number' }, { name: 'c', type: 'number' }, { name: 'd', type: 'number' }],
+    outputs: [{ name: 'value', type: 'number' }],
+  },
 };
 const NUMBER_OUTPUT_TYPES = new Set(['NumberSlider', 'Expression', 'Series', 'Range', 'ListItem', 'ListLength']);
 
@@ -47,7 +52,15 @@ function pickTargetHandle(sourceType, sourceHandle, targetType, takenHandles) {
   const srcDef = sourceType ? NODE_LIBRARY[sourceType] : undefined;
   const shName = sourceHandle || defaultSourceHandle(sourceType);
   const srcOutType = srcDef?.outputs.find(o => o.name === shName)?.type;
-  if (!srcOutType || srcOutType === 'number') return undefined;
+  if (!srcOutType) return undefined;
+  if (srcOutType === 'number') {
+    // Jul-21: number sources land on the first FREE number-typed input
+    // (Expression a→b→c→d, PointsFromLists x→y→z→scale) instead of falling
+    // into the geometry-only fallback and getting rejected.
+    const numHandles = targetDef.inputs.filter(i => i.type === 'number').map(i => i.name);
+    if (numHandles.length === 0) return undefined;
+    return numHandles.find(h => !takenHandles.has(h)) ?? undefined;
+  }
   const typedHandles = targetDef.inputs.filter(i => i.type === srcOutType).map(i => i.name);
   if (typedHandles.length === 0) return null;
   return typedHandles.find(h => !takenHandles.has(h)) ?? undefined;
@@ -71,11 +84,19 @@ assert.strictEqual(pickTargetHandle('Point', undefined, 'Rotate', none), 'pivot'
 assert.strictEqual(pickTargetHandle('Sphere', undefined, 'Boolean', new Set(['target'])), 'tool');
 // Solid → Sphere: KNOWN mismatch → null (honest rejection, not silent nonsense).
 assert.strictEqual(pickTargetHandle('Sphere', undefined, 'Sphere', none), null);
-// Number source → undefined (legacy fallback path decides).
+// Number source into a target with NO number inputs → undefined (legacy fallback).
 assert.strictEqual(pickTargetHandle('NumberSlider', undefined, 'Sphere', none), undefined);
 // Unknown source type → undefined (legacy fallback).
 assert.strictEqual(pickTargetHandle('Macro', undefined, 'Sphere', none), undefined);
 // All typed matches taken → undefined (legacy replace semantics decide).
 assert.strictEqual(pickTargetHandle('Point', undefined, 'Sphere', new Set(['center'])), undefined);
 
-console.log('test_typed_handle_inference: all 11 contracts PASS');
+// Jul-21 number-input contracts: the list layer is reachable without explicit handles.
+// Series → Expression lands on 'a' (first free number input, declaration order).
+assert.strictEqual(pickTargetHandle('Series', undefined, 'Expression', none), 'a');
+// With 'a' taken it lands on 'b'.
+assert.strictEqual(pickTargetHandle('Series', undefined, 'Expression', new Set(['a'])), 'b');
+// Slider → Series lands on 'start' (first declared number input).
+assert.strictEqual(pickTargetHandle('NumberSlider', undefined, 'Series', none), 'start');
+
+console.log('test_typed_handle_inference: all 14 contracts PASS');
