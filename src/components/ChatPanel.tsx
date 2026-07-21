@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useStore, generateUUID } from '../store/useStore';
 import { Settings, Send, MessageSquare, BarChart2, BookOpen, Star, FlaskConical, Library, X, Brain } from 'lucide-react';
 import { processUserIntent } from '../ai/agent';
@@ -6,11 +6,6 @@ import { LibraryPanel } from './LibraryPanel';
 import { EvalPanel } from './EvalPanel';
 
 export const ChatPanel: React.FC = () => {
-  const [input, setInput] = useState('');
-  const [showSettings, setShowSettings] = useState(false);
-  const [activeTab, setActiveTab] = useState<'chat' | 'reasoning' | 'logs' | 'guidelines' | 'library' | 'evals'>('chat');
-  const [isLoading, setIsLoading] = useState(false);
-
   const {
     messages = [],
     addMessage,
@@ -33,6 +28,47 @@ export const ChatPanel: React.FC = () => {
     episodeRatios,
     episodeDrivers,
   } = useStore();
+
+  const [input, setInput] = useState('');
+  const [showSettings, setShowSettings] = useState(false);
+  const [activeTab, setActiveTab] = useState<'chat' | 'reasoning' | 'logs' | 'guidelines' | 'library' | 'evals'>('chat');
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [ollamaModels, setOllamaModels] = useState<Record<string, string[]>>({});
+  const [loadingOllama, setLoadingOllama] = useState<Record<string, boolean>>({});
+  const [editManual, setEditManual] = useState<Record<string, boolean>>({});
+
+  const fetchModelsForSlot = async (slotId: string, rawUrl: string) => {
+    const url = (rawUrl || 'http://localhost:11434').trim().replace(/\/$/, '');
+    if (!url) return;
+    
+    setLoadingOllama(prev => ({ ...prev, [slotId]: true }));
+    try {
+      const response = await fetch(`${url}/api/tags`);
+      if (!response.ok) throw new Error('Failed to fetch tags');
+      const data = await response.json();
+      const names = Array.isArray(data.models) ? data.models.map((m: any) => m.name) : [];
+      setOllamaModels(prev => ({ ...prev, [slotId]: names }));
+    } catch (err) {
+      console.error('Error fetching Ollama models for slot:', slotId, err);
+      setOllamaModels(prev => ({ ...prev, [slotId]: [] }));
+    } finally {
+      setLoadingOllama(prev => ({ ...prev, [slotId]: false }));
+    }
+  };
+
+  useEffect(() => {
+    if (!showSettings) return;
+    
+    agentSlots.forEach(slot => {
+      if (slot.provider === 'ollama') {
+        const currentUrl = slot.apiKey || 'http://localhost:11434';
+        if (ollamaModels[slot.id] === undefined && !loadingOllama[slot.id]) {
+          fetchModelsForSlot(slot.id, currentUrl);
+        }
+      }
+    });
+  }, [showSettings, agentSlots, ollamaModels, loadingOllama]);
 
   const handleSend = async () => {
     if (!input.trim() || isLoading) return;
@@ -255,6 +291,7 @@ export const ChatPanel: React.FC = () => {
                           defaultKey = 'http://localhost:11434';
                           defaultModel = 'llama3';
                           defaultName = 'Ollama (Local)';
+                          fetchModelsForSlot(slot.id, defaultKey);
                         } else if (newProvider === 'openai') {
                           defaultModel = 'gpt-4o';
                           defaultName = 'OpenAI';
@@ -289,19 +326,69 @@ export const ChatPanel: React.FC = () => {
                     <input
                       type="password"
                       value={slot.apiKey}
-                      onChange={(e) => updateAgentSlot(slot.id, { apiKey: e.target.value })}
+                      onChange={(e) => {
+                        const newUrl = e.target.value;
+                        updateAgentSlot(slot.id, { apiKey: newUrl });
+                        if (slot.provider === 'ollama') {
+                          fetchModelsForSlot(slot.id, newUrl);
+                        }
+                      }}
                       className="w-full bg-slate-900 border border-slate-650 rounded px-2 py-1 text-xs text-slate-200"
                       placeholder={slot.provider === 'ollama' ? 'http://localhost:11434' : 'Key...'}
                     />
                   </div>
                   <div>
-                    <label className="block text-[9px] text-slate-400 mb-1">Model Name</label>
-                    <input
-                      type="text"
-                      value={slot.model}
-                      onChange={(e) => updateAgentSlot(slot.id, { model: e.target.value })}
-                      className="w-full bg-slate-900 border border-slate-650 rounded px-2 py-1 text-xs text-slate-200"
-                    />
+                    <div className="flex justify-between items-center mb-1">
+                      <label className="block text-[9px] text-slate-400">Model Name</label>
+                      {slot.provider === 'ollama' && (ollamaModels[slot.id] || []).length > 0 && (
+                        <button
+                          type="button"
+                          onClick={() => setEditManual(prev => ({ ...prev, [slot.id]: !prev[slot.id] }))}
+                          className="text-[9px] text-blue-400 hover:text-blue-300 font-medium transition-colors cursor-pointer select-none"
+                        >
+                          {editManual[slot.id] ? 'Select list' : 'Type custom'}
+                        </button>
+                      )}
+                    </div>
+                    {slot.provider === 'ollama' && !editManual[slot.id] && (ollamaModels[slot.id] || []).length > 0 ? (
+                      <select
+                        value={slot.model}
+                        onChange={(e) => updateAgentSlot(slot.id, { model: e.target.value })}
+                        className="w-full bg-slate-900 border border-slate-650 rounded px-2 py-1 text-xs text-slate-200 focus:outline-none focus:border-blue-500"
+                      >
+                        {(() => {
+                          const list = ollamaModels[slot.id] || [];
+                          const hasSelected = list.includes(slot.model);
+                          return (
+                            <>
+                              {!hasSelected && slot.model && (
+                                <option value={slot.model}>{slot.model}</option>
+                              )}
+                              {list.map((m) => (
+                                <option key={m} value={m}>
+                                  {m}
+                                </option>
+                              ))}
+                            </>
+                          );
+                        })()}
+                      </select>
+                    ) : (
+                      <div className="relative">
+                        <input
+                          type="text"
+                          value={slot.model}
+                          onChange={(e) => updateAgentSlot(slot.id, { model: e.target.value })}
+                          className="w-full bg-slate-900 border border-slate-650 rounded px-2 py-1 text-xs text-slate-200 focus:outline-none focus:border-blue-500"
+                          placeholder="e.g. llama3"
+                        />
+                        {slot.provider === 'ollama' && loadingOllama[slot.id] && (
+                          <span className="absolute right-2 top-1.5 text-[9px] text-slate-500 animate-pulse">
+                            loading...
+                          </span>
+                        )}
+                      </div>
+                    )}
                   </div>
                 </div>
                 {/* Behavior checkboxes */}
