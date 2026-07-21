@@ -261,6 +261,37 @@ export function defaultSourceHandle(sourceType: string | undefined): string {
   return 'solid';
 }
 
+// S2 (Jul-20 geometric sockets): TYPE-AWARE auto-fill for an omitted
+// targetHandle. With center/pivot/axis sockets on primitives and Rotate,
+// "first unconnected input in declaration order" is no longer enough — a
+// VectorXYZ wired into a Cone must land on "axis" (Vector), not "center"
+// (Point), and a Point wired into Translate must land on "target", not "solid".
+//
+// Returns:
+//   string    — the handle to use (first UNCONNECTED input whose declared type
+//               matches the source output's type)
+//   null      — the source output type is KNOWN and the target declares NO
+//               input of that type: reject the edge with an honest error
+//               instead of silently wiring nonsense
+//   undefined — source type unknown (Macro, etc.) or all typed matches taken:
+//               caller falls back to legacy declaration-order behavior
+export function pickTargetHandle(
+  sourceType: string | undefined,
+  sourceHandle: string | undefined,
+  targetType: string,
+  takenHandles: Set<string>
+): string | null | undefined {
+  const targetDef = NODE_LIBRARY[targetType];
+  if (!targetDef || targetType === 'Macro') return undefined;
+  const srcDef = sourceType ? NODE_LIBRARY[sourceType] : undefined;
+  const shName = sourceHandle || defaultSourceHandle(sourceType);
+  const srcOutType = srcDef?.outputs.find(o => o.name === shName)?.type;
+  if (!srcOutType || srcOutType === 'number') return undefined;
+  const typedHandles = targetDef.inputs.filter(i => i.type === srcOutType).map(i => i.name);
+  if (typedHandles.length === 0) return null;
+  return typedHandles.find(h => !takenHandles.has(h)) ?? undefined;
+}
+
 function normalizeArgs(args: any): any {
   const out = { ...(coerce(args) || {}) };
   for (const k of ['nodes', 'edges', 'ids', 'questions']) {
@@ -412,16 +443,23 @@ export function executeTool(
         let th = e.targetHandle !== undefined && e.targetHandle !== null ? String(e.targetHandle) : '';
         let autoNote = '';
         if (!th) {
-          if (geoHandles.length === 1) {
+          // S2: type-aware first — a Point lands on a Point input (center/
+          // target), a Vector on a Vector input (axis), a Solid on a Solid one.
+          const taken = new Set(graph.edges.filter(x => x.target === target).map(x => String(x.targetHandle)));
+          const picked = pickTargetHandle(nodeById[source].type, e.sourceHandle ? String(e.sourceHandle) : undefined, targetType, taken);
+          if (typeof picked === 'string') {
+            th = picked;
+            if (geoHandles.length > 1) autoNote = ` (auto-assigned to input "${picked}" by type — pass targetHandle to choose a different input)`;
+          } else if (picked === null) {
+            skipped.push(`${source}→${target}: "${targetType}" has no input accepting what "${source}" outputs. Valid inputs: ${geoHandles.join(', ') || '(none)'}; numeric params need targetHandle "param:<name>".`);
+            continue;
+          } else if (geoHandles.length === 1) {
             th = geoHandles[0];
           } else if (geoHandles.length === 0 && targetType === 'Macro') {
             th = 'solid';
           } else {
-            // Multi-input node with the handle omitted: auto-assign the first
-            // geometry input (declaration order) that is not already connected,
-            // instead of skipping. Connecting twice to a Boolean therefore
-            // fills "target" then "tool"; Align fills "shape" then "reference".
-            const taken = new Set(graph.edges.filter(x => x.target === target).map(x => String(x.targetHandle)));
+            // Legacy fallback: auto-assign the first geometry input
+            // (declaration order) that is not already connected.
             const free = geoHandles.find(h => !taken.has(h));
             if (free) {
               th = free;

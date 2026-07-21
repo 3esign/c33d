@@ -14,6 +14,78 @@ const TRANSFORM_TYPES = new Set([
   'ExtrudeCurve', 'LoftCurves', 'SweepAlongCurve', 'RevolveCurve', 'InstanceOnPoints'
 ]);
 
+// S1 (Jul-20 placement provenance): MEASURE prompt rule 5 instead of preaching
+// it. The Jul-20 spaceship export placed all 9 leaves with literal
+// Translate/Rotate offsets — zero Align, zero derived placement — and the
+// report stayed silent (proportionalIntegrity 1.0). A rule that is not
+// measured is a suggestion. Classifies HOW each rendered leaf got its
+// position:
+//   anchored — its subgraph derives placement from geometry: Align, patterns/
+//              instancers, curve→solid bridges, or a geometric-socket edge
+//              (center/pivot/target/axis)
+//   literal  — positioned only by Translate nodes with typed coordinates
+//   origin   — no placement ops at all (sits where constructed)
+const ANCHORED_PLACEMENT_TYPES = new Set([
+  'Align', 'PlaceOnSurface', 'PlaceOnVertices', 'ScatterOnSurface',
+  'InstanceOnPoints', 'LinearPattern', 'CircularPattern', 'Mirror',
+  'ExtrudeCurve', 'LoftCurves', 'SweepAlongCurve', 'RevolveCurve', 'Pipe',
+  'Loft',
+]);
+const GEO_SOCKET_HANDLES = new Set(['center', 'pivot', 'target', 'axis']);
+
+export function computePlacementProvenance(
+  nodeList: any[],
+  edgeList: any[],
+  leafIds: string[],
+): { anchored: string[]; literal: string[]; origin: string[]; literalNodeIds: string[]; ratio: number } {
+  const byId: Record<string, any> = {};
+  nodeList.forEach(n => { byId[n.id] = n; });
+  const incoming: Record<string, any[]> = {};
+  edgeList.forEach(e => { (incoming[e.target] = incoming[e.target] || []).push(e); });
+  const nonZero = (v: any): boolean => {
+    if (v === undefined || v === null || v === '' || v === false) return false;
+    const n = parseFloat(v);
+    // Formula strings ("shipLength*0.36") don't parse to their value — any
+    // non-numeric string is treated as a (potentially) nonzero offset.
+    if (typeof v === 'string' && String(n) !== v.trim()) return true;
+    return isFinite(n) && Math.abs(n) > 1e-9;
+  };
+  const anchored: string[] = [];
+  const literal: string[] = [];
+  const origin: string[] = [];
+  const literalNodes = new Set<string>();
+  for (const leafId of leafIds) {
+    const seen = new Set<string>();
+    const stack = [leafId];
+    let isAnchored = false;
+    const leafLiterals: string[] = [];
+    while (stack.length > 0) {
+      const id = stack.pop()!;
+      if (seen.has(id)) continue;
+      seen.add(id);
+      const n = byId[id];
+      if (!n) continue;
+      const ins = (incoming[id] || []).filter(e => !String(e.targetHandle || '').startsWith('param:'));
+      if (ANCHORED_PLACEMENT_TYPES.has(n.type)) isAnchored = true;
+      if (ins.some(e => GEO_SOCKET_HANDLES.has(String(e.targetHandle || '')))) isAnchored = true;
+      if (n.type === 'Translate' && !ins.some(e => String(e.targetHandle || '') === 'target')) {
+        const d = n.data || {};
+        if (nonZero(d.x) || nonZero(d.y) || nonZero(d.z)) leafLiterals.push(id);
+      }
+      for (const e of ins) stack.push(String(e.source));
+    }
+    if (isAnchored) anchored.push(leafId);
+    else if (leafLiterals.length > 0) { literal.push(leafId); leafLiterals.forEach(id => literalNodes.add(id)); }
+    else origin.push(leafId);
+  }
+  const placed = anchored.length + literal.length;
+  return {
+    anchored, literal, origin,
+    literalNodeIds: [...literalNodes],
+    ratio: placed > 0 ? anchored.length / placed : 1,
+  };
+}
+
 // Turns a generic "no geometry" leaf into an actionable trace: is an input
 // missing, did an upstream node fail (cascade), or are the params to blame?
 function explainNullGeometry(
@@ -25,7 +97,10 @@ function explainNullGeometry(
   const node = nodeList.find(n => n.id === nodeId);
   if (!node) return 'Node produced no geometry (node not found).';
   const def = NODE_LIBRARY[node.type];
-  const geoHandles = def ? def.inputs.filter(i => i.type !== 'number').map(i => i.name) : [];
+  // Optional geometric sockets (S2) must not be reported as "missing":
+  // center/pivot/axis everywhere, plus Translate's optional "target".
+  const OPTIONAL_SOCKETS = new Set(['center', 'pivot', 'axis', ...(node.type === 'Translate' ? ['target'] : [])]);
+  const geoHandles = def ? def.inputs.filter(i => i.type !== 'number' && !OPTIONAL_SOCKETS.has(i.name)).map(i => i.name) : [];
   if (geoHandles.length === 0) {
     return `Node "${nodeId}" (${node.type}) produced no geometry — check its parameters are valid numbers within range.`;
   }
@@ -599,6 +674,9 @@ async function evaluateGraphInternal(
 
   const finalMeshes: any[] = [];
   const leafReports: any[] = [];
+  // Raw (pre-alias) ids of report leaves — the placement probe walks the
+  // expanded graph, whose edges use raw ids.
+  const rawLeafIds: string[] = [];
 
   let sceneMin = [Infinity, Infinity, Infinity];
   let sceneMax = [-Infinity, -Infinity, -Infinity];
@@ -635,6 +713,7 @@ async function evaluateGraphInternal(
 
     if (!value) {
       if (!isHelper) {
+        rawLeafIds.push(id);
         leafReports.push({
           id: reportId,
           bbox: null,
@@ -723,6 +802,7 @@ async function evaluateGraphInternal(
           if (typeof v === 'number' && isFinite(v)) volume = v;
         } catch (e) { /* volume unsupported */ }
   
+        rawLeafIds.push(id);
         leafReports.push({
           id: reportId,
           bbox,
@@ -806,6 +886,17 @@ async function evaluateGraphInternal(
   const nodesPerLeafRatio = leafCount > 0 ? nodes.length / leafCount : 0;
   const nodeEconomyWarning = leafCount > 0 && transformCount > 2 * leafCount;
 
+  // S1: placement provenance (aliased back to macro-level ids for display).
+  const rawPlacement = computePlacementProvenance(nodes, edges, rawLeafIds);
+  const alias = (ids: string[]) => ids.map(id => aliasMap[id] || id);
+  const placement = {
+    anchored: alias(rawPlacement.anchored),
+    literal: alias(rawPlacement.literal),
+    origin: alias(rawPlacement.origin),
+    literalNodeIds: alias(rawPlacement.literalNodeIds),
+    ratio: rawPlacement.ratio,
+  };
+
   const report = {
     leaves: leafReports,
     nodeErrors,
@@ -818,6 +909,7 @@ async function evaluateGraphInternal(
     transformCount,
     nodesPerLeafRatio,
     nodeEconomyWarning,
+    placement,
     scene: hasScene ? {
       min: sceneMin, max: sceneMax,
       size: [sceneMax[0] - sceneMin[0], sceneMax[1] - sceneMin[1], sceneMax[2] - sceneMin[2]],

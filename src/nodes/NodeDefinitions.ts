@@ -157,11 +157,16 @@ export const NODE_LIBRARY: Record<string, NodeDefinition> = {
       { name: 'count', type: 'number', default: 2, min: 1, max: 200, step: 1 },
     ],
   },
+  // S2 (Jul-20 geometric sockets): every solid primitive accepts an OPTIONAL
+  // "center" Point input — placement DERIVED from geometry (Centroid, Midpoint,
+  // DivideCurve, BoundingBox anchors …) instead of a Translate chain with typed
+  // coordinates. Rotational primitives also accept an optional "axis" Vector
+  // that tilts the primitive's +Z onto the vector (replaces Rotate-90 boilerplate).
   Box: {
     type: 'Box',
     label: 'Box',
     category: 'geometry',
-    inputs: [],
+    inputs: [{ name: 'center', type: 'Point' }],
     outputs: [{ name: 'solid', type: 'Solid' }],
     params: [
       { name: 'width', type: 'number', default: 10, min: 0.1, max: 200, step: 0.1 },
@@ -174,7 +179,7 @@ export const NODE_LIBRARY: Record<string, NodeDefinition> = {
     type: 'Sphere',
     label: 'Sphere',
     category: 'geometry',
-    inputs: [],
+    inputs: [{ name: 'center', type: 'Point' }],
     outputs: [{ name: 'solid', type: 'Solid' }],
     params: [
       { name: 'radius', type: 'number', default: 5, min: 0.1, max: 100, step: 0.1 },
@@ -185,7 +190,10 @@ export const NODE_LIBRARY: Record<string, NodeDefinition> = {
     type: 'Cylinder',
     label: 'Cylinder',
     category: 'geometry',
-    inputs: [],
+    inputs: [
+      { name: 'center', type: 'Point' },
+      { name: 'axis', type: 'Vector' },
+    ],
     outputs: [{ name: 'solid', type: 'Solid' }],
     params: [
       { name: 'radius', type: 'number', default: 5, min: 0.1, max: 200, step: 0.1 },
@@ -197,7 +205,10 @@ export const NODE_LIBRARY: Record<string, NodeDefinition> = {
     type: 'Cone',
     label: 'Cone',
     category: 'geometry',
-    inputs: [],
+    inputs: [
+      { name: 'center', type: 'Point' },
+      { name: 'axis', type: 'Vector' },
+    ],
     outputs: [{ name: 'solid', type: 'Solid' }],
     params: [
       { name: 'radius1', type: 'number', default: 5, min: 0.0, max: 200, step: 0.1 },
@@ -210,7 +221,7 @@ export const NODE_LIBRARY: Record<string, NodeDefinition> = {
     type: 'Ellipsoid',
     label: 'Ellipsoid',
     category: 'geometry',
-    inputs: [],
+    inputs: [{ name: 'center', type: 'Point' }],
     outputs: [{ name: 'solid', type: 'Solid' }],
     params: [
       { name: 'radiusX', type: 'number', default: 5, min: 0.1, max: 100, step: 0.1 },
@@ -223,7 +234,10 @@ export const NODE_LIBRARY: Record<string, NodeDefinition> = {
     type: 'Torus',
     label: 'Torus (Ring)',
     category: 'geometry',
-    inputs: [],
+    inputs: [
+      { name: 'center', type: 'Point' },
+      { name: 'axis', type: 'Vector' },
+    ],
     outputs: [{ name: 'solid', type: 'Solid' }],
     params: [
       { name: 'majorRadius', type: 'number', default: 8, min: 0.2, max: 200, step: 0.1 },
@@ -265,7 +279,13 @@ export const NODE_LIBRARY: Record<string, NodeDefinition> = {
     type: 'Rotate',
     label: 'Rotate',
     category: 'transform',
-    inputs: [{ name: 'solid', type: 'Solid' }],
+    // S2 (geometric sockets): optional "pivot" Point sets the rotation centre
+    // (overrides isLocal/origin); optional "axis" Vector overrides axisX/Y/Z.
+    inputs: [
+      { name: 'solid', type: 'Solid' },
+      { name: 'pivot', type: 'Point' },
+      { name: 'axis', type: 'Vector' },
+    ],
     outputs: [{ name: 'solid', type: 'Solid' }],
     params: [
       { name: 'angle', type: 'number', default: 90, min: -360, max: 360, step: 1 },

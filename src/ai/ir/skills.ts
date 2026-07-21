@@ -429,47 +429,57 @@ export const SKILLS: Record<string, SkillDef> = {
   },
 
   // ---------------- solids: primitives ----------------
+  // S2 (Jul-20): primitives take an optional "center" Point (and, for the
+  // rotational ones, an "axis" Vector) — placement/orientation DERIVED from
+  // geometry instead of a translate()/rotate() chain with typed coordinates.
   box: {
     name: 'box',
-    doc: 'box primitive (width, length, height)',
-    args: { width: NUMR, length: NUMR, height: NUMR },
+    doc: 'box primitive (width, length, height); optional center point places it directly',
+    args: { width: NUMR, length: NUMR, height: NUMR, center: { kind: 'point' } },
     returns: 'solid',
     expand: (ctx) => solid(ctx, ctx.node('Box', {
       params: { width: ctx.num('width'), length: ctx.num('length'), height: ctx.num('height') },
+      inputs: { center: ctx.refOpt('center', 'point') },
     })),
   },
   sphere: {
     name: 'sphere',
-    doc: 'sphere primitive',
-    args: { radius: NUMR },
+    doc: 'sphere primitive; optional center point places it directly (no translate needed)',
+    args: { radius: NUMR, center: { kind: 'point' } },
     returns: 'solid',
-    expand: (ctx) => solid(ctx, ctx.node('Sphere', { params: { radius: ctx.num('radius') } })),
+    expand: (ctx) => solid(ctx, ctx.node('Sphere', {
+      params: { radius: ctx.num('radius') },
+      inputs: { center: ctx.refOpt('center', 'point') },
+    })),
   },
   cylinder: {
     name: 'cylinder',
-    doc: 'cylinder primitive',
-    args: { radius: NUMR, height: NUMR },
+    doc: 'cylinder primitive; optional center point + axis vector place and tilt it (axis replaces rotate-90)',
+    args: { radius: NUMR, height: NUMR, center: { kind: 'point' }, axis: { kind: 'vector' } },
     returns: 'solid',
     expand: (ctx) => solid(ctx, ctx.node('Cylinder', {
       params: { radius: ctx.num('radius'), height: ctx.num('height') },
+      inputs: { center: ctx.refOpt('center', 'point'), axis: ctx.refOpt('axis', 'vector') },
     })),
   },
   cone: {
     name: 'cone',
-    doc: 'cone/frustum primitive (radius1 bottom, radius2 top)',
-    args: { radius1: NUMR, radius2: NUM, height: NUMR },
+    doc: 'cone/frustum primitive (radius1 bottom, radius2 top); optional center point + axis vector place and tilt it',
+    args: { radius1: NUMR, radius2: NUM, height: NUMR, center: { kind: 'point' }, axis: { kind: 'vector' } },
     returns: 'solid',
     expand: (ctx) => solid(ctx, ctx.node('Cone', {
       params: { radius1: ctx.num('radius1'), radius2: ctx.numOpt('radius2') ?? 0, height: ctx.num('height') },
+      inputs: { center: ctx.refOpt('center', 'point'), axis: ctx.refOpt('axis', 'vector') },
     })),
   },
   torus: {
     name: 'torus',
-    doc: 'torus primitive (majorRadius ring size, minorRadius tube thickness)',
-    args: { majorRadius: NUMR, minorRadius: NUMR },
+    doc: 'torus primitive (majorRadius ring size, minorRadius tube thickness); optional center point + axis vector place and tilt it',
+    args: { majorRadius: NUMR, minorRadius: NUMR, center: { kind: 'point' }, axis: { kind: 'vector' } },
     returns: 'solid',
     expand: (ctx) => solid(ctx, ctx.node('Torus', {
       params: { majorRadius: ctx.num('majorRadius'), minorRadius: ctx.num('minorRadius') },
+      inputs: { center: ctx.refOpt('center', 'point'), axis: ctx.refOpt('axis', 'vector') },
     })),
   },
   ring: {
@@ -567,15 +577,15 @@ export const SKILLS: Record<string, SkillDef> = {
   },
   rotate: {
     name: 'rotate',
-    doc: 'rotate a solid around an axis through the origin (degrees)',
-    args: { shape: { kind: 'solid', required: true }, angle: NUMR, axisX: NUM, axisY: NUM, axisZ: NUM },
+    doc: 'rotate a solid around an axis (degrees); optional pivot point sets the rotation centre (hinges, joints, petal roots)',
+    args: { shape: { kind: 'solid', required: true }, angle: NUMR, axisX: NUM, axisY: NUM, axisZ: NUM, pivot: { kind: 'point' } },
     returns: 'solid',
     expand: (ctx) => solid(ctx, ctx.node('Rotate', {
       params: {
         angle: ctx.num('angle'),
         axisX: ctx.numOpt('axisX') ?? 0, axisY: ctx.numOpt('axisY') ?? 0, axisZ: ctx.numOpt('axisZ') ?? 1,
       },
-      inputs: { solid: ctx.ref('shape', 'solid') },
+      inputs: { solid: ctx.ref('shape', 'solid'), pivot: ctx.refOpt('pivot', 'point') },
     })),
   },
   scale: {

@@ -16,8 +16,10 @@ const worker = readFileSync(join(root, 'src/worker/geometryWorker.ts'), 'utf8');
 const defTypes = [...defs.matchAll(/^\s{4}type: '([A-Za-z0-9]+)',$/gm)].map(m => m[1]);
 assert.ok(defTypes.length > 60, `expected >60 node types in NODE_LIBRARY, found ${defTypes.length}`);
 
-// Node types evaluated inline by the worker rather than via EXECUTORS
-const inlineHandled = new Set(['NumberSlider', 'Expression', 'Series', 'Range', 'ListItem', 'ListLength', 'Macro']);
+// Node types evaluated inline by the worker rather than via EXECUTORS.
+// (ListConstant/RepeatEach/Tile joined the inline number path Jul-16; they are
+// asserted below to actually BE inline, so this exemption cannot rot silently.)
+const inlineHandled = new Set(['NumberSlider', 'Expression', 'Series', 'Range', 'ListItem', 'ListLength', 'Macro', 'ListConstant', 'RepeatEach', 'Tile']);
 
 const missing = defTypes.filter(t =>
   !inlineHandled.has(t) &&
@@ -26,9 +28,22 @@ const missing = defTypes.filter(t =>
 assert.deepStrictEqual(missing, [], `node types WITHOUT an executor (capability lie): ${missing.join(', ')}`);
 
 // Inline-handled types really are handled inline
-for (const t of ['Series', 'Range', 'ListItem', 'ListLength']) {
+for (const t of ['Series', 'Range', 'ListItem', 'ListLength', 'ListConstant', 'RepeatEach', 'Tile']) {
   assert.ok(new RegExp(`node\\.type === '${t}'`).test(worker), `worker handles ${t} inline`);
 }
+
+// S2 (Jul-20 geometric sockets): primitives expose center (+axis for the
+// rotational ones), Rotate exposes pivot/axis, and the executors actually
+// consume them (orientAndPlace / socketXYZ) — definition and execution must
+// not drift apart.
+for (const t of ['Box', 'Sphere', 'Cylinder', 'Cone', 'Ellipsoid', 'Torus']) {
+  const defBlock = defs.slice(defs.indexOf(`  ${t}: {`), defs.indexOf('},', defs.indexOf(`  ${t}: {`)));
+  assert.ok(/name: 'center', type: 'Point'/.test(defBlock), `${t} declares a "center" Point input`);
+}
+assert.ok(/function orientAndPlace/.test(execs), 'orientAndPlace helper exists');
+assert.ok(/socketXYZ\(inputs, 'pivot'\)/.test(execs), 'Rotate consumes pivot socket');
+assert.ok(/socketXYZ\(inputs, 'axis'\)/.test(execs), 'axis socket consumed');
+assert.ok(/computePlacementProvenance/.test(worker), 'placement provenance probe wired into worker');
 
 // The bridge wave is present end to end (definition + executor)
 for (const t of ['ExtrudeCurve', 'LoftCurves', 'SweepAlongCurve', 'RevolveCurve', 'InstanceOnPoints', 'TransformCurve', 'OffsetCurve']) {

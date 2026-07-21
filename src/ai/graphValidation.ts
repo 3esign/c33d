@@ -26,7 +26,16 @@ interface GEdge { source: string; target: string; sourceHandle?: string; targetH
 function requiredGeoInputs(type: string): { handles: string[]; minConnected: number } | null {
   const def = NODE_LIBRARY[type];
   if (!def) return null;
-  const geoHandles = def.inputs.filter(i => i.type !== 'number').map(i => i.name);
+  // S2 (Jul-20 geometric sockets): "center" (primitives), "pivot"/"axis"
+  // (Rotate, rotational primitives) are optional placement overrides — the
+  // executors default to origin/+Z. Requiring them would repeat the Jul-18
+  // CircleCurve mistake (stricter than the engine, costing repair rounds).
+  // NOTE: "target" is NOT here — it is required on Boolean; Translate's
+  // optional "target" is covered by its explicit case below.
+  const OPTIONAL_GEO_SOCKETS = new Set(['center', 'pivot', 'axis']);
+  const geoHandles = def.inputs
+    .filter(i => i.type !== 'number' && !OPTIONAL_GEO_SOCKETS.has(i.name))
+    .map(i => i.name);
   if (geoHandles.length === 0) return null; // primitives, number nodes
   if (type === 'Loft') return { handles: geoHandles, minConnected: 2 };
   if (type === 'LoftCurves') return { handles: geoHandles, minConnected: 2 };

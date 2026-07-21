@@ -332,6 +332,13 @@ export function checkGeometrySanity(report: GeometryReport | null, evalError: st
   if (report.nodeEconomyWarning) {
     warnings.push(`Node economy warning: This graph has too many transform nodes (${report.transformCount}) relative to the number of rendered leaves (${report.leaves.length}). Use list-driven transforms, patterns (LinearPattern/CircularPattern), or instancers (PlaceOnVertices/ScatterOnSurface) to repeat shapes instead of duplicating Translate/Rotate/Scale nodes.`);
   }
+  // S1 (Jul-20): placement provenance — rule 5 measured, not preached. Fires
+  // only on multi-part models where NOTHING is derived: an assembly held
+  // together entirely by typed coordinates.
+  const pl = report.placement;
+  if (pl && pl.anchored.length === 0 && pl.literal.length >= 2) {
+    warnings.push(`Placement provenance: 0 of ${pl.anchored.length + pl.literal.length + pl.origin.length} parts derive their position from geometry — all placed via literal Translate offsets (${pl.literalNodeIds.slice(0, 6).join(', ')}). This assembly only "fits" at current slider values. Replace typed coordinates with Align, a Point into a primitive's "center", a pivot on Rotate, or curve-driven placement (DivideCurve→InstanceOnPoints).`);
+  }
   return { sane: issues.length === 0, issues, warnings };
 }
 
@@ -362,6 +369,17 @@ export function formatGeometryReport(report: GeometryReport | null, evalError: s
     const gm = computeGraphShapeMetrics(gNodes as any[], gEdges as any[]);
     lines.push(`Graph shape: derivation ratio ${gm.derivationRatio.toFixed(2)} (geometry nodes fed by upstream geometry), skeleton nodes on leaf paths ${gm.skeletonNodes}, magic numbers ${gm.magicNumberCount}, max chain depth ${gm.maxDepth}, edges/node ${gm.edgeNodeRatio.toFixed(2)}. Raise derivation by building from curves/points (LoftCurves, DivideCurve→InstanceOnPoints, Pipe "path") instead of hardcoded positions.`);
   } catch { /* metrics are best-effort */ }
+  // S1 (Jul-20): per-leaf placement provenance — the in-loop measurement of
+  // "placement: RELATIVE, never arithmetic" (rule 5).
+  if (report.placement) {
+    const pl = report.placement;
+    const total = pl.anchored.length + pl.literal.length + pl.origin.length;
+    let line = `Placement provenance: ${pl.anchored.length}/${total} leaves anchored (derived from geometry), ${pl.literal.length} literal, ${pl.origin.length} at origin.`;
+    if (pl.literal.length > 0) {
+      line += ` Literal-offset leaves: ${pl.literal.slice(0, 8).join(', ')} (via ${pl.literalNodeIds.slice(0, 8).join(', ')}) — swap typed Translate coordinates for Align, center/pivot/target sockets, or curve-driven placement.`;
+    }
+    lines.push(line);
+  }
   const sliderEntries = Object.entries(report.sliders || {});
   if (sliderEntries.length > 0) {
     lines.push(`Design sliders (referenceable in inline formulas): ${sliderEntries.map(([k, v]) => `${k}=${fmt(v as number)}`).join(', ')}`);

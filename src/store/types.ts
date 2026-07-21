@@ -27,6 +27,14 @@ export type GeometryReport = {
   transformCount?: number;
   nodesPerLeafRatio?: number;
   nodeEconomyWarning?: boolean;
+  // S1 (Jul-20): placement provenance — HOW each leaf got its position.
+  placement?: {
+    anchored: string[];
+    literal: string[];
+    origin: string[];
+    literalNodeIds: string[];
+    ratio: number;
+  };
   selections?: Record<
     string,
     {

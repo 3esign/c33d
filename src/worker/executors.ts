@@ -255,46 +255,84 @@ function partitionByChannel(pts: any[], channel: string): any[][] {
   return groups;
 }
 
+// S2 (Jul-20 geometric sockets): read an optional Point/Vector-valued input.
+// Accepts a single Point/Vector or a point list (first entry wins — instancing
+// on many points is InstanceOnPoints' job, not the primitive's).
+function socketXYZ(inputs: any[], handle: string): { x: number; y: number; z: number } | null {
+  const raw = inputs?.find((i: any) => i.targetHandle === handle)?.value;
+  const v = Array.isArray(raw)
+    ? raw.find((e: any) => e && (e.type === 'Point' || e.type === 'Vector'))
+    : raw;
+  if (!v || (v.type !== 'Point' && v.type !== 'Vector')) return null;
+  const x = Number(v.x) || 0, y = Number(v.y) || 0, z = Number(v.z) || 0;
+  return { x, y, z };
+}
+
+// Orient a primitive's +Z onto the optional "axis" Vector, then move it to the
+// optional "center" Point. This is what lets one Point node replace a whole
+// Rotate→Translate chain, and what makes DERIVED placement the shortest path.
+function orientAndPlace(shape: any, inputs: any[]): any {
+  if (!shape || !inputs || inputs.length === 0) return shape;
+  let out = shape;
+  const axis = socketXYZ(inputs, 'axis');
+  if (axis) {
+    const len = Math.hypot(axis.x, axis.y, axis.z);
+    if (len > 1e-12) {
+      const dz = axis.z / len;
+      const angleDeg = (Math.acos(Math.max(-1, Math.min(1, dz))) * 180) / Math.PI;
+      if (angleDeg > 1e-9) {
+        // rotation axis = +Z × dir; degenerate (dir ∥ Z, i.e. 180°) → flip about X.
+        let rx = -axis.y / len, ry = axis.x / len;
+        if (Math.hypot(rx, ry) < 1e-12) { rx = 1; ry = 0; }
+        out = safeRotate(out, angleDeg, [0, 0, 0], [rx, ry, 0]);
+      }
+    }
+  }
+  const c = socketXYZ(inputs, 'center');
+  if (c && (c.x || c.y || c.z)) out = safeTranslate(out, [c.x, c.y, c.z]);
+  return out;
+}
+
 export const EXECUTORS: Record<
   string,
   (params: any, inputs: any[], warn: (msg: string) => void, scope?: Record<string, number>) => any
 > = {
-  Box: (params) => {
+  Box: (params, inputs) => {
     const w = parseFloat(params.width) || 10;
     const l = parseFloat(params.length) || 10;
     const h = parseFloat(params.height) || 10;
-    return replicad.makeBox([-w / 2, -l / 2, -h / 2], [w / 2, l / 2, h / 2]);
+    return orientAndPlace(replicad.makeBox([-w / 2, -l / 2, -h / 2], [w / 2, l / 2, h / 2]), inputs);
   },
 
-  Sphere: (params) => {
+  Sphere: (params, inputs) => {
     const r = parseFloat(params.radius) || 5;
-    return replicad.makeSphere(r);
+    return orientAndPlace(replicad.makeSphere(r), inputs);
   },
 
-  Cylinder: (params) => {
+  Cylinder: (params, inputs) => {
     const r = parseFloat(params.radius) || 5;
     const h = parseFloat(params.height) || 10;
-    return replicad.makeCylinder(r, h, [0, 0, -h / 2]);
+    return orientAndPlace(replicad.makeCylinder(r, h, [0, 0, -h / 2]), inputs);
   },
 
-  Cone: (params, _inputs, warn) => {
+  Cone: (params, inputs, warn) => {
     const r1 = Math.max(num(params.radius1, 5), 0.001);
     const r2 = Math.max(num(params.radius2, 2), 0.001);
     const h = Math.max(num(params.height, 10), 0.001);
     if (Math.abs(r1 - r2) < 1e-6) {
-      return replicad.makeCylinder(r1, h, [0, 0, -h / 2]);
+      return orientAndPlace(replicad.makeCylinder(r1, h, [0, 0, -h / 2]), inputs);
     }
     try {
       const OC = (replicad as any).getOC();
       const maker = new OC.BRepPrimAPI_MakeCone_1(r1, r2, h);
       const shape = replicad.cast(maker.Shape());
       maker.delete();
-      return (shape as any).translate([0, 0, -h / 2]);
+      return orientAndPlace((shape as any).translate([0, 0, -h / 2]), inputs);
     } catch (e1: any) {
       try {
         const s1 = replicad.drawCircle(r1).sketchOnPlane("XY") as any;
         const s2 = replicad.drawCircle(r2).sketchOnPlane("XY", h) as any;
-        return s1.loftWith(s2).translate([0, 0, -h / 2]);
+        return orientAndPlace(s1.loftWith(s2).translate([0, 0, -h / 2]), inputs);
       } catch (err: any) {
         console.warn("Cone generation failed:", err);
         warn(
@@ -315,27 +353,27 @@ export const EXECUTORS: Record<
       .translate([-w / 2, -l / 2, 0]);
   },
 
-  Ellipsoid: (params, _inputs, warn) => {
+  Ellipsoid: (params, inputs, warn) => {
     const rx = Math.max(num(params.radiusX, 5), 0.001);
     const ry = Math.max(num(params.radiusY, 3), 0.001);
     const rz = Math.max(num(params.radiusZ, 2), 0.001);
     try {
       const base = replicad.makeSphere(rx);
-      if (Math.abs(ry - rx) < 1e-9 && Math.abs(rz - rx) < 1e-9) return base;
+      if (Math.abs(ry - rx) < 1e-9 && Math.abs(rz - rx) < 1e-9) return orientAndPlace(base, inputs);
       const out = nonUniformScale(base, 1, ry / rx, rz / rx);
       try {
         (base as any).delete?.();
       } catch (e) {
         /* ok */
       }
-      return out;
+      return orientAndPlace(out, inputs);
     } catch (err: any) {
       warn(`Ellipsoid failed (rx=${rx}, ry=${ry}, rz=${rz}): ${String(err?.message || err)}`);
-      return replicad.makeSphere(rx);
+      return orientAndPlace(replicad.makeSphere(rx), inputs);
     }
   },
 
-  Torus: (params, _inputs, warn) => {
+  Torus: (params, inputs, warn) => {
     const R = Math.max(num(params.majorRadius, 8), 0.001);
     const r = Math.max(Math.min(num(params.minorRadius, 2), R * 0.99), 0.001);
     try {
@@ -343,7 +381,7 @@ export const EXECUTORS: Record<
       const maker = new OC.BRepPrimAPI_MakeTorus_1(R, r);
       const shape = replicad.cast(maker.Shape());
       maker.delete();
-      return shape;
+      return orientAndPlace(shape, inputs);
     } catch (err: any) {
       warn(`Torus failed (majorRadius=${R}, minorRadius=${r}): ${String(err?.message || err)}`);
       return null;
@@ -626,15 +664,26 @@ export const EXECUTORS: Record<
     if (!solidInput) return null;
 
     const angleVal = parseParamToNumberOrList(params.angle, 0);
-    const axVal = parseParamToNumberOrList(params.axisX, 0);
-    const ayVal = parseParamToNumberOrList(params.axisY, 0);
-    const azVal = parseParamToNumberOrList(params.axisZ, 1);
+    let axVal = parseParamToNumberOrList(params.axisX, 0);
+    let ayVal = parseParamToNumberOrList(params.axisY, 0);
+    let azVal = parseParamToNumberOrList(params.axisZ, 1);
+
+    // S2 (geometric sockets): a connected "axis" Vector overrides axisX/Y/Z.
+    const axisSocket = socketXYZ(inputs, 'axis');
+    if (axisSocket && (axisSocket.x || axisSocket.y || axisSocket.z)) {
+      axVal = axisSocket.x; ayVal = axisSocket.y; azVal = axisSocket.z;
+    }
 
     const isLocal = params.isLocal === true || params.isLocal === 'true';
     let center = [0, 0, 0];
     if (isLocal && solidInput.boundingBox) {
       center = solidInput.boundingBox.center;
     }
+    // S2: a connected "pivot" Point overrides isLocal/origin — rotate ABOUT a
+    // derived point (hinge, joint, wing root) instead of compensating with
+    // Translate afterwards.
+    const pivot = socketXYZ(inputs, 'pivot');
+    if (pivot) center = [pivot.x, pivot.y, pivot.z];
 
     const isArray =
       Array.isArray(angleVal) ||
