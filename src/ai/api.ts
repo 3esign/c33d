@@ -51,6 +51,71 @@ function dataUrlToBase64(dataUrl: string): { mime: string; data: string } {
   return { mime: m[1], data: m[2] };
 }
 
+// ---------- Provider model listing (Jul 22) ----------
+// One button loads the models a provider actually offers, so ids never have to
+// be typed by hand. Local (Ollama /api/tags) and cloud (OpenRouter, OpenAI,
+// Gemini) all support browser-side listing; errors are surfaced to the UI.
+
+export interface ProviderModelList {
+  models: string[];
+  note?: string;
+}
+
+export async function listProviderModels(
+  provider: AgentSlot['provider'],
+  apiKey: string,
+): Promise<ProviderModelList> {
+  if (provider === 'ollama') {
+    const url = (apiKey || 'http://localhost:11434').trim().replace(/\/$/, '');
+    const r = await fetch(`${url}/api/tags`);
+    if (!r.ok) throw new Error(`Ollama ${r.status} ${r.statusText} — is Ollama running at ${url}?`);
+    const d = await r.json();
+    const models = (Array.isArray(d.models) ? d.models.map((m: any) => String(m.name)) : []).sort();
+    return { models };
+  }
+
+  if (provider === 'gemini') {
+    if (!apiKey) throw new Error('Enter your Gemini API key first, then load models.');
+    const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?pageSize=1000&key=${encodeURIComponent(apiKey)}`);
+    if (!r.ok) throw new Error(`Gemini ${r.status} ${r.statusText}`);
+    const d = await r.json();
+    const models = ((d.models || []) as any[])
+      .filter(m => (m.supportedGenerationMethods || []).includes('generateContent'))
+      .map(m => String(m.name || '').replace(/^models\//, ''))
+      .filter(Boolean)
+      .sort();
+    return { models };
+  }
+
+  if (provider === 'openai') {
+    if (!apiKey) throw new Error('Enter your OpenAI API key first, then load models.');
+    const r = await fetch('https://api.openai.com/v1/models', {
+      headers: { Authorization: `Bearer ${apiKey}` },
+    });
+    if (!r.ok) throw new Error(`OpenAI ${r.status} ${r.statusText}`);
+    const d = await r.json();
+    const all = ((d.data || []) as any[]).map(m => String(m.id));
+    // Hide obvious non-chat endpoints (embeddings, audio, images, moderation);
+    // "Type custom" still accepts anything.
+    const EXCLUDE = /(embed|whisper|tts|audio|dall-e|image|moderation|realtime|transcribe|davinci|babbage)/i;
+    const models = all.filter(id => !EXCLUDE.test(id)).sort();
+    return {
+      models,
+      note: all.length > models.length ? `${all.length - models.length} non-chat models hidden` : undefined,
+    };
+  }
+
+  // OpenRouter: the models endpoint is public (a key is optional).
+  const r = await fetch(
+    'https://openrouter.ai/api/v1/models',
+    apiKey ? { headers: { Authorization: `Bearer ${apiKey}` } } : undefined,
+  );
+  if (!r.ok) throw new Error(`OpenRouter ${r.status} ${r.statusText}`);
+  const d = await r.json();
+  const models = ((d.data || []) as any[]).map(m => String(m.id)).filter(Boolean).sort();
+  return { models };
+}
+
 // ---------- Legacy single-shot JSON completion (fallback path) ----------
 
 interface SimpleMessage {

@@ -572,8 +572,13 @@ export function aggregateAndRankIssues(issues: string[]): string[] {
 }
 
 // Applies a working graph to the store (with auto-layout), waits for evaluation,
-// returns { error, report, sanity } — the agent's percepts.
-async function applyAndPerceive(graph: WorkingGraph) {
+// returns { error, report, sanity } — the agent's percepts. `meta` labels the
+// graph-timeline snapshot recorded for this application (session exports replay
+// these snapshots turn by turn).
+async function applyAndPerceive(
+  graph: WorkingGraph,
+  meta?: { trigger?: string; label?: string; details?: string[] },
+) {
   const store = useStore.getState();
 
   // Run deterministic autofixes
@@ -588,6 +593,19 @@ async function applyAndPerceive(graph: WorkingGraph) {
   const laidOut = autoLayout(graph.nodes as any[], graph.edges as any[]);
   store.setNodes(laidOut as any[]);
   store.setEdges(graph.edges as any[]);
+
+  // Record this application in the graph timeline (with any structural issues
+  // attached), and keep the whole graph in view on the canvas.
+  store.recordGraphSnapshot(
+    meta?.trigger || 'ai',
+    meta?.label || 'AI graph application',
+    [
+      ...(meta?.details || []),
+      ...structuralErrors.slice(0, 6).map(e => `structural: ${e}`),
+      ...structuralWarnings.slice(0, 4).map(w => `warning: ${w}`),
+    ],
+  );
+  store.zoomGraphToFit();
 
   if (structuralErrors.length > 0) {
     // Skip worker evaluation entirely on structural errors!
@@ -946,7 +964,14 @@ async function runToolLoop(modifiedUserText: string, originalText: string, optio
     }
 
     if (mutated) {
-      const percept = await applyAndPerceive(graph);
+      const toolCounts: Record<string, number> = {};
+      modelTurn.toolCalls.forEach(tc => { toolCounts[tc.name] = (toolCounts[tc.name] || 0) + 1; });
+      const batchLabel = Object.entries(toolCounts)
+        .map(([n, c]) => (c > 1 ? `${n}×${c}` : n)).join(', ') || 'tool batch';
+      const percept = await applyAndPerceive(graph, {
+        trigger: repairs > 0 ? 'ai-repair' : 'ai-tools',
+        label: `turn ${turn + 1}: ${batchLabel}`,
+      });
       evaluatedOk = !percept.error;
       geometrySane = percept.sanity.sane;
       lastError = percept.error || (percept.sanity.issues.length ? percept.sanity.issues.join(' | ') : undefined);
@@ -1132,6 +1157,7 @@ async function runLegacyJson(modifiedUserText: string, originalText: string, opt
       throw parseErr;
     }
     parsedOk = true;
+    let viaIr = false;
 
     // Capture the design genome (Pillar 1) BEFORE the IR path reassigns `parsed`
     // below — so both IR programs and patch responses carry it into eval records.
@@ -1160,9 +1186,20 @@ async function runLegacyJson(modifiedUserText: string, originalText: string, opt
           }
           throw new Error(`IR compile failed: ${msgs}`);
         }
-        compiled.notes.forEach(n => addSystemMessage(`[IR] ${n}`));
+        // Aggregate repetitive notes: 9 identical "consumed downstream" lines
+        // for one Taj-Mahal build buried the signal (Jul-22 transcript).
+        const consumedNotes = compiled.notes.filter(n => n.includes('consumed downstream'));
+        compiled.notes.filter(n => !n.includes('consumed downstream'))
+          .forEach(n => addSystemMessage(`[IR] ${n}`));
+        if (consumedNotes.length > 0) {
+          const names = consumedNotes
+            .map(n => (n.match(/"(\$?[^"]+)"/) || [])[1] || '')
+            .filter(Boolean).join(', ');
+          addSystemMessage(`[IR] ${consumedNotes.length} emitted binding(s) are also consumed downstream and will not render as separate leaves: ${names}. (Only unconsumed bindings render.)`);
+        }
         // Route through the existing full-rebuild path (validation, layout,
         // evaluation, sanity) — the compiler's output is a complete graph.
+        viaIr = true;
         parsed = {
           reasoning: parsed.intent || 'Built from IR program.',
           clearGraph: true,
@@ -1193,7 +1230,11 @@ async function runLegacyJson(modifiedUserText: string, originalText: string, opt
     }
 
     const graph = { nodes: graphResult.nodes, edges: graphResult.edges };
-    const percept = await applyAndPerceive(graph);
+    const percept = await applyAndPerceive(graph, {
+      trigger: viaIr ? 'ai-ir' : (attempt > 0 ? 'ai-repair' : 'ai-json'),
+      label: `attempt ${attempt + 1}: ${summarizePatchForDiagnosis(parsed)}`,
+      details: (graphResult.droppedEdges || []).slice(0, 12).map((e: string) => `dropped edge: ${e}`),
+    });
     if (graphResult.droppedEdges && graphResult.droppedEdges.length > 0) {
       percept.sanity.issues.push(...graphResult.droppedEdges.map((e: string) => `Dropped invalid edge: ${e}`));
       percept.sanity.sane = false;
@@ -1402,7 +1443,12 @@ function applyParsedGraphOps(parsed: any, options?: { forEval?: boolean }): (Wor
     if (parsed.removedEdgeIds) {
       // Models rarely know real edge ids. Accept, in order: exact id,
       // {source,target[,targetHandle]} objects, and "source->target[.handle]"
-      // strings (also → and =>). Report anything that matched nothing.
+      // strings (also → and =>). Report anything that matched nothing —
+      // but AGGREGATED into one note: the Jul-22 exports show 20–50 separate
+      // "matched NO edge" system messages per session drowning the transcript
+      // while carrying one repeated lesson.
+      const unmatchedRemovals: string[] = [];
+      const unmatchedRefIds = new Set<string>();
       for (const raw of parsed.removedEdgeIds) {
         let matched = 0;
         const removeWhere = (pred: (e: any) => boolean) => {
@@ -1428,24 +1474,30 @@ function applyParsedGraphOps(parsed: any, options?: { forEval?: boolean }): (Wor
           }
         }
         if (matched === 0) {
-          // A9: list the real edges touching the referenced nodes so the model
-          // corrects on the next turn instead of retrying the same wrong id.
-          const refIds = new Set<string>();
           if (raw && typeof raw === 'object') {
-            refIds.add(String((raw as any).source));
-            refIds.add(String((raw as any).target));
+            unmatchedRemovals.push(`${(raw as any).source}->${(raw as any).target}${(raw as any).targetHandle ? `.${(raw as any).targetHandle}` : ''}`);
+            unmatchedRefIds.add(String((raw as any).source));
+            unmatchedRefIds.add(String((raw as any).target));
           } else {
+            unmatchedRemovals.push(String(raw));
             String(raw).split(/->|→|=>|[.\s]+/).forEach(part => {
               const p = part.trim();
-              if (p) refIds.add(p);
+              if (p) unmatchedRefIds.add(p);
             });
           }
-          const candidates = nextEdges
-            .filter(e => refIds.has(String(e.source)) || refIds.has(String(e.target)))
-            .slice(0, 6)
-            .map(e => `${e.source}->${e.target}${e.targetHandle ? `.${e.targetHandle}` : ''}`);
-          patchNotes.push(`removedEdgeIds entry ${JSON.stringify(raw)} matched NO edge — nothing was removed. Use the edge ids shown in the graph state, {"source","target"} objects, or "source->target" strings.${candidates.length ? ` Current edges touching those nodes: ${candidates.join(', ')}` : ''}`);
         }
+      }
+      if (unmatchedRemovals.length > 0) {
+        // A9 (aggregated): one note naming every miss + the real edges that DO
+        // touch the referenced nodes, so the model corrects on the next turn.
+        const shown = unmatchedRemovals.slice(0, 10);
+        const candidates = nextEdges
+          .filter(e => unmatchedRefIds.has(String(e.source)) || unmatchedRefIds.has(String(e.target)))
+          .slice(0, 8)
+          .map(e => `${e.source}->${e.target}${e.targetHandle ? `.${e.targetHandle}` : ''}`);
+        patchNotes.push(
+          `${unmatchedRemovals.length} removedEdgeIds entr${unmatchedRemovals.length === 1 ? 'y' : 'ies'} matched NO edge (already gone or never existed) — nothing was removed for: ${shown.join('; ')}${unmatchedRemovals.length > shown.length ? ` … and ${unmatchedRemovals.length - shown.length} more` : ''}. This usually means those edges were already dropped or renamed — do NOT keep retrying them. Use the edge ids shown in the graph state, {"source","target"} objects, or "source->target" strings.${candidates.length ? ` Edges that DO exist on those nodes: ${candidates.join(', ')}` : ''}`
+        );
       }
     }
     if (parsed.addedNodes) {

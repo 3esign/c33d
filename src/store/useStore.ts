@@ -23,6 +23,7 @@ import type {
   SceneObject,
   PerformanceLogEntry,
   AgentSlot,
+  GraphTimelineEntry,
 } from './types';
 import { DEFAULT_GUIDELINES } from './guidelines';
 import { isSystemError } from '../utils/errors';
@@ -118,6 +119,14 @@ type AppState = {
   clearLastEvaluationError: () => void;
   triggerFitCount: number;
   zoomToFit: () => void;
+  // Node-graph zoom-to-fit trigger (mirrors the 3D viewport's zoomToFit):
+  // bumped after every AI graph application so the whole graph stays in view.
+  graphFitCount: number;
+  zoomGraphToFit: () => void;
+
+  // Graph timeline: per-turn history of the graph for session exports.
+  graphTimeline: GraphTimelineEntry[];
+  recordGraphSnapshot: (trigger: string, label: string, details?: string[]) => void;
 
   // Agent Guidelines (Continuous Knowledge Base)
   agentGuidelines: string;
@@ -497,7 +506,9 @@ export const useStore = create<AppState>()(
         messages: [],
         addMessage: (msg) => set((state) => ({ messages: [...state.messages, msg] })),
         removeMessage: (id) => set((state) => ({ messages: state.messages.filter(m => m.id !== id) })),
-        clearMessages: () => set({ messages: [] }),
+        // A cleared conversation starts a fresh trace: timeline entries refer
+        // to conversation turns, so they reset together.
+        clearMessages: () => set({ messages: [], graphTimeline: [] }),
 
         // Node Graph — starts empty. Do not seed a default demo graph here:
         // nodes/edges are intentionally excluded from persist() partialize
@@ -513,6 +524,7 @@ export const useStore = create<AppState>()(
           const hasRemove = changes.some(c => c.type === 'remove');
           if (hasRemove) {
             get().evaluateGraph();
+            get().recordGraphSnapshot('user-edit', 'manual node removal');
           }
         },
         onEdgesChange: (changes) => {
@@ -522,6 +534,7 @@ export const useStore = create<AppState>()(
           const hasRemove = changes.some(c => c.type === 'remove');
           if (hasRemove) {
             get().evaluateGraph();
+            get().recordGraphSnapshot('user-edit', 'manual edge removal');
           }
         },
         onConnect: (connection) => {
@@ -529,6 +542,7 @@ export const useStore = create<AppState>()(
             edges: addEdge(connection, get().edges),
           });
           get().evaluateGraph();
+          get().recordGraphSnapshot('user-edit', 'manual connect');
         },
         setNodes: (nodes) => {
           set({ nodes });
@@ -558,6 +572,69 @@ export const useStore = create<AppState>()(
         isEvaluating: false,
         triggerFitCount: 0,
         zoomToFit: () => set((state) => ({ triggerFitCount: state.triggerFitCount + 1 })),
+        graphFitCount: 0,
+        zoomGraphToFit: () => set((state) => ({ graphFitCount: state.graphFitCount + 1 })),
+
+        // Graph timeline. Structural-diff based: identical consecutive states
+        // are not recorded twice (unless they carry details), so this can be
+        // called liberally from the agent loop and manual-edit handlers.
+        graphTimeline: [],
+        recordGraphSnapshot: (trigger, label, details) => {
+          const s = get();
+          const prev = s.graphTimeline[s.graphTimeline.length - 1];
+          const nodes = s.nodes as any[];
+          const edges = s.edges as any[];
+          const nodeSig = (n: any) => `${n.type}|${JSON.stringify(n.data || {})}`;
+          const edgeKey = (e: any) =>
+            `${e.source}.${e.sourceHandle ?? ''}->${e.target}.${e.targetHandle ?? ''}`;
+          const currNodes = new Map(nodes.map(n => [String(n.id), nodeSig(n)]));
+          const currEdges = new Set(edges.map(edgeKey));
+          const prevNodes = new Map<string, string>(
+            ((prev?.nodes || []) as any[]).map(n => [String(n.id), nodeSig(n)])
+          );
+          const prevEdges = new Set(((prev?.edges || []) as any[]).map(edgeKey));
+
+          const addedNodes = [...currNodes.keys()].filter(id => !prevNodes.has(id));
+          const removedNodes = [...prevNodes.keys()].filter(id => !currNodes.has(id));
+          const changedNodes = [...currNodes.keys()].filter(
+            id => prevNodes.has(id) && prevNodes.get(id) !== currNodes.get(id)
+          );
+          const addedEdges = [...currEdges].filter(k => !prevEdges.has(k)).length;
+          const removedEdges = [...prevEdges].filter(k => !currEdges.has(k)).length;
+
+          const unchanged = !!prev && addedNodes.length === 0 && removedNodes.length === 0 &&
+            changedNodes.length === 0 && addedEdges === 0 && removedEdges === 0;
+          if (unchanged && !(details && details.length)) return;
+
+          const wired = new Set<string>();
+          edges.forEach(e => { wired.add(String(e.source)); wired.add(String(e.target)); });
+          const isolatedCount = nodes.filter(n => !wired.has(String(n.id))).length;
+
+          const entry: GraphTimelineEntry = {
+            at: new Date().toISOString(),
+            turn: s.messages.filter(m => m.role === 'user').length,
+            trigger,
+            label: String(label || '').slice(0, 300),
+            nodeCount: nodes.length,
+            edgeCount: edges.length,
+            isolatedCount,
+            diff: {
+              addedNodes: addedNodes.slice(0, 100),
+              removedNodes: removedNodes.slice(0, 100),
+              changedNodes: changedNodes.slice(0, 100),
+              addedEdges,
+              removedEdges,
+            },
+            details: details && details.length
+              ? details.slice(0, 25).map(d => String(d).slice(0, 300))
+              : undefined,
+            nodes: JSON.parse(JSON.stringify(nodes)),
+            edges: JSON.parse(JSON.stringify(edges)),
+          };
+          // Cap the in-memory history; exports rarely need more than this and
+          // the timeline is intentionally NOT persisted to localStorage.
+          set({ graphTimeline: [...s.graphTimeline, entry].slice(-200) });
+        },
         evaluateGraph: () => {
           // Debounce rapid re-evaluations (slider drags): trailing edge.
           // Kept short (50ms) for responsiveness — the worker is never
@@ -780,4 +857,5 @@ export type {
   SceneObject,
   PerformanceLogEntry,
   AgentSlot,
+  GraphTimelineEntry,
 } from './types';

@@ -28,6 +28,11 @@ export function buildIrJsonSchema(): any {
       { type: 'string' },
       { type: 'boolean' },
       { type: 'array', items: { anyOf: [{ type: 'number' }, { type: 'string' }] } },
+      // Ergonomic object forms (Jul 22): inline {"op":...,"args":{...}}
+      // constructors and bare {"x","y","z"} point/vector literals — the
+      // compiler auto-lifts both (compile.ts). Kept permissive here: per-op
+      // validation lives in compileIr, which produces better repair messages.
+      { type: 'object' },
     ],
   };
   return {

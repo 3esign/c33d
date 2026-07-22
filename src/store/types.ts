@@ -101,6 +101,38 @@ export type ChatMessage = {
   content: string;
 };
 
+// Per-turn graph history (Jul 22): every AI application, repair round, manual
+// edit batch and clear is snapshotted so exported sessions show HOW the graph
+// evolved across a long conversation — not just its final state. Entries carry
+// full nodes/edges (graphs are small) plus a precomputed diff vs the previous
+// entry, so a session export can be replayed step by step when analyzing what
+// a model did while "fixing" things.
+export type GraphTimelineEntry = {
+  at: string;
+  /** Number of user messages in the conversation when this was recorded. */
+  turn: number;
+  /** 'ai-tools' | 'ai-json' | 'ai-ir' | 'ai-repair' | 'user-edit' | 'export' | … */
+  trigger: string;
+  /** Compact description of what caused this state (tool batch, patch summary…). */
+  label: string;
+  nodeCount: number;
+  edgeCount: number;
+  /** Nodes with no edges at all — the longitudinal wiring-health signal. */
+  isolatedCount: number;
+  diff: {
+    addedNodes: string[];
+    removedNodes: string[];
+    /** Same id, different type/data. */
+    changedNodes: string[];
+    addedEdges: number;
+    removedEdges: number;
+  };
+  /** Dropped edges / validation issues tied to this exact application. */
+  details?: string[];
+  nodes: any[];
+  edges: any[];
+};
+
 export type SceneObject = {
   id: string;
   name: string;

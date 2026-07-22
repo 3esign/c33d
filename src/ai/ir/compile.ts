@@ -33,6 +33,16 @@ function isRefString(v: IrValue): v is string {
   return typeof v === 'string' && v.startsWith('$');
 }
 
+// Function/constant names allowed inside formulas — identifiers in a formula
+// that are NOT bindings and NOT one of these are left for the runtime scope
+// (slider labels) to resolve.
+const KNOWN_FUNCS = new Set([
+  'sin', 'cos', 'tan', 'asin', 'acos', 'atan', 'atan2', 'sinh', 'cosh', 'tanh',
+  'sqrt', 'cbrt', 'abs', 'sign', 'min', 'max', 'floor', 'ceil', 'round', 'trunc',
+  'pow', 'exp', 'log', 'log2', 'log10', 'mod', 'clamp', 'random',
+  'pi', 'PI', 'e', 'E', 'tau', 'TAU',
+]);
+
 export function compileIr(program: IrProgram): CompileResult {
   const issues: CompileIssue[] = [];
   const notes: string[] = [];
@@ -102,7 +112,7 @@ export function compileIr(program: IrProgram): CompileResult {
           throw new CompileError(`"${skill.name}" requires argument "${k}" (${def.kind}).`);
         }
       }
-      const ctx = makeCtx(skill.name, op, env, nodes, edges, freshId);
+      const ctx = makeCtx(skill.name, op, env, nodes, edges, freshId, notes);
       const ref = skill.expand(ctx);
       env.set(op.let, ref);
     } catch (err: any) {
@@ -153,6 +163,7 @@ function makeCtx(
   nodes: GraphNode[],
   edges: GraphEdge[],
   freshId: (base: string) => string,
+  notes: string[],
 ): ExpandCtx {
   const args = op.args ?? {};
   let mintedPrimary = false;
@@ -166,6 +177,79 @@ function makeCtx(
       fail(`Argument "${argName}" references "$${name}", which is not bound. Bindings so far: ${[...env.keys()].join(', ') || '(none)'}.`);
     }
     return ref!;
+  };
+
+  // ------- ERGONOMIC COERCIONS (Jul 22) --------------------------------------
+  // The Jul-22 transcripts show models spending whole repair budgets on forms
+  // the compiler COULD accept deterministically: nested op literals, bare
+  // binding names without "$", {"x","y","z"} point literals, and arithmetic on
+  // references. Each coercion below turns one of those hard failures into the
+  // canonical expansion (with a note teaching the canonical form), so the turn
+  // survives and the feedback stays honest.
+
+  const isSliderRef = (r: ValueRef): boolean => {
+    const n = nodes.find(nn => nn.id === r.nodeId);
+    return !!n && n.type === 'NumberSlider';
+  };
+
+  // {"op":"point","args":{...}} nested inside another op's args → compile it
+  // as its own step and use the resulting reference.
+  const liftInlineOp = (rawObj: any, argName: string): ValueRef => {
+    const subName = String(rawObj.op ?? '');
+    const subSkill = resolveSkill(subName);
+    if (!subSkill) {
+      fail(`Argument "${argName}" of "${skillName}": inline op "${subName}" is unknown. Available ops: ${Object.keys(SKILLS).join(', ')}.`);
+    }
+    const subArgs = rawObj.args ?? {};
+    for (const k of Object.keys(subArgs)) {
+      if (!(k in subSkill!.args)) {
+        fail(`Inline "${subName}" (in argument "${argName}" of "${skillName}") has no argument "${k}". Valid arguments: ${Object.keys(subSkill!.args).join(', ')}.`);
+      }
+    }
+    for (const [k, def] of Object.entries(subSkill!.args)) {
+      if (def.required && subArgs[k] === undefined) {
+        fail(`Inline "${subName}" (in argument "${argName}" of "${skillName}") requires argument "${k}" (${def.kind}).`);
+      }
+    }
+    const subOp: IrOp = { let: `${op.let}_${argName}`, op: subName, args: subArgs };
+    const subCtx = makeCtx(subSkill!.name, subOp, env, nodes, edges, freshId, notes);
+    const ref = subSkill!.expand(subCtx);
+    notes.push(`Auto-lifted inline ${subName}() from "${op.let}.${argName}" into its own step — canonical form is a separate {"let": "...", "op": "${subName}", ...} referenced as "$name".`);
+    return ref;
+  };
+
+  // Formula handling with COMPILE-TIME binding resolution: slider params may be
+  // named directly (the runtime formula scope contains them), but computed
+  // bindings (expr/series outputs) must be WIRED — auto-lift into expr() when
+  // a formula names them, instead of failing at runtime with "unknown slider".
+  const resolveFormula = (formulaRaw: string, argName: string): NumArg => {
+    const formula = formulaRaw.replace(/\$/g, '');
+    const ids = [...new Set([...formula.matchAll(/[A-Za-z_][A-Za-z0-9_]*/g)].map(m => m[0]))];
+    const nonSliderBindings: string[] = [];
+    for (const t of ids) {
+      if (KNOWN_FUNCS.has(t)) continue;
+      const r = env.get(t);
+      if (!r) continue; // may be a runtime variable (slider label, a-d wire) — leave to runtime
+      if (r.type !== 'number' && r.type !== 'number[]') {
+        fail(`Argument "${argName}" of "${skillName}": formula "${formulaRaw}" uses "${t}", which is a ${r.type} binding — formulas can only use numbers.`);
+      }
+      if (!isSliderRef(r)) nonSliderBindings.push(t);
+    }
+    if (nonSliderBindings.length === 0) return { inline: formula };
+    const letters = ['a', 'b', 'c', 'd'].filter(L => !ids.includes(L));
+    if (nonSliderBindings.length > letters.length) {
+      fail(`Argument "${argName}" of "${skillName}": formula "${formulaRaw}" references ${nonSliderBindings.length} computed bindings (${nonSliderBindings.join(', ')}) — too many to auto-wire. Precompute parts with expr() steps and reference the result.`);
+    }
+    let f2 = formula;
+    const subArgs: Record<string, any> = {};
+    nonSliderBindings.forEach((t, i) => {
+      const L = letters[i];
+      subArgs[L] = '$' + t;
+      f2 = f2.replace(new RegExp(`\\b${t}\\b`, 'g'), L);
+    });
+    const ref = liftInlineOp({ op: 'expr', args: { formula: f2, ...subArgs } }, argName);
+    notes.push(`Argument "${argName}" of "${skillName}": formula "${formulaRaw}" named computed binding(s) ${nonSliderBindings.map(b => `"${b}"`).join(', ')} — auto-wired via expr("${f2}"). Sliders can be named directly in formulas; computed bindings must be referenced as "$name" args.`);
+    return { ref };
   };
 
   const typeOk = (t: IrType, accept: IrType[]): boolean =>
@@ -188,14 +272,39 @@ function makeCtx(
       if (typeof raw === 'boolean' || Array.isArray(raw)) {
         fail(`Argument "${name}" of "${skillName}" must be a number, a formula string, or a "$binding" — got ${JSON.stringify(raw)}.`);
       }
+      if (raw && typeof raw === 'object') {
+        // Inline op object where a number is expected — auto-lift it.
+        const ref = liftInlineOp(raw, name);
+        if (ref.type !== 'number' && ref.type !== 'number[]') {
+          fail(`Argument "${name}" of "${skillName}" needs a number; the inline ${(raw as any).op}() produced a ${ref.type}.`);
+        }
+        return { ref };
+      }
       if (isRefString(raw)) {
+        const refName = raw.slice(1);
+        if (!ID_RE.test(refName)) {
+          // "$podiumH + 0.5": arithmetic on a reference — resolve as a formula
+          // (auto-wiring computed bindings through expr()).
+          return resolveFormula(raw, name);
+        }
         const ref = resolveRef(raw, name);
         if (ref.type !== 'number' && ref.type !== 'number[]') {
           fail(`Argument "${name}" of "${skillName}" needs a number; "$${raw.slice(1)}" is a ${ref.type}.`);
         }
         return { ref };
       }
-      return { inline: String(raw) }; // formula
+      const asStr = String(raw);
+      if (env.has(asStr)) {
+        // Bare binding name without "$" — treat as the binding.
+        const ref = env.get(asStr)!;
+        if (ref.type === 'number' || ref.type === 'number[]') {
+          if (isSliderRef(ref)) return { inline: asStr }; // slider names resolve in formulas
+          notes.push(`Argument "${name}" of "${skillName}": treated "${asStr}" as the binding "$${asStr}" (add the "$" prefix to reference bindings).`);
+          return { ref };
+        }
+        fail(`Argument "${name}" of "${skillName}" needs a number; binding "${asStr}" is a ${ref.type}.`);
+      }
+      return resolveFormula(asStr, name); // formula
     },
     inlineNum(name) {
       const v = ctx.inlineNumOpt(name);
@@ -218,6 +327,33 @@ function makeCtx(
       const raw = args[name];
       if (raw === undefined) return undefined;
       if (!isRefString(raw)) {
+        // Inline op literal: {"op":"point","args":{...}} → lift to its own step.
+        if (raw && typeof raw === 'object' && !Array.isArray(raw) && typeof (raw as any).op === 'string') {
+          const ref = liftInlineOp(raw, name);
+          if (!typeOk(ref.type, accept)) {
+            fail(`Argument "${name}" of "${skillName}" expects ${accept.join(' | ')}; the inline ${(raw as any).op}() produced a ${ref.type}.`);
+          }
+          return ref;
+        }
+        // Bare {"x","y","z"} literal where a point/vector is expected.
+        if (
+          raw && typeof raw === 'object' && !Array.isArray(raw) &&
+          ('x' in (raw as any) || 'y' in (raw as any) || 'z' in (raw as any)) &&
+          (accept.includes('point') || accept.includes('vector'))
+        ) {
+          const kind = accept.includes('point') ? 'point' : 'vector';
+          const { x, y, z } = raw as any;
+          return liftInlineOp({ op: kind, args: { x, y, z } }, name);
+        }
+        // Bare binding name without the "$" prefix.
+        if (typeof raw === 'string' && env.has(raw)) {
+          const ref = env.get(raw)!;
+          if (!typeOk(ref.type, accept)) {
+            fail(`Argument "${name}" of "${skillName}" expects ${accept.join(' | ')}; binding "${raw}" is a ${ref.type}.`);
+          }
+          notes.push(`Argument "${name}" of "${skillName}": treated "${raw}" as the binding "$${raw}" (add the "$" prefix to reference bindings).`);
+          return ref;
+        }
         fail(`Argument "${name}" of "${skillName}" must be a reference like "$myCurve" (${accept.join(' | ')}), got ${JSON.stringify(raw)}.`);
       }
       const ref = resolveRef(raw as string, name);
@@ -234,12 +370,30 @@ function makeCtx(
       if (typeof raw === 'boolean') {
         return fail(`Argument "${name}" of "${skillName}" must be a number list or "$binding", got a boolean.`);
       }
+      if (raw && typeof raw === 'object') {
+        // Inline op object where a list is expected — auto-lift it.
+        const ref = liftInlineOp(raw, name);
+        if (ref.type !== 'number[]' && ref.type !== 'number') {
+          fail(`Argument "${name}" of "${skillName}" needs a number list; the inline ${(raw as any).op}() produced a ${ref.type}.`);
+        }
+        return { ref };
+      }
       if (isRefString(raw)) {
         const ref = resolveRef(raw, name);
         if (ref.type !== 'number[]' && ref.type !== 'number') {
           fail(`Argument "${name}" of "${skillName}" needs a number list; "$${raw.slice(1)}" is a ${ref.type}.`);
         }
         return { ref };
+      }
+      if (typeof raw === 'string' && env.has(raw)) {
+        // Bare binding name without "$" — wire the binding, not the string.
+        const ref = env.get(raw)!;
+        if (ref.type === 'number[]' || ref.type === 'number') {
+          if (!isSliderRef(ref)) {
+            notes.push(`Argument "${name}" of "${skillName}": treated "${raw}" as the binding "$${raw}" (add the "$" prefix to reference bindings).`);
+            return { ref };
+          }
+        }
       }
       return { literal: [raw] }; // single formula string
     },

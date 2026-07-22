@@ -3,8 +3,16 @@
 // report, an optional user comment, and metadata. This makes any run a shareable,
 // analyzable artifact (R5.3) — a graph without its conversation and intent is
 // half the story, so the bundle carries all of it.
+//
+// v2 (Jul 22): adds `timeline` — the per-turn graph history recorded by
+// useStore.recordGraphSnapshot. Long directed-repair conversations can now be
+// replayed change by change: what each model turn added/removed/rewired, which
+// applications carried dropped-edge/validation details, and how node/edge/
+// isolated counts evolved. Analysis of exports should prefer the timeline over
+// the final graph alone.
 
 import { useStore } from '../store/useStore';
+import type { GraphTimelineEntry } from '../store/useStore';
 
 export interface SessionExport {
   c33dExport: number;
@@ -16,14 +24,20 @@ export interface SessionExport {
   plan: string;
   genome: unknown | null;
   geometryReport: unknown | null;
+  timeline: GraphTimelineEntry[];
 }
 
 export function buildSessionExport(comment: string): SessionExport {
+  // Catch-up entry: if the graph changed since the last recorded step (manual
+  // tweaks, slider edits), snapshot it now so the export's timeline always
+  // ends at the exported state. recordGraphSnapshot dedupes when unchanged.
+  useStore.getState().recordGraphSnapshot('export', 'state at export (includes any unrecorded manual edits)');
+
   const s = useStore.getState();
   const agent = s.agentSlots.find(a => a.id === s.activeAgentId);
   const clone = <T,>(v: T): T => JSON.parse(JSON.stringify(v));
   return {
-    c33dExport: 1,
+    c33dExport: 2,
     exportedAt: new Date().toISOString(),
     comment: comment || '',
     agent: agent ? { name: agent.name, provider: agent.provider, model: agent.model } : null,
@@ -35,6 +49,7 @@ export function buildSessionExport(comment: string): SessionExport {
     plan: s.episodePlan || '',
     genome: s.episodeGenome ? clone(s.episodeGenome) : null,
     geometryReport: s.lastGeometryReport ? clone(s.lastGeometryReport) : null,
+    timeline: clone(s.graphTimeline),
   };
 }
 

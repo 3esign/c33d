@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   ReactFlow,
   MiniMap,
@@ -6,8 +6,9 @@ import {
   Background,
   BackgroundVariant,
 } from '@xyflow/react';
+import type { ReactFlowInstance } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
-import { Package } from 'lucide-react';
+import { Package, Maximize } from 'lucide-react';
 import { useStore, generateUUID } from '../store/useStore';
 import { NODE_LIBRARY } from '../nodes/NodeDefinitions';
 import type { MacroExposedParam } from '../nodes/NodeDefinitions';
@@ -141,8 +142,42 @@ const MacroDialog: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
 export const NodeGraph: React.FC = () => {
   const { nodes, edges, onNodesChange, onEdgesChange, onConnect } = useStore();
+  const graphFitCount = useStore(state => state.graphFitCount);
   const [macroDialogOpen, setMacroDialogOpen] = useState(false);
   const selectedCount = useMemo(() => nodes.filter(n => (n as any).selected).length, [nodes]);
+
+  // Zoom-to-fit for the NODE GRAPH (Jul 22): big AI-generated graphs used to be
+  // impossible to see whole — React Flow's default minZoom (0.5) blocked
+  // zooming out far enough. minZoom is lowered, a Fit button + "G" shortcut
+  // added, and the agent bumps graphFitCount after every application so the
+  // whole graph stays in view as it grows.
+  const rfInstance = useRef<ReactFlowInstance | null>(null);
+  const fitGraph = useCallback(() => {
+    rfInstance.current?.fitView({ padding: 0.15, duration: 300 });
+  }, []);
+
+  useEffect(() => {
+    if (graphFitCount > 0) {
+      // Small delay lets auto-layout positions land before measuring.
+      const t = setTimeout(fitGraph, 120);
+      return () => clearTimeout(t);
+    }
+  }, [graphFitCount, fitGraph]);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const activeEl = document.activeElement;
+      const isInput = activeEl && (
+        activeEl.tagName === 'INPUT' ||
+        activeEl.tagName === 'TEXTAREA' ||
+        activeEl.hasAttribute('contenteditable')
+      );
+      if (isInput) return;
+      if (e.key.toLowerCase() === 'g') fitGraph();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [fitGraph]);
 
   return (
     <div className="w-full h-full bg-slate-900 relative">
@@ -153,7 +188,11 @@ export const NodeGraph: React.FC = () => {
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
+        onInit={(instance) => { rfInstance.current = instance; }}
         fitView
+        fitViewOptions={{ padding: 0.15 }}
+        minZoom={0.03}
+        maxZoom={2.5}
         className="touch-none"
         proOptions={{ hideAttribution: true }}
       >
@@ -165,6 +204,15 @@ export const NodeGraph: React.FC = () => {
         />
         <Background variant={BackgroundVariant.Dots} gap={12} size={1} color="#334155" />
       </ReactFlow>
+
+      <button
+        onClick={fitGraph}
+        className="absolute top-3 left-3 z-40 bg-slate-800/90 hover:bg-slate-700 text-slate-200 text-xs font-medium px-3 py-1.5 rounded-lg border border-slate-700 shadow-lg flex items-center gap-1.5"
+        title="Zoom out to fit the whole node graph (G)"
+      >
+        <Maximize size={13} />
+        Fit Graph
+      </button>
 
       {selectedCount >= 2 && (
         <button

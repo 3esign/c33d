@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useStore, generateUUID } from '../store/useStore';
-import { Settings, Send, MessageSquare, BarChart2, BookOpen, Star, FlaskConical, Library, X, Brain } from 'lucide-react';
+import { Settings, Send, MessageSquare, BarChart2, BookOpen, Star, FlaskConical, Library, X, Brain, RefreshCw } from 'lucide-react';
 import { processUserIntent } from '../ai/agent';
+import { listProviderModels } from '../ai/api';
 import { LibraryPanel } from './LibraryPanel';
 import { EvalPanel } from './EvalPanel';
 
@@ -34,41 +35,47 @@ export const ChatPanel: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'chat' | 'reasoning' | 'logs' | 'guidelines' | 'library' | 'evals'>('chat');
   const [isLoading, setIsLoading] = useState(false);
 
-  const [ollamaModels, setOllamaModels] = useState<Record<string, string[]>>({});
-  const [loadingOllama, setLoadingOllama] = useState<Record<string, boolean>>({});
+  // Provider model lists (Jul 22): every provider — not just Ollama — can load
+  // its available models into a dropdown, so ids never need manual typing.
+  const [slotModels, setSlotModels] = useState<Record<string, string[]>>({});
+  const [loadingModels, setLoadingModels] = useState<Record<string, boolean>>({});
+  const [modelErrors, setModelErrors] = useState<Record<string, string>>({});
+  const [modelNotes, setModelNotes] = useState<Record<string, string>>({});
   const [editManual, setEditManual] = useState<Record<string, boolean>>({});
 
-  const fetchModelsForSlot = async (slotId: string, rawUrl: string) => {
-    const url = (rawUrl || 'http://localhost:11434').trim().replace(/\/$/, '');
-    if (!url) return;
-    
-    setLoadingOllama(prev => ({ ...prev, [slotId]: true }));
+  const fetchModelsForSlot = async (slotId: string, provider: string, apiKey: string) => {
+    setLoadingModels(prev => ({ ...prev, [slotId]: true }));
+    setModelErrors(prev => ({ ...prev, [slotId]: '' }));
     try {
-      const response = await fetch(`${url}/api/tags`);
-      if (!response.ok) throw new Error('Failed to fetch tags');
-      const data = await response.json();
-      const names = Array.isArray(data.models) ? data.models.map((m: any) => m.name) : [];
-      setOllamaModels(prev => ({ ...prev, [slotId]: names }));
-    } catch (err) {
-      console.error('Error fetching Ollama models for slot:', slotId, err);
-      setOllamaModels(prev => ({ ...prev, [slotId]: [] }));
+      const { models, note } = await listProviderModels(provider as any, apiKey);
+      setSlotModels(prev => ({ ...prev, [slotId]: models }));
+      setModelNotes(prev => ({ ...prev, [slotId]: note || '' }));
+      if (models.length === 0) {
+        setModelErrors(prev => ({ ...prev, [slotId]: 'Provider returned no models.' }));
+      }
+    } catch (err: any) {
+      console.error('Error fetching models for slot:', slotId, err);
+      setSlotModels(prev => ({ ...prev, [slotId]: [] }));
+      setModelErrors(prev => ({ ...prev, [slotId]: String(err?.message || err).slice(0, 140) }));
     } finally {
-      setLoadingOllama(prev => ({ ...prev, [slotId]: false }));
+      setLoadingModels(prev => ({ ...prev, [slotId]: false }));
     }
   };
 
+  // A slot can auto-load its model list when it doesn't need a key (Ollama URL
+  // default, OpenRouter public endpoint) or when a key is already entered.
+  const canListModels = (slot: { provider: string; apiKey: string }) =>
+    slot.provider === 'ollama' || slot.provider === 'openrouter' || !!(slot.apiKey && slot.apiKey.trim());
+
   useEffect(() => {
     if (!showSettings) return;
-    
+
     agentSlots.forEach(slot => {
-      if (slot.provider === 'ollama') {
-        const currentUrl = slot.apiKey || 'http://localhost:11434';
-        if (ollamaModels[slot.id] === undefined && !loadingOllama[slot.id]) {
-          fetchModelsForSlot(slot.id, currentUrl);
-        }
+      if (slotModels[slot.id] === undefined && !loadingModels[slot.id] && canListModels(slot)) {
+        fetchModelsForSlot(slot.id, slot.provider, slot.apiKey);
       }
     });
-  }, [showSettings, agentSlots, ollamaModels, loadingOllama]);
+  }, [showSettings, agentSlots, slotModels, loadingModels]);
 
   const handleSend = async () => {
     if (!input.trim() || isLoading) return;
@@ -291,7 +298,6 @@ export const ChatPanel: React.FC = () => {
                           defaultKey = 'http://localhost:11434';
                           defaultModel = 'llama3';
                           defaultName = 'Ollama (Local)';
-                          fetchModelsForSlot(slot.id, defaultKey);
                         } else if (newProvider === 'openai') {
                           defaultModel = 'gpt-4o';
                           defaultName = 'OpenAI';
@@ -299,13 +305,20 @@ export const ChatPanel: React.FC = () => {
                           defaultModel = 'anthropic/claude-3.5-sonnet';
                           defaultName = 'OpenRouter';
                         }
-                        
-                        updateAgentSlot(slot.id, { 
-                          provider: newProvider, 
+
+                        updateAgentSlot(slot.id, {
+                          provider: newProvider,
                           model: defaultModel,
                           apiKey: defaultKey,
                           name: defaultName
                         });
+                        // Refresh the model list for the new provider (works
+                        // immediately for Ollama/OpenRouter; keyed providers
+                        // load once a key is entered or on the ↻ button).
+                        setSlotModels(prev => { const next = { ...prev }; delete next[slot.id]; return next; });
+                        if (newProvider === 'ollama' || newProvider === 'openrouter') {
+                          fetchModelsForSlot(slot.id, newProvider, defaultKey);
+                        }
                       }}
                       className="w-full bg-slate-900 border border-slate-650 rounded px-2 py-1 text-xs text-slate-200"
                     >
@@ -330,7 +343,7 @@ export const ChatPanel: React.FC = () => {
                         const newUrl = e.target.value;
                         updateAgentSlot(slot.id, { apiKey: newUrl });
                         if (slot.provider === 'ollama') {
-                          fetchModelsForSlot(slot.id, newUrl);
+                          fetchModelsForSlot(slot.id, 'ollama', newUrl);
                         }
                       }}
                       className="w-full bg-slate-900 border border-slate-650 rounded px-2 py-1 text-xs text-slate-200"
@@ -340,24 +353,36 @@ export const ChatPanel: React.FC = () => {
                   <div>
                     <div className="flex justify-between items-center mb-1">
                       <label className="block text-[9px] text-slate-400">Model Name</label>
-                      {slot.provider === 'ollama' && (ollamaModels[slot.id] || []).length > 0 && (
+                      <div className="flex items-center gap-2">
+                        {(slotModels[slot.id] || []).length > 0 && (
+                          <button
+                            type="button"
+                            onClick={() => setEditManual(prev => ({ ...prev, [slot.id]: !prev[slot.id] }))}
+                            className="text-[9px] text-blue-400 hover:text-blue-300 font-medium transition-colors cursor-pointer select-none"
+                          >
+                            {editManual[slot.id] ? 'Select list' : 'Type custom'}
+                          </button>
+                        )}
                         <button
                           type="button"
-                          onClick={() => setEditManual(prev => ({ ...prev, [slot.id]: !prev[slot.id] }))}
-                          className="text-[9px] text-blue-400 hover:text-blue-300 font-medium transition-colors cursor-pointer select-none"
+                          onClick={() => fetchModelsForSlot(slot.id, slot.provider, slot.apiKey)}
+                          disabled={loadingModels[slot.id]}
+                          className="text-[9px] text-emerald-400 hover:text-emerald-300 font-medium transition-colors cursor-pointer select-none flex items-center gap-0.5 disabled:opacity-50"
+                          title={`Load the models available from ${slot.provider}`}
                         >
-                          {editManual[slot.id] ? 'Select list' : 'Type custom'}
+                          <RefreshCw size={9} className={loadingModels[slot.id] ? 'animate-spin' : ''} />
+                          {loadingModels[slot.id] ? 'Loading…' : 'Load models'}
                         </button>
-                      )}
+                      </div>
                     </div>
-                    {slot.provider === 'ollama' && !editManual[slot.id] && (ollamaModels[slot.id] || []).length > 0 ? (
+                    {!editManual[slot.id] && (slotModels[slot.id] || []).length > 0 ? (
                       <select
                         value={slot.model}
                         onChange={(e) => updateAgentSlot(slot.id, { model: e.target.value })}
                         className="w-full bg-slate-900 border border-slate-650 rounded px-2 py-1 text-xs text-slate-200 focus:outline-none focus:border-blue-500"
                       >
                         {(() => {
-                          const list = ollamaModels[slot.id] || [];
+                          const list = slotModels[slot.id] || [];
                           const hasSelected = list.includes(slot.model);
                           return (
                             <>
@@ -382,12 +407,20 @@ export const ChatPanel: React.FC = () => {
                           className="w-full bg-slate-900 border border-slate-650 rounded px-2 py-1 text-xs text-slate-200 focus:outline-none focus:border-blue-500"
                           placeholder="e.g. llama3"
                         />
-                        {slot.provider === 'ollama' && loadingOllama[slot.id] && (
+                        {loadingModels[slot.id] && (
                           <span className="absolute right-2 top-1.5 text-[9px] text-slate-500 animate-pulse">
                             loading...
                           </span>
                         )}
                       </div>
+                    )}
+                    {modelErrors[slot.id] && (
+                      <p className="text-[9px] text-red-400 mt-1 leading-tight">{modelErrors[slot.id]}</p>
+                    )}
+                    {!modelErrors[slot.id] && (slotModels[slot.id] || []).length > 0 && (
+                      <p className="text-[9px] text-slate-500 mt-1 leading-tight">
+                        {(slotModels[slot.id] || []).length} models{modelNotes[slot.id] ? ` · ${modelNotes[slot.id]}` : ''}
+                      </p>
                     )}
                   </div>
                 </div>

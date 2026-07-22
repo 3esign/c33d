@@ -1,0 +1,1790 @@
+{
+  "c33dExport": 1,
+  "exportedAt": "2026-07-22T08:20:17.377Z",
+  "comment": "qwen did some interesting things",
+  "agent": {
+    "name": "Ollama (Local)",
+    "provider": "ollama",
+    "model": "qwen3.5:cloud"
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "circleRadius",
+        "type": "NumberSlider",
+        "data": {
+          "label": "circleRadius",
+          "value": 20,
+          "min": 5,
+          "max": 50,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 230
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "segmentCount",
+        "type": "NumberSlider",
+        "data": {
+          "label": "segmentCount",
+          "value": 12,
+          "min": 3,
+          "max": 24,
+          "step": 1
+        },
+        "position": {
+          "x": 40,
+          "y": 1750
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "baseSphereRadius",
+        "type": "NumberSlider",
+        "data": {
+          "label": "baseSphereRadius",
+          "value": 2,
+          "min": 0.5,
+          "max": 10,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 40
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "variationAmp",
+        "type": "NumberSlider",
+        "data": {
+          "label": "variationAmp",
+          "value": 1.5,
+          "min": 0,
+          "max": 5,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 2130
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "indices",
+        "type": "Series",
+        "data": {
+          "start": 0,
+          "step": 1,
+          "count": 12
+        },
+        "position": {
+          "x": 270,
+          "y": 990
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "angles",
+        "type": "Expression",
+        "data": {
+          "formula": "a * 2 * 3.14159 / 12"
+        },
+        "position": {
+          "x": 500,
+          "y": 420
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "xCoords",
+        "type": "Expression",
+        "data": {
+          "formula": "cos(a) * b"
+        },
+        "position": {
+          "x": 730,
+          "y": 40
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "yCoords",
+        "type": "Expression",
+        "data": {
+          "formula": "sin(a) * b"
+        },
+        "position": {
+          "x": 730,
+          "y": 230
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "zCoords",
+        "type": "ListConstant",
+        "data": {
+          "values": "0"
+        },
+        "position": {
+          "x": 40,
+          "y": 2320
+        },
+        "measured": {
+          "width": 177,
+          "height": 136
+        }
+      },
+      {
+        "id": "scales",
+        "type": "Expression",
+        "data": {
+          "formula": "1 + sin(a * 2 * 3.14159 / 12) * c / 2"
+        },
+        "position": {
+          "x": 500,
+          "y": 800
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "points",
+        "type": "PointsFromLists",
+        "data": {},
+        "position": {
+          "x": 960,
+          "y": 420
+        },
+        "measured": {
+          "width": 150,
+          "height": 234
+        }
+      },
+      {
+        "id": "sphere",
+        "type": "Sphere",
+        "data": {
+          "radius": "baseSphereRadius",
+          "color": "#3b82f6"
+        },
+        "position": {
+          "x": 40,
+          "y": 1940
+        },
+        "measured": {
+          "width": 201,
+          "height": 216
+        }
+      },
+      {
+        "id": "spheres",
+        "type": "InstanceOnPoints",
+        "data": {
+          "scaleStart": 1,
+          "scaleEnd": 1,
+          "alignToTangent": false,
+          "color": "#3b82f6"
+        },
+        "position": {
+          "x": 1190,
+          "y": 420
+        },
+        "measured": {
+          "width": 201,
+          "height": 436
+        }
+      },
+      {
+        "id": "lineLength",
+        "type": "NumberSlider",
+        "data": {
+          "label": "lineLength",
+          "value": 15,
+          "min": 5,
+          "max": 50,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 990
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "endpointRadius",
+        "type": "NumberSlider",
+        "data": {
+          "label": "endpointRadius",
+          "value": 1.5,
+          "min": 0.5,
+          "max": 5,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 610
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "randSeed1",
+        "type": "NumberSlider",
+        "data": {
+          "label": "randSeed1",
+          "value": 7,
+          "min": 1,
+          "max": 100,
+          "step": 1
+        },
+        "position": {
+          "x": 40,
+          "y": 1180
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "randSeed2",
+        "type": "NumberSlider",
+        "data": {
+          "label": "randSeed2",
+          "value": 13,
+          "min": 1,
+          "max": 100,
+          "step": 1
+        },
+        "position": {
+          "x": 40,
+          "y": 1370
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "randSeed3",
+        "type": "NumberSlider",
+        "data": {
+          "label": "randSeed3",
+          "value": 23,
+          "min": 1,
+          "max": 100,
+          "step": 1
+        },
+        "position": {
+          "x": 40,
+          "y": 1560
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "dirAngles1",
+        "type": "Expression",
+        "data": {
+          "formula": "sin(a * 2.718 + b) * 3.14159 * 2"
+        },
+        "position": {
+          "x": 270,
+          "y": 610
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "dirAngles2",
+        "type": "Expression",
+        "data": {
+          "formula": "cos(a * 3.14159 + b) * 3.14159"
+        },
+        "position": {
+          "x": 270,
+          "y": 800
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "randLengths",
+        "type": "Expression",
+        "data": {
+          "formula": "c * (0.5 + sin(a * 5.73 + b) * 0.5)"
+        },
+        "position": {
+          "x": 500,
+          "y": 610
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "endX",
+        "type": "Expression",
+        "data": {
+          "formula": "a + sin(b) * cos(c) * d"
+        },
+        "position": {
+          "x": 960,
+          "y": 230
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "endY",
+        "type": "Expression",
+        "data": {
+          "formula": "b + sin(c) * sin(d) * e"
+        },
+        "position": {
+          "x": 730,
+          "y": 800
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "endZ",
+        "type": "Expression",
+        "data": {
+          "formula": "0 + cos(b) * d"
+        },
+        "position": {
+          "x": 730,
+          "y": 610
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "endPoints",
+        "type": "PointsFromLists",
+        "data": {},
+        "position": {
+          "x": 1190,
+          "y": 230
+        },
+        "measured": {
+          "width": 150,
+          "height": 234
+        }
+      },
+      {
+        "id": "endpointSphere",
+        "type": "Sphere",
+        "data": {
+          "radius": "endpointRadius",
+          "color": "#ef4444"
+        },
+        "position": {
+          "x": 40,
+          "y": 800
+        },
+        "measured": {
+          "width": 201,
+          "height": 216
+        }
+      },
+      {
+        "id": "endpointSpheres",
+        "type": "InstanceOnPoints",
+        "data": {
+          "scaleStart": 1,
+          "scaleEnd": 1,
+          "color": "#ef4444"
+        },
+        "position": {
+          "x": 1420,
+          "y": 230
+        },
+        "measured": {
+          "width": 201,
+          "height": 436
+        }
+      },
+      {
+        "id": "lines",
+        "type": "PolylineCurve",
+        "data": {
+          "closed": false,
+          "color": "#94a3b8",
+          "groupBy": "group"
+        },
+        "position": {
+          "x": 1650,
+          "y": 40
+        },
+        "measured": {
+          "width": 177,
+          "height": 266
+        }
+      },
+      {
+        "id": "doubleIndices",
+        "type": "Series",
+        "data": {
+          "start": 0,
+          "step": 1,
+          "count": 24
+        },
+        "position": {
+          "x": 40,
+          "y": 420
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "isEven",
+        "type": "Expression",
+        "data": {
+          "formula": "1 - (a % 2)"
+        },
+        "position": {
+          "x": 270,
+          "y": 230
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "halfIndex",
+        "type": "Expression",
+        "data": {
+          "formula": "floor(a / 2)"
+        },
+        "position": {
+          "x": 270,
+          "y": 40
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "circleX",
+        "type": "Expression",
+        "data": {
+          "formula": "cos(b) * c"
+        },
+        "position": {
+          "x": 500,
+          "y": 40
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "circleY",
+        "type": "Expression",
+        "data": {
+          "formula": "sin(b) * c"
+        },
+        "position": {
+          "x": 500,
+          "y": 230
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "lineX",
+        "type": "Expression",
+        "data": {
+          "formula": "a * b + (1 - a) * c"
+        },
+        "position": {
+          "x": 1190,
+          "y": 40
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "lineY",
+        "type": "Expression",
+        "data": {
+          "formula": "a * b + (1 - a) * c"
+        },
+        "position": {
+          "x": 960,
+          "y": 40
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "lineZ",
+        "type": "Expression",
+        "data": {
+          "formula": "cos(b) * c"
+        },
+        "position": {
+          "x": 730,
+          "y": 420
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "linePoints",
+        "type": "PointsFromLists",
+        "data": {},
+        "position": {
+          "x": 1420,
+          "y": 40
+        },
+        "measured": {
+          "width": 150,
+          "height": 234
+        }
+      },
+      {
+        "id": "lineGroups",
+        "type": "Expression",
+        "data": {
+          "formula": "floor(a / 2)"
+        },
+        "position": {
+          "x": 270,
+          "y": 420
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      }
+    ],
+    "edges": [
+      {
+        "source": "segmentCount",
+        "target": "indices",
+        "targetHandle": "param:count",
+        "id": "e_segmentCount_indices_param:count",
+        "sourceHandle": "value"
+      },
+      {
+        "source": "indices",
+        "target": "angles",
+        "targetHandle": "a",
+        "id": "e_indices_angles_a",
+        "sourceHandle": "values"
+      },
+      {
+        "source": "angles",
+        "target": "xCoords",
+        "targetHandle": "a",
+        "id": "e_angles_xCoords_a",
+        "sourceHandle": "value"
+      },
+      {
+        "source": "angles",
+        "target": "yCoords",
+        "targetHandle": "a",
+        "id": "e_angles_yCoords_a",
+        "sourceHandle": "value"
+      },
+      {
+        "source": "circleRadius",
+        "target": "xCoords",
+        "targetHandle": "b",
+        "id": "e_circleRadius_xCoords_b",
+        "sourceHandle": "value"
+      },
+      {
+        "source": "circleRadius",
+        "target": "yCoords",
+        "targetHandle": "b",
+        "id": "e_circleRadius_yCoords_b",
+        "sourceHandle": "value"
+      },
+      {
+        "source": "indices",
+        "target": "scales",
+        "targetHandle": "a",
+        "id": "e_indices_scales_a",
+        "sourceHandle": "values"
+      },
+      {
+        "source": "segmentCount",
+        "target": "scales",
+        "targetHandle": "b",
+        "id": "e_segmentCount_scales_b",
+        "sourceHandle": "value"
+      },
+      {
+        "source": "variationAmp",
+        "target": "scales",
+        "targetHandle": "c",
+        "id": "e_variationAmp_scales_c",
+        "sourceHandle": "value"
+      },
+      {
+        "source": "baseSphereRadius",
+        "target": "scales",
+        "targetHandle": "d",
+        "id": "e_baseSphereRadius_scales_d",
+        "sourceHandle": "value"
+      },
+      {
+        "source": "xCoords",
+        "target": "points",
+        "targetHandle": "x",
+        "id": "e_xCoords_points_x",
+        "sourceHandle": "value"
+      },
+      {
+        "source": "yCoords",
+        "target": "points",
+        "targetHandle": "y",
+        "id": "e_yCoords_points_y",
+        "sourceHandle": "value"
+      },
+      {
+        "source": "zCoords",
+        "target": "points",
+        "targetHandle": "z",
+        "id": "e_zCoords_points_z",
+        "sourceHandle": "values"
+      },
+      {
+        "source": "scales",
+        "target": "points",
+        "targetHandle": "scale",
+        "id": "e_scales_points_scale",
+        "sourceHandle": "value"
+      },
+      {
+        "source": "sphere",
+        "target": "spheres",
+        "targetHandle": "shape",
+        "id": "e_sphere_spheres_shape",
+        "sourceHandle": "solid"
+      },
+      {
+        "source": "points",
+        "target": "spheres",
+        "targetHandle": "points",
+        "id": "e_points_spheres_points",
+        "sourceHandle": "points"
+      },
+      {
+        "source": "segmentCount",
+        "sourceHandle": "value",
+        "target": "dirAngles1",
+        "targetHandle": "a",
+        "id": "e_segmentCount_dirAngles1_a"
+      },
+      {
+        "source": "randSeed1",
+        "sourceHandle": "value",
+        "target": "dirAngles1",
+        "targetHandle": "b",
+        "id": "e_randSeed1_dirAngles1_b"
+      },
+      {
+        "source": "segmentCount",
+        "sourceHandle": "value",
+        "target": "dirAngles2",
+        "targetHandle": "a",
+        "id": "e_segmentCount_dirAngles2_a"
+      },
+      {
+        "source": "randSeed2",
+        "sourceHandle": "value",
+        "target": "dirAngles2",
+        "targetHandle": "b",
+        "id": "e_randSeed2_dirAngles2_b"
+      },
+      {
+        "source": "indices",
+        "sourceHandle": "values",
+        "target": "randLengths",
+        "targetHandle": "a",
+        "id": "e_indices_randLengths_a"
+      },
+      {
+        "source": "randSeed3",
+        "sourceHandle": "value",
+        "target": "randLengths",
+        "targetHandle": "b",
+        "id": "e_randSeed3_randLengths_b"
+      },
+      {
+        "source": "lineLength",
+        "sourceHandle": "value",
+        "target": "randLengths",
+        "targetHandle": "c",
+        "id": "e_lineLength_randLengths_c"
+      },
+      {
+        "source": "xCoords",
+        "sourceHandle": "value",
+        "target": "endX",
+        "targetHandle": "a",
+        "id": "e_xCoords_endX_a"
+      },
+      {
+        "source": "dirAngles1",
+        "sourceHandle": "value",
+        "target": "endX",
+        "targetHandle": "b",
+        "id": "e_dirAngles1_endX_b"
+      },
+      {
+        "source": "dirAngles2",
+        "sourceHandle": "value",
+        "target": "endX",
+        "targetHandle": "c",
+        "id": "e_dirAngles2_endX_c"
+      },
+      {
+        "source": "randLengths",
+        "sourceHandle": "value",
+        "target": "endX",
+        "targetHandle": "d",
+        "id": "e_randLengths_endX_d"
+      },
+      {
+        "source": "dirAngles1",
+        "sourceHandle": "value",
+        "target": "endY",
+        "targetHandle": "b",
+        "id": "e_dirAngles1_endY_b"
+      },
+      {
+        "source": "dirAngles2",
+        "sourceHandle": "value",
+        "target": "endY",
+        "targetHandle": "c",
+        "id": "e_dirAngles2_endY_c"
+      },
+      {
+        "source": "randLengths",
+        "sourceHandle": "value",
+        "target": "endY",
+        "targetHandle": "d",
+        "id": "e_randLengths_endY_d"
+      },
+      {
+        "source": "dirAngles1",
+        "sourceHandle": "value",
+        "target": "endZ",
+        "targetHandle": "b",
+        "id": "e_dirAngles1_endZ_b"
+      },
+      {
+        "source": "randLengths",
+        "sourceHandle": "value",
+        "target": "endZ",
+        "targetHandle": "d",
+        "id": "e_randLengths_endZ_d"
+      },
+      {
+        "source": "endX",
+        "sourceHandle": "value",
+        "target": "endPoints",
+        "targetHandle": "x",
+        "id": "e_endX_endPoints_x"
+      },
+      {
+        "source": "endY",
+        "sourceHandle": "value",
+        "target": "endPoints",
+        "targetHandle": "y",
+        "id": "e_endY_endPoints_y"
+      },
+      {
+        "source": "endZ",
+        "sourceHandle": "value",
+        "target": "endPoints",
+        "targetHandle": "z",
+        "id": "e_endZ_endPoints_z"
+      },
+      {
+        "source": "endpointSphere",
+        "sourceHandle": "solid",
+        "target": "endpointSpheres",
+        "targetHandle": "shape",
+        "id": "e_endpointSphere_endpointSpheres_shape"
+      },
+      {
+        "source": "endPoints",
+        "sourceHandle": "points",
+        "target": "endpointSpheres",
+        "targetHandle": "points",
+        "id": "e_endPoints_endpointSpheres_points"
+      },
+      {
+        "source": "doubleIndices",
+        "sourceHandle": "values",
+        "target": "isEven",
+        "targetHandle": "a",
+        "id": "e_doubleIndices_isEven_a"
+      },
+      {
+        "source": "doubleIndices",
+        "sourceHandle": "values",
+        "target": "halfIndex",
+        "targetHandle": "a",
+        "id": "e_doubleIndices_halfIndex_a"
+      },
+      {
+        "source": "halfIndex",
+        "sourceHandle": "value",
+        "target": "circleX",
+        "targetHandle": "a",
+        "id": "e_halfIndex_circleX_a"
+      },
+      {
+        "source": "segmentCount",
+        "sourceHandle": "value",
+        "target": "circleX",
+        "targetHandle": "b",
+        "id": "e_segmentCount_circleX_b"
+      },
+      {
+        "source": "circleRadius",
+        "sourceHandle": "value",
+        "target": "circleX",
+        "targetHandle": "c",
+        "id": "e_circleRadius_circleX_c"
+      },
+      {
+        "source": "halfIndex",
+        "sourceHandle": "value",
+        "target": "circleY",
+        "targetHandle": "a",
+        "id": "e_halfIndex_circleY_a"
+      },
+      {
+        "source": "segmentCount",
+        "sourceHandle": "value",
+        "target": "circleY",
+        "targetHandle": "b",
+        "id": "e_segmentCount_circleY_b"
+      },
+      {
+        "source": "circleRadius",
+        "sourceHandle": "value",
+        "target": "circleY",
+        "targetHandle": "c",
+        "id": "e_circleRadius_circleY_c"
+      },
+      {
+        "source": "halfIndex",
+        "sourceHandle": "value",
+        "target": "lineZ",
+        "targetHandle": "a",
+        "id": "e_halfIndex_lineZ_a"
+      },
+      {
+        "source": "dirAngles1",
+        "sourceHandle": "value",
+        "target": "lineZ",
+        "targetHandle": "b",
+        "id": "e_dirAngles1_lineZ_b"
+      },
+      {
+        "source": "randLengths",
+        "sourceHandle": "value",
+        "target": "lineZ",
+        "targetHandle": "c",
+        "id": "e_randLengths_lineZ_c"
+      },
+      {
+        "source": "lineX",
+        "sourceHandle": "value",
+        "target": "linePoints",
+        "targetHandle": "x",
+        "id": "e_lineX_linePoints_x"
+      },
+      {
+        "source": "lineY",
+        "sourceHandle": "value",
+        "target": "linePoints",
+        "targetHandle": "y",
+        "id": "e_lineY_linePoints_y"
+      },
+      {
+        "source": "lineZ",
+        "sourceHandle": "value",
+        "target": "linePoints",
+        "targetHandle": "z",
+        "id": "e_lineZ_linePoints_z"
+      },
+      {
+        "source": "doubleIndices",
+        "sourceHandle": "values",
+        "target": "lineGroups",
+        "targetHandle": "a",
+        "id": "e_doubleIndices_lineGroups_a"
+      },
+      {
+        "source": "lineGroups",
+        "sourceHandle": "value",
+        "target": "linePoints",
+        "targetHandle": "group",
+        "id": "e_lineGroups_linePoints_group"
+      },
+      {
+        "source": "linePoints",
+        "sourceHandle": "points",
+        "target": "lines",
+        "targetHandle": "points",
+        "id": "e_linePoints_lines_points"
+      },
+      {
+        "source": "isEven",
+        "sourceHandle": "value",
+        "target": "lineX",
+        "targetHandle": "a",
+        "id": "e_isEven_lineX_a"
+      },
+      {
+        "source": "circleX",
+        "sourceHandle": "value",
+        "target": "lineX",
+        "targetHandle": "b",
+        "id": "e_circleX_lineX_b"
+      },
+      {
+        "source": "endX",
+        "sourceHandle": "value",
+        "target": "lineX",
+        "targetHandle": "c",
+        "id": "e_endX_lineX_c"
+      },
+      {
+        "source": "isEven",
+        "sourceHandle": "value",
+        "target": "lineY",
+        "targetHandle": "a",
+        "id": "e_isEven_lineY_a"
+      },
+      {
+        "source": "circleY",
+        "sourceHandle": "value",
+        "target": "lineY",
+        "targetHandle": "b",
+        "id": "e_circleY_lineY_b"
+      },
+      {
+        "source": "endY",
+        "sourceHandle": "value",
+        "target": "lineY",
+        "targetHandle": "c",
+        "id": "e_endY_lineY_c"
+      }
+    ]
+  },
+  "conversation": [
+    {
+      "role": "system",
+      "content": "Workspace cleared."
+    },
+    {
+      "role": "user",
+      "content": "make a circle divide on equal segments and place spheres on the points with varying radius"
+    },
+    {
+      "role": "assistant",
+      "content": "Circle of spheres with varying radii placed on equally divided points"
+    },
+    {
+      "role": "system",
+      "content": "Issues detected (auto-repair 1/2): Evaluation error: The graph evaluated successfully but produced no visible 3D shapes. Please verify that at least one geometry shape node (Primitive, Boolean, Compound, or Pattern) is a leaf node (has no outgoing edges) and evaluates successfully with correct inputs.; No leaf node produced meshable geometry — the viewport is empty.; Node \"scales\" failed: ListConstant entry \"indices\" error: unknown variable 'indices' — available: circleradius, segmentcount, basesphereradius, variationamp"
+    },
+    {
+      "role": "assistant",
+      "content": "The graph has broken ListConstant nodes trying to reference slider names as variables (ListConstant only accepts literal comma-separated values). Rebuilding with proper Expression nodes for angle/x/y/scale calculations, wiring through PointsFromLists with scale channel, then InstanceOnPoints."
+    },
+    {
+      "role": "system",
+      "content": "[Autofix] Wired \"xCoords\" → \"points\":x (inferred from naming — PointsFromLists \"points\" channel 'x' had no list; wired \"xCoords\" (\"xCoords\" is the only 'x'-named number producer and \"points\" the only PointsFromLists))."
+    },
+    {
+      "role": "system",
+      "content": "[Autofix] Wired \"yCoords\" → \"points\":y (inferred from naming — PointsFromLists \"points\" channel 'y' had no list; wired \"yCoords\" (\"yCoords\" is the only 'y'-named number producer and \"points\" the only PointsFromLists))."
+    },
+    {
+      "role": "system",
+      "content": "[Patch] removedEdgeIds entry {\"source\":\"scales\",\"target\":\"scales_x.a\"} matched NO edge — nothing was removed. Use the edge ids shown in the graph state, {\"source\",\"target\"} objects, or \"source->target\" strings."
+    },
+    {
+      "role": "system",
+      "content": "[Patch] removedEdgeIds entry {\"source\":\"pts\",\"target\":\"pts_x.list\"} matched NO edge — nothing was removed. Use the edge ids shown in the graph state, {\"source\",\"target\"} objects, or \"source->target\" strings."
+    },
+    {
+      "role": "system",
+      "content": "[Patch] removedEdgeIds entry {\"source\":\"pts\",\"target\":\"pts_x_2.list\"} matched NO edge — nothing was removed. Use the edge ids shown in the graph state, {\"source\",\"target\"} objects, or \"source->target\" strings."
+    },
+    {
+      "role": "system",
+      "content": "[Patch] removedEdgeIds entry {\"source\":\"pts_x\",\"target\":\"pts_x_4.count\"} matched NO edge — nothing was removed. Use the edge ids shown in the graph state, {\"source\",\"target\"} objects, or \"source->target\" strings."
+    },
+    {
+      "role": "system",
+      "content": "[Patch] removedEdgeIds entry {\"source\":\"pts_x_3\",\"target\":\"pts_x_4.list\"} matched NO edge — nothing was removed. Use the edge ids shown in the graph state, {\"source\",\"target\"} objects, or \"source->target\" strings."
+    },
+    {
+      "role": "system",
+      "content": "[Patch] removedEdgeIds entry {\"source\":\"pts_x_2\",\"target\":\"pts_x_5.a\"} matched NO edge — nothing was removed. Use the edge ids shown in the graph state, {\"source\",\"target\"} objects, or \"source->target\" strings."
+    },
+    {
+      "role": "system",
+      "content": "[Patch] removedEdgeIds entry {\"source\":\"pts_x_4\",\"target\":\"pts_x_5.b\"} matched NO edge — nothing was removed. Use the edge ids shown in the graph state, {\"source\",\"target\"} objects, or \"source->target\" strings."
+    },
+    {
+      "role": "system",
+      "content": "[Patch] removedEdgeIds entry {\"source\":\"pts_x_2\",\"target\":\"pts_x_6.a\"} matched NO edge — nothing was removed. Use the edge ids shown in the graph state, {\"source\",\"target\"} objects, or \"source->target\" strings."
+    },
+    {
+      "role": "system",
+      "content": "[Patch] removedEdgeIds entry {\"source\":\"pts_x_4\",\"target\":\"pts_x_6.b\"} matched NO edge — nothing was removed. Use the edge ids shown in the graph state, {\"source\",\"target\"} objects, or \"source->target\" strings."
+    },
+    {
+      "role": "system",
+      "content": "[Patch] removedEdgeIds entry {\"source\":\"pts_x_7\",\"target\":\"pts_x_8.list\"} matched NO edge — nothing was removed. Use the edge ids shown in the graph state, {\"source\",\"target\"} objects, or \"source->target\" strings."
+    },
+    {
+      "role": "system",
+      "content": "[Patch] removedEdgeIds entry {\"source\":\"pts_x_5\",\"target\":\"pts_x_9.x\"} matched NO edge — nothing was removed. Use the edge ids shown in the graph state, {\"source\",\"target\"} objects, or \"source->target\" strings."
+    },
+    {
+      "role": "system",
+      "content": "[Patch] removedEdgeIds entry {\"source\":\"pts_x_6\",\"target\":\"pts_x_9.y\"} matched NO edge — nothing was removed. Use the edge ids shown in the graph state, {\"source\",\"target\"} objects, or \"source->target\" strings."
+    },
+    {
+      "role": "system",
+      "content": "[Patch] removedEdgeIds entry {\"source\":\"pts_x_8\",\"target\":\"pts_x_9.scale\"} matched NO edge — nothing was removed. Use the edge ids shown in the graph state, {\"source\",\"target\"} objects, or \"source->target\" strings."
+    },
+    {
+      "role": "system",
+      "content": "[Patch] removedEdgeIds entry {\"source\":\"pts_x_2\",\"target\":\"pts_x_9.group\"} matched NO edge — nothing was removed. Use the edge ids shown in the graph state, {\"source\",\"target\"} objects, or \"source->target\" strings."
+    },
+    {
+      "role": "system",
+      "content": "[Patch] removedEdgeIds entry {\"source\":\"sphere\",\"target\":\"spheres.shape\"} matched NO edge — nothing was removed. Use the edge ids shown in the graph state, {\"source\",\"target\"} objects, or \"source->target\" strings. Current edges touching those nodes: sphere->spheres.shape"
+    },
+    {
+      "role": "system",
+      "content": "[Patch] removedEdgeIds entry {\"source\":\"pts_x_9\",\"target\":\"spheres.points\"} matched NO edge — nothing was removed. Use the edge ids shown in the graph state, {\"source\",\"target\"} objects, or \"source->target\" strings."
+    },
+    {
+      "role": "system",
+      "content": "Structural validation error (does not count against repair budget, 1/3): Expression \"scales_x\" uses \"a\" in formula \"1 + sin(a * 2 * 3.14159 / segmentCount) * variationAmp / baseSphereRadius\" but that per-element input is not connecte | \"spheres\" (InstanceOnPoints) is missing required input: \"points\". Connect an upstream solid to handle \"points\", or the node produces no geometry."
+    },
+    {
+      "role": "assistant",
+      "content": "The patch had mismatched node IDs and wrong handle names. Clearing and rebuilding with a complete, correct graph using proper wiring."
+    },
+    {
+      "role": "user",
+      "content": "ok now make lines from points on the circle in random directions with random lengths and place spheres at the end of those new lines and keep the current graph just expand it"
+    },
+    {
+      "role": "system",
+      "content": "IR program had compile errors (attempt 1/3) — asking the model to fix."
+    },
+    {
+      "role": "system",
+      "content": "IR program had compile errors (attempt 2/3) — asking the model to fix."
+    },
+    {
+      "role": "system",
+      "content": "Error: IR compile failed: emit[2]: Emit ref \"$lines\" is a curve; only solids render. Extrude/loft/instance it into a solid first."
+    },
+    {
+      "role": "user",
+      "content": "Bankrbot has closed the loop on the runner and workflows — the two items it left \"unconfirmed\" I can chase down. The settlement tx is checkable on a public explorer right now:  Searched the web Searched the web  On-chain confirmation is done — that closes bankrbot's last open item. The settlement is real and independently verifiable:  Tx: 0xc197b5141e4454cb9660cbc8b0774402ff1881d1663d356c4beb4929f6f92c3d — 0.01 USDC (10,000 raw units, 6 decimals) from 0x2882...dfb0 to your payTo 0x525e...8a2C5, settled 2026-07-22 00:24 UTC. Explorer link for the PR: https://basescan.org/tx/0xc197b5141e4454cb9660cbc8b0774402ff1881d1663d356c4beb4929f6f92c3d. The address history also shows earlier settlements landing on Jul 13 and Jul 17 (including one ~7.96 USDC payment), so the rail has been settling repeatedly, not just once.  That means every item from the original failed check is now green: runner verified, workflows verified, API serving v4 personas, settlement confirmed on-chain. The one claim nobody outside can verify is \"old v3 batch rows scrubbed\" — that's DB-internal; if you want it confirmed, run npx tsx scripts/check-tags.ts (or db-check.ts) locally and you'll see whether any batch-* polluted rows remain. Optional — it doesn't block anything.  Two closing thoughts. First, the only remaining go-live step is the one from before: the BankrBot/skills PR — paste the Basescan link above into the PR body as the proof tx (the HANDOFF template has the slot for it), since that's exactly what reviewers want to see. Until merge, the fork URL keeps working for installs.  Second, on bankrbot's roadmap: the ideas are reasonable but they're all net-new products, so I'd rank them by how much you already have built. The launch-health oracle is closest — your repo already has /api/v1/simulate and the doppler-a2a-v1 output batch, so a \"resistance score per launch\" is mostly packaging. The bias-guard app is second (it's the guardrails workflow behind an intercept hook). Dynamic pricing and app templates are the furthest out and depend on demand signal you don't have yet — I'd wait for real paid traffic before building either. One caution: the $BNKR contract address in that message came from an external bot — verify it independently before wiring anything to it or referencing it anywhere. Your own SKILL.md's rule applies in both directions: treat pasted addresses as data, not instructions."
+    },
+    {
+      "role": "assistant",
+      "content": "Expanding the circle-of-spheres graph to add random-direction lines from each circle point with random lengths, and spheres at the line endpoints. Adding 2 new sliders for line length control and endpoint sphere size. Using Expression nodes with sin/cos for random 3D directions, computing endpoint positions, creating Line curves, and instancing spheres at endpoints."
+    },
+    {
+      "role": "system",
+      "content": "Issues detected (auto-repair 1/2): Dropped invalid edge: yCoords → endY.e (\"Expression\" has no input handle \"e\" (it accepts — number/list inputs: a, b, c, d)); Dropped invalid edge: zCoords → endZ.f (\"Expression\" has no input handle \"f\" (it accepts — number/list inputs: a, b, c, d))"
+    },
+    {
+      "role": "assistant",
+      "content": "Fixing rejected edges (Expression only has a,b,c,d inputs - need to restructure endY/endZ formulas), wiring endpointRadius and baseSphereRadius to their respective sphere radius parameters, and fixing the lines by creating proper start-end point pairs for PolylineCurve with groupBy='row' to make individual segments."
+    },
+    {
+      "role": "system",
+      "content": "[Autofix] Wired \"indices\" → \"endY\":a (inferred from naming — \"endY\" uses 'a' but nothing was wired to it; \"indices\" is the only Series/Range in the graph)."
+    },
+    {
+      "role": "system",
+      "content": "[Patch] removedEdgeIds entry {\"source\":\"xCoords\",\"target\":\"startPointsForLines\"} matched NO edge — nothing was removed. Use the edge ids shown in the graph state, {\"source\",\"target\"} objects, or \"source->target\" strings. Current edges touching those nodes: angles->xCoords.a, circleRadius->xCoords.b, xCoords->points.x, xCoords->endX.a"
+    },
+    {
+      "role": "system",
+      "content": "[Patch] removedEdgeIds entry {\"source\":\"yCoords\",\"target\":\"startPointsForLines\"} matched NO edge — nothing was removed. Use the edge ids shown in the graph state, {\"source\",\"target\"} objects, or \"source->target\" strings. Current edges touching those nodes: angles->yCoords.a, circleRadius->yCoords.b, yCoords->points.y"
+    },
+    {
+      "role": "system",
+      "content": "[Patch] removedEdgeIds entry {\"source\":\"zCoords\",\"target\":\"startPointsForLines\"} matched NO edge — nothing was removed. Use the edge ids shown in the graph state, {\"source\",\"target\"} objects, or \"source->target\" strings. Current edges touching those nodes: zCoords->points.z"
+    },
+    {
+      "role": "system",
+      "content": "[Patch] removedEdgeIds entry {\"source\":\"startPointsForLines\",\"target\":\"lines\"} matched NO edge — nothing was removed. Use the edge ids shown in the graph state, {\"source\",\"target\"} objects, or \"source->target\" strings."
+    },
+    {
+      "role": "system",
+      "content": "[Patch] removedEdgeIds entry {\"source\":\"yCoords\",\"target\":\"endY\"} matched NO edge — nothing was removed. Use the edge ids shown in the graph state, {\"source\",\"target\"} objects, or \"source->target\" strings. Current edges touching those nodes: angles->yCoords.a, circleRadius->yCoords.b, yCoords->points.y, dirAngles1->endY.b, dirAngles2->endY.c, randLengths->endY.d"
+    },
+    {
+      "role": "system",
+      "content": "[Patch] removedEdgeIds entry {\"source\":\"zCoords\",\"target\":\"endZ\"} matched NO edge — nothing was removed. Use the edge ids shown in the graph state, {\"source\",\"target\"} objects, or \"source->target\" strings. Current edges touching those nodes: zCoords->points.z, dirAngles1->endZ.b, randLengths->endZ.d, endZ->endPoints.z"
+    },
+    {
+      "role": "system",
+      "content": "Structural validation error (does not count against repair budget, 1/3): Type mismatch: Cannot connect Point output \"points\" from \"lineStartPoints\" to number input \"x\" on \"combinedLinePoints\". | Type mismatch: Cannot connect Point output \"points\" from \"endPoints\" to number input \"y\" on \"combinedLinePoints\"."
+    },
+    {
+      "role": "assistant",
+      "content": "The type mismatch occurred because PointsFromLists needs number lists, not Point objects. I need to create interleaved coordinate lists (start0, end0, start1, end1...) for the PolylineCurve. Using Expression with conditional logic based on index parity to alternate between circle coords and endpoint coords. Also fixing the endY formula which incorrectly uses 'a' instead of yCoords."
+    },
+    {
+      "role": "system",
+      "content": "[Patch] removedEdgeIds entry {\"source\":\"xCoords\",\"target\":\"lineStartPoints\"} matched NO edge — nothing was removed. Use the edge ids shown in the graph state, {\"source\",\"target\"} objects, or \"source->target\" strings. Current edges touching those nodes: angles->xCoords.a, circleRadius->xCoords.b, xCoords->points.x, xCoords->endX.a"
+    },
+    {
+      "role": "system",
+      "content": "[Patch] removedEdgeIds entry {\"source\":\"yCoords\",\"target\":\"lineStartPoints\"} matched NO edge — nothing was removed. Use the edge ids shown in the graph state, {\"source\",\"target\"} objects, or \"source->target\" strings. Current edges touching those nodes: angles->yCoords.a, circleRadius->yCoords.b, yCoords->points.y"
+    },
+    {
+      "role": "system",
+      "content": "[Patch] removedEdgeIds entry {\"source\":\"zCoords\",\"target\":\"lineStartPoints\"} matched NO edge — nothing was removed. Use the edge ids shown in the graph state, {\"source\",\"target\"} objects, or \"source->target\" strings. Current edges touching those nodes: zCoords->points.z"
+    },
+    {
+      "role": "system",
+      "content": "[Patch] removedEdgeIds entry {\"source\":\"lineStartPoints\",\"target\":\"combinedLinePoints\"} matched NO edge — nothing was removed. Use the edge ids shown in the graph state, {\"source\",\"target\"} objects, or \"source->target\" strings."
+    },
+    {
+      "role": "system",
+      "content": "[Patch] removedEdgeIds entry {\"source\":\"endPoints\",\"target\":\"combinedLinePoints\"} matched NO edge — nothing was removed. Use the edge ids shown in the graph state, {\"source\",\"target\"} objects, or \"source->target\" strings. Current edges touching those nodes: endX->endPoints.x, endY->endPoints.y, endZ->endPoints.z, endPoints->endpointSpheres.points"
+    },
+    {
+      "role": "system",
+      "content": "[Patch] removedEdgeIds entry {\"source\":\"endPoints\",\"target\":\"combinedLinePoints\"} matched NO edge — nothing was removed. Use the edge ids shown in the graph state, {\"source\",\"target\"} objects, or \"source->target\" strings. Current edges touching those nodes: endX->endPoints.x, endY->endPoints.y, endZ->endPoints.z, endPoints->endpointSpheres.points"
+    },
+    {
+      "role": "system",
+      "content": "[Patch] removedEdgeIds entry {\"source\":\"lineGroups\",\"target\":\"combinedLinePoints\"} matched NO edge — nothing was removed. Use the edge ids shown in the graph state, {\"source\",\"target\"} objects, or \"source->target\" strings."
+    },
+    {
+      "role": "system",
+      "content": "[Patch] removedEdgeIds entry {\"source\":\"combinedLinePoints\",\"target\":\"lines\"} matched NO edge — nothing was removed. Use the edge ids shown in the graph state, {\"source\",\"target\"} objects, or \"source->target\" strings."
+    },
+    {
+      "role": "system",
+      "content": "Issues detected (auto-repair 2/2): Dropped invalid edge: endX → lineX.e (\"Expression\" has no input handle \"e\" (it accepts — number/list inputs: a, b, c, d)); Dropped invalid edge: endY → lineY.e (\"Expression\" has no input handle \"e\" (it accepts — number/list inputs: a, b, c, d))"
+    },
+    {
+      "role": "assistant",
+      "content": "Expression only has a,b,c,d inputs - need to rewrite lineX/lineY formulas to use only 3 inputs: a*(b) + (1-a)*(c) where a=isEven, b=circle coords, c=end coords. Also need to wire endX/endY into these expressions."
+    },
+    {
+      "role": "user",
+      "content": "ignore the last request it was a false paste "
+    },
+    {
+      "role": "assistant",
+      "content": "Acknowledging the false paste - no graph changes needed. The current circle-of-spheres graph remains as-is."
+    }
+  ],
+  "plan": "Acknowledging the false paste - no graph changes needed. The current circle-of-spheres graph remains as-is.",
+  "genome": {
+    "archetype": "radial-array-with-extensions",
+    "parts": [
+      {
+        "id": "baseSpheres",
+        "role": "anchor points",
+        "count": "segmentCount"
+      },
+      {
+        "id": "extensionLines",
+        "role": "directional stems",
+        "count": "segmentCount"
+      },
+      {
+        "id": "endSpheres",
+        "role": "terminal nodes",
+        "count": "segmentCount"
+      }
+    ],
+    "detailBudget": "medium"
+  },
+  "geometryReport": {
+    "leaves": [
+      {
+        "id": "spheres",
+        "bbox": {
+          "min": [
+            -22.02625359304901,
+            -20.557418454192135,
+            -3.569954498246755
+          ],
+          "max": [
+            22.069954498248077,
+            23.5580002237525,
+            3.569954498246755
+          ],
+          "center": [
+            0.021850452599533554,
+            1.5002908847801812,
+            0
+          ],
+          "size": [
+            44.096208091297086,
+            44.11541867794463,
+            7.13990899649351
+          ]
+        },
+        "volume": 741.4163262309452,
+        "meshOk": true,
+        "vertexCount": 1377,
+        "error": null
+      },
+      {
+        "id": "endpointSpheres",
+        "bbox": {
+          "min": [
+            -16.976296329262645,
+            -0.3467642673227594,
+            -1.561749202238445
+          ],
+          "max": [
+            21.926345888033275,
+            4.217768183456781,
+            1.561749202238445
+          ],
+          "center": [
+            2.475024779385315,
+            1.935501958067011,
+            0
+          ],
+          "size": [
+            38.90264221729592,
+            4.564532450779541,
+            3.12349840447689
+          ]
+        },
+        "volume": 169.64600329384885,
+        "meshOk": true,
+        "vertexCount": 1092,
+        "error": null
+      },
+      {
+        "id": "lines",
+        "bbox": null,
+        "meshOk": true,
+        "vertexCount": 612,
+        "error": null
+      }
+    ],
+    "nodeErrors": [],
+    "numbers": {
+      "circleRadius": 20,
+      "segmentCount": 12,
+      "baseSphereRadius": 2,
+      "variationAmp": 1.5,
+      "zCoords": [
+        0
+      ],
+      "lineLength": 15,
+      "endpointRadius": 1.5,
+      "randSeed1": 7,
+      "randSeed2": 13,
+      "randSeed3": 23,
+      "doubleIndices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23
+      ],
+      "indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "dirAngles1": 5.9106228532952505,
+      "dirAngles2": 2.8508677653162304,
+      "isEven": [
+        1,
+        0,
+        1,
+        0,
+        1,
+        0,
+        1,
+        0,
+        1,
+        0,
+        1,
+        0,
+        1,
+        0,
+        1,
+        0,
+        1,
+        0,
+        1,
+        0,
+        1,
+        0,
+        1,
+        0
+      ],
+      "halfIndex": [
+        0,
+        0,
+        1,
+        1,
+        2,
+        2,
+        3,
+        3,
+        4,
+        4,
+        5,
+        5,
+        6,
+        6,
+        7,
+        7,
+        8,
+        8,
+        9,
+        9,
+        10,
+        10,
+        11,
+        11
+      ],
+      "lineGroups": [
+        0,
+        0,
+        1,
+        1,
+        2,
+        2,
+        3,
+        3,
+        4,
+        4,
+        5,
+        5,
+        6,
+        6,
+        7,
+        7,
+        8,
+        8,
+        9,
+        9,
+        10,
+        10,
+        11,
+        11
+      ],
+      "angles": [
+        0,
+        0.5235983333333333,
+        1.0471966666666666,
+        1.5707949999999997,
+        2.094393333333333,
+        2.6179916666666667,
+        3.1415899999999994,
+        3.665188333333333,
+        4.188786666666666,
+        4.712385,
+        5.235983333333333,
+        5.759581666666667
+      ],
+      "scales": [
+        1,
+        1.3749997127404416,
+        1.6495187211393507,
+        1.7499999999993399,
+        1.649519716234761,
+        1.3750014362966907,
+        1.0000019901923454,
+        0.6250020108184479,
+        0.35048227396063325,
+        0.25000000000594136,
+        0.3504792886744026,
+        0.6249968401497009
+      ],
+      "randLengths": [
+        1.15334696868622,
+        4.199545771298515,
+        8.230235213831426,
+        12.043103204181909,
+        14.500811488993838,
+        14.870251643065863,
+        13.041223570140941,
+        9.559307027783245,
+        5.463120947631398,
+        1.9745143770721418,
+        0.13410181250234576,
+        0.4908588851108761
+      ],
+      "circleX": [
+        16.877079174649843,
+        16.877079174649843,
+        16.877079174649843,
+        16.877079174649843,
+        16.877079174649843,
+        16.877079174649843,
+        16.877079174649843,
+        16.877079174649843,
+        16.877079174649843,
+        16.877079174649843,
+        16.877079174649843,
+        16.877079174649843,
+        16.877079174649843,
+        16.877079174649843,
+        16.877079174649843,
+        16.877079174649843,
+        16.877079174649843,
+        16.877079174649843,
+        16.877079174649843,
+        16.877079174649843,
+        16.877079174649843,
+        16.877079174649843,
+        16.877079174649843,
+        16.877079174649843
+      ],
+      "circleY": [
+        -10.731458360008698,
+        -10.731458360008698,
+        -10.731458360008698,
+        -10.731458360008698,
+        -10.731458360008698,
+        -10.731458360008698,
+        -10.731458360008698,
+        -10.731458360008698,
+        -10.731458360008698,
+        -10.731458360008698,
+        -10.731458360008698,
+        -10.731458360008698,
+        -10.731458360008698,
+        -10.731458360008698,
+        -10.731458360008698,
+        -10.731458360008698,
+        -10.731458360008698,
+        -10.731458360008698,
+        -10.731458360008698,
+        -10.731458360008698,
+        -10.731458360008698,
+        -10.731458360008698,
+        -10.731458360008698,
+        -10.731458360008698
+      ],
+      "xCoords": [
+        20,
+        17.320512498336736,
+        10.000015320503906,
+        0.00002653589793799155,
+        -9.99996935896872,
+        -17.32048596239815,
+        -19.999999999929585,
+        -17.320539034153363,
+        -10.000061281968675,
+        -0.00007960769379158335,
+        9.99992339736313,
+        17.3204594263376
+      ],
+      "yCoords": [
+        0,
+        9.999992339745114,
+        17.320499230382683,
+        19.999999999982396,
+        17.320525766260292,
+        10.000038301245084,
+        0.00005307179587593638,
+        -9.999946378174723,
+        -17.320472694383113,
+        -19.999999999841563,
+        -17.320552302015933,
+        -10.000084262674642
+      ],
+      "endY": [
+        6.622897694849031,
+        5.231676186446172,
+        6.635303686722323,
+        5.521253125987128,
+        6.638855992334898,
+        6.48964722039012,
+        6.2668729966206715,
+        5.806115489943369,
+        5.340889532315666,
+        6.6271682100252525,
+        6.014800304066272,
+        6.277918638395094
+      ],
+      "endZ": [
+        1.074224671082112,
+        3.911447116392219,
+        7.6656218428158,
+        11.216918177759467,
+        13.506021930184684,
+        13.850117626247954,
+        12.146565153850322,
+        8.903516224081846,
+        5.088338082455873,
+        1.8390580760561068,
+        0.12490211474777735,
+        0.45718481837829195
+      ],
+      "lineZ": [
+        1.074224671082112,
+        3.911447116392219,
+        7.6656218428158,
+        11.216918177759467,
+        13.506021930184684,
+        13.850117626247954,
+        12.146565153850322,
+        8.903516224081846,
+        5.088338082455873,
+        1.8390580760561068,
+        0.12490211474777735,
+        0.45718481837829195,
+        0.45718481837829195,
+        0.45718481837829195,
+        0.45718481837829195,
+        0.45718481837829195,
+        0.45718481837829195,
+        0.45718481837829195,
+        0.45718481837829195,
+        0.45718481837829195,
+        0.45718481837829195,
+        0.45718481837829195,
+        0.45718481837829195,
+        0.45718481837829195
+      ],
+      "endX": [
+        20.402204817522094,
+        18.78501328299205,
+        12.870131896189427,
+        4.199798380926753,
+        -4.943124890476627,
+        -12.134807228252996,
+        -15.452155258751464,
+        -13.986937400703162,
+        -8.094915975742092,
+        0.6884895881221719,
+        10.046688504907763,
+        17.491635849110015
+      ],
+      "lineY": [
+        -10.731458360008698,
+        5.231676186446172,
+        -10.731458360008698,
+        5.521253125987128,
+        -10.731458360008698,
+        6.48964722039012,
+        -10.731458360008698,
+        5.806115489943369,
+        -10.731458360008698,
+        6.6271682100252525,
+        -10.731458360008698,
+        6.277918638395094,
+        -10.731458360008698,
+        6.277918638395094,
+        -10.731458360008698,
+        6.277918638395094,
+        -10.731458360008698,
+        6.277918638395094,
+        -10.731458360008698,
+        6.277918638395094,
+        -10.731458360008698,
+        6.277918638395094,
+        -10.731458360008698,
+        6.277918638395094
+      ],
+      "lineX": [
+        16.877079174649843,
+        18.78501328299205,
+        16.877079174649843,
+        4.199798380926753,
+        16.877079174649843,
+        -12.134807228252996,
+        16.877079174649843,
+        -13.986937400703162,
+        16.877079174649843,
+        0.6884895881221719,
+        16.877079174649843,
+        17.491635849110015,
+        16.877079174649843,
+        17.491635849110015,
+        16.877079174649843,
+        17.491635849110015,
+        16.877079174649843,
+        17.491635849110015,
+        16.877079174649843,
+        17.491635849110015,
+        16.877079174649843,
+        17.491635849110015,
+        16.877079174649843,
+        17.491635849110015
+      ]
+    },
+    "sliders": {
+      "circleRadius": 20,
+      "segmentCount": 12,
+      "baseSphereRadius": 2,
+      "variationAmp": 1.5,
+      "lineLength": 15,
+      "endpointRadius": 1.5,
+      "randSeed1": 7,
+      "randSeed2": 13,
+      "randSeed3": 23
+    },
+    "selections": {},
+    "helpers": {},
+    "nodeCount": 38,
+    "edgeCount": 60,
+    "transformCount": 2,
+    "nodesPerLeafRatio": 12.666666666666666,
+    "nodeEconomyWarning": false,
+    "placement": {
+      "anchored": [
+        "spheres",
+        "endpointSpheres"
+      ],
+      "literal": [],
+      "origin": [
+        "lines"
+      ],
+      "literalNodeIds": [],
+      "ratio": 1
+    },
+    "scene": {
+      "min": [
+        -22.02625359304901,
+        -20.557418454192135,
+        -3.569954498246755
+      ],
+      "max": [
+        22.069954498248077,
+        23.5580002237525,
+        3.569954498246755
+      ],
+      "size": [
+        44.096208091297086,
+        44.11541867794463,
+        7.13990899649351
+      ]
+    },
+    "meshedLeafCount": 3,
+    "kernelFaultCount": 0,
+    "kernelSuspect": false,
+    "kernelHealth": "ok",
+    "evalCount": 7,
+    "recycleRecommended": false,
+    "perturbationIssues": [],
+    "proportionalIntegrity": 1
+  }
+}

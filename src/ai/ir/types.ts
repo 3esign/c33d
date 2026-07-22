@@ -29,8 +29,18 @@ export type IrType =
  *  - strings starting with "$"  → reference to a prior `let` binding OR a param
  *  - other strings              → inline formula ("systemRadius*0.2") or plain string
  *  - arrays of numbers/strings  → data literals (compiled to ListConstant)
+ *  - objects                    → ERGONOMIC forms the compiler auto-lifts
+ *                                 (Jul 22): {"op":"point","args":{...}} nested
+ *                                 constructors become their own step, and bare
+ *                                 {"x":..,"y":..,"z":..} literals become
+ *                                 point()/vector() where a point/vector is
+ *                                 expected. Models write these constantly; the
+ *                                 canonical $ref form remains preferred.
  */
-export type IrValue = number | string | boolean | (number | string)[];
+export type IrValue =
+  | number | string | boolean
+  | (number | string)[]
+  | { [key: string]: any };
 
 export interface IrOp {
   /** Binding name; later ops reference this result as "$<name>". */
