@@ -153,87 +153,30 @@ To create high-quality, complex models in a resource-efficient way:
 - **Rendering Multiple Colors**: If you merge all geometries into a single global union/compound node at the end of the graph, they will be fused into a single mesh and rendered in a single uniform color.
 - **To Render Multi-Colored Objects**: Do NOT connect all sub-assemblies to a final single Compound/Boolean node. Instead, keep the sub-assemblies (e.g., Chassis assembly, Wheel assembly, Wing assembly) as separate **leaf nodes** (nodes with no outgoing connections). The engine will mesh them separately and render them in their respective colors.
 
-## 11. Reference Object Blueprints (For Concept Reference Only)
-These blueprints serve as conceptual examples of how complex objects *can* be deconstructed into parametric parts. You are strongly encouraged to explore completely different design styles, alternative shapes, and unique topologies (e.g., building a futuristic cybertruck, a retro pickup, or a boxy van instead of a classic F1 car; or a brutalist/modernist structure instead of a Renaissance dome). Do not copy these blueprints verbatim unless explicitly requested. Every model is free to uniquely solve problems and offer creative variety!
+## 11. Abstract Topological Idioms & Generative Parametric Patterns
+Do NOT treat examples as rigid topic recipes (e.g., do not copy a "flower" or "car" step-by-step). Instead, treat them as **generic, topic-agnostic topological idioms** that can be creatively re-combined for ANY parametric modeling request.
 
-*   **Avoid Monolithic Styling:** If the user says "make a car", do not blindly default to the Formula 1 recipe. Instead, feel free to design a futuristic hovercar (pod chassis, no wheels, thrusters), a boxy truck, a low-poly Cybertruck, or an angular sports coupe. 
-*   **Encourage Style Variety:** Every object can be represented in many ways. Use curves for retro styles, sharp boxes for brutalism/cybertrucks, and angular rotations for futuristic themes. Keep models open to unique geometric expressions!
+*   **Avoid Monolithic Recipes:** Never default to a fixed construction formula for a prompt. Explore distinct architectural styles, futuristic geometries, or alternative organic topologies.
+*   **Encourage Style Variety:** Every request can be solved using different topological idioms (curves, brutalist boxes, subdivided grids, radial patterns).
 
-### Formula 1 / Race Car:
-To construct a beautiful Formula 1 race car using skeletal rigging and watertight box modeling:
-1. **Chassis**: A long, low `Box` (e.g. width = 40, length = 16, height = 2).
-2. **Cockpit**: Instead of translating a disconnected box, use `FilterFaces` (axisFilter = 'maxZ') to select the top face of the chassis, then use `SubdivideSurface` (uDivisions = 3, vDivisions = 3) to extrude the central cockpit cabin directly out of the chassis.
-3. **Wings**:
-   - **Front Wing**: Select the front face of the chassis with `FilterFaces` (axisFilter = 'maxX') and extrude it using `SubdivideSurface`.
-   - **Rear Wing**: Select the rear top face and extrude a spoiler upwards.
-4. **Wheels (4x)**:
-   - Create a `Cylinder` node representing a wheel (e.g. radius = 3.5, height = 2) and rotate it 90° around X.
-   - Use `PlaceOnVertices` or `PlaceOnSurface` to attach the wheels to the bottom-side corners of the chassis, parametrically scaling and inheriting the parent's position.
-5. **Driver Details**: A `Sphere` helmet attached via `PlaceOnSurface` to the top of the cockpit face.
-6. **Final Output**: The watertight body can be chamfered/filleted as a single solid, while wheels and helmet can be kept as separate leaf nodes for multi-color rendering.
+### Idiom 1: Radial Instanced Array around Central Substrate
+*   **Topology**: A central substrate body (e.g. `Cylinder`, `Sphere`, `Cone`, or `Ellipsoid` of radius `R`) surrounded by a radially distributed array of curved/tapered elements (fins, petals, spokes, ribs, struts).
+*   **Pattern**: Construct a single element (using `Ellipsoid`, `Bend`, or `Extrude` with `taperEndFactor`), apply local `Rotate` (tilt), translate outward by `y = R`, and feed into a `CircularPattern` (`radius = R`, `count = N`).
+*   **Applications**: Radial blooms, turbines, stadium structural ribs, wheels, spires, dome arches.
 
-### Renaissance Building:
-To construct a beautiful Renaissance-style building:
-1. **Base Podium**: A wide, flat `Box` (e.g. width = 60, length = 40, height = 2).
-2. **Main Hall**: A smaller `Box` (e.g. width = 50, length = 30, height = 20) translated up on top of the podium.
-3. **Colonnade / Facade**:
-   - Create a `Cylinder` (radius = 1, height = 15).
-   - Create a `Translate` node to offset it to the front facade.
-   - Connect it to a `LinearPattern` node to repeat it along the X-axis (e.g. `count = 8`, `spacing = 6`).
-   - Create an **Entablature** `Box` that runs across the top of the columns, translated up in Z. Ensure it overlaps the column tops by 0.1-0.2 units (e.g. columns height 15, entablature base at `z = 15`).
-   - Union the colonnade and entablature using a `Boolean` node.
-4. **Dome**:
-   - Create a half-sphere using the dome recipe (Sphere cut in half by a Translate(Box) difference).
-   - Translate it to the center roof of the Main Hall.
-5. **Pediment**:
-   - Create a triangular sketch using the `Sketch` node and extrude it.
-   - Rotate and translate it to sit directly on top of the front colonnade's entablature.
-6. **Final Assembly**: Connect these four unique sources (Podium/Hall, Colonnade, Dome, Pediment) to a `Compound` node.
-- When the user asks for app feedback rather than a CAD model, answer in the requested format and do not generate a node graph.
-- For complete wipeouts, delete all nodes and edges to reset the canvas entirely.
-- For multi-colored car models, keep wheels, chassis, cabin and wings as separate leaf nodes instead of merging into a single Compound.
-- **CircularPattern Offset Math**: When repeating objects (like fins, columns, or petals) in a `CircularPattern` around a central shape of radius `R` (such as a rocket body or tower dome), you MUST set the `radius` parameter of the `CircularPattern` to match `R` (or slightly more, like `R + 0.2` for overlap). If you leave the `radius` parameter at its default (`20`), the objects will float far away in empty space. Always align the pattern's `radius` with the central body's radius!
-- **Nose Cones & Tapered Tips**: To build a nose cone or tapered tip for a rocket, column, or tower, use the `Cone` primitive node directly rather than attempting complex `Loft` transforms between 3D solids, which are highly unstable and often fail to render. Set `radius1` as the base radius, `radius2` to a very small number like `0.1` (or `0` for sharp point), and translate it to sit on top of the main body.
-## 7. July 2026 Engine Update (new capabilities)
-- **NumberSlider** node: outputs a `number` (`value` handle). Use 2–5 per model as top-level design parameters.
-- **Expression** node: inputs `a,b,c,d` (numbers), param `formula` (e.g. `a * 0.5 + 2`), outputs `value`. Use for derived dimensions and proportional relationships.
-- **Param driving**: connect any number output to a node's numeric parameter using targetHandle `param:<paramName>` (e.g. `param:radius`). Driven sliders lock in the UI. This is what makes graphs truly parametric.
-- **Revolve** node: revolves a Sketch/Plane profile around X/Y/Z by `angle` degrees (vases, domes, wheels).
-- **Loft** now accepts up to 4 profiles (`profile1..profile4`).
-- **Macro** nodes: verified reusable subgraphs from the library. Place with type `Macro` and `data.macroId`. Prefer macros over rebuilding known components.
-- **Positions are automatic**: never emit node x/y positions; a layered auto-layout arranges the canvas.
-- **Geometry report**: after each evaluation the agent receives per-leaf bounding boxes, volumes and node errors, and must verify proportions/placement against its plan before finishing.
+### Idiom 2: Watertight Box Modeling & Integrated Face Sub-Extrusion
+*   **Topology**: A primary continuous solid body where sub-features (cabins, windows, spoilers, cockpits, panels) are derived directly from the base geometry's faces rather than placing disconnected floating shapes in empty space.
+*   **Pattern**: Use `FilterFaces` (e.g., `axisFilter = 'maxZ'`) on the main body to select a target surface, then pass it to `SubdivideSurface` (`uDivisions`, `vDivisions`, `inset`, `extrudeMin/Max`) to extrude paneling or cabins directly out of the surface.
+*   **Applications**: Chassis/cockpits, architectural facade windows, rocket fuselage detailing, textured panels.
 
-## 12. July 2026 Fix — ScaleXYZ / Ellipsoid non-uniform scale (`geometryWorker.ts`)
-`ScaleXYZ` and non-uniform `Ellipsoid` (radii not all equal) both routed through a `nonUniformScale()` helper that called `new OC.BRepBuilderAPI_GTransform_2(...)`. **That class is not compiled into replicad's WASM bundle** — confirmed empirically in a Node harness (`typeof OC.BRepBuilderAPI_GTransform_2 === 'undefined'` at runtime; only 888 of the full OpenCascade class surface are bound in `replicad_single.wasm`, and `BRepBuilderAPI_GTransform` isn't one of them, in either the `_single` or `_with_exceptions` variant). Every call threw, was caught, and silently passed the shape through UNSCALED — so `ScaleXYZ` was a no-op and non-uniform `Ellipsoid` silently degraded to a plain sphere, for as long as those nodes have existed. This was the root cause of "petals/leaves look like plain unscaled spheres" reports — not a missing-vocabulary problem, a broken-binding problem.
+### Idiom 3: Deformed Organic Mesh Shell & Curvature Transformation
+*   **Topology**: Smooth, organic, or aerodynamic bodies generated using multi-axis scaling and non-linear axial deformations.
+*   **Pattern**: Start with `Ellipsoid` (`radiusX`, `radiusY`, `radiusZ`) for organic torsos, or apply `Bend` (`axis: "Y"`, `angle: 20..60`) and `Twist` to extruded shapes (`Box`, `Cone`, `Pipe`) for natural sweep and curvature.
+*   **Applications**: Organic bodies, curved wings, twisted columns, horns, vine stems, sleek aerodynamic shrouds.
 
-**Fix**: `nonUniformScale()` now goes through a new helper, `solidFromDeformedMesh(shape, deform, tolerance)`: tessellate the input (`shape.mesh()`), apply an arbitrary per-vertex JS function, and re-sew the result into a genuine `TopoDS_Solid` using only primitives confirmed present in this WASM build (`BRepBuilderAPI_Sewing`, `MakeEdge_3` from two `gp_Pnt`, `MakeWire_4`, `MakeFace_15` from a wire, `MakeSolid_3` from a shell). Validated in a headless Node harness: sphere r=2 scaled to semi-axes (2,3,0.5) → correct bbox, volume within ~1-8% of analytic depending on tolerance; a 4×6×2 box scaled (2,0.5,3) → exact 144 (flat faces tessellate exactly); downstream `.faces`, `.clone()`, `.translate()`, `.fuse()` all work normally on the result; a full 2-ring, 8-petal-per-ring flower (16 non-uniform Ellipsoids + stem + stamens) built in ~1.5s total.
+### Idiom 4: Vertical Colonnade / Structural Linear Array
+*   **Topology**: A base podium, a repeated linear array of vertical supports, and a top entablature overlapping the supports.
+*   **Pattern**: Base `Box` + `Cylinder` column translated and fed to `LinearPattern` (`count`, `spacing`) + an overlapping roof `Box` (with 0.1-0.2 unit vertical Z-overlap to ensure clean Boolean fusion).
+*   **Applications**: Colonnades, fence posts, bridge piers, rib cages, louvers.
 
-**Trade-off**: the result is faceted (polyhedral), not a smooth analytic NURBS surface — invisible at normal render tessellation, but be aware if a future node needs to distinguish "true curvature" from "many small flat faces" (e.g. a hypothetical curvature-based fillet-radius heuristic). Tolerance is picked adaptively from the input's bounding-box diagonal (`solidFromDeformedMesh` callers can override).
-
-**Reusability**: `solidFromDeformedMesh` takes an arbitrary `(x,y,z) => [x,y,z]` deform function, not just linear scale. `Bend`, `Twist`, and simple `DeformByLattice`-style nodes (proposed in the Jul 9 organic-shape-vocabulary review) are the same shape of problem — no native OC binding, needs a deform-and-resew — and can call this helper directly instead of re-solving the GTransform problem. Do not reach for `BRepBuilderAPI_GTransform` again in this codebase; it does not exist in the compiled WASM.
-
-**Also fixed in the same pass**: the geometry report's per-leaf `volume` field read `(value as any).volume`, which is not a real property on replicad's `Shape3D`/`Solid` (verified against `node_modules/replicad/dist/replicad.js` — there is no `get volume()` on that class; replicad only exposes it via the exported `measureVolume(shape)` function, which wraps `BRepGProp.VolumeProperties`). This was silently `undefined` for every node, not just the ones touched here. Now calls `replicad.measureVolume(value)`.
-
-## 13. July 9 2026 — Bend, Twist, Pipe (built on the §12 fix)
-Per user prioritization after the §12 fix, added three more nodes:
-
-- **`Bend`** (`axis`: X/Y/Z, `angle`) and **`Twist`** (`axis`, `angle`) — both go through `solidFromDeformedMesh`, same as `ScaleXYZ`. Unlike non-uniform scale, bending/twisting introduces real curvature into faces that may have started flat (a plain `Box`'s sides), so a naive reuse of §12's approach chords straight across the curve and loses significant volume (measured: a 90° twist on a coarse box lost ~33% volume before the fix below). Fixed by pre-subdividing each triangle (longest-edge bisection, `bisectTriangle`) before deforming, targeting ~4-18 segments across the bend/twist span (scaled to the angle — small bends need few segments, 360° twists need more, capped so it stays bounded). Validated: a bent petal held volume within 0.1%; a bent/twisted cylinder held volume within ~2-8% (cylinders start with coarser circumferential tessellation than the bend axis subdivision targets — acceptable for visual work, worth revisiting if exact-volume bent primitives are ever needed). `solidFromDeformedMesh` gained optional `maxEdgeLength`/`maxDepth` params for this; `nonUniformScale` (ScaleXYZ/Ellipsoid) intentionally does NOT pass them, since linear scale never turns a flat face curved and doesn't need it — keep it that way, subdivision only adds cost.
-- **`Pipe`** (`pathSvg`: same M/L/C/Q syntax as `Sketch`, just omit the closing `Z`; `radius`) — a circular tube along an arbitrary path, via the native `OC.BRepOffsetAPI_MakePipe_1(spineWire, profileShape)` (no mesh-rebuild needed here — this one has a direct, real kernel binding). The profile is a circle built on the `YZ` plane (facing +X) then rotated/translated to match the path's actual initial tangent and start point (computed from the path's first two anchor points via `extractFirstTwoPathPoints`) — a profile left facing the wrong way produces a degenerate zero-volume or garbage result, confirmed empirically. Only the circular case is implemented; a general `SweepAlongCurve` (arbitrary non-circular profile swept along a path) would reuse the exact same wire-extraction + tangent logic, swapping the hardcoded circle for a `profile` input handle — natural next step, not yet built.
-- Both `pathSketch.wires()` (on a `Sketch` from `parseSVGPath`) and `Shape.faces` elsewhere in this file are **methods that must be called**, not properties — `openPath.wires` (no parens) silently returns the function object itself, not a wire, and every call downstream then fails with an opaque embind error (`Cannot read properties of undefined (reading '$$')`, since embind's wrapped objects carry a `$$` handle and you've handed it something that isn't one). Hit this repeatedly while testing Pipe; worth remembering before reaching for `.wires`/similar accessors on replicad shape objects again.
-
-### Organic Bird, Animal & Aircraft Blueprints (Avoiding Primitive Fallback)
-When asked for organic creatures (birds, animals, fish) or high-tech aircraft/jets, NEVER fall back to a simple collection of raw unstyled primitives (e.g. flat Box wings, Sphere head, Cone beak sitting on empty space). Instead, use the following organic parametric recipes:
-
-1. **Organic Creature / Bird Topology**:
-   - **Torso/Body**: Use an `Ellipsoid` primitive (`radiusX`, `radiusY`, `radiusZ`) for a smooth, organic bird or animal body instead of a `Sphere` or `Box`.
-   - **Wings**: Use an `Ellipsoid` (flattened in Z, stretched in Y) or an extruded teardrop `Sketch`, connected to a `Bend` node (`axis: "Y"`, `angle: 25-45`) to give the wings natural aerodynamic curvature.
-   - **Head & Neck**: Use an `Ellipsoid` translated and connected to the torso using a tapered `Cone` or a smooth loft.
-   - **Tail & Feathers**: Use `Extrude` with `taperEndFactor` (e.g., 0.3) or a `CircularPattern` array of curved petals.
-   - **Multi-Color Aesthetics**: Assign distinct organic hex colors (`color`) to the body (`#2563eb`), beak (`#f59e0b`), eyes (`#0f172a`), and wings (`#3b82f6`) and leave them as separate leaf nodes so they render in full vibrant colors!
-
-2. **Sleek Aircraft / Jet Topology**:
-   - **Fuselage**: Use a `Cone` (tapered cylinder from wide base to nose tip) or a lofted profile.
-   - **Cockpit Canopy**: Do NOT float a standalone sphere on top. Instead, use `FilterFaces` (axisFilter = 'maxZ') on the fuselage and `SubdivideSurface` (inset = 0.1, extrude = 0.5) to extrude the cockpit glass directly out of the top surface of the fuselage mesh, OR use an `Ellipsoid` semi-embedded into the upper torso.
-   - **Swept Wings**: Create a swept wing using an extruded sketch or thin `Box` combined with `Rotate` (around Z) and `Fillet`/`Chamfer` on the leading edges.
 
