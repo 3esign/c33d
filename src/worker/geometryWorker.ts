@@ -376,37 +376,56 @@ async function evaluateGraphInternal(
   let kernelFaultCount = 0;
   let kernelRegression = false;
 
-  // Scope for inline parametric formulas: slider values keyed by (normalized)
+  // Scope for inline parametric formulas: numeric values keyed by (normalized)
   // label AND id, so a param like "bodyRadius*0.2" resolves without any edges.
-  const sliderScope: Record<string, number> = {};
+  const computedBindingScope: Record<string, any> = {};
   const normalizedLabelsSeen: Record<string, { original: string; id: string }> = {};
 
+  const NUMERIC_TYPES = new Set(['NumberSlider', 'Expression', 'Series', 'Range', 'ListConstant', 'ListItem', 'ListLength', 'RepeatEach', 'Tile']);
+  const nameToNodeId: Record<string, string> = {};
+  const nodeNames: Record<string, string[]> = {};
+
   for (const n of nodes) {
-    if (n.type !== 'NumberSlider') continue;
-    const defaultVal = parseFloat((n.data || {}).value);
+    if (!NUMERIC_TYPES.has(n.type)) continue;
+
     const normId = normalizeVarName(n.id);
-    const rawIdOverride = sliderScopeOverride
-      ? (sliderScopeOverride[normId] ?? sliderScopeOverride[n.id.toLowerCase()] ?? sliderScopeOverride[n.id])
-      : undefined;
-    const v = (rawIdOverride !== undefined) ? rawIdOverride : (isFinite(defaultVal) ? defaultVal : 0);
+    nameToNodeId[normId] = n.id;
+    nameToNodeId[normId.toLowerCase()] = n.id;
+    const names = [normId, normId.toLowerCase()];
 
     const label = String((n.data || {}).label ?? '').trim();
     if (label) {
       const normLabel = normalizeVarName(label);
-      if (normalizedLabelsSeen[normLabel]) {
+      if (normalizedLabelsSeen[normLabel] && normalizedLabelsSeen[normLabel].id !== n.id) {
         nodeErrors.push({
           id: n.id,
-          error: `Slider label "${label}" normalizes to "${normLabel}", which collides with slider "${normalizedLabelsSeen[normLabel].original}" (ID: ${normalizedLabelsSeen[normLabel].id}). Labels must normalize to unique alphanumeric identifiers.`
+          error: `Label "${label}" normalizes to "${normLabel}", which collides with "${normalizedLabelsSeen[normLabel].original}" (ID: ${normalizedLabelsSeen[normLabel].id}). Labels must normalize to unique alphanumeric identifiers.`
         });
       } else {
         normalizedLabelsSeen[normLabel] = { original: label, id: n.id };
       }
-      const rawLabelOverride = sliderScopeOverride
-        ? (sliderScopeOverride[normLabel] ?? sliderScopeOverride[label.toLowerCase()] ?? sliderScopeOverride[label])
-        : undefined;
-      sliderScope[normLabel] = (rawLabelOverride !== undefined) ? rawLabelOverride : v;
+      nameToNodeId[normLabel] = n.id;
+      nameToNodeId[normLabel.toLowerCase()] = n.id;
+      names.push(normLabel, normLabel.toLowerCase());
     }
-    sliderScope[normId] = v;
+    nodeNames[n.id] = [...new Set(names)];
+
+    if (n.type === 'NumberSlider') {
+      const defaultVal = parseFloat((n.data || {}).value);
+      const rawIdOverride = sliderScopeOverride
+        ? (sliderScopeOverride[normId] ?? sliderScopeOverride[n.id.toLowerCase()] ?? sliderScopeOverride[n.id])
+        : undefined;
+      let v = (rawIdOverride !== undefined) ? rawIdOverride : (isFinite(defaultVal) ? defaultVal : 0);
+
+      if (label) {
+        const normLabel = normalizeVarName(label);
+        const rawLabelOverride = sliderScopeOverride
+          ? (sliderScopeOverride[normLabel] ?? sliderScopeOverride[label.toLowerCase()] ?? sliderScopeOverride[label])
+          : undefined;
+        if (rawLabelOverride !== undefined) v = rawLabelOverride;
+      }
+      names.forEach(name => computedBindingScope[name] = v);
+    }
   }
 
   // Build dependency graph
@@ -423,6 +442,29 @@ async function evaluateGraphInternal(
     inDegree[e.target] = (inDegree[e.target] || 0) + 1;
     if (!adjList[e.source]) adjList[e.source] = [];
     adjList[e.source].push(e.target);
+  });
+
+  // Inject implicit dependencies based on formula identifiers referencing computed node names
+  nodes.forEach(n => {
+    const params = n.data || {};
+    for (const key in params) {
+      const raw = params[key];
+      if (typeof raw === 'string') {
+        const idents = raw.match(/[a-zA-Z_][a-zA-Z0-9_]*/g) || [];
+        for (const ident of idents) {
+          if (EXPR_BUILTINS.has(ident.toLowerCase())) continue;
+          const normIdent = normalizeVarName(ident);
+          const sourceId = nameToNodeId[normIdent] || nameToNodeId[normIdent.toLowerCase()];
+          if (sourceId && sourceId !== n.id) {
+            if (!adjList[sourceId]) adjList[sourceId] = [];
+            if (!adjList[sourceId].includes(n.id)) {
+              adjList[sourceId].push(n.id);
+              if (inDegree[n.id] !== undefined) inDegree[n.id]++;
+            }
+          }
+        }
+      }
+    }
   });
 
   const queue: string[] = Object.keys(inDegree).filter(id => inDegree[id] === 0);
@@ -463,7 +505,7 @@ async function evaluateGraphInternal(
     // formula string (referencing slider names) into a concrete number. Runs
     // before hashing so slider changes correctly invalidate the shape cache.
     if (node.type !== 'NumberSlider') {
-      resolveInlineNumericParams(node.type, effectiveParams, sliderScope, node.id, nodeErrors);
+      resolveInlineNumericParams(node.type, effectiveParams, computedBindingScope, node.id, nodeErrors);
     }
 
     // 2. Number/List nodes: resolve to plain numbers/arrays, no geometry
@@ -475,6 +517,7 @@ async function evaluateGraphInternal(
         : undefined;
       const v = (rawOverride !== undefined) ? rawOverride : (isFinite(defaultVal) ? defaultVal : 0);
       numberCache[node.id] = v;
+      (nodeNames[node.id] || []).forEach(name => computedBindingScope[name] = v);
       continue;
     }
     if (node.type === 'Expression') {
@@ -489,11 +532,12 @@ async function evaluateGraphInternal(
         // Unified namespace: Expression formulas see slider labels directly
         // (same contract as inline numeric params). Edge-fed vars (a,b,c,d)
         // shadow sliders on name collision.
-        numberCache[node.id] = evaluateExpressionWithLists(String(effectiveParams.formula ?? '0'), { ...sliderScope, ...vars });
+        numberCache[node.id] = evaluateExpressionWithLists(String(effectiveParams.formula ?? '0'), { ...computedBindingScope, ...vars });
       } catch (err: any) {
         numberCache[node.id] = 0;
         nodeErrors.push({ id: node.id, error: `Expression error: ${err.message}` });
       }
+      (nodeNames[node.id] || []).forEach(name => computedBindingScope[name] = numberCache[node.id]);
       continue;
     }
     if (node.type === 'Series') {
@@ -506,6 +550,7 @@ async function evaluateGraphInternal(
         values.push(start + i * step);
       }
       numberCache[node.id] = values;
+      (nodeNames[node.id] || []).forEach(name => computedBindingScope[name] = numberCache[node.id]);
       continue;
     }
     if (node.type === 'Range') {
@@ -518,6 +563,7 @@ async function evaluateGraphInternal(
         values.push(min + (i / steps) * (max - min));
       }
       numberCache[node.id] = values;
+      (nodeNames[node.id] || []).forEach(name => computedBindingScope[name] = numberCache[node.id]);
       continue;
     }
     if (node.type === 'RepeatEach' || node.type === 'Tile') {
@@ -537,6 +583,7 @@ async function evaluateGraphInternal(
         for (let i = 0; i < count; i++) for (const v of listVal) values.push(v);
       }
       numberCache[node.id] = values;
+      (nodeNames[node.id] || []).forEach(name => computedBindingScope[name] = numberCache[node.id]);
       continue;
     }
     if (node.type === 'ListConstant') {
@@ -548,13 +595,14 @@ async function evaluateGraphInternal(
         const s = part.trim();
         if (!s) continue;
         try {
-          values.push(evaluateExpressionSafe(s, sliderScope));
+          values.push(evaluateExpressionSafe(s, computedBindingScope));
         } catch (err: any) {
           nodeErrors.push({ id: node.id, error: `ListConstant entry "${s}" error: ${err.message}` });
           values.push(0);
         }
       }
       numberCache[node.id] = values;
+      (nodeNames[node.id] || []).forEach(name => computedBindingScope[name] = numberCache[node.id]);
       continue;
     }
     if (node.type === 'ListItem') {
@@ -573,6 +621,7 @@ async function evaluateGraphInternal(
         const idx = Math.max(0, Math.min(listVal.length - 1, index));
         numberCache[node.id] = listVal[idx];
       }
+      (nodeNames[node.id] || []).forEach(name => computedBindingScope[name] = numberCache[node.id]);
       continue;
     }
     if (node.type === 'ListLength') {
@@ -585,6 +634,7 @@ async function evaluateGraphInternal(
         }
       }
       numberCache[node.id] = listVal.length;
+      (nodeNames[node.id] || []).forEach(name => computedBindingScope[name] = numberCache[node.id]);
       continue;
     }
 
@@ -613,7 +663,7 @@ async function evaluateGraphInternal(
         { ...node, data: effectiveParams },
         nodeInputs,
         (msg: string) => nodeErrors.push({ id: node.id, error: msg }),
-        sliderScope
+        computedBindingScope
       );
       nodeCache[node.id] = val;
       if (val) succeededTypesThisWorker.add(node.type);
