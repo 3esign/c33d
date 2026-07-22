@@ -1,10 +1,68 @@
 import React, { useState, useEffect } from 'react';
 import { useStore, generateUUID } from '../store/useStore';
-import { Settings, Send, MessageSquare, BarChart2, BookOpen, Star, FlaskConical, Library, X, Brain, RefreshCw } from 'lucide-react';
+import { Settings, Send, MessageSquare, BarChart2, BookOpen, Star, FlaskConical, Library, X, Brain, RefreshCw, ChevronDown, ChevronRight } from 'lucide-react';
 import { processUserIntent } from '../ai/agent';
 import { listProviderModels } from '../ai/api';
 import { LibraryPanel } from './LibraryPanel';
 import { EvalPanel } from './EvalPanel';
+
+const SystemMessageBadge: React.FC<{ content: string }> = ({ content }) => {
+  const [expanded, setExpanded] = useState(false);
+
+  let title = 'System Notification';
+  let isWarning = false;
+  let isPatch = false;
+
+  if (content.includes('removedEdgeIds')) {
+    title = '⚡ Graph Auto-Repair: Cleaned stale edge reference';
+    isPatch = true;
+  } else if (content.includes('Response was not valid JSON')) {
+    const match = content.match(/\(attempt \d\/\d\)/i);
+    title = `🔧 Protocol Repair: Formatting JSON response ${match ? match[0] : ''}`;
+    isWarning = true;
+  } else if (content.includes('IR program had compile errors')) {
+    title = '🛠️ IR Compiler: Autofixing syntax structure';
+    isWarning = true;
+  } else if (content.includes('Tool-calling unavailable')) {
+    title = '🔄 Protocol Fallback: Switching to structured JSON';
+  } else if (content.includes('Workspace cleared')) {
+    title = '🧹 Workspace Reset';
+  } else {
+    const firstLine = content.split('\n')[0];
+    title = firstLine.length > 65 ? firstLine.slice(0, 65) + '...' : firstLine;
+  }
+
+  const isLong = content.length > 80 || content.includes('\n');
+
+  return (
+    <div className="w-full flex justify-center my-1">
+      <div className={`border text-[10.5px] font-mono rounded-md px-2.5 py-1 max-w-[95%] shadow-sm transition-all ${
+        isWarning 
+          ? 'bg-amber-950/30 border-amber-800/40 text-amber-300'
+          : isPatch 
+            ? 'bg-slate-800/60 border-slate-700/50 text-slate-400' 
+            : 'bg-slate-800/90 border-slate-700 text-slate-300'
+      }`}>
+        <div 
+          onClick={() => isLong && setExpanded(!expanded)} 
+          className={`flex items-center justify-between gap-2 ${isLong ? 'cursor-pointer hover:opacity-80' : ''}`}
+        >
+          <span className="truncate flex-1 font-semibold">{title}</span>
+          {isLong && (
+            <span className="text-[9px] px-1.5 py-0.5 rounded bg-slate-700/80 text-slate-400 shrink-0 flex items-center gap-1 font-sans">
+              {expanded ? 'Hide' : 'Details'} {expanded ? <ChevronDown size={10} /> : <ChevronRight size={10} />}
+            </span>
+          )}
+        </div>
+        {expanded && (
+          <div className="mt-1.5 pt-1.5 border-t border-slate-700/50 text-[10px] text-slate-400 whitespace-pre-wrap leading-relaxed select-text">
+            {content}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
 
 export const ChatPanel: React.FC = () => {
   const {
@@ -481,14 +539,7 @@ export const ChatPanel: React.FC = () => {
           ) : (
             [...messages].reverse().map((msg) => {
               if (msg.role === 'system') {
-                return (
-                  <div key={msg.id} className="w-full flex justify-center my-1.5">
-                    <div className="bg-slate-800/80 border border-slate-700/60 text-slate-400 rounded-md px-3 py-1.5 text-[10.5px] font-mono max-w-[95%] whitespace-pre-wrap leading-relaxed shadow-sm">
-                      <span className="text-slate-500 font-bold uppercase tracking-wider mr-1.5">[System]</span>
-                      {msg.content}
-                    </div>
-                  </div>
-                );
+                return <SystemMessageBadge key={msg.id} content={msg.content} />;
               }
               return (
                 <div 
