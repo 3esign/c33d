@@ -50,7 +50,6 @@ function resolveParams(type, data) {
   const def = NODE_LIBRARY[type];
   const validParamsLowerMap = new Map();
   def.params.forEach(p => validParamsLowerMap.set(p.name.toLowerCase(), p.name));
-  const validParams = def.params.map(p => p.name);
   const validatedData = {}, warnings = [], errors = [];
   for (const [key, value] of Object.entries(data)) {
     const keyLower = key.toLowerCase();

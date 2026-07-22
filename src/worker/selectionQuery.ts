@@ -21,7 +21,7 @@ function getNormalVec(face: any): [number, number, number] {
     const norm = face.normalAt();
     if (norm && typeof norm.toTuple === 'function') return norm.toTuple();
     if (norm && 'x' in norm) return [norm.x, norm.y, norm.z];
-  } catch (e) {}
+  } catch {}
   try {
     const A = face.pointOnSurface(0, 0);
     const B = face.pointOnSurface(1, 0);
@@ -38,7 +38,7 @@ function getNormalVec(face: any): [number, number, number] {
     let nz = v1x * v2y - v1y * v2x;
     const len = Math.sqrt(nx * nx + ny * ny + nz * nz);
     return len > 0 ? [nx / len, ny / len, nz / len] : [0, 0, 1];
-  } catch (e) {
+  } catch {
     return [0, 0, 1];
   }
 }
@@ -57,7 +57,7 @@ function getEdgeDirection(edge: any): [number, number, number] {
       if (tangent && typeof tangent.toTuple === 'function') return tangent.toTuple();
       if (tangent && 'x' in tangent) return [tangent.x, tangent.y, tangent.z];
     }
-  } catch (e) {}
+  } catch {}
   return [0, 0, 1];
 }
 
@@ -110,7 +110,7 @@ function tokenizeQuery(src: string): string[] {
       continue;
     }
     let j = i;
-    while (j < src.length && !'()><~=\s,'.includes(src[j]) && !/\s/.test(src[j])) {
+    while (j < src.length && !'()><~=s,'.includes(src[j]) && !/\s/.test(src[j])) {
       if (src[j] === '[') {
         while (j < src.length && src[j] !== ']') j++;
         if (j < src.length) j++;
@@ -357,7 +357,7 @@ function evaluateAST(
     let limit = 0;
     try {
       limit = evaluateExpressionSafe(formula, scope);
-    } catch (e) {
+    } catch {
       limit = 0;
     }
     

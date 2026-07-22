@@ -21,9 +21,11 @@ export const SaveExampleModal: React.FC = () => {
   const candidate = saveModalCandidate;
   const prompts = candidate ? candidate.prompts : episodePrompts;
   const plan = candidate ? candidate.plan : episodePlan;
-  const graphFinal = candidate
-    ? candidate.graphFinal
-    : { nodes: JSON.parse(JSON.stringify(nodes)), edges: JSON.parse(JSON.stringify(edges)) };
+  const graphFinal = useMemo(() => {
+    return candidate
+      ? candidate.graphFinal
+      : { nodes: JSON.parse(JSON.stringify(nodes)), edges: JSON.parse(JSON.stringify(edges)) };
+  }, [candidate, nodes, edges]);
   const graphOriginal = candidate ? candidate.graphOriginal : (lastAIGraph ? JSON.parse(JSON.stringify(lastAIGraph)) : null);
 
   const { coverage, total } = useMemo(() => {

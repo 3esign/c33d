@@ -89,7 +89,7 @@ function makeEllipsoid(rx, ry, rz) {
   const base = replicad.makeSphere(rx);
   if (Math.abs(ry-rx) < 1e-9 && Math.abs(rz-rx) < 1e-9) return base;
   const out = nonUniformScale(base, 1, ry/rx, rz/rx);
-  try { base.delete?.(); } catch(e) {}
+  try { base.delete?.(); } catch {}
   return out;
 }
 // ---- end verbatim ----

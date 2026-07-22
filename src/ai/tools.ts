@@ -220,7 +220,7 @@ function coerce(v: any): any {
   if (typeof v === 'string') {
     const t = v.trim();
     if ((t.startsWith('{') && t.endsWith('}')) || (t.startsWith('[') && t.endsWith(']'))) {
-      try { return JSON.parse(t); } catch (e) { return v; }
+      try { return JSON.parse(t); } catch { return v; }
     }
   }
   return v;

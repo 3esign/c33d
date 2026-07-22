@@ -64,7 +64,7 @@ let evalWaiters: ((outcome: EvaluationOutcome) => void)[] = [];
 const resolveEvalWaiters = (outcome: EvaluationOutcome) => {
   const ws = evalWaiters;
   evalWaiters = [];
-  ws.forEach(w => { try { w(outcome); } catch (e) { /* noop */ } });
+  ws.forEach(w => { try { w(outcome); } catch { /* noop */ } });
 };
 export const waitForEvaluation = (timeoutMs = 30000): Promise<EvaluationOutcome> => {
   const state = useStore.getState();
@@ -204,7 +204,7 @@ export const useStore = create<AppState>()(
           if (kernelSuspect && !get().hasRetriedDeleted) {
             console.warn('Kernel-class node failures detected — respawning worker and replaying evaluation once...');
             set({ hasRetriedDeleted: true });
-            try { worker.terminate(); } catch (err) { /* noop */ }
+            try { worker.terminate(); } catch { /* noop */ }
             worker = createGeometryWorker();
             bindWorker(worker);
             const { nodes, edges, macros } = get();
@@ -290,7 +290,7 @@ export const useStore = create<AppState>()(
 
           // Recycle the worker periodically to contain OCCT WASM memory growth
           if (report?.recycleRecommended && !(window as any)._pendingEvaluation) {
-            try { worker.terminate(); } catch (err) { /* noop */ }
+            try { worker.terminate(); } catch { /* noop */ }
             worker = createGeometryWorker();
             bindWorker(worker);
           }
@@ -319,7 +319,7 @@ export const useStore = create<AppState>()(
           if (isSystemError(errStr) && !get().hasRetriedDeleted) {
             console.warn("Detected system/kernel deletion error. Respawning worker and retrying evaluation once...", errStr);
             set({ hasRetriedDeleted: true });
-            try { worker.terminate(); } catch (err) {}
+            try { worker.terminate(); } catch {}
             worker = createGeometryWorker();
             bindWorker(worker);
             
@@ -693,13 +693,13 @@ export const useStore = create<AppState>()(
           // the instinctive recovery move (users and models both reach for it)
           // — it must actually reset the engine, not just the node list.
           if (!get().isEvaluating) {
-            try { worker.terminate(); } catch (e) { /* noop */ }
+            try { worker.terminate(); } catch { /* noop */ }
             worker = createGeometryWorker();
             bindWorker(worker);
           } else {
             try {
               worker.postMessage({ type: 'CLEAR_CACHE' });
-            } catch (e) { /* noop */ }
+            } catch { /* noop */ }
           }
         },
         lastEvaluationError: null,

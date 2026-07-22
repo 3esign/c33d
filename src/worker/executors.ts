@@ -363,7 +363,7 @@ export const EXECUTORS: Record<
       const out = nonUniformScale(base, 1, ry / rx, rz / rx);
       try {
         (base as any).delete?.();
-      } catch (e) {
+      } catch {
         /* ok */
       }
       return orientAndPlace(out, inputs);
@@ -519,7 +519,7 @@ export const EXECUTORS: Record<
           x = pt[0];
           y = pt[1];
           z = pt[2];
-        } catch (e) {
+        } catch {
           const bbox = surface.boundingBox;
           const [minPt, maxPt] = bbox.bounds;
           x = minPt[0] + u * (maxPt[0] - minPt[0]);
@@ -552,7 +552,7 @@ export const EXECUTORS: Record<
       if (scaled) {
         try {
           scaled.delete();
-        } catch (e) {}
+        } catch {}
       }
     }
     return replicad.makeCompound(shapeArray);
@@ -1109,11 +1109,11 @@ export const EXECUTORS: Record<
       copies.push(copy);
       try {
         translated.delete();
-      } catch (e) {}
+      } catch {}
       if (scaled) {
         try {
           scaled.delete();
-        } catch (e) {}
+        } catch {}
       }
     }
     return replicad.makeCompound(copies);
@@ -1140,7 +1140,7 @@ export const EXECUTORS: Record<
         try {
            coords.push([...source.value.pointAt(0)] as [number, number, number]);
            coords.push([...source.value.pointAt(1)] as [number, number, number]);
-        } catch(e) {}
+        } catch {}
       } else if (source.type === 'Plane' || source.type === 'Vector' || source.type === 'Selection') {
         warn(`Cannot place shapes on a ${source.type}. Connect a solid, point, list of points, or curve.`);
         return null;
@@ -1173,7 +1173,7 @@ export const EXECUTORS: Record<
           z - center[2]
         ]);
         if (scaled) {
-          try { scaled.delete(); } catch (e) {}
+          try { scaled.delete(); } catch {}
         }
         return translated;
       });
@@ -1374,7 +1374,7 @@ export const EXECUTORS: Record<
         let nz = v1x * v2y - v1y * v2x;
         const len = Math.sqrt(nx * nx + ny * ny + nz * nz);
         return len > 0 ? [nx / len, ny / len, nz / len] : [0, 0, 1];
-      } catch (e) {
+      } catch {
         return [0, 0, 1];
       }
     };
@@ -1540,7 +1540,7 @@ export const EXECUTORS: Record<
             if (filterAxis === 'X' && Math.abs(dx) < 0.95) return false;
             if (filterAxis === 'Y' && Math.abs(dy) < 0.95) return false;
             if (filterAxis === 'Z' && Math.abs(dz) < 0.95) return false;
-          } catch (e) {
+          } catch {
             return false;
           }
         }
@@ -1695,7 +1695,7 @@ export const EXECUTORS: Record<
         b2.delete?.();
         half1.delete?.();
         half2.delete?.();
-      } catch (e) {}
+      } catch {}
 
       return out;
     } catch (err: any) {
@@ -1754,7 +1754,7 @@ export const EXECUTORS: Record<
         b2.delete?.();
         half1.delete?.();
         half2.delete?.();
-      } catch (e) {}
+      } catch {}
 
       return out;
     } catch (err: any) {
@@ -1808,7 +1808,7 @@ export const EXECUTORS: Record<
         try {
           wire.delete?.();
           prism.delete?.();
-        } catch (e) {}
+        } catch {}
       }
 
       return out;

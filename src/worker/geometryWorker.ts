@@ -742,7 +742,7 @@ async function evaluateGraphInternal(
         sceneMin[2] = Math.min(sceneMin[2], bb.bounds[0][2]);
         sceneMax[2] = Math.max(sceneMax[2], bb.bounds[1][2]);
       }
-    } catch(e) {}
+    } catch {}
   }
   let diag = 0;
   if (isFinite(sceneMin[0])) {
@@ -846,11 +846,11 @@ async function evaluateGraphInternal(
               size: [mx[0] - mn[0], mx[1] - mn[1], mx[2] - mn[2]],
             };
           }
-        } catch (e) { /* no bbox */ }
+        } catch { /* no bbox */ }
         try {
           const v = (replicad as any).measureVolume(value);
           if (typeof v === 'number' && isFinite(v)) volume = v;
-        } catch (e) { /* volume unsupported */ }
+        } catch { /* volume unsupported */ }
   
         rawLeafIds.push(id);
         leafReports.push({
@@ -1272,7 +1272,7 @@ function evaluateExpressionWithLists(formula: string, vars: Record<string, numbe
     }
     try {
       result.push(evaluateExpressionSafe(formula, localVars));
-    } catch (e) {
+    } catch {
       result.push(0);
     }
   }

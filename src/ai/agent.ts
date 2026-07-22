@@ -89,14 +89,14 @@ function robustJSONParse(text: string): any {
       return line;
     })
     .join('\n');
-  jsonStr = jsonStr.replace(/,\s*(\r?\n?\s*[\}\]])/g, '$1');
+  jsonStr = jsonStr.replace(/,\s*(\r?\n?\s*[}\]])/g, '$1');
   try {
     return JSON.parse(jsonStr);
   } catch (e: any) {
     try {
       const repaired = jsonStr.replace(/"([^"\\]*(\\.[^"\\]*)*)"/g, (match) => match.replace(/\r?\n/g, '\\n'));
       return JSON.parse(repaired);
-    } catch (e2) {
+    } catch {
       throw new Error(`AI returned malformed JSON: ${e.message}. Raw extracted text was:\n${jsonStr}`);
     }
   }
@@ -134,7 +134,7 @@ async function buildSystemPrompt(userText: string, forTools: boolean): Promise<s
       examplesSection = `\n### VERIFIED PAST EXAMPLES (user-confirmed successes for similar requests — reuse their construction patterns):\n` +
         similar.map((ex, i) => formatExampleForPrompt(ex, i)).join('\n\n');
     }
-  } catch (e) { /* retrieval is best-effort */ }
+  } catch { /* retrieval is best-effort */ }
 
   const core = `You are C33D, an expert computational designer. You design 3D objects by building PARAMETRIC NODE GRAPHS that a B-Rep CAD kernel (OpenCascade) evaluates deterministically. The graph — not the geometry — is your medium: think in construction operations, attachments, and proportional relationships.
 

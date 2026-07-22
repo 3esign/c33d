@@ -146,7 +146,6 @@ async function run() {
   console.log('=== Petal-like test: Ellipsoid bent + twisted (realistic use case) ===');
   const petalBase = replicad.makeSphere(3);
   // fake an ellipsoid via the already-proven nonUniformScale path (reuse solidFromDeformedMesh directly)
-  const centerP = [0,0,0];
   const petal = solidFromDeformedMesh(petalBase, (x,y,z) => [x, y*2.5, z*0.3], 0.08);
   console.log('petal (pre-bend) bbox:', JSON.stringify(petal.boundingBox.bounds));
   const petalMoved = petal.translate([0, 7.5, 0]); // move so its base is near origin

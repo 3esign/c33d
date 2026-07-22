@@ -16,7 +16,6 @@ async function main() {
 
   console.log("1. Slicing box...");
   const box = replicad.makeBox([-5, -5, -5], [5, 5, 5]);
-  const bbox = box.boundingBox;
   const splitZ = -2;
 
   const b1 = replicad.makeBox([-6, -6, -6], [6, 6, splitZ]);

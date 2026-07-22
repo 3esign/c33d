@@ -133,13 +133,11 @@ async function main() {
   const cache3 = new Map();
   
   // Build
-  const boxNode = { id: 'hull', type: 'Box', size: 10 };
   const boxShape = replicad.makeBox([-5, -5, -5], [5, 5, 5]);
   cache3.set('hull', { hash: 'h_hull_10', shape: boxShape });
   
   // Clear-all simulation (fixed to not delete)
-  const retained3 = new Set();
-  for (const [id, entry] of Array.from(cache3.entries())) {
+  for (const id of Array.from(cache3.keys())) {
     cache3.delete(id);
   }
   

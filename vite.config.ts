@@ -22,7 +22,7 @@ export default defineConfig({
                 if (fs.existsSync(logPath)) {
                   try {
                     logs = JSON.parse(fs.readFileSync(logPath, 'utf8'));
-                  } catch (e) {
+                  } catch {
                     logs = [];
                   }
                 }
@@ -160,7 +160,7 @@ export default defineConfig({
                 if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
                 let results = [];
                 if (fs.existsSync(filepath)) {
-                  try { results = JSON.parse(fs.readFileSync(filepath, 'utf8')); } catch (e) { results = []; }
+                  try { results = JSON.parse(fs.readFileSync(filepath, 'utf8')); } catch { results = []; }
                 }
                 results.push(JSON.parse(body));
                 fs.writeFileSync(filepath, JSON.stringify(results, null, 2), 'utf8');

@@ -60,8 +60,6 @@ const LIB = {
 };
 
 // ---- mirrors of the handle helpers ----------------------------------------
-const geoInputHandles = (t) => (LIB[t] ? LIB[t].inputs.filter(i => i.type !== 'number').map(i => i.name) : []);
-const numberInputHandles = (t) => (LIB[t] ? LIB[t].inputs.filter(i => i.type === 'number').map(i => i.name) : []);
 const allInputHandles = (t) => (LIB[t] ? LIB[t].inputs.map(i => i.name) : []);
 const defaultSourceHandle = (t) => (LIB[t] && LIB[t].outputs.length === 1 ? LIB[t].outputs[0].name : 'solid');
 

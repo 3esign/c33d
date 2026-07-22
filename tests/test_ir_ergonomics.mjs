@@ -21,7 +21,6 @@ import assert from 'assert';
 
 // ---- mirrored decision logic (keep in lockstep with compile.ts) ------------
 
-const ID_RE = /^[A-Za-z_][A-Za-z0-9_]*$/;
 const KNOWN_FUNCS = new Set([
   'sin', 'cos', 'tan', 'asin', 'acos', 'atan', 'atan2', 'sinh', 'cosh', 'tanh',
   'sqrt', 'cbrt', 'abs', 'sign', 'min', 'max', 'floor', 'ceil', 'round', 'trunc',

@@ -89,7 +89,7 @@ function checkGeometrySanity(report, evalError) {
 }
 
 // Copy implementation of validateAndNormalizeNodeData
-function validateAndNormalizeNodeData(id, type, data, macros) {
+function validateAndNormalizeNodeData(id, type, data, _macros) {
   const warnings = [];
   const errors = [];
   const validatedData = {};

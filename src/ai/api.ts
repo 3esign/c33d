@@ -402,7 +402,7 @@ async function openAIStyleToolCompletion(
   const toolCalls: ToolCall[] = (message.tool_calls || []).map((tc: any, idx: number) => {
     let args = tc.function?.arguments;
     if (typeof args === 'string') {
-      try { args = JSON.parse(args); } catch (e) { args = {}; }
+      try { args = JSON.parse(args); } catch { args = {}; }
     }
     return { id: tc.id || `call_${idx}`, name: tc.function?.name || tc.name, arguments: args || {} };
   });
@@ -442,7 +442,7 @@ async function geminiToolCompletion(
       if (parts.length > 0) contents.push({ role: 'model', parts });
     } else if (m.role === 'tool') {
       let responseObj: any;
-      try { responseObj = JSON.parse(m.content); } catch (e) { responseObj = { result: m.content }; }
+      try { responseObj = JSON.parse(m.content); } catch { responseObj = { result: m.content }; }
       contents.push({
         role: 'user',
         parts: [{ functionResponse: { name: m.name, response: typeof responseObj === 'object' && responseObj !== null ? responseObj : { result: responseObj } } }],
@@ -603,7 +603,7 @@ export async function tryEmbed(text: string): Promise<number[] | null> {
     }
 
     return null; // openrouter: no stable embeddings endpoint
-  } catch (e) {
+  } catch {
     return null;
   }
 }
