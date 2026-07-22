@@ -111,7 +111,7 @@ export const Viewport3D: React.FC = () => {
     <div className="relative w-full h-full bg-slate-900 border-b border-slate-700">
       <Canvas
         camera={{ position: [20, 20, 20], fov: 50, near: 0.1, far: 5000 }}
-        shadows
+        shadows={{ type: THREE.PCFShadowMap }}
         gl={{ preserveDrawingBuffer: true }}
         onCreated={({ gl }) => registerViewportCanvas(gl.domElement)}
       >

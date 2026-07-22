@@ -65,7 +65,7 @@ export const ParametricNode: React.FC<NodeProps> = ({ id, type, data, isConnecta
               return (
                 <div key={param.name} className="relative flex flex-col gap-1">
                   {/* Param-driving handle (numeric params accept a number connection) */}
-                  {param.type === 'number' && !isNumberNode && (
+                  {param.type === 'number' && !(type === 'NumberSlider' && param.name === 'value') && (
                     <Handle
                       type="target"
                       position={Position.Left}
