@@ -3,6 +3,7 @@ import { ChatPanel } from './components/ChatPanel';
 import { NodeGraph } from './components/NodeGraph';
 import { Viewport3D } from './components/Viewport3D';
 import { SaveExampleModal } from './components/SaveExampleModal';
+import { SessionNote } from './components/SessionNote';
 import { useStore } from './store/useStore';
 
 function App() {
@@ -96,6 +97,7 @@ function App() {
       <div className="flex-1 flex flex-col h-full relative min-w-0 overflow-hidden">
         <div style={{ height: topHeight }} className="w-full relative z-0">
           <Viewport3D />
+          <SessionNote />
         </div>
         
         {/* Resize Divider Splitter (Horizontal) */}

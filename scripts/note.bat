@@ -21,6 +21,17 @@ if "!body!"=="" (
   pause
   exit /b 0
 )
-call node --no-warnings scripts\note.mjs "!body!"
+echo.
+echo   Verdict for this session - Enter to skip:
+echo     [1] OK    did what I asked
+echo     [2] WEAK  partly there
+echo     [3] FAIL  no usable result
+set "v="
+set /p v=Choice: 
+set "verdict="
+if "!v!"=="1" set "verdict=--verdict OK"
+if "!v!"=="2" set "verdict=--verdict WEAK"
+if "!v!"=="3" set "verdict=--verdict FAIL"
+call node --no-warnings scripts\note.mjs !verdict! "!body!"
 echo.
 pause

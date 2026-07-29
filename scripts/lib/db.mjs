@@ -249,12 +249,23 @@ export function addRun(r) {
 }
 
 /** A note attached to a session. Stored, never sent anywhere. */
+export const VERDICTS = ['OK', 'WEAK', 'FAIL'];
+
 export function addComment({ sessionId = null, turnId = null, body, tag = null }) {
   const d = openDb();
   d.prepare('INSERT INTO comments (session_id, turn_id, body, tag, created_at) VALUES (?,?,?,?,?)')
     .run(sessionId, turnId, String(body), tag, new Date().toISOString());
   if (sessionId) {
-    d.prepare('UPDATE sessions SET comment = ? WHERE id = ?').run(String(body), sessionId);
+    // A note carries your text; a verdict tag also grades the session. Until
+    // this existed the verdict column was never written by anything, so every
+    // OK/WEAK/FAIL column in the reports was silently empty.
+    const verdict = VERDICTS.includes(String(tag).toUpperCase()) ? String(tag).toUpperCase() : null;
+    if (verdict) {
+      d.prepare('UPDATE sessions SET comment = ?, verdict = ? WHERE id = ?')
+        .run(String(body), verdict, sessionId);
+    } else {
+      d.prepare('UPDATE sessions SET comment = ? WHERE id = ?').run(String(body), sessionId);
+    }
   }
 }
 

@@ -70,6 +70,34 @@ function record(endpoint: string, payload: any): void {
   } catch { /* store is optional */ }
 }
 
+/**
+ * Save YOUR note/verdict on the current session and report whether it landed.
+ *
+ * Unlike record() this one is awaited, because the person is standing there
+ * waiting to see that their note was kept. It still cannot throw: a missing
+ * store resolves false and the UI says so plainly instead of erroring.
+ */
+export async function saveSessionNote(
+  body: string,
+  verdict: 'OK' | 'WEAK' | 'FAIL' | null,
+): Promise<boolean> {
+  try {
+    const res = await fetch('/api/store/comment', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        sessionId: currentSessionId,
+        body: body || `verdict: ${verdict}`,
+        tag: verdict ?? 'note',
+      }),
+    });
+    const json = await res.json().catch(() => ({ ok: false }));
+    return json?.ok !== false;
+  } catch {
+    return false;
+  }
+}
+
 // Persistence helper to dry up fetch calls
 async function persistData(endpoint: string, payload: any, isText = false) {
   try {
