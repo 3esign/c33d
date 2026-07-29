@@ -27,9 +27,9 @@ echo.
 echo ===============================================================
 echo   What changed
 echo ===============================================================
-git status --short
+git --no-pager status --short
 echo.
-git diff --stat
+git --no-pager diff --stat
 echo.
 
 set "src="
@@ -50,13 +50,14 @@ echo.
 echo ===============================================================
 echo   NOT staged - decide before committing
 echo ===============================================================
-git status --porcelain | findstr /b /c:" M" /c:"??" | findstr /v /c:"JSONs/"
+git --no-pager status --porcelain | findstr /b /c:" M" /c:"??" | findstr /v /c:"JSONs/"
 echo   (blank above means nothing was left behind)
 echo.
 echo ===============================================================
 echo   Staged for commit
 echo ===============================================================
-git diff --cached --stat
+git --no-pager diff --cached --stat --compact-summary -- . ":(exclude)JSONs"
+echo   (JSONs excluded from this list - they are staged, just not shown)
 echo.
 
 set "msg="

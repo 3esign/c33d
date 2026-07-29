@@ -42,6 +42,34 @@ export const generateUUID = () => {
   return Date.now().toString() + '-' + Math.random().toString(36).substring(2, 9);
 };
 
+// ---------------------------------------------------------------------------
+// SESSION IDENTITY (Jul 29)
+//
+// One id per browser tab per design. It is NOT persisted: a reload or a
+// cleared workspace starts a new session, which is what "session" means here.
+// Because each dev-server port is its own browser origin, five parallel
+// instances naturally produce five distinct sessions writing to one database.
+// ---------------------------------------------------------------------------
+let currentSessionId = generateUUID();
+export const getSessionId = () => currentSessionId;
+export const newSessionId = () => { currentSessionId = generateUUID(); return currentSessionId; };
+
+/**
+ * Send a record to the session store. Deliberately fire-and-forget and
+ * deliberately silent: capturing history must never slow the app down, and a
+ * store that is unavailable (production build, no dev server) must never
+ * surface an error to the user.
+ */
+function record(endpoint: string, payload: any): void {
+  try {
+    void fetch(`/api/store/${endpoint}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ sessionId: currentSessionId, ...payload }),
+    }).catch(() => { /* store is optional */ });
+  } catch { /* store is optional */ }
+}
+
 // Persistence helper to dry up fetch calls
 async function persistData(endpoint: string, payload: any, isText = false) {
   try {
@@ -499,16 +527,25 @@ export const useStore = create<AppState>()(
           set((state) => ({
             performanceLogs: [newEntry, ...state.performanceLogs].slice(0, 50)
           }));
-          persistData('/api/log', newEntry);
+          persistData('/api/log', { ...newEntry, sessionId: currentSessionId });
         },
 
         // Chat
         messages: [],
-        addMessage: (msg) => set((state) => ({ messages: [...state.messages, msg] })),
+        addMessage: (msg) => {
+          set((state) => ({ messages: [...state.messages, msg] }));
+          // System messages carry the compiler's feedback — the most
+          // analytically valuable rows in the store. Keep all of them.
+          const seq = get().messages.length;
+          record('message', { seq, role: msg.role, content: msg.content, at: new Date().toISOString() });
+        },
         removeMessage: (id) => set((state) => ({ messages: state.messages.filter(m => m.id !== id) })),
         // A cleared conversation starts a fresh trace: timeline entries refer
         // to conversation turns, so they reset together.
-        clearMessages: () => set({ messages: [], graphTimeline: [] }),
+        clearMessages: () => {
+          newSessionId();          // a cleared conversation is a new session
+          set({ messages: [], graphTimeline: [] });
+        },
 
         // Node Graph — starts empty. Do not seed a default demo graph here:
         // nodes/edges are intentionally excluded from persist() partialize
@@ -634,6 +671,16 @@ export const useStore = create<AppState>()(
           // Cap the in-memory history; exports rarely need more than this and
           // the timeline is intentionally NOT persisted to localStorage.
           set({ graphTimeline: [...s.graphTimeline, entry].slice(-200) });
+
+          // ...but it IS written to the store, immediately. This is what makes
+          // a run that blacks out still leave evidence behind: the in-memory
+          // timeline dies with the tab, the stored one does not.
+          const agent = s.agentSlots.find(a => a.id === s.activeAgentId);
+          record('turn', {
+            ...entry,
+            model: agent?.model ?? null,
+            provider: agent?.provider ?? null,
+          });
         },
         evaluateGraph: () => {
           // Debounce rapid re-evaluations (slider drags): trailing edge.

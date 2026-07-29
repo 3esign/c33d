@@ -4,15 +4,15 @@ setlocal
 cd /d "%~dp0.."
 echo.
 echo === Branch and sync ===
-git status -sb
+git --no-pager status -sb
 echo.
 echo === Changed files ===
-git status --short
+git --no-pager status --short
 echo.
 echo === Size of the change ===
-git diff --stat
+git --no-pager diff --stat
 echo.
 echo === Last 8 commits ===
-git log --oneline -8 --date=short --pretty="%%h %%ad %%s"
+git --no-pager log --oneline -8 --date=short --pretty="%%h %%ad %%s"
 echo.
 pause
