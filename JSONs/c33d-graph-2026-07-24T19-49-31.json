@@ -1,0 +1,2213 @@
+{
+  "c33dExport": 2,
+  "exportedAt": "2026-07-24T19:49:31.256Z",
+  "comment": "very primitive 3d shape",
+  "agent": {
+    "name": "Ollama (Local)",
+    "provider": "ollama",
+    "model": "deepseek-v4-flash:cloud"
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "totalHeight",
+        "type": "NumberSlider",
+        "data": {
+          "value": 20,
+          "label": "totalHeight",
+          "min": 10,
+          "max": 40,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 3840
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "bodyWidth",
+        "type": "NumberSlider",
+        "data": {
+          "value": 4,
+          "label": "bodyWidth",
+          "min": 2,
+          "max": 8,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 420
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "hatHeight",
+        "type": "NumberSlider",
+        "data": {
+          "value": 5,
+          "label": "hatHeight",
+          "min": 2,
+          "max": 10,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 1560
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "ground",
+        "type": "Point",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "position": {
+          "x": 40,
+          "y": 990
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "torsoHeight",
+        "type": "Expression",
+        "data": {
+          "formula": "totalHeight * 0.4"
+        },
+        "position": {
+          "x": 40,
+          "y": 3650
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "torsoCenter_z",
+        "type": "Expression",
+        "data": {
+          "formula": "a / 2"
+        },
+        "position": {
+          "x": 270,
+          "y": 1370
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "torsoCenter",
+        "type": "Point",
+        "data": {
+          "x": 0,
+          "y": 0
+        },
+        "position": {
+          "x": 500,
+          "y": 990
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "torso",
+        "type": "Box",
+        "data": {
+          "width": "bodyWidth",
+          "length": "bodyWidth * 0.6",
+          "color": "#2d6a4f"
+        },
+        "position": {
+          "x": 730,
+          "y": 230
+        },
+        "measured": {
+          "width": 201,
+          "height": 312
+        }
+      },
+      {
+        "id": "headRadius",
+        "type": "Expression",
+        "data": {
+          "formula": "bodyWidth * 0.3"
+        },
+        "position": {
+          "x": 40,
+          "y": 1750
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "headZ",
+        "type": "Expression",
+        "data": {
+          "formula": "torsoHeight + headRadius"
+        },
+        "position": {
+          "x": 40,
+          "y": 1940
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "headCenter",
+        "type": "Point",
+        "data": {
+          "x": 0,
+          "y": 0
+        },
+        "position": {
+          "x": 270,
+          "y": 420
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "head",
+        "type": "Sphere",
+        "data": {
+          "color": "#f4a261"
+        },
+        "position": {
+          "x": 500,
+          "y": 610
+        },
+        "measured": {
+          "width": 201,
+          "height": 216
+        }
+      },
+      {
+        "id": "hatCenterZ",
+        "type": "Expression",
+        "data": {
+          "formula": "headZ + hatHeight / 2"
+        },
+        "position": {
+          "x": 40,
+          "y": 1370
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "hatCenter",
+        "type": "Point",
+        "data": {
+          "x": 0,
+          "y": 0
+        },
+        "position": {
+          "x": 270,
+          "y": 230
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "hat",
+        "type": "Cone",
+        "data": {
+          "radius1": "bodyWidth * 0.5",
+          "radius2": 0,
+          "height": "hatHeight",
+          "color": "#e63946"
+        },
+        "position": {
+          "x": 500,
+          "y": 40
+        },
+        "measured": {
+          "width": 201,
+          "height": 344
+        }
+      },
+      {
+        "id": "armLength",
+        "type": "Expression",
+        "data": {
+          "formula": "totalHeight * 0.3"
+        },
+        "position": {
+          "x": 40,
+          "y": 40
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "armRadius",
+        "type": "Expression",
+        "data": {
+          "formula": "bodyWidth * 0.1"
+        },
+        "position": {
+          "x": 40,
+          "y": 230
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "shoulderZ",
+        "type": "Expression",
+        "data": {
+          "formula": "torsoHeight * 0.8"
+        },
+        "position": {
+          "x": 40,
+          "y": 3460
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "leftShoulder",
+        "type": "Point",
+        "data": {
+          "x": "-bodyWidth / 2",
+          "y": 0
+        },
+        "position": {
+          "x": 270,
+          "y": 990
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "rightShoulder",
+        "type": "Point",
+        "data": {
+          "x": "bodyWidth / 2",
+          "y": 0
+        },
+        "position": {
+          "x": 270,
+          "y": 1180
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "leftArm_axis",
+        "type": "VectorXYZ",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": -1
+        },
+        "position": {
+          "x": 40,
+          "y": 2320
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "leftArm",
+        "type": "Cylinder",
+        "data": {
+          "color": "#2d6a4f"
+        },
+        "position": {
+          "x": 500,
+          "y": 420
+        },
+        "measured": {
+          "width": 201,
+          "height": 296
+        }
+      },
+      {
+        "id": "rightArm_axis",
+        "type": "VectorXYZ",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": -1
+        },
+        "position": {
+          "x": 40,
+          "y": 3080
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "rightArm",
+        "type": "Cylinder",
+        "data": {
+          "color": "#2d6a4f"
+        },
+        "position": {
+          "x": 500,
+          "y": 800
+        },
+        "measured": {
+          "width": 201,
+          "height": 296
+        }
+      },
+      {
+        "id": "legLength",
+        "type": "Expression",
+        "data": {
+          "formula": "totalHeight * 0.3"
+        },
+        "position": {
+          "x": 40,
+          "y": 2700
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "legRadius",
+        "type": "Expression",
+        "data": {
+          "formula": "bodyWidth * 0.12"
+        },
+        "position": {
+          "x": 40,
+          "y": 2890
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "hipZ",
+        "type": "Expression",
+        "data": {
+          "formula": "torsoHeight * 0.2"
+        },
+        "position": {
+          "x": 40,
+          "y": 2130
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "leftHip",
+        "type": "Point",
+        "data": {
+          "x": "-bodyWidth * 0.2",
+          "y": 0
+        },
+        "position": {
+          "x": 270,
+          "y": 610
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "rightHip",
+        "type": "Point",
+        "data": {
+          "x": "bodyWidth * 0.2",
+          "y": 0
+        },
+        "position": {
+          "x": 270,
+          "y": 800
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "leftLeg_axis",
+        "type": "VectorXYZ",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": -1
+        },
+        "position": {
+          "x": 40,
+          "y": 2510
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "leftLeg",
+        "type": "Cylinder",
+        "data": {
+          "color": "#1b4332"
+        },
+        "position": {
+          "x": 500,
+          "y": 1180
+        },
+        "measured": {
+          "width": 201,
+          "height": 296
+        }
+      },
+      {
+        "id": "rightLeg_axis",
+        "type": "VectorXYZ",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": -1
+        },
+        "position": {
+          "x": 40,
+          "y": 3270
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "rightLeg",
+        "type": "Cylinder",
+        "data": {
+          "color": "#1b4332"
+        },
+        "position": {
+          "x": 500,
+          "y": 1370
+        },
+        "measured": {
+          "width": 201,
+          "height": 296
+        }
+      },
+      {
+        "id": "handZ",
+        "type": "Expression",
+        "data": {
+          "formula": "shoulderZ - armLength"
+        },
+        "position": {
+          "x": 40,
+          "y": 1180
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "leftHand",
+        "type": "Point",
+        "data": {
+          "x": "-bodyWidth / 2",
+          "y": 0
+        },
+        "position": {
+          "x": 270,
+          "y": 40
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "bowHeight",
+        "type": "Expression",
+        "data": {
+          "formula": "totalHeight * 0.4"
+        },
+        "position": {
+          "x": 40,
+          "y": 610
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "bowThickness",
+        "type": "Expression",
+        "data": {
+          "formula": "bodyWidth * 0.05"
+        },
+        "position": {
+          "x": 40,
+          "y": 800
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "bow",
+        "type": "Box",
+        "data": {},
+        "position": {
+          "x": 500,
+          "y": 230
+        },
+        "measured": {
+          "width": 201,
+          "height": 312
+        }
+      },
+      {
+        "id": "bowRotated",
+        "type": "Rotate",
+        "data": {
+          "angle": 30,
+          "axisX": 0,
+          "axisY": 1,
+          "axisZ": 0,
+          "color": "#8b5a2b"
+        },
+        "position": {
+          "x": 730,
+          "y": 40
+        },
+        "measured": {
+          "width": 201,
+          "height": 414
+        }
+      }
+    ],
+    "edges": [
+      {
+        "source": "torsoHeight",
+        "sourceHandle": "value",
+        "target": "torsoCenter_z",
+        "targetHandle": "a",
+        "id": "e_torsoHeight_torsoCenter_z_a"
+      },
+      {
+        "source": "torsoCenter_z",
+        "sourceHandle": "value",
+        "target": "torsoCenter",
+        "targetHandle": "z",
+        "id": "e_torsoCenter_z_torsoCenter_z"
+      },
+      {
+        "source": "torsoHeight",
+        "sourceHandle": "value",
+        "target": "torso",
+        "targetHandle": "param:height",
+        "id": "e_torsoHeight_torso_param:height"
+      },
+      {
+        "source": "torsoCenter",
+        "sourceHandle": "point",
+        "target": "torso",
+        "targetHandle": "center",
+        "id": "e_torsoCenter_torso_center"
+      },
+      {
+        "source": "headZ",
+        "sourceHandle": "value",
+        "target": "headCenter",
+        "targetHandle": "z",
+        "id": "e_headZ_headCenter_z"
+      },
+      {
+        "source": "headRadius",
+        "sourceHandle": "value",
+        "target": "head",
+        "targetHandle": "param:radius",
+        "id": "e_headRadius_head_param:radius"
+      },
+      {
+        "source": "headCenter",
+        "sourceHandle": "point",
+        "target": "head",
+        "targetHandle": "center",
+        "id": "e_headCenter_head_center"
+      },
+      {
+        "source": "hatCenterZ",
+        "sourceHandle": "value",
+        "target": "hatCenter",
+        "targetHandle": "z",
+        "id": "e_hatCenterZ_hatCenter_z"
+      },
+      {
+        "source": "hatCenter",
+        "sourceHandle": "point",
+        "target": "hat",
+        "targetHandle": "center",
+        "id": "e_hatCenter_hat_center"
+      },
+      {
+        "source": "shoulderZ",
+        "sourceHandle": "value",
+        "target": "leftShoulder",
+        "targetHandle": "z",
+        "id": "e_shoulderZ_leftShoulder_z"
+      },
+      {
+        "source": "shoulderZ",
+        "sourceHandle": "value",
+        "target": "rightShoulder",
+        "targetHandle": "z",
+        "id": "e_shoulderZ_rightShoulder_z"
+      },
+      {
+        "source": "armRadius",
+        "sourceHandle": "value",
+        "target": "leftArm",
+        "targetHandle": "param:radius",
+        "id": "e_armRadius_leftArm_param:radius"
+      },
+      {
+        "source": "armLength",
+        "sourceHandle": "value",
+        "target": "leftArm",
+        "targetHandle": "param:height",
+        "id": "e_armLength_leftArm_param:height"
+      },
+      {
+        "source": "leftShoulder",
+        "sourceHandle": "point",
+        "target": "leftArm",
+        "targetHandle": "center",
+        "id": "e_leftShoulder_leftArm_center"
+      },
+      {
+        "source": "leftArm_axis",
+        "sourceHandle": "vector",
+        "target": "leftArm",
+        "targetHandle": "axis",
+        "id": "e_leftArm_axis_leftArm_axis"
+      },
+      {
+        "source": "armRadius",
+        "sourceHandle": "value",
+        "target": "rightArm",
+        "targetHandle": "param:radius",
+        "id": "e_armRadius_rightArm_param:radius"
+      },
+      {
+        "source": "armLength",
+        "sourceHandle": "value",
+        "target": "rightArm",
+        "targetHandle": "param:height",
+        "id": "e_armLength_rightArm_param:height"
+      },
+      {
+        "source": "rightShoulder",
+        "sourceHandle": "point",
+        "target": "rightArm",
+        "targetHandle": "center",
+        "id": "e_rightShoulder_rightArm_center"
+      },
+      {
+        "source": "rightArm_axis",
+        "sourceHandle": "vector",
+        "target": "rightArm",
+        "targetHandle": "axis",
+        "id": "e_rightArm_axis_rightArm_axis"
+      },
+      {
+        "source": "hipZ",
+        "sourceHandle": "value",
+        "target": "leftHip",
+        "targetHandle": "z",
+        "id": "e_hipZ_leftHip_z"
+      },
+      {
+        "source": "hipZ",
+        "sourceHandle": "value",
+        "target": "rightHip",
+        "targetHandle": "z",
+        "id": "e_hipZ_rightHip_z"
+      },
+      {
+        "source": "legRadius",
+        "sourceHandle": "value",
+        "target": "leftLeg",
+        "targetHandle": "param:radius",
+        "id": "e_legRadius_leftLeg_param:radius"
+      },
+      {
+        "source": "legLength",
+        "sourceHandle": "value",
+        "target": "leftLeg",
+        "targetHandle": "param:height",
+        "id": "e_legLength_leftLeg_param:height"
+      },
+      {
+        "source": "leftHip",
+        "sourceHandle": "point",
+        "target": "leftLeg",
+        "targetHandle": "center",
+        "id": "e_leftHip_leftLeg_center"
+      },
+      {
+        "source": "leftLeg_axis",
+        "sourceHandle": "vector",
+        "target": "leftLeg",
+        "targetHandle": "axis",
+        "id": "e_leftLeg_axis_leftLeg_axis"
+      },
+      {
+        "source": "legRadius",
+        "sourceHandle": "value",
+        "target": "rightLeg",
+        "targetHandle": "param:radius",
+        "id": "e_legRadius_rightLeg_param:radius"
+      },
+      {
+        "source": "legLength",
+        "sourceHandle": "value",
+        "target": "rightLeg",
+        "targetHandle": "param:height",
+        "id": "e_legLength_rightLeg_param:height"
+      },
+      {
+        "source": "rightHip",
+        "sourceHandle": "point",
+        "target": "rightLeg",
+        "targetHandle": "center",
+        "id": "e_rightHip_rightLeg_center"
+      },
+      {
+        "source": "rightLeg_axis",
+        "sourceHandle": "vector",
+        "target": "rightLeg",
+        "targetHandle": "axis",
+        "id": "e_rightLeg_axis_rightLeg_axis"
+      },
+      {
+        "source": "handZ",
+        "sourceHandle": "value",
+        "target": "leftHand",
+        "targetHandle": "z",
+        "id": "e_handZ_leftHand_z"
+      },
+      {
+        "source": "bowThickness",
+        "sourceHandle": "value",
+        "target": "bow",
+        "targetHandle": "param:width",
+        "id": "e_bowThickness_bow_param:width"
+      },
+      {
+        "source": "bowHeight",
+        "sourceHandle": "value",
+        "target": "bow",
+        "targetHandle": "param:length",
+        "id": "e_bowHeight_bow_param:length"
+      },
+      {
+        "source": "bowThickness",
+        "sourceHandle": "value",
+        "target": "bow",
+        "targetHandle": "param:height",
+        "id": "e_bowThickness_bow_param:height"
+      },
+      {
+        "source": "leftHand",
+        "sourceHandle": "point",
+        "target": "bow",
+        "targetHandle": "center",
+        "id": "e_leftHand_bow_center"
+      },
+      {
+        "source": "bow",
+        "sourceHandle": "solid",
+        "target": "bowRotated",
+        "targetHandle": "solid",
+        "id": "e_bow_bowRotated_solid"
+      },
+      {
+        "source": "leftHand",
+        "sourceHandle": "point",
+        "target": "bowRotated",
+        "targetHandle": "pivot",
+        "id": "e_leftHand_bowRotated_pivot"
+      }
+    ]
+  },
+  "conversation": [
+    {
+      "role": "system",
+      "content": "Workspace cleared."
+    },
+    {
+      "role": "user",
+      "content": "make a robinhood"
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline expr() from \"torsoCenter.z\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"expr\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Argument \"z\" of \"point\": formula \"torsoHeight / 2\" named computed binding(s) \"torsoHeight\" — auto-wired via expr(\"a / 2\"). Sliders can be named directly in formulas; computed bindings must be referenced as \"$name\" args."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Argument \"height\" of \"box\": treated \"torsoHeight\" as the binding \"$torsoHeight\" (add the \"$\" prefix to reference bindings)."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Argument \"z\" of \"point\": treated \"headZ\" as the binding \"$headZ\" (add the \"$\" prefix to reference bindings)."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Argument \"radius\" of \"sphere\": treated \"headRadius\" as the binding \"$headRadius\" (add the \"$\" prefix to reference bindings)."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Argument \"z\" of \"point\": treated \"hatCenterZ\" as the binding \"$hatCenterZ\" (add the \"$\" prefix to reference bindings)."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Argument \"z\" of \"point\": treated \"shoulderZ\" as the binding \"$shoulderZ\" (add the \"$\" prefix to reference bindings)."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Argument \"z\" of \"point\": treated \"shoulderZ\" as the binding \"$shoulderZ\" (add the \"$\" prefix to reference bindings)."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Argument \"radius\" of \"cylinder\": treated \"armRadius\" as the binding \"$armRadius\" (add the \"$\" prefix to reference bindings)."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Argument \"height\" of \"cylinder\": treated \"armLength\" as the binding \"$armLength\" (add the \"$\" prefix to reference bindings)."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline vector() from \"leftArm.axis\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"vector\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Argument \"radius\" of \"cylinder\": treated \"armRadius\" as the binding \"$armRadius\" (add the \"$\" prefix to reference bindings)."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Argument \"height\" of \"cylinder\": treated \"armLength\" as the binding \"$armLength\" (add the \"$\" prefix to reference bindings)."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline vector() from \"rightArm.axis\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"vector\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Argument \"z\" of \"point\": treated \"hipZ\" as the binding \"$hipZ\" (add the \"$\" prefix to reference bindings)."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Argument \"z\" of \"point\": treated \"hipZ\" as the binding \"$hipZ\" (add the \"$\" prefix to reference bindings)."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Argument \"radius\" of \"cylinder\": treated \"legRadius\" as the binding \"$legRadius\" (add the \"$\" prefix to reference bindings)."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Argument \"height\" of \"cylinder\": treated \"legLength\" as the binding \"$legLength\" (add the \"$\" prefix to reference bindings)."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline vector() from \"leftLeg.axis\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"vector\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Argument \"radius\" of \"cylinder\": treated \"legRadius\" as the binding \"$legRadius\" (add the \"$\" prefix to reference bindings)."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Argument \"height\" of \"cylinder\": treated \"legLength\" as the binding \"$legLength\" (add the \"$\" prefix to reference bindings)."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline vector() from \"rightLeg.axis\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"vector\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Argument \"z\" of \"point\": treated \"handZ\" as the binding \"$handZ\" (add the \"$\" prefix to reference bindings)."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Argument \"width\" of \"box\": treated \"bowThickness\" as the binding \"$bowThickness\" (add the \"$\" prefix to reference bindings)."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Argument \"length\" of \"box\": treated \"bowHeight\" as the binding \"$bowHeight\" (add the \"$\" prefix to reference bindings)."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Argument \"height\" of \"box\": treated \"bowThickness\" as the binding \"$bowThickness\" (add the \"$\" prefix to reference bindings)."
+    },
+    {
+      "role": "assistant",
+      "content": "A stylized Robin Hood figure with a hat, bow, and simple humanoid proportions."
+    }
+  ],
+  "plan": "",
+  "genome": null,
+  "geometryReport": {
+    "leaves": [
+      {
+        "id": "torso",
+        "bbox": {
+          "min": [
+            -2.0000001000000003,
+            -1.2000001000000002,
+            -4.0000001
+          ],
+          "max": [
+            2.0000001000000003,
+            1.2000001000000002,
+            4.0000001
+          ],
+          "center": [
+            0,
+            0,
+            0
+          ],
+          "size": [
+            4.000000200000001,
+            2.4000002000000005,
+            8.0000002
+          ]
+        },
+        "volume": 76.79999999999998,
+        "meshOk": true,
+        "vertexCount": 24,
+        "error": null
+      },
+      {
+        "id": "leftArm",
+        "bbox": {
+          "min": [
+            -2.4000001,
+            -0.4295837177117625,
+            -3.0396125528390328
+          ],
+          "max": [
+            -1.5603874471609673,
+            0.4295837177117625,
+            3.0396125528390328
+          ],
+          "center": [
+            -1.9801937735804838,
+            0,
+            0
+          ],
+          "size": [
+            0.8396126528390329,
+            0.859167435423525,
+            6.0792251056780655
+          ]
+        },
+        "volume": 3.015928947446201,
+        "meshOk": true,
+        "vertexCount": 30,
+        "error": null
+      },
+      {
+        "id": "rightArm",
+        "bbox": {
+          "min": [
+            1.5999999,
+            -0.4295837177117623,
+            -3.0396125528390323
+          ],
+          "max": [
+            2.4396125528390322,
+            0.4295837177117623,
+            3.0396125528390323
+          ],
+          "center": [
+            2.019806226419516,
+            0,
+            0
+          ],
+          "size": [
+            0.8396126528390322,
+            0.8591674354235246,
+            6.079225105678065
+          ]
+        },
+        "volume": 3.015928947446201,
+        "meshOk": true,
+        "vertexCount": 30,
+        "error": null
+      },
+      {
+        "id": "leftLeg",
+        "bbox": {
+          "min": [
+            -1.2800001,
+            -0.5155004412541145,
+            -3.047535043406839
+          ],
+          "max": [
+            -0.27246495659316117,
+            0.5155004412541145,
+            3.047535043406839
+          ],
+          "center": [
+            -0.7762325282965806,
+            0,
+            0
+          ],
+          "size": [
+            1.007535143406839,
+            1.031000882508229,
+            6.095070086813678
+          ]
+        },
+        "volume": 4.34293768432253,
+        "meshOk": true,
+        "vertexCount": 30,
+        "error": null
+      },
+      {
+        "id": "rightLeg",
+        "bbox": {
+          "min": [
+            0.3199999,
+            -0.5155004412541145,
+            -3.047535043406839
+          ],
+          "max": [
+            1.327535043406839,
+            0.5155004412541145,
+            3.047535043406839
+          ],
+          "center": [
+            0.8237674717034195,
+            0,
+            0
+          ],
+          "size": [
+            1.007535143406839,
+            1.031000882508229,
+            6.095070086813678
+          ]
+        },
+        "volume": 4.342937684322529,
+        "meshOk": true,
+        "vertexCount": 30,
+        "error": null
+      },
+      {
+        "id": "head",
+        "bbox": {
+          "min": [
+            -1.2682807772581284,
+            -1.2560665075152477,
+            -1.2682807772581284
+          ],
+          "max": [
+            1.2682807772581284,
+            1.2560665075152475,
+            1.2682807772581284
+          ],
+          "center": [
+            0,
+            0,
+            0
+          ],
+          "size": [
+            2.5365615545162568,
+            2.5121330150304955,
+            2.5365615545162568
+          ]
+        },
+        "volume": 7.238229473870883,
+        "meshOk": true,
+        "vertexCount": 67,
+        "error": null
+      },
+      {
+        "id": "hat",
+        "bbox": {
+          "min": [
+            -2.1709989330002184,
+            -2.1709989330002184,
+            -2.6709989330002184
+          ],
+          "max": [
+            2.1709989330002184,
+            2.1709989330002184,
+            2.6709989330002184
+          ],
+          "center": [
+            0,
+            0,
+            0
+          ],
+          "size": [
+            4.341997866000437,
+            4.341997866000437,
+            5.341997866000437
+          ]
+        },
+        "volume": 20.954428235431678,
+        "meshOk": true,
+        "vertexCount": 72,
+        "error": null
+      },
+      {
+        "id": "bowRotated",
+        "bbox": {
+          "min": [
+            -2.136602640378445,
+            -4.0000001,
+            -0.13660264037844438
+          ],
+          "max": [
+            -1.8633973596215556,
+            4.0000001,
+            0.13660264037844427
+          ],
+          "center": [
+            -2,
+            0,
+            -5.551115123125783e-17
+          ],
+          "size": [
+            0.2732052807568892,
+            8.0000002,
+            0.27320528075688866
+          ]
+        },
+        "volume": 0.32000000000000034,
+        "meshOk": true,
+        "vertexCount": 24,
+        "error": null
+      }
+    ],
+    "nodeErrors": [],
+    "numbers": {
+      "totalHeight": 20,
+      "bodyWidth": 4,
+      "hatHeight": 5,
+      "torsoHeight": 8,
+      "armLength": 6,
+      "legLength": 6,
+      "bowHeight": 8,
+      "headRadius": 1.2,
+      "armRadius": 0.4,
+      "legRadius": 0.48,
+      "bowThickness": 0.2,
+      "torsoCenter_z": 4,
+      "shoulderZ": 6.4,
+      "hipZ": 1.6,
+      "headZ": 9.2,
+      "handZ": 0.40000000000000036,
+      "hatCenterZ": 11.7
+    },
+    "sliders": {
+      "totalHeight": 20,
+      "bodyWidth": 4,
+      "hatHeight": 5
+    },
+    "selections": {},
+    "helpers": {
+      "ground": {
+        "type": "Point",
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "sourceNodeId": "ground",
+        "ancestorNodeIds": []
+      },
+      "leftArm_axis": {
+        "type": "Vector",
+        "x": 0,
+        "y": 0,
+        "z": -1,
+        "sourceNodeId": "leftArm_axis",
+        "ancestorNodeIds": []
+      },
+      "rightArm_axis": {
+        "type": "Vector",
+        "x": 0,
+        "y": 0,
+        "z": -1,
+        "sourceNodeId": "rightArm_axis",
+        "ancestorNodeIds": []
+      },
+      "leftLeg_axis": {
+        "type": "Vector",
+        "x": 0,
+        "y": 0,
+        "z": -1,
+        "sourceNodeId": "leftLeg_axis",
+        "ancestorNodeIds": []
+      },
+      "rightLeg_axis": {
+        "type": "Vector",
+        "x": 0,
+        "y": 0,
+        "z": -1,
+        "sourceNodeId": "rightLeg_axis",
+        "ancestorNodeIds": []
+      },
+      "torsoCenter": {
+        "type": "Point",
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "sourceNodeId": "torsoCenter",
+        "ancestorNodeIds": []
+      },
+      "leftShoulder": {
+        "type": "Point",
+        "x": -2,
+        "y": 0,
+        "z": 0,
+        "sourceNodeId": "leftShoulder",
+        "ancestorNodeIds": []
+      },
+      "rightShoulder": {
+        "type": "Point",
+        "x": 2,
+        "y": 0,
+        "z": 0,
+        "sourceNodeId": "rightShoulder",
+        "ancestorNodeIds": []
+      },
+      "leftHip": {
+        "type": "Point",
+        "x": -0.8,
+        "y": 0,
+        "z": 0,
+        "sourceNodeId": "leftHip",
+        "ancestorNodeIds": []
+      },
+      "rightHip": {
+        "type": "Point",
+        "x": 0.8,
+        "y": 0,
+        "z": 0,
+        "sourceNodeId": "rightHip",
+        "ancestorNodeIds": []
+      },
+      "headCenter": {
+        "type": "Point",
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "sourceNodeId": "headCenter",
+        "ancestorNodeIds": []
+      },
+      "leftHand": {
+        "type": "Point",
+        "x": -2,
+        "y": 0,
+        "z": 0,
+        "sourceNodeId": "leftHand",
+        "ancestorNodeIds": []
+      },
+      "hatCenter": {
+        "type": "Point",
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "sourceNodeId": "hatCenter",
+        "ancestorNodeIds": []
+      }
+    },
+    "nodeCount": 39,
+    "edgeCount": 36,
+    "transformCount": 1,
+    "nodesPerLeafRatio": 4.875,
+    "nodeEconomyWarning": false,
+    "placement": {
+      "anchored": [
+        "torso",
+        "leftArm",
+        "rightArm",
+        "leftLeg",
+        "rightLeg",
+        "head",
+        "hat",
+        "bowRotated"
+      ],
+      "literal": [],
+      "origin": [],
+      "literalNodeIds": [],
+      "ratio": 1
+    },
+    "scene": {
+      "min": [
+        -2.4000001,
+        -4.0000001,
+        -4.0000001
+      ],
+      "max": [
+        2.4396125528390322,
+        4.0000001,
+        4.0000001
+      ],
+      "size": [
+        4.839612652839032,
+        8.0000002,
+        8.0000002
+      ]
+    },
+    "meshedLeafCount": 9,
+    "kernelFaultCount": 0,
+    "kernelSuspect": false,
+    "kernelHealth": "ok",
+    "evalCount": 1,
+    "recycleRecommended": false,
+    "perturbationIssues": [
+      "At hatHeight increase (1.5x), \"leftLeg\" becomes fully buried inside \"hat\".",
+      "At hatHeight increase (1.5x), \"rightLeg\" becomes fully buried inside \"hat\".",
+      "At totalHeight decrease (0.6x), \"torso\" becomes fully buried inside \"hat\".",
+      "At totalHeight decrease (0.6x), \"leftLeg\" becomes fully buried inside \"hat\".",
+      "At totalHeight decrease (0.6x), \"rightLeg\" becomes fully buried inside \"hat\"."
+    ],
+    "proportionalIntegrity": 0.6666666666666666
+  },
+  "timeline": [
+    {
+      "at": "2026-07-24T19:43:56.333Z",
+      "turn": 1,
+      "trigger": "ai-ir",
+      "label": "attempt 1: rebuilt graph (39 nodes)",
+      "nodeCount": 39,
+      "edgeCount": 36,
+      "isolatedCount": 4,
+      "diff": {
+        "addedNodes": [
+          "totalHeight",
+          "bodyWidth",
+          "hatHeight",
+          "ground",
+          "torsoHeight",
+          "torsoCenter_z",
+          "torsoCenter",
+          "torso",
+          "headRadius",
+          "headZ",
+          "headCenter",
+          "head",
+          "hatCenterZ",
+          "hatCenter",
+          "hat",
+          "armLength",
+          "armRadius",
+          "shoulderZ",
+          "leftShoulder",
+          "rightShoulder",
+          "leftArm_axis",
+          "leftArm",
+          "rightArm_axis",
+          "rightArm",
+          "legLength",
+          "legRadius",
+          "hipZ",
+          "leftHip",
+          "rightHip",
+          "leftLeg_axis",
+          "leftLeg",
+          "rightLeg_axis",
+          "rightLeg",
+          "handZ",
+          "leftHand",
+          "bowHeight",
+          "bowThickness",
+          "bow",
+          "bowRotated"
+        ],
+        "removedNodes": [],
+        "changedNodes": [],
+        "addedEdges": 36,
+        "removedEdges": 0
+      },
+      "details": [
+        "warning: Dead design parameter: slider \"totalHeight\" is not referenced by any formula or edge — moving it changes nothing. Wire dimensions to it or remove it."
+      ],
+      "nodes": [
+        {
+          "id": "totalHeight",
+          "type": "NumberSlider",
+          "data": {
+            "value": 20,
+            "label": "totalHeight",
+            "min": 10,
+            "max": 40,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 3840
+          }
+        },
+        {
+          "id": "bodyWidth",
+          "type": "NumberSlider",
+          "data": {
+            "value": 4,
+            "label": "bodyWidth",
+            "min": 2,
+            "max": 8,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 420
+          }
+        },
+        {
+          "id": "hatHeight",
+          "type": "NumberSlider",
+          "data": {
+            "value": 5,
+            "label": "hatHeight",
+            "min": 2,
+            "max": 10,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 1560
+          }
+        },
+        {
+          "id": "ground",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "position": {
+            "x": 40,
+            "y": 990
+          }
+        },
+        {
+          "id": "torsoHeight",
+          "type": "Expression",
+          "data": {
+            "formula": "totalHeight * 0.4"
+          },
+          "position": {
+            "x": 40,
+            "y": 3650
+          }
+        },
+        {
+          "id": "torsoCenter_z",
+          "type": "Expression",
+          "data": {
+            "formula": "a / 2"
+          },
+          "position": {
+            "x": 270,
+            "y": 1370
+          }
+        },
+        {
+          "id": "torsoCenter",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0
+          },
+          "position": {
+            "x": 500,
+            "y": 990
+          }
+        },
+        {
+          "id": "torso",
+          "type": "Box",
+          "data": {
+            "width": "bodyWidth",
+            "length": "bodyWidth * 0.6",
+            "color": "#2d6a4f"
+          },
+          "position": {
+            "x": 730,
+            "y": 230
+          }
+        },
+        {
+          "id": "headRadius",
+          "type": "Expression",
+          "data": {
+            "formula": "bodyWidth * 0.3"
+          },
+          "position": {
+            "x": 40,
+            "y": 1750
+          }
+        },
+        {
+          "id": "headZ",
+          "type": "Expression",
+          "data": {
+            "formula": "torsoHeight + headRadius"
+          },
+          "position": {
+            "x": 40,
+            "y": 1940
+          }
+        },
+        {
+          "id": "headCenter",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0
+          },
+          "position": {
+            "x": 270,
+            "y": 420
+          }
+        },
+        {
+          "id": "head",
+          "type": "Sphere",
+          "data": {
+            "color": "#f4a261"
+          },
+          "position": {
+            "x": 500,
+            "y": 610
+          }
+        },
+        {
+          "id": "hatCenterZ",
+          "type": "Expression",
+          "data": {
+            "formula": "headZ + hatHeight / 2"
+          },
+          "position": {
+            "x": 40,
+            "y": 1370
+          }
+        },
+        {
+          "id": "hatCenter",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0
+          },
+          "position": {
+            "x": 270,
+            "y": 230
+          }
+        },
+        {
+          "id": "hat",
+          "type": "Cone",
+          "data": {
+            "radius1": "bodyWidth * 0.5",
+            "radius2": 0,
+            "height": "hatHeight",
+            "color": "#e63946"
+          },
+          "position": {
+            "x": 500,
+            "y": 40
+          }
+        },
+        {
+          "id": "armLength",
+          "type": "Expression",
+          "data": {
+            "formula": "totalHeight * 0.3"
+          },
+          "position": {
+            "x": 40,
+            "y": 40
+          }
+        },
+        {
+          "id": "armRadius",
+          "type": "Expression",
+          "data": {
+            "formula": "bodyWidth * 0.1"
+          },
+          "position": {
+            "x": 40,
+            "y": 230
+          }
+        },
+        {
+          "id": "shoulderZ",
+          "type": "Expression",
+          "data": {
+            "formula": "torsoHeight * 0.8"
+          },
+          "position": {
+            "x": 40,
+            "y": 3460
+          }
+        },
+        {
+          "id": "leftShoulder",
+          "type": "Point",
+          "data": {
+            "x": "-bodyWidth / 2",
+            "y": 0
+          },
+          "position": {
+            "x": 270,
+            "y": 990
+          }
+        },
+        {
+          "id": "rightShoulder",
+          "type": "Point",
+          "data": {
+            "x": "bodyWidth / 2",
+            "y": 0
+          },
+          "position": {
+            "x": 270,
+            "y": 1180
+          }
+        },
+        {
+          "id": "leftArm_axis",
+          "type": "VectorXYZ",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": -1
+          },
+          "position": {
+            "x": 40,
+            "y": 2320
+          }
+        },
+        {
+          "id": "leftArm",
+          "type": "Cylinder",
+          "data": {
+            "color": "#2d6a4f"
+          },
+          "position": {
+            "x": 500,
+            "y": 420
+          }
+        },
+        {
+          "id": "rightArm_axis",
+          "type": "VectorXYZ",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": -1
+          },
+          "position": {
+            "x": 40,
+            "y": 3080
+          }
+        },
+        {
+          "id": "rightArm",
+          "type": "Cylinder",
+          "data": {
+            "color": "#2d6a4f"
+          },
+          "position": {
+            "x": 500,
+            "y": 800
+          }
+        },
+        {
+          "id": "legLength",
+          "type": "Expression",
+          "data": {
+            "formula": "totalHeight * 0.3"
+          },
+          "position": {
+            "x": 40,
+            "y": 2700
+          }
+        },
+        {
+          "id": "legRadius",
+          "type": "Expression",
+          "data": {
+            "formula": "bodyWidth * 0.12"
+          },
+          "position": {
+            "x": 40,
+            "y": 2890
+          }
+        },
+        {
+          "id": "hipZ",
+          "type": "Expression",
+          "data": {
+            "formula": "torsoHeight * 0.2"
+          },
+          "position": {
+            "x": 40,
+            "y": 2130
+          }
+        },
+        {
+          "id": "leftHip",
+          "type": "Point",
+          "data": {
+            "x": "-bodyWidth * 0.2",
+            "y": 0
+          },
+          "position": {
+            "x": 270,
+            "y": 610
+          }
+        },
+        {
+          "id": "rightHip",
+          "type": "Point",
+          "data": {
+            "x": "bodyWidth * 0.2",
+            "y": 0
+          },
+          "position": {
+            "x": 270,
+            "y": 800
+          }
+        },
+        {
+          "id": "leftLeg_axis",
+          "type": "VectorXYZ",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": -1
+          },
+          "position": {
+            "x": 40,
+            "y": 2510
+          }
+        },
+        {
+          "id": "leftLeg",
+          "type": "Cylinder",
+          "data": {
+            "color": "#1b4332"
+          },
+          "position": {
+            "x": 500,
+            "y": 1180
+          }
+        },
+        {
+          "id": "rightLeg_axis",
+          "type": "VectorXYZ",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": -1
+          },
+          "position": {
+            "x": 40,
+            "y": 3270
+          }
+        },
+        {
+          "id": "rightLeg",
+          "type": "Cylinder",
+          "data": {
+            "color": "#1b4332"
+          },
+          "position": {
+            "x": 500,
+            "y": 1370
+          }
+        },
+        {
+          "id": "handZ",
+          "type": "Expression",
+          "data": {
+            "formula": "shoulderZ - armLength"
+          },
+          "position": {
+            "x": 40,
+            "y": 1180
+          }
+        },
+        {
+          "id": "leftHand",
+          "type": "Point",
+          "data": {
+            "x": "-bodyWidth / 2",
+            "y": 0
+          },
+          "position": {
+            "x": 270,
+            "y": 40
+          }
+        },
+        {
+          "id": "bowHeight",
+          "type": "Expression",
+          "data": {
+            "formula": "totalHeight * 0.4"
+          },
+          "position": {
+            "x": 40,
+            "y": 610
+          }
+        },
+        {
+          "id": "bowThickness",
+          "type": "Expression",
+          "data": {
+            "formula": "bodyWidth * 0.05"
+          },
+          "position": {
+            "x": 40,
+            "y": 800
+          }
+        },
+        {
+          "id": "bow",
+          "type": "Box",
+          "data": {},
+          "position": {
+            "x": 500,
+            "y": 230
+          }
+        },
+        {
+          "id": "bowRotated",
+          "type": "Rotate",
+          "data": {
+            "angle": 30,
+            "axisX": 0,
+            "axisY": 1,
+            "axisZ": 0,
+            "color": "#8b5a2b"
+          },
+          "position": {
+            "x": 730,
+            "y": 40
+          }
+        }
+      ],
+      "edges": [
+        {
+          "source": "torsoHeight",
+          "sourceHandle": "value",
+          "target": "torsoCenter_z",
+          "targetHandle": "a",
+          "id": "e_torsoHeight_torsoCenter_z_a"
+        },
+        {
+          "source": "torsoCenter_z",
+          "sourceHandle": "value",
+          "target": "torsoCenter",
+          "targetHandle": "z",
+          "id": "e_torsoCenter_z_torsoCenter_z"
+        },
+        {
+          "source": "torsoHeight",
+          "sourceHandle": "value",
+          "target": "torso",
+          "targetHandle": "param:height",
+          "id": "e_torsoHeight_torso_param:height"
+        },
+        {
+          "source": "torsoCenter",
+          "sourceHandle": "point",
+          "target": "torso",
+          "targetHandle": "center",
+          "id": "e_torsoCenter_torso_center"
+        },
+        {
+          "source": "headZ",
+          "sourceHandle": "value",
+          "target": "headCenter",
+          "targetHandle": "z",
+          "id": "e_headZ_headCenter_z"
+        },
+        {
+          "source": "headRadius",
+          "sourceHandle": "value",
+          "target": "head",
+          "targetHandle": "param:radius",
+          "id": "e_headRadius_head_param:radius"
+        },
+        {
+          "source": "headCenter",
+          "sourceHandle": "point",
+          "target": "head",
+          "targetHandle": "center",
+          "id": "e_headCenter_head_center"
+        },
+        {
+          "source": "hatCenterZ",
+          "sourceHandle": "value",
+          "target": "hatCenter",
+          "targetHandle": "z",
+          "id": "e_hatCenterZ_hatCenter_z"
+        },
+        {
+          "source": "hatCenter",
+          "sourceHandle": "point",
+          "target": "hat",
+          "targetHandle": "center",
+          "id": "e_hatCenter_hat_center"
+        },
+        {
+          "source": "shoulderZ",
+          "sourceHandle": "value",
+          "target": "leftShoulder",
+          "targetHandle": "z",
+          "id": "e_shoulderZ_leftShoulder_z"
+        },
+        {
+          "source": "shoulderZ",
+          "sourceHandle": "value",
+          "target": "rightShoulder",
+          "targetHandle": "z",
+          "id": "e_shoulderZ_rightShoulder_z"
+        },
+        {
+          "source": "armRadius",
+          "sourceHandle": "value",
+          "target": "leftArm",
+          "targetHandle": "param:radius",
+          "id": "e_armRadius_leftArm_param:radius"
+        },
+        {
+          "source": "armLength",
+          "sourceHandle": "value",
+          "target": "leftArm",
+          "targetHandle": "param:height",
+          "id": "e_armLength_leftArm_param:height"
+        },
+        {
+          "source": "leftShoulder",
+          "sourceHandle": "point",
+          "target": "leftArm",
+          "targetHandle": "center",
+          "id": "e_leftShoulder_leftArm_center"
+        },
+        {
+          "source": "leftArm_axis",
+          "sourceHandle": "vector",
+          "target": "leftArm",
+          "targetHandle": "axis",
+          "id": "e_leftArm_axis_leftArm_axis"
+        },
+        {
+          "source": "armRadius",
+          "sourceHandle": "value",
+          "target": "rightArm",
+          "targetHandle": "param:radius",
+          "id": "e_armRadius_rightArm_param:radius"
+        },
+        {
+          "source": "armLength",
+          "sourceHandle": "value",
+          "target": "rightArm",
+          "targetHandle": "param:height",
+          "id": "e_armLength_rightArm_param:height"
+        },
+        {
+          "source": "rightShoulder",
+          "sourceHandle": "point",
+          "target": "rightArm",
+          "targetHandle": "center",
+          "id": "e_rightShoulder_rightArm_center"
+        },
+        {
+          "source": "rightArm_axis",
+          "sourceHandle": "vector",
+          "target": "rightArm",
+          "targetHandle": "axis",
+          "id": "e_rightArm_axis_rightArm_axis"
+        },
+        {
+          "source": "hipZ",
+          "sourceHandle": "value",
+          "target": "leftHip",
+          "targetHandle": "z",
+          "id": "e_hipZ_leftHip_z"
+        },
+        {
+          "source": "hipZ",
+          "sourceHandle": "value",
+          "target": "rightHip",
+          "targetHandle": "z",
+          "id": "e_hipZ_rightHip_z"
+        },
+        {
+          "source": "legRadius",
+          "sourceHandle": "value",
+          "target": "leftLeg",
+          "targetHandle": "param:radius",
+          "id": "e_legRadius_leftLeg_param:radius"
+        },
+        {
+          "source": "legLength",
+          "sourceHandle": "value",
+          "target": "leftLeg",
+          "targetHandle": "param:height",
+          "id": "e_legLength_leftLeg_param:height"
+        },
+        {
+          "source": "leftHip",
+          "sourceHandle": "point",
+          "target": "leftLeg",
+          "targetHandle": "center",
+          "id": "e_leftHip_leftLeg_center"
+        },
+        {
+          "source": "leftLeg_axis",
+          "sourceHandle": "vector",
+          "target": "leftLeg",
+          "targetHandle": "axis",
+          "id": "e_leftLeg_axis_leftLeg_axis"
+        },
+        {
+          "source": "legRadius",
+          "sourceHandle": "value",
+          "target": "rightLeg",
+          "targetHandle": "param:radius",
+          "id": "e_legRadius_rightLeg_param:radius"
+        },
+        {
+          "source": "legLength",
+          "sourceHandle": "value",
+          "target": "rightLeg",
+          "targetHandle": "param:height",
+          "id": "e_legLength_rightLeg_param:height"
+        },
+        {
+          "source": "rightHip",
+          "sourceHandle": "point",
+          "target": "rightLeg",
+          "targetHandle": "center",
+          "id": "e_rightHip_rightLeg_center"
+        },
+        {
+          "source": "rightLeg_axis",
+          "sourceHandle": "vector",
+          "target": "rightLeg",
+          "targetHandle": "axis",
+          "id": "e_rightLeg_axis_rightLeg_axis"
+        },
+        {
+          "source": "handZ",
+          "sourceHandle": "value",
+          "target": "leftHand",
+          "targetHandle": "z",
+          "id": "e_handZ_leftHand_z"
+        },
+        {
+          "source": "bowThickness",
+          "sourceHandle": "value",
+          "target": "bow",
+          "targetHandle": "param:width",
+          "id": "e_bowThickness_bow_param:width"
+        },
+        {
+          "source": "bowHeight",
+          "sourceHandle": "value",
+          "target": "bow",
+          "targetHandle": "param:length",
+          "id": "e_bowHeight_bow_param:length"
+        },
+        {
+          "source": "bowThickness",
+          "sourceHandle": "value",
+          "target": "bow",
+          "targetHandle": "param:height",
+          "id": "e_bowThickness_bow_param:height"
+        },
+        {
+          "source": "leftHand",
+          "sourceHandle": "point",
+          "target": "bow",
+          "targetHandle": "center",
+          "id": "e_leftHand_bow_center"
+        },
+        {
+          "source": "bow",
+          "sourceHandle": "solid",
+          "target": "bowRotated",
+          "targetHandle": "solid",
+          "id": "e_bow_bowRotated_solid"
+        },
+        {
+          "source": "leftHand",
+          "sourceHandle": "point",
+          "target": "bowRotated",
+          "targetHandle": "pivot",
+          "id": "e_leftHand_bowRotated_pivot"
+        }
+      ]
+    }
+  ]
+}

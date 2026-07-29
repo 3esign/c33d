@@ -1,0 +1,1944 @@
+{
+  "c33dExport": 2,
+  "exportedAt": "2026-07-25T02:48:48.632Z",
+  "comment": "most amazing result until now",
+  "agent": {
+    "name": "Ollama (Local)",
+    "provider": "ollama",
+    "model": "qwen3.5:cloud"
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "palaceRadius",
+        "type": "NumberSlider",
+        "data": {
+          "value": 32,
+          "label": "palaceRadius",
+          "min": 18,
+          "max": 55,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 1750
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "palaceHeight",
+        "type": "NumberSlider",
+        "data": {
+          "value": 48,
+          "label": "palaceHeight",
+          "min": 25,
+          "max": 85,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 1560
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "chamberCount",
+        "type": "NumberSlider",
+        "data": {
+          "value": 14,
+          "label": "chamberCount",
+          "min": 8,
+          "max": 28,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 420
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "chamberScale",
+        "type": "NumberSlider",
+        "data": {
+          "value": 4.5,
+          "label": "chamberScale",
+          "min": 2.5,
+          "max": 9,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 800
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "spiralTightness",
+        "type": "NumberSlider",
+        "data": {
+          "value": 0.75,
+          "label": "spiralTightness",
+          "min": 0.4,
+          "max": 1.4,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 1940
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "angles",
+        "type": "Range",
+        "data": {
+          "min": 76.7,
+          "max": 360,
+          "steps": 80
+        },
+        "position": {
+          "x": 40,
+          "y": 40
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        },
+        "selected": false
+      },
+      {
+        "id": "heights",
+        "type": "Range",
+        "data": {
+          "min": "palaceHeight*0.15",
+          "max": "palaceHeight*0.92",
+          "steps": "chamberCount"
+        },
+        "position": {
+          "x": 40,
+          "y": 1370
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "radii",
+        "type": "Expression",
+        "data": {
+          "formula": "palaceRadius*(0.6+0.4*sin(a*0.4))"
+        },
+        "position": {
+          "x": 270,
+          "y": 40
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "xCoords",
+        "type": "Expression",
+        "data": {
+          "formula": "a*cos(b)"
+        },
+        "position": {
+          "x": 500,
+          "y": 40
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "yCoords",
+        "type": "Expression",
+        "data": {
+          "formula": "a*sin(b)"
+        },
+        "position": {
+          "x": 500,
+          "y": 230
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "helixPts",
+        "type": "PointsFromLists",
+        "data": {},
+        "position": {
+          "x": 730,
+          "y": 40
+        },
+        "measured": {
+          "width": 150,
+          "height": 234
+        }
+      },
+      {
+        "id": "walkwaySpline",
+        "type": "SplineCurve",
+        "data": {
+          "closed": false
+        },
+        "position": {
+          "x": 960,
+          "y": 40
+        },
+        "measured": {
+          "width": 177,
+          "height": 266
+        }
+      },
+      {
+        "id": "walkway",
+        "type": "Pipe",
+        "data": {
+          "radius": "chamberScale*0.45",
+          "color": "#8b5cf6"
+        },
+        "position": {
+          "x": 1190,
+          "y": 40
+        },
+        "measured": {
+          "width": 201,
+          "height": 270
+        }
+      },
+      {
+        "id": "chamberProto",
+        "type": "Cone",
+        "data": {
+          "radius1": "chamberScale",
+          "radius2": "chamberScale*0.55",
+          "height": "chamberScale*2.2"
+        },
+        "position": {
+          "x": 40,
+          "y": 610
+        },
+        "measured": {
+          "width": 201,
+          "height": 344
+        }
+      },
+      {
+        "id": "chambers",
+        "type": "InstanceOnPoints",
+        "data": {
+          "scaleStart": 3.3,
+          "scaleEnd": 1.25,
+          "alignToTangent": true,
+          "color": "#c4b5fd"
+        },
+        "position": {
+          "x": 960,
+          "y": 230
+        },
+        "measured": {
+          "width": 201,
+          "height": 436
+        },
+        "selected": true
+      },
+      {
+        "id": "core",
+        "type": "Cylinder",
+        "data": {
+          "radius": "palaceRadius*0.14",
+          "height": "palaceHeight",
+          "color": "#64748b"
+        },
+        "position": {
+          "x": 40,
+          "y": 990
+        },
+        "measured": {
+          "width": 201,
+          "height": 296
+        }
+      },
+      {
+        "id": "crown_center",
+        "type": "Point",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": "palaceHeight"
+        },
+        "position": {
+          "x": 40,
+          "y": 1180
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "crown",
+        "type": "Sphere",
+        "data": {
+          "radius": 21.2,
+          "color": "#fbbf24"
+        },
+        "position": {
+          "x": 270,
+          "y": 230
+        },
+        "measured": {
+          "width": 201,
+          "height": 216
+        },
+        "selected": false
+      },
+      {
+        "id": "basePlatform",
+        "type": "Cylinder",
+        "data": {
+          "radius": "palaceRadius*1.15",
+          "height": 29.6,
+          "color": "#475569"
+        },
+        "position": {
+          "x": 40,
+          "y": 230
+        },
+        "measured": {
+          "width": 201,
+          "height": 296
+        },
+        "selected": false
+      },
+      {
+        "id": "lowerAssembly",
+        "type": "Compound",
+        "data": {},
+        "position": {
+          "x": 1420,
+          "y": 40
+        },
+        "measured": {
+          "width": 150,
+          "height": 330
+        }
+      },
+      {
+        "id": "palace",
+        "type": "Compound",
+        "data": {},
+        "position": {
+          "x": 1650,
+          "y": 40
+        },
+        "measured": {
+          "width": 150,
+          "height": 330
+        }
+      }
+    ],
+    "edges": [
+      {
+        "source": "angles",
+        "sourceHandle": "values",
+        "target": "radii",
+        "targetHandle": "a",
+        "id": "e_angles_radii_a"
+      },
+      {
+        "source": "radii",
+        "sourceHandle": "value",
+        "target": "xCoords",
+        "targetHandle": "a",
+        "id": "e_radii_xCoords_a"
+      },
+      {
+        "source": "angles",
+        "sourceHandle": "values",
+        "target": "xCoords",
+        "targetHandle": "b",
+        "id": "e_angles_xCoords_b"
+      },
+      {
+        "source": "radii",
+        "sourceHandle": "value",
+        "target": "yCoords",
+        "targetHandle": "a",
+        "id": "e_radii_yCoords_a"
+      },
+      {
+        "source": "angles",
+        "sourceHandle": "values",
+        "target": "yCoords",
+        "targetHandle": "b",
+        "id": "e_angles_yCoords_b"
+      },
+      {
+        "source": "xCoords",
+        "sourceHandle": "value",
+        "target": "helixPts",
+        "targetHandle": "x",
+        "id": "e_xCoords_helixPts_x"
+      },
+      {
+        "source": "yCoords",
+        "sourceHandle": "value",
+        "target": "helixPts",
+        "targetHandle": "y",
+        "id": "e_yCoords_helixPts_y"
+      },
+      {
+        "source": "heights",
+        "sourceHandle": "values",
+        "target": "helixPts",
+        "targetHandle": "z",
+        "id": "e_heights_helixPts_z"
+      },
+      {
+        "source": "helixPts",
+        "sourceHandle": "points",
+        "target": "walkwaySpline",
+        "targetHandle": "points",
+        "id": "e_helixPts_walkwaySpline_points"
+      },
+      {
+        "source": "walkwaySpline",
+        "sourceHandle": "curve",
+        "target": "walkway",
+        "targetHandle": "path",
+        "id": "e_walkwaySpline_walkway_path"
+      },
+      {
+        "source": "chamberProto",
+        "sourceHandle": "solid",
+        "target": "chambers",
+        "targetHandle": "shape",
+        "id": "e_chamberProto_chambers_shape"
+      },
+      {
+        "source": "helixPts",
+        "sourceHandle": "points",
+        "target": "chambers",
+        "targetHandle": "points",
+        "id": "e_helixPts_chambers_points"
+      },
+      {
+        "source": "crown_center",
+        "sourceHandle": "point",
+        "target": "crown",
+        "targetHandle": "center",
+        "id": "e_crown_center_crown_center"
+      },
+      {
+        "source": "basePlatform",
+        "sourceHandle": "solid",
+        "target": "lowerAssembly",
+        "targetHandle": "solid1",
+        "id": "e_basePlatform_lowerAssembly_solid1"
+      },
+      {
+        "source": "core",
+        "sourceHandle": "solid",
+        "target": "lowerAssembly",
+        "targetHandle": "solid2",
+        "id": "e_core_lowerAssembly_solid2"
+      },
+      {
+        "source": "walkway",
+        "sourceHandle": "solid",
+        "target": "lowerAssembly",
+        "targetHandle": "solid3",
+        "id": "e_walkway_lowerAssembly_solid3"
+      },
+      {
+        "source": "chambers",
+        "sourceHandle": "solid",
+        "target": "lowerAssembly",
+        "targetHandle": "solid4",
+        "id": "e_chambers_lowerAssembly_solid4"
+      },
+      {
+        "source": "lowerAssembly",
+        "sourceHandle": "solid",
+        "target": "palace",
+        "targetHandle": "solid1",
+        "id": "e_lowerAssembly_palace_solid1"
+      },
+      {
+        "source": "crown",
+        "sourceHandle": "solid",
+        "target": "palace",
+        "targetHandle": "solid2",
+        "id": "e_crown_palace_solid2"
+      }
+    ]
+  },
+  "conversation": [
+    {
+      "role": "system",
+      "content": "Workspace cleared."
+    },
+    {
+      "role": "user",
+      "content": "make your own perfect memory palace"
+    },
+    {
+      "role": "system",
+      "content": "IR program had compile errors (attempt 1/3) — asking the model to fix."
+    },
+    {
+      "role": "system",
+      "content": "IR program had compile errors (attempt 2/3) — asking the model to fix."
+    },
+    {
+      "role": "system",
+      "content": "Error: IR compile failed: body[20] (upperAssembly = compound): Argument \"c\" references \"$centralColumn\", which is not bound. Bindings so far: palaceRadius, chamberCount, floorHeight, columnRadius, domeHeight, baseRadius, chamberWidth, chamberDepth, rotundaCore, chamberPoints, chamberPrototype, chambers, outerWall, wallHollow, outerWallRing, columnCircle, columnPoints, columnProto, colonnade, groundFloor, upperChamberProto, upperChambers, upperChambersMoved, upperGallery, upperLevel."
+    },
+    {
+      "role": "user",
+      "content": "still no 3d preievew try beter best bench you can make"
+    },
+    {
+      "role": "system",
+      "content": "IR program had compile errors (attempt 1/3) — asking the model to fix."
+    },
+    {
+      "role": "system",
+      "content": "IR program had compile errors (attempt 2/3) — asking the model to fix."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline point() from \"crown.center\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"point\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "system",
+      "content": "[IR] 5 emitted binding(s) are also consumed downstream and will not render as separate leaves: $basePlatform, $core, $walkway, $chambers, $crown. (Only unconsumed bindings render.)"
+    },
+    {
+      "role": "assistant",
+      "content": "A spiraling memory palace with organic curved walkway, vaulted chambers along a helical path, central core column, and luminous crown dome"
+    }
+  ],
+  "plan": "",
+  "genome": null,
+  "geometryReport": {
+    "leaves": [
+      {
+        "id": "palace",
+        "bbox": {
+          "min": [
+            -44.736073800642274,
+            -39.86028384101377,
+            -27.072484236487053
+          ],
+          "max": [
+            39.872484236487054,
+            80.72191001633897,
+            72.27248423648706
+          ],
+          "center": [
+            -2.43179478207761,
+            20.4308130876626,
+            22.600000000000005
+          ],
+          "size": [
+            84.60855803712933,
+            120.58219385735273,
+            99.34496847297412
+          ]
+        },
+        "volume": 258722.34323194,
+        "meshOk": true,
+        "vertexCount": 6262,
+        "error": null
+      }
+    ],
+    "nodeErrors": [],
+    "numbers": {
+      "palaceRadius": 32,
+      "palaceHeight": 48,
+      "chamberCount": 14,
+      "chamberScale": 4.5,
+      "spiralTightness": 0.75,
+      "angles": [
+        76.7,
+        80.24125000000001,
+        83.7825,
+        87.32375,
+        90.86500000000001,
+        94.40625,
+        97.9475,
+        101.48875000000001,
+        105.03,
+        108.57125,
+        112.11250000000001,
+        115.65375,
+        119.195,
+        122.73625000000001,
+        126.2775,
+        129.81875000000002,
+        133.36,
+        136.90125,
+        140.4425,
+        143.98375,
+        147.525,
+        151.06625000000003,
+        154.60750000000002,
+        158.14875,
+        161.69,
+        165.23125,
+        168.7725,
+        172.31375000000003,
+        175.85500000000002,
+        179.39625,
+        182.9375,
+        186.47875,
+        190.02,
+        193.56125,
+        197.10250000000002,
+        200.64375,
+        204.185,
+        207.72625,
+        211.26749999999998,
+        214.80875000000003,
+        218.35000000000002,
+        221.89125,
+        225.4325,
+        228.97375,
+        232.51500000000004,
+        236.05625000000003,
+        239.59750000000003,
+        243.13875000000002,
+        246.68,
+        250.22125,
+        253.7625,
+        257.30375,
+        260.845,
+        264.38625,
+        267.9275,
+        271.46875,
+        275.01,
+        278.55125000000004,
+        282.09250000000003,
+        285.63375,
+        289.175,
+        292.71625,
+        296.2575,
+        299.79875,
+        303.34000000000003,
+        306.88125,
+        310.4225,
+        313.96375,
+        317.505,
+        321.04625000000004,
+        324.58750000000003,
+        328.12875,
+        331.67,
+        335.21125,
+        338.7525,
+        342.29375,
+        345.835,
+        349.37625,
+        352.9175,
+        356.45875,
+        360
+      ],
+      "heights": [
+        7.199999999999999,
+        9.84,
+        12.48,
+        15.120000000000001,
+        17.76,
+        20.400000000000002,
+        23.040000000000003,
+        25.680000000000003,
+        28.320000000000004,
+        30.960000000000004,
+        33.60000000000001,
+        36.24000000000001,
+        38.88000000000001,
+        41.52000000000001,
+        44.16000000000001
+      ],
+      "radii": [
+        10.607690233296232,
+        27.254257032220302,
+        30.267943913776456,
+        14.547692990136602,
+        6.702078119266599,
+        20.01082516347872,
+        31.947144925637936,
+        22.30726028243527,
+        7.407932572915534,
+        12.468216105977639,
+        28.922921382689946,
+        28.92031481475148,
+        12.464808358170107,
+        7.409491702610673,
+        22.311147259388107,
+        31.946780534679696,
+        20.006826183805398,
+        6.701213345251194,
+        14.551426164525324,
+        30.269956152288735,
+        27.251142358874276,
+        10.604720638734532,
+        8.506929651336774,
+        24.508554094577004,
+        31.524758750901224,
+        17.679702661583757,
+        6.407947991678428,
+        16.788408818315325,
+        31.250802076232915,
+        25.315641971247373,
+        9.028960642379769,
+        9.958089243907942,
+        26.530356503764075,
+        30.695039852709797,
+        15.402869846908375,
+        6.5378375895834,
+        19.10516575294805,
+        31.83301324130335,
+        23.177839077352285,
+        7.789653754802931,
+        11.714966816285312,
+        28.309674231943966,
+        29.48507054372088,
+        13.251644278407658,
+        7.08658545330052,
+        21.42505975903623,
+        31.997330381110014,
+        20.908451172649663,
+        6.927795654065935,
+        13.719445700133287,
+        29.787648301179104,
+        27.934876028952473,
+        11.29718746718697,
+        8.036039266415102,
+        23.671349854371094,
+        31.738317963396078,
+        18.582548521713047,
+        6.471896193205469,
+        15.90521869436517,
+        30.915388037390066,
+        26.09573600022004,
+        9.604151908138347,
+        9.354791551694028,
+        25.76972983884685,
+        31.064543994840854,
+        16.277070869843204,
+        6.437036307955264,
+        18.199981475584043,
+        31.65558835042779,
+        24.02848832850141,
+        8.228542406383324,
+        10.999218615384137,
+        27.650786307957855,
+        29.99829659550401,
+        14.068282313158559,
+        6.824369146617148,
+        20.527824390459408,
+        31.983763768583692,
+        21.80151657631279,
+        7.215863465155044,
+        12.914923598099591
+      ],
+      "xCoords": [
+        2.8193843157668996,
+        3.550305003998511,
+        -15.309149835176946,
+        11.66130354884393,
+        -6.508087463837268,
+        19.760085976816026,
+        -27.09910641538815,
+        12.83410336771506,
+        -1.568547749853944,
+        -2.3094575746827943,
+        15.994380032854286,
+        -24.108370065507728,
+        12.250916126554845,
+        -7.240260789178074,
+        18.238665604141826,
+        -16.89776944481347,
+        3.141773824199929,
+        1.6057131197984278,
+        -8.709022626362797,
+        26.12459569279451,
+        -27.02170727014111,
+        10.22107920638301,
+        -6.67076758466605,
+        11.786122704982237,
+        -3.210631843930297,
+        -5.1847614102135715,
+        4.114831294424424,
+        -14.938660623804818,
+        31.16484011164662,
+        -23.986594761709572,
+        6.757416803056033,
+        -4.295639911157999,
+        1.2293886571275114,
+        10.62040881626496,
+        -10.532497034644322,
+        5.974469645400941,
+        -19.10188852369236,
+        29.54877469298814,
+        -16.464521004247473,
+        2.9640343249901844,
+        0.109071507273497,
+        -11.257697968276961,
+        21.327690088089152,
+        -12.390398075089093,
+        7.081697513011909,
+        -19.41345275570667,
+        21.441280427025255,
+        -6.867747913147963,
+        -0.44982856962557205,
+        6.147624187477617,
+        -22.657540886675385,
+        26.630052073336962,
+        -11.248567372092594,
+        7.081109441295483,
+        -14.859920936082,
+        8.74100027438383,
+        2.23641660347248,
+        -3.217442341881804,
+        12.65380826728748,
+        -29.945245957177228,
+        25.808622690489553,
+        -8.197131937467397,
+        5.45832309980347,
+        -5.707894812136662,
+        -5.448625486745678,
+        8.865232217626971,
+        -5.3301987522394425,
+        17.85322960360165,
+        -30.998269152813005,
+        19.7798766992253,
+        -4.421939593068413,
+        1.8357432660887592,
+        6.356918919555222,
+        -17.71288392078844,
+        12.070055259154827,
+        -6.757742982821847,
+        19.838896086272086,
+        -25.277403681090327,
+        10.674831912246212,
+        -0.8066041779762418,
+        -3.663848772009982
+      ],
+      "yCoords": [
+        10.22615099465952,
+        -27.022025474729183,
+        26.11088585421067,
+        -8.697664679498146,
+        1.600827498450818,
+        3.157867304392597,
+        -16.919175523268933,
+        18.24553786697227,
+        -7.239967055262828,
+        12.252461735345289,
+        -24.098032879757955,
+        15.97407592848065,
+        -2.299239323347138,
+        -1.5745446947441348,
+        12.850617456386884,
+        -27.112030066391522,
+        19.75860195425206,
+        -6.50599305836395,
+        11.657483790043761,
+        -15.289726791198888,
+        3.5287527641412813,
+        2.8265950687084627,
+        -5.279082488857461,
+        21.48852101448374,
+        -31.360839552940288,
+        16.90237070121147,
+        -4.912225654678439,
+        7.660749925279589,
+        -2.316327097666792,
+        -8.094751395435724,
+        5.988275914770366,
+        -8.98393116309901,
+        26.50185691129101,
+        -28.799173393256346,
+        11.238990423343541,
+        -2.6550014696704864,
+        0.35385487992833486,
+        11.841057645498484,
+        -16.313545672119606,
+        7.203693923258774,
+        -11.714459053365081,
+        25.9750243806208,
+        -20.359249015487297,
+        4.699373535087727,
+        0.26316101749972726,
+        -9.063720967694161,
+        23.750803042582994,
+        -19.748351046113367,
+        6.913176323691121,
+        -12.264987043142193,
+        19.33752394396376,
+        -8.437868529688359,
+        -1.0469845959995043,
+        3.799449456403038,
+        -18.425947837259994,
+        30.51091184066533,
+        -18.447480866978353,
+        5.615470159505219,
+        -9.63623982943089,
+        7.683974366599726,
+        3.860366849553019,
+        -5.004674002804721,
+        7.59729122212633,
+        -25.12964211405998,
+        30.58297522989855,
+        -13.651032701940427,
+        3.60893581150447,
+        -3.535748638221323,
+        -6.417443676535175,
+        13.642753721898398,
+        -6.939406341244374,
+        10.84494614140719,
+        -26.910138708274072,
+        24.210566739349613,
+        -7.227055644152661,
+        0.9512749483835553,
+        5.273497538032829,
+        -19.596275359051482,
+        19.009315839149266,
+        -7.1706398074251805,
+        12.384323304912169
+      ]
+    },
+    "sliders": {
+      "palaceRadius": 32,
+      "palaceHeight": 48,
+      "chamberCount": 14,
+      "chamberScale": 4.5,
+      "spiralTightness": 0.75
+    },
+    "selections": {},
+    "helpers": {
+      "crown_center": {
+        "type": "Point",
+        "x": 0,
+        "y": 0,
+        "z": 48,
+        "sourceNodeId": "crown_center",
+        "ancestorNodeIds": []
+      }
+    },
+    "nodeCount": 21,
+    "edgeCount": 19,
+    "transformCount": 1,
+    "nodesPerLeafRatio": 21,
+    "nodeEconomyWarning": false,
+    "placement": {
+      "anchored": [
+        "palace"
+      ],
+      "literal": [],
+      "origin": [],
+      "literalNodeIds": [],
+      "ratio": 1
+    },
+    "scene": {
+      "min": [
+        -44.736073800642274,
+        -39.86028384101377,
+        -27.072484236487053
+      ],
+      "max": [
+        39.872484236487054,
+        80.72191001633897,
+        72.27248423648706
+      ],
+      "size": [
+        84.60855803712933,
+        120.58219385735273,
+        99.34496847297412
+      ]
+    },
+    "meshedLeafCount": 1,
+    "kernelFaultCount": 0,
+    "kernelSuspect": false,
+    "kernelHealth": "ok",
+    "evalCount": 8,
+    "recycleRecommended": false,
+    "perturbationIssues": [],
+    "proportionalIntegrity": 1
+  },
+  "timeline": [
+    {
+      "at": "2026-07-25T01:06:58.532Z",
+      "turn": 2,
+      "trigger": "ai-ir",
+      "label": "attempt 3: rebuilt graph (21 nodes)",
+      "nodeCount": 21,
+      "edgeCount": 19,
+      "isolatedCount": 5,
+      "diff": {
+        "addedNodes": [
+          "palaceRadius",
+          "palaceHeight",
+          "chamberCount",
+          "chamberScale",
+          "spiralTightness",
+          "angles",
+          "heights",
+          "radii",
+          "xCoords",
+          "yCoords",
+          "helixPts",
+          "walkwaySpline",
+          "walkway",
+          "chamberProto",
+          "chambers",
+          "core",
+          "crown_center",
+          "crown",
+          "basePlatform",
+          "lowerAssembly",
+          "palace"
+        ],
+        "removedNodes": [],
+        "changedNodes": [],
+        "addedEdges": 19,
+        "removedEdges": 0
+      },
+      "details": [
+        "warning: Dead design parameters: sliders \"chamberCount\", \"spiralTightness\" are not referenced by any formula or edge — moving them changes nothing. Wire dimensions to them or remove them."
+      ],
+      "nodes": [
+        {
+          "id": "palaceRadius",
+          "type": "NumberSlider",
+          "data": {
+            "value": 32,
+            "label": "palaceRadius",
+            "min": 18,
+            "max": 55,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 1750
+          }
+        },
+        {
+          "id": "palaceHeight",
+          "type": "NumberSlider",
+          "data": {
+            "value": 48,
+            "label": "palaceHeight",
+            "min": 25,
+            "max": 85,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 1560
+          }
+        },
+        {
+          "id": "chamberCount",
+          "type": "NumberSlider",
+          "data": {
+            "value": 14,
+            "label": "chamberCount",
+            "min": 8,
+            "max": 28,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 420
+          }
+        },
+        {
+          "id": "chamberScale",
+          "type": "NumberSlider",
+          "data": {
+            "value": 4.5,
+            "label": "chamberScale",
+            "min": 2.5,
+            "max": 9,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 800
+          }
+        },
+        {
+          "id": "spiralTightness",
+          "type": "NumberSlider",
+          "data": {
+            "value": 0.75,
+            "label": "spiralTightness",
+            "min": 0.4,
+            "max": 1.4,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 1940
+          }
+        },
+        {
+          "id": "angles",
+          "type": "Range",
+          "data": {
+            "min": 0,
+            "max": 360,
+            "steps": "chamberCount"
+          },
+          "position": {
+            "x": 40,
+            "y": 40
+          }
+        },
+        {
+          "id": "heights",
+          "type": "Range",
+          "data": {
+            "min": "palaceHeight*0.15",
+            "max": "palaceHeight*0.92",
+            "steps": "chamberCount"
+          },
+          "position": {
+            "x": 40,
+            "y": 1370
+          }
+        },
+        {
+          "id": "radii",
+          "type": "Expression",
+          "data": {
+            "formula": "palaceRadius*(0.6+0.4*sin(a*0.4))"
+          },
+          "position": {
+            "x": 270,
+            "y": 40
+          }
+        },
+        {
+          "id": "xCoords",
+          "type": "Expression",
+          "data": {
+            "formula": "a*cos(b)"
+          },
+          "position": {
+            "x": 500,
+            "y": 40
+          }
+        },
+        {
+          "id": "yCoords",
+          "type": "Expression",
+          "data": {
+            "formula": "a*sin(b)"
+          },
+          "position": {
+            "x": 500,
+            "y": 230
+          }
+        },
+        {
+          "id": "helixPts",
+          "type": "PointsFromLists",
+          "data": {},
+          "position": {
+            "x": 730,
+            "y": 40
+          }
+        },
+        {
+          "id": "walkwaySpline",
+          "type": "SplineCurve",
+          "data": {
+            "closed": false
+          },
+          "position": {
+            "x": 960,
+            "y": 40
+          }
+        },
+        {
+          "id": "walkway",
+          "type": "Pipe",
+          "data": {
+            "radius": "chamberScale*0.45",
+            "color": "#8b5cf6"
+          },
+          "position": {
+            "x": 1190,
+            "y": 40
+          }
+        },
+        {
+          "id": "chamberProto",
+          "type": "Cone",
+          "data": {
+            "radius1": "chamberScale",
+            "radius2": "chamberScale*0.55",
+            "height": "chamberScale*2.2"
+          },
+          "position": {
+            "x": 40,
+            "y": 610
+          }
+        },
+        {
+          "id": "chambers",
+          "type": "InstanceOnPoints",
+          "data": {
+            "scaleStart": 0.75,
+            "scaleEnd": 1.25,
+            "alignToTangent": true,
+            "color": "#c4b5fd"
+          },
+          "position": {
+            "x": 960,
+            "y": 230
+          }
+        },
+        {
+          "id": "core",
+          "type": "Cylinder",
+          "data": {
+            "radius": "palaceRadius*0.14",
+            "height": "palaceHeight",
+            "color": "#64748b"
+          },
+          "position": {
+            "x": 40,
+            "y": 990
+          }
+        },
+        {
+          "id": "crown_center",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "palaceHeight"
+          },
+          "position": {
+            "x": 40,
+            "y": 1180
+          }
+        },
+        {
+          "id": "crown",
+          "type": "Sphere",
+          "data": {
+            "radius": "palaceRadius*0.38",
+            "color": "#fbbf24"
+          },
+          "position": {
+            "x": 270,
+            "y": 230
+          }
+        },
+        {
+          "id": "basePlatform",
+          "type": "Cylinder",
+          "data": {
+            "radius": "palaceRadius*1.15",
+            "height": "palaceHeight*0.08",
+            "color": "#475569"
+          },
+          "position": {
+            "x": 40,
+            "y": 230
+          }
+        },
+        {
+          "id": "lowerAssembly",
+          "type": "Compound",
+          "data": {},
+          "position": {
+            "x": 1420,
+            "y": 40
+          }
+        },
+        {
+          "id": "palace",
+          "type": "Compound",
+          "data": {},
+          "position": {
+            "x": 1650,
+            "y": 40
+          }
+        }
+      ],
+      "edges": [
+        {
+          "source": "angles",
+          "sourceHandle": "values",
+          "target": "radii",
+          "targetHandle": "a",
+          "id": "e_angles_radii_a"
+        },
+        {
+          "source": "radii",
+          "sourceHandle": "value",
+          "target": "xCoords",
+          "targetHandle": "a",
+          "id": "e_radii_xCoords_a"
+        },
+        {
+          "source": "angles",
+          "sourceHandle": "values",
+          "target": "xCoords",
+          "targetHandle": "b",
+          "id": "e_angles_xCoords_b"
+        },
+        {
+          "source": "radii",
+          "sourceHandle": "value",
+          "target": "yCoords",
+          "targetHandle": "a",
+          "id": "e_radii_yCoords_a"
+        },
+        {
+          "source": "angles",
+          "sourceHandle": "values",
+          "target": "yCoords",
+          "targetHandle": "b",
+          "id": "e_angles_yCoords_b"
+        },
+        {
+          "source": "xCoords",
+          "sourceHandle": "value",
+          "target": "helixPts",
+          "targetHandle": "x",
+          "id": "e_xCoords_helixPts_x"
+        },
+        {
+          "source": "yCoords",
+          "sourceHandle": "value",
+          "target": "helixPts",
+          "targetHandle": "y",
+          "id": "e_yCoords_helixPts_y"
+        },
+        {
+          "source": "heights",
+          "sourceHandle": "values",
+          "target": "helixPts",
+          "targetHandle": "z",
+          "id": "e_heights_helixPts_z"
+        },
+        {
+          "source": "helixPts",
+          "sourceHandle": "points",
+          "target": "walkwaySpline",
+          "targetHandle": "points",
+          "id": "e_helixPts_walkwaySpline_points"
+        },
+        {
+          "source": "walkwaySpline",
+          "sourceHandle": "curve",
+          "target": "walkway",
+          "targetHandle": "path",
+          "id": "e_walkwaySpline_walkway_path"
+        },
+        {
+          "source": "chamberProto",
+          "sourceHandle": "solid",
+          "target": "chambers",
+          "targetHandle": "shape",
+          "id": "e_chamberProto_chambers_shape"
+        },
+        {
+          "source": "helixPts",
+          "sourceHandle": "points",
+          "target": "chambers",
+          "targetHandle": "points",
+          "id": "e_helixPts_chambers_points"
+        },
+        {
+          "source": "crown_center",
+          "sourceHandle": "point",
+          "target": "crown",
+          "targetHandle": "center",
+          "id": "e_crown_center_crown_center"
+        },
+        {
+          "source": "basePlatform",
+          "sourceHandle": "solid",
+          "target": "lowerAssembly",
+          "targetHandle": "solid1",
+          "id": "e_basePlatform_lowerAssembly_solid1"
+        },
+        {
+          "source": "core",
+          "sourceHandle": "solid",
+          "target": "lowerAssembly",
+          "targetHandle": "solid2",
+          "id": "e_core_lowerAssembly_solid2"
+        },
+        {
+          "source": "walkway",
+          "sourceHandle": "solid",
+          "target": "lowerAssembly",
+          "targetHandle": "solid3",
+          "id": "e_walkway_lowerAssembly_solid3"
+        },
+        {
+          "source": "chambers",
+          "sourceHandle": "solid",
+          "target": "lowerAssembly",
+          "targetHandle": "solid4",
+          "id": "e_chambers_lowerAssembly_solid4"
+        },
+        {
+          "source": "lowerAssembly",
+          "sourceHandle": "solid",
+          "target": "palace",
+          "targetHandle": "solid1",
+          "id": "e_lowerAssembly_palace_solid1"
+        },
+        {
+          "source": "crown",
+          "sourceHandle": "solid",
+          "target": "palace",
+          "targetHandle": "solid2",
+          "id": "e_crown_palace_solid2"
+        }
+      ]
+    },
+    {
+      "at": "2026-07-25T02:48:48.623Z",
+      "turn": 2,
+      "trigger": "export",
+      "label": "state at export (includes any unrecorded manual edits)",
+      "nodeCount": 21,
+      "edgeCount": 19,
+      "isolatedCount": 5,
+      "diff": {
+        "addedNodes": [],
+        "removedNodes": [],
+        "changedNodes": [
+          "angles",
+          "chambers",
+          "crown",
+          "basePlatform"
+        ],
+        "addedEdges": 0,
+        "removedEdges": 0
+      },
+      "nodes": [
+        {
+          "id": "palaceRadius",
+          "type": "NumberSlider",
+          "data": {
+            "value": 32,
+            "label": "palaceRadius",
+            "min": 18,
+            "max": 55,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 1750
+          },
+          "measured": {
+            "width": 201,
+            "height": 328
+          }
+        },
+        {
+          "id": "palaceHeight",
+          "type": "NumberSlider",
+          "data": {
+            "value": 48,
+            "label": "palaceHeight",
+            "min": 25,
+            "max": 85,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 1560
+          },
+          "measured": {
+            "width": 201,
+            "height": 328
+          }
+        },
+        {
+          "id": "chamberCount",
+          "type": "NumberSlider",
+          "data": {
+            "value": 14,
+            "label": "chamberCount",
+            "min": 8,
+            "max": 28,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 420
+          },
+          "measured": {
+            "width": 201,
+            "height": 328
+          }
+        },
+        {
+          "id": "chamberScale",
+          "type": "NumberSlider",
+          "data": {
+            "value": 4.5,
+            "label": "chamberScale",
+            "min": 2.5,
+            "max": 9,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 800
+          },
+          "measured": {
+            "width": 201,
+            "height": 328
+          }
+        },
+        {
+          "id": "spiralTightness",
+          "type": "NumberSlider",
+          "data": {
+            "value": 0.75,
+            "label": "spiralTightness",
+            "min": 0.4,
+            "max": 1.4,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 1940
+          },
+          "measured": {
+            "width": 201,
+            "height": 328
+          }
+        },
+        {
+          "id": "angles",
+          "type": "Range",
+          "data": {
+            "min": 76.7,
+            "max": 360,
+            "steps": 80
+          },
+          "position": {
+            "x": 40,
+            "y": 40
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          },
+          "selected": false
+        },
+        {
+          "id": "heights",
+          "type": "Range",
+          "data": {
+            "min": "palaceHeight*0.15",
+            "max": "palaceHeight*0.92",
+            "steps": "chamberCount"
+          },
+          "position": {
+            "x": 40,
+            "y": 1370
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "radii",
+          "type": "Expression",
+          "data": {
+            "formula": "palaceRadius*(0.6+0.4*sin(a*0.4))"
+          },
+          "position": {
+            "x": 270,
+            "y": 40
+          },
+          "measured": {
+            "width": 177,
+            "height": 264
+          }
+        },
+        {
+          "id": "xCoords",
+          "type": "Expression",
+          "data": {
+            "formula": "a*cos(b)"
+          },
+          "position": {
+            "x": 500,
+            "y": 40
+          },
+          "measured": {
+            "width": 177,
+            "height": 264
+          }
+        },
+        {
+          "id": "yCoords",
+          "type": "Expression",
+          "data": {
+            "formula": "a*sin(b)"
+          },
+          "position": {
+            "x": 500,
+            "y": 230
+          },
+          "measured": {
+            "width": 177,
+            "height": 264
+          }
+        },
+        {
+          "id": "helixPts",
+          "type": "PointsFromLists",
+          "data": {},
+          "position": {
+            "x": 730,
+            "y": 40
+          },
+          "measured": {
+            "width": 150,
+            "height": 234
+          }
+        },
+        {
+          "id": "walkwaySpline",
+          "type": "SplineCurve",
+          "data": {
+            "closed": false
+          },
+          "position": {
+            "x": 960,
+            "y": 40
+          },
+          "measured": {
+            "width": 177,
+            "height": 266
+          }
+        },
+        {
+          "id": "walkway",
+          "type": "Pipe",
+          "data": {
+            "radius": "chamberScale*0.45",
+            "color": "#8b5cf6"
+          },
+          "position": {
+            "x": 1190,
+            "y": 40
+          },
+          "measured": {
+            "width": 201,
+            "height": 270
+          }
+        },
+        {
+          "id": "chamberProto",
+          "type": "Cone",
+          "data": {
+            "radius1": "chamberScale",
+            "radius2": "chamberScale*0.55",
+            "height": "chamberScale*2.2"
+          },
+          "position": {
+            "x": 40,
+            "y": 610
+          },
+          "measured": {
+            "width": 201,
+            "height": 344
+          }
+        },
+        {
+          "id": "chambers",
+          "type": "InstanceOnPoints",
+          "data": {
+            "scaleStart": 3.3,
+            "scaleEnd": 1.25,
+            "alignToTangent": true,
+            "color": "#c4b5fd"
+          },
+          "position": {
+            "x": 960,
+            "y": 230
+          },
+          "measured": {
+            "width": 201,
+            "height": 436
+          },
+          "selected": true
+        },
+        {
+          "id": "core",
+          "type": "Cylinder",
+          "data": {
+            "radius": "palaceRadius*0.14",
+            "height": "palaceHeight",
+            "color": "#64748b"
+          },
+          "position": {
+            "x": 40,
+            "y": 990
+          },
+          "measured": {
+            "width": 201,
+            "height": 296
+          }
+        },
+        {
+          "id": "crown_center",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "palaceHeight"
+          },
+          "position": {
+            "x": 40,
+            "y": 1180
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "crown",
+          "type": "Sphere",
+          "data": {
+            "radius": 21.2,
+            "color": "#fbbf24"
+          },
+          "position": {
+            "x": 270,
+            "y": 230
+          },
+          "measured": {
+            "width": 201,
+            "height": 216
+          },
+          "selected": false
+        },
+        {
+          "id": "basePlatform",
+          "type": "Cylinder",
+          "data": {
+            "radius": "palaceRadius*1.15",
+            "height": 29.6,
+            "color": "#475569"
+          },
+          "position": {
+            "x": 40,
+            "y": 230
+          },
+          "measured": {
+            "width": 201,
+            "height": 296
+          },
+          "selected": false
+        },
+        {
+          "id": "lowerAssembly",
+          "type": "Compound",
+          "data": {},
+          "position": {
+            "x": 1420,
+            "y": 40
+          },
+          "measured": {
+            "width": 150,
+            "height": 330
+          }
+        },
+        {
+          "id": "palace",
+          "type": "Compound",
+          "data": {},
+          "position": {
+            "x": 1650,
+            "y": 40
+          },
+          "measured": {
+            "width": 150,
+            "height": 330
+          }
+        }
+      ],
+      "edges": [
+        {
+          "source": "angles",
+          "sourceHandle": "values",
+          "target": "radii",
+          "targetHandle": "a",
+          "id": "e_angles_radii_a"
+        },
+        {
+          "source": "radii",
+          "sourceHandle": "value",
+          "target": "xCoords",
+          "targetHandle": "a",
+          "id": "e_radii_xCoords_a"
+        },
+        {
+          "source": "angles",
+          "sourceHandle": "values",
+          "target": "xCoords",
+          "targetHandle": "b",
+          "id": "e_angles_xCoords_b"
+        },
+        {
+          "source": "radii",
+          "sourceHandle": "value",
+          "target": "yCoords",
+          "targetHandle": "a",
+          "id": "e_radii_yCoords_a"
+        },
+        {
+          "source": "angles",
+          "sourceHandle": "values",
+          "target": "yCoords",
+          "targetHandle": "b",
+          "id": "e_angles_yCoords_b"
+        },
+        {
+          "source": "xCoords",
+          "sourceHandle": "value",
+          "target": "helixPts",
+          "targetHandle": "x",
+          "id": "e_xCoords_helixPts_x"
+        },
+        {
+          "source": "yCoords",
+          "sourceHandle": "value",
+          "target": "helixPts",
+          "targetHandle": "y",
+          "id": "e_yCoords_helixPts_y"
+        },
+        {
+          "source": "heights",
+          "sourceHandle": "values",
+          "target": "helixPts",
+          "targetHandle": "z",
+          "id": "e_heights_helixPts_z"
+        },
+        {
+          "source": "helixPts",
+          "sourceHandle": "points",
+          "target": "walkwaySpline",
+          "targetHandle": "points",
+          "id": "e_helixPts_walkwaySpline_points"
+        },
+        {
+          "source": "walkwaySpline",
+          "sourceHandle": "curve",
+          "target": "walkway",
+          "targetHandle": "path",
+          "id": "e_walkwaySpline_walkway_path"
+        },
+        {
+          "source": "chamberProto",
+          "sourceHandle": "solid",
+          "target": "chambers",
+          "targetHandle": "shape",
+          "id": "e_chamberProto_chambers_shape"
+        },
+        {
+          "source": "helixPts",
+          "sourceHandle": "points",
+          "target": "chambers",
+          "targetHandle": "points",
+          "id": "e_helixPts_chambers_points"
+        },
+        {
+          "source": "crown_center",
+          "sourceHandle": "point",
+          "target": "crown",
+          "targetHandle": "center",
+          "id": "e_crown_center_crown_center"
+        },
+        {
+          "source": "basePlatform",
+          "sourceHandle": "solid",
+          "target": "lowerAssembly",
+          "targetHandle": "solid1",
+          "id": "e_basePlatform_lowerAssembly_solid1"
+        },
+        {
+          "source": "core",
+          "sourceHandle": "solid",
+          "target": "lowerAssembly",
+          "targetHandle": "solid2",
+          "id": "e_core_lowerAssembly_solid2"
+        },
+        {
+          "source": "walkway",
+          "sourceHandle": "solid",
+          "target": "lowerAssembly",
+          "targetHandle": "solid3",
+          "id": "e_walkway_lowerAssembly_solid3"
+        },
+        {
+          "source": "chambers",
+          "sourceHandle": "solid",
+          "target": "lowerAssembly",
+          "targetHandle": "solid4",
+          "id": "e_chambers_lowerAssembly_solid4"
+        },
+        {
+          "source": "lowerAssembly",
+          "sourceHandle": "solid",
+          "target": "palace",
+          "targetHandle": "solid1",
+          "id": "e_lowerAssembly_palace_solid1"
+        },
+        {
+          "source": "crown",
+          "sourceHandle": "solid",
+          "target": "palace",
+          "targetHandle": "solid2",
+          "id": "e_crown_palace_solid2"
+        }
+      ]
+    }
+  ]
+}

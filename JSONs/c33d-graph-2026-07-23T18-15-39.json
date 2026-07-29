@@ -1,0 +1,2075 @@
+{
+  "c33dExport": 2,
+  "exportedAt": "2026-07-23T18:15:39.456Z",
+  "comment": "interesting output primitive very but 3d previewable",
+  "agent": {
+    "name": "Ollama (Local)",
+    "provider": "ollama",
+    "model": "glm-5.2:cloud"
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "balloonHeight",
+        "type": "NumberSlider",
+        "data": {
+          "value": 35,
+          "label": "balloonHeight",
+          "min": 15,
+          "max": 70,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 40
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "balloonRadius",
+        "type": "NumberSlider",
+        "data": {
+          "value": 14,
+          "label": "balloonRadius",
+          "min": 6,
+          "max": 30,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 230
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "basketSize",
+        "type": "NumberSlider",
+        "data": {
+          "value": 6,
+          "label": "basketSize",
+          "min": 3,
+          "max": 12,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 610
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "ropeCount",
+        "type": "NumberSlider",
+        "data": {
+          "value": 6,
+          "label": "ropeCount",
+          "min": 3,
+          "max": 12,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 2510
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "basketCenter",
+        "type": "Point",
+        "data": {
+          "x": "0",
+          "y": "0",
+          "z": "basketSize*0.3"
+        },
+        "position": {
+          "x": 40,
+          "y": 420
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "basket",
+        "type": "Box",
+        "data": {
+          "width": "basketSize",
+          "length": "basketSize*0.8",
+          "height": "basketSize*0.6",
+          "color": "#92400e"
+        },
+        "position": {
+          "x": 270,
+          "y": 40
+        },
+        "measured": {
+          "width": 201,
+          "height": 312
+        }
+      },
+      {
+        "id": "ropeBottom",
+        "type": "Point",
+        "data": {
+          "x": "basketSize*0.4",
+          "y": "0",
+          "z": "basketSize*0.6"
+        },
+        "position": {
+          "x": 40,
+          "y": 2320
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "ropeTop",
+        "type": "Point",
+        "data": {
+          "x": "balloonRadius*0.25",
+          "y": "0",
+          "z": "basketSize+balloonHeight*0.12"
+        },
+        "position": {
+          "x": 40,
+          "y": 2700
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "ropePath",
+        "type": "Line",
+        "data": {},
+        "position": {
+          "x": 270,
+          "y": 1750
+        },
+        "measured": {
+          "width": 177,
+          "height": 200
+        }
+      },
+      {
+        "id": "rope",
+        "type": "Pipe",
+        "data": {
+          "radius": "0.15"
+        },
+        "position": {
+          "x": 500,
+          "y": 230
+        },
+        "measured": {
+          "width": 201,
+          "height": 270
+        }
+      },
+      {
+        "id": "ropes",
+        "type": "CircularPattern",
+        "data": {
+          "count": "ropeCount",
+          "radius": "0",
+          "angle": "360",
+          "color": "#525252"
+        },
+        "position": {
+          "x": 730,
+          "y": 40
+        },
+        "measured": {
+          "width": 201,
+          "height": 450
+        }
+      },
+      {
+        "id": "burnerCenter",
+        "type": "Point",
+        "data": {
+          "x": "0",
+          "y": "0",
+          "z": "basketSize*0.6+balloonHeight*0.03"
+        },
+        "position": {
+          "x": 40,
+          "y": 800
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "burner",
+        "type": "Cylinder",
+        "data": {
+          "radius": "basketSize*0.12",
+          "height": "balloonHeight*0.03",
+          "color": "#52525b"
+        },
+        "position": {
+          "x": 270,
+          "y": 230
+        },
+        "measured": {
+          "width": 201,
+          "height": 296
+        }
+      },
+      {
+        "id": "flameCenter",
+        "type": "Point",
+        "data": {
+          "x": "0",
+          "y": "0",
+          "z": "basketSize*0.6+balloonHeight*0.07"
+        },
+        "position": {
+          "x": 40,
+          "y": 2130
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "flame",
+        "type": "Cone",
+        "data": {
+          "radius1": "basketSize*0.1",
+          "radius2": "0.01",
+          "height": "balloonHeight*0.04",
+          "color": "#f59e0b"
+        },
+        "position": {
+          "x": 270,
+          "y": 990
+        },
+        "measured": {
+          "width": 201,
+          "height": 344
+        }
+      },
+      {
+        "id": "upVec",
+        "type": "VectorXYZ",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": 1
+        },
+        "position": {
+          "x": 40,
+          "y": 2890
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "c1c",
+        "type": "Point",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": "basketSize+balloonHeight*0.12"
+        },
+        "position": {
+          "x": 40,
+          "y": 990
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "c2c",
+        "type": "Point",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": "basketSize+balloonHeight*0.2"
+        },
+        "position": {
+          "x": 40,
+          "y": 1180
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "c3c",
+        "type": "Point",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": "basketSize+balloonHeight*0.54"
+        },
+        "position": {
+          "x": 40,
+          "y": 1370
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "c4c",
+        "type": "Point",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": "basketSize+balloonHeight*0.74"
+        },
+        "position": {
+          "x": 40,
+          "y": 1560
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "c5c",
+        "type": "Point",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": "basketSize+balloonHeight*0.92"
+        },
+        "position": {
+          "x": 40,
+          "y": 1750
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "c6c",
+        "type": "Point",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": "basketSize+balloonHeight*1.05"
+        },
+        "position": {
+          "x": 40,
+          "y": 1940
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "circ1",
+        "type": "CircleCurve",
+        "data": {
+          "radius": "balloonRadius*0.35",
+          "color": "#dc2626"
+        },
+        "position": {
+          "x": 270,
+          "y": 420
+        },
+        "measured": {
+          "width": 201,
+          "height": 248
+        }
+      },
+      {
+        "id": "circ2",
+        "type": "CircleCurve",
+        "data": {
+          "radius": "balloonRadius*0.7",
+          "color": "#dc2626"
+        },
+        "position": {
+          "x": 270,
+          "y": 610
+        },
+        "measured": {
+          "width": 201,
+          "height": 248
+        }
+      },
+      {
+        "id": "circ3",
+        "type": "CircleCurve",
+        "data": {
+          "radius": "balloonRadius",
+          "color": "#dc2626"
+        },
+        "position": {
+          "x": 270,
+          "y": 800
+        },
+        "measured": {
+          "width": 201,
+          "height": 248
+        }
+      },
+      {
+        "id": "circ4",
+        "type": "CircleCurve",
+        "data": {
+          "radius": "balloonRadius*0.9",
+          "color": "#dc2626"
+        },
+        "position": {
+          "x": 270,
+          "y": 1180
+        },
+        "measured": {
+          "width": 201,
+          "height": 248
+        }
+      },
+      {
+        "id": "circ5",
+        "type": "CircleCurve",
+        "data": {
+          "radius": "balloonRadius*0.6",
+          "color": "#dc2626"
+        },
+        "position": {
+          "x": 270,
+          "y": 1370
+        },
+        "measured": {
+          "width": 201,
+          "height": 248
+        }
+      },
+      {
+        "id": "circ6",
+        "type": "CircleCurve",
+        "data": {
+          "radius": "balloonRadius*0.25",
+          "color": "#dc2626"
+        },
+        "position": {
+          "x": 270,
+          "y": 1560
+        },
+        "measured": {
+          "width": 201,
+          "height": 248
+        }
+      },
+      {
+        "id": "envelope",
+        "type": "LoftCurves",
+        "data": {
+          "ruled": false,
+          "closed": false,
+          "color": "#dc2626"
+        },
+        "position": {
+          "x": 500,
+          "y": 40
+        },
+        "measured": {
+          "width": 192,
+          "height": 416
+        }
+      }
+    ],
+    "edges": [
+      {
+        "source": "basketCenter",
+        "sourceHandle": "point",
+        "target": "basket",
+        "targetHandle": "center",
+        "id": "e_basketCenter_basket_center"
+      },
+      {
+        "source": "ropeBottom",
+        "sourceHandle": "point",
+        "target": "ropePath",
+        "targetHandle": "a",
+        "id": "e_ropeBottom_ropePath_a"
+      },
+      {
+        "source": "ropeTop",
+        "sourceHandle": "point",
+        "target": "ropePath",
+        "targetHandle": "b",
+        "id": "e_ropeTop_ropePath_b"
+      },
+      {
+        "source": "ropePath",
+        "sourceHandle": "curve",
+        "target": "rope",
+        "targetHandle": "path",
+        "id": "e_ropePath_rope_path"
+      },
+      {
+        "source": "rope",
+        "sourceHandle": "solid",
+        "target": "ropes",
+        "targetHandle": "solid",
+        "id": "e_rope_ropes_solid"
+      },
+      {
+        "source": "burnerCenter",
+        "sourceHandle": "point",
+        "target": "burner",
+        "targetHandle": "center",
+        "id": "e_burnerCenter_burner_center"
+      },
+      {
+        "source": "flameCenter",
+        "sourceHandle": "point",
+        "target": "flame",
+        "targetHandle": "center",
+        "id": "e_flameCenter_flame_center"
+      },
+      {
+        "source": "c1c",
+        "target": "circ1",
+        "id": "e_c1c_circ1_center",
+        "sourceHandle": "point",
+        "targetHandle": "center"
+      },
+      {
+        "source": "c2c",
+        "target": "circ2",
+        "id": "e_c2c_circ2_center",
+        "sourceHandle": "point",
+        "targetHandle": "center"
+      },
+      {
+        "source": "c3c",
+        "target": "circ3",
+        "id": "e_c3c_circ3_center",
+        "sourceHandle": "point",
+        "targetHandle": "center"
+      },
+      {
+        "source": "c4c",
+        "target": "circ4",
+        "id": "e_c4c_circ4_center",
+        "sourceHandle": "point",
+        "targetHandle": "center"
+      },
+      {
+        "source": "c5c",
+        "target": "circ5",
+        "id": "e_c5c_circ5_center",
+        "sourceHandle": "point",
+        "targetHandle": "center"
+      },
+      {
+        "source": "c6c",
+        "target": "circ6",
+        "id": "e_c6c_circ6_center",
+        "sourceHandle": "point",
+        "targetHandle": "center"
+      },
+      {
+        "source": "upVec",
+        "target": "circ1",
+        "id": "e_upVec_circ1_normal",
+        "sourceHandle": "vector",
+        "targetHandle": "normal"
+      },
+      {
+        "source": "upVec",
+        "target": "circ2",
+        "id": "e_upVec_circ2_normal",
+        "sourceHandle": "vector",
+        "targetHandle": "normal"
+      },
+      {
+        "source": "upVec",
+        "target": "circ3",
+        "id": "e_upVec_circ3_normal",
+        "sourceHandle": "vector",
+        "targetHandle": "normal"
+      },
+      {
+        "source": "upVec",
+        "target": "circ4",
+        "id": "e_upVec_circ4_normal",
+        "sourceHandle": "vector",
+        "targetHandle": "normal"
+      },
+      {
+        "source": "upVec",
+        "target": "circ5",
+        "id": "e_upVec_circ5_normal",
+        "sourceHandle": "vector",
+        "targetHandle": "normal"
+      },
+      {
+        "source": "upVec",
+        "target": "circ6",
+        "id": "e_upVec_circ6_normal",
+        "sourceHandle": "vector",
+        "targetHandle": "normal"
+      },
+      {
+        "source": "circ1",
+        "target": "envelope",
+        "id": "e_circ1_envelope_curve1",
+        "sourceHandle": "curve",
+        "targetHandle": "curve1"
+      },
+      {
+        "source": "circ2",
+        "target": "envelope",
+        "id": "e_circ2_envelope_curve2",
+        "sourceHandle": "curve",
+        "targetHandle": "curve2"
+      },
+      {
+        "source": "circ3",
+        "target": "envelope",
+        "id": "e_circ3_envelope_curve3",
+        "sourceHandle": "curve",
+        "targetHandle": "curve3"
+      },
+      {
+        "source": "circ4",
+        "target": "envelope",
+        "id": "e_circ4_envelope_curve4",
+        "sourceHandle": "curve",
+        "targetHandle": "curve4"
+      },
+      {
+        "source": "circ5",
+        "target": "envelope",
+        "id": "e_circ5_envelope_curve5",
+        "sourceHandle": "curve",
+        "targetHandle": "curve5"
+      },
+      {
+        "source": "circ6",
+        "target": "envelope",
+        "id": "e_circ6_envelope_curve6",
+        "sourceHandle": "curve",
+        "targetHandle": "curve6"
+      }
+    ]
+  },
+  "conversation": [
+    {
+      "role": "system",
+      "content": "Workspace cleared."
+    },
+    {
+      "role": "user",
+      "content": "make a hot air balloon "
+    },
+    {
+      "role": "system",
+      "content": "Response was not valid JSON (attempt 1/3) — asking the model to resend."
+    },
+    {
+      "role": "system",
+      "content": "Response was not valid JSON (attempt 2/3) — asking the model to resend."
+    },
+    {
+      "role": "system",
+      "content": "Error: AI did not return valid JSON. Response was: "
+    },
+    {
+      "role": "user",
+      "content": "try again"
+    },
+    {
+      "role": "assistant",
+      "content": "A classic hot air balloon with a teardrop envelope, suspension ropes, a burner with flame, and a woven basket"
+    },
+    {
+      "role": "system",
+      "content": "Issues detected (auto-repair 1/2): Node \"envelope\" failed: RevolveCurve failed: face.revolve is not a function. The profile must not cross the revolve axis.; Leaf \"envelope\" could not be meshed: Node \"envelope\" (RevolveCurve) produced no geometry despite connected inputs — likely invalid parameters (e.g. zero/negative size, self-intersecting fillet).."
+    },
+    {
+      "role": "assistant",
+      "content": "RevolveCurve needs a closed face profile, not an open spline — the envelope failed because a SplineCurve isn't revolvable. I'll rebuild the balloon envelope as a LoftCurves between 6 horizontal circle sections at key heights with matching radii, giving the same teardrop silhouette."
+    },
+    {
+      "role": "system",
+      "content": "[Patch] 5 removedEdgeIds entries matched NO edge (already gone or never existed) — nothing was removed for: profX->profPts; profY->profPts; profZ->profPts; profPts->profCurve; profCurve->envelope. This usually means those edges were already dropped or renamed — do NOT keep retrying them. Use the edge ids shown in the graph state, {\"source\",\"target\"} objects, or \"source->target\" strings."
+    },
+    {
+      "role": "user",
+      "content": "ok make it in more detail better more accurate"
+    },
+    {
+      "role": "system",
+      "content": "Response was not valid JSON (attempt 1/3) — asking the model to resend."
+    },
+    {
+      "role": "system",
+      "content": "IR program had compile errors (attempt 2/3) — asking the model to fix."
+    },
+    {
+      "role": "system",
+      "content": "Error: IR compile failed: body[14] (panels = subdivide): Unknown op \"subdivide\". Available ops: list, series, range, remap, expr, item, repeat_each, tile, point, vector, midpoint, points, on_circle, grid, jitter, line, line_sdl, circle, ellipse, arc, polyline, spline, divide, box, sphere, cylinder, cone, torus, ring, extrude, loft, sweep, pipe, revolve, translate, move_to, rotate, scale, instances, linear_pattern, circular_pattern, union, difference, intersect, compound."
+    }
+  ],
+  "plan": "RevolveCurve needs a closed face profile, not an open spline — the envelope failed because a SplineCurve isn't revolvable. I'll rebuild the balloon envelope as a LoftCurves between 6 horizontal circle sections at key heights with matching radii, giving the same teardrop silhouette.",
+  "genome": {
+    "archetype": "suspended-vessel",
+    "parts": [
+      {
+        "id": "envelope",
+        "role": "focal"
+      },
+      {
+        "id": "panels",
+        "role": "detail"
+      },
+      {
+        "id": "band",
+        "role": "accent"
+      },
+      {
+        "id": "crown",
+        "role": "cap"
+      },
+      {
+        "id": "burner",
+        "role": "mechanism"
+      },
+      {
+        "id": "basket",
+        "role": "container"
+      },
+      {
+        "id": "ropes",
+        "role": "structure"
+      }
+    ],
+    "detailBudget": "high"
+  },
+  "geometryReport": {
+    "leaves": [
+      {
+        "id": "basket",
+        "bbox": {
+          "min": [
+            -3.0000001000000003,
+            -2.4000001000000006,
+            -1.000000001110223e-7
+          ],
+          "max": [
+            3.0000001000000003,
+            2.4000001000000006,
+            3.6000001
+          ],
+          "center": [
+            0,
+            0,
+            1.8
+          ],
+          "size": [
+            6.000000200000001,
+            4.800000200000001,
+            3.6000002
+          ]
+        },
+        "volume": 103.68,
+        "meshOk": true,
+        "vertexCount": 24,
+        "error": null
+      },
+      {
+        "id": "burner",
+        "bbox": {
+          "min": [
+            -0.7200001,
+            -0.7524829952029358,
+            4.081578586965853
+          ],
+          "max": [
+            0.763421413034146,
+            0.7524829952029358,
+            5.218421413034146
+          ],
+          "center": [
+            0.021710656517073046,
+            0,
+            4.6499999999999995
+          ],
+          "size": [
+            1.4834215130341462,
+            1.5049659904058716,
+            1.1368428260682926
+          ]
+        },
+        "volume": 1.7100317132019964,
+        "meshOk": true,
+        "vertexCount": 38,
+        "error": null
+      },
+      {
+        "id": "flame",
+        "bbox": {
+          "min": [
+            -0.695468795564175,
+            -0.695468795564175,
+            5.254531204435825
+          ],
+          "max": [
+            0.695468795564175,
+            0.695468795564175,
+            6.845468795564175
+          ],
+          "center": [
+            0,
+            0,
+            6.05
+          ],
+          "size": [
+            1.39093759112835,
+            1.39093759112835,
+            1.59093759112835
+          ]
+        },
+        "volume": 0.5367306328903044,
+        "meshOk": true,
+        "vertexCount": 36,
+        "error": null
+      },
+      {
+        "id": "envelope",
+        "bbox": {
+          "min": [
+            -14.097233750893034,
+            -14.09723374665749,
+            10.100200796322548
+          ],
+          "max": [
+            14.097233750892679,
+            14.097233746657492,
+            42.849799203677804
+          ],
+          "center": [
+            -1.7763568394002505e-13,
+            0,
+            26.47500000000018
+          ],
+          "size": [
+            28.194467501785713,
+            28.19446749331498,
+            32.74959840735526
+          ]
+        },
+        "volume": 13598.38197260991,
+        "meshOk": true,
+        "vertexCount": 1699,
+        "error": null
+      },
+      {
+        "id": "ropes",
+        "bbox": {
+          "min": [
+            -3.5200962894323347,
+            -3.12618520267787,
+            3.449999899999999
+          ],
+          "max": [
+            3.5200962894323347,
+            3.1261852026778705,
+            10.350000099999999
+          ],
+          "center": [
+            0,
+            4.440892098500626e-16,
+            6.899999999999999
+          ],
+          "size": [
+            7.040192578864669,
+            6.252370405355741,
+            6.9000002
+          ]
+        },
+        "volume": 0.4665265090580847,
+        "meshOk": true,
+        "vertexCount": 168,
+        "error": null
+      }
+    ],
+    "nodeErrors": [],
+    "numbers": {
+      "balloonHeight": 35,
+      "balloonRadius": 14,
+      "basketSize": 6,
+      "ropeCount": 6
+    },
+    "sliders": {
+      "balloonHeight": 35,
+      "balloonRadius": 14,
+      "basketSize": 6,
+      "ropeCount": 6
+    },
+    "selections": {},
+    "helpers": {
+      "upVec": {
+        "type": "Vector",
+        "x": 0,
+        "y": 0,
+        "z": 1,
+        "sourceNodeId": "upVec",
+        "ancestorNodeIds": []
+      },
+      "basketCenter": {
+        "type": "Point",
+        "x": 0,
+        "y": 0,
+        "z": 1.7999999999999998,
+        "sourceNodeId": "basketCenter",
+        "ancestorNodeIds": []
+      },
+      "ropeBottom": {
+        "type": "Point",
+        "x": 2.4000000000000004,
+        "y": 0,
+        "z": 3.5999999999999996,
+        "sourceNodeId": "ropeBottom",
+        "ancestorNodeIds": []
+      },
+      "ropeTop": {
+        "type": "Point",
+        "x": 3.5,
+        "y": 0,
+        "z": 10.2,
+        "sourceNodeId": "ropeTop",
+        "ancestorNodeIds": []
+      },
+      "burnerCenter": {
+        "type": "Point",
+        "x": 0,
+        "y": 0,
+        "z": 4.6499999999999995,
+        "sourceNodeId": "burnerCenter",
+        "ancestorNodeIds": []
+      },
+      "flameCenter": {
+        "type": "Point",
+        "x": 0,
+        "y": 0,
+        "z": 6.05,
+        "sourceNodeId": "flameCenter",
+        "ancestorNodeIds": []
+      },
+      "c1c": {
+        "type": "Point",
+        "x": 0,
+        "y": 0,
+        "z": 10.2,
+        "sourceNodeId": "c1c",
+        "ancestorNodeIds": []
+      },
+      "c2c": {
+        "type": "Point",
+        "x": 0,
+        "y": 0,
+        "z": 13,
+        "sourceNodeId": "c2c",
+        "ancestorNodeIds": []
+      },
+      "c3c": {
+        "type": "Point",
+        "x": 0,
+        "y": 0,
+        "z": 24.900000000000002,
+        "sourceNodeId": "c3c",
+        "ancestorNodeIds": []
+      },
+      "c4c": {
+        "type": "Point",
+        "x": 0,
+        "y": 0,
+        "z": 31.9,
+        "sourceNodeId": "c4c",
+        "ancestorNodeIds": []
+      },
+      "c5c": {
+        "type": "Point",
+        "x": 0,
+        "y": 0,
+        "z": 38.2,
+        "sourceNodeId": "c5c",
+        "ancestorNodeIds": []
+      },
+      "c6c": {
+        "type": "Point",
+        "x": 0,
+        "y": 0,
+        "z": 42.75,
+        "sourceNodeId": "c6c",
+        "ancestorNodeIds": []
+      }
+    },
+    "nodeCount": 29,
+    "edgeCount": 25,
+    "transformCount": 2,
+    "nodesPerLeafRatio": 5.8,
+    "nodeEconomyWarning": false,
+    "placement": {
+      "anchored": [
+        "basket",
+        "burner",
+        "flame",
+        "envelope",
+        "ropes"
+      ],
+      "literal": [],
+      "origin": [],
+      "literalNodeIds": [],
+      "ratio": 1
+    },
+    "scene": {
+      "min": [
+        -14.097233750893034,
+        -14.09723374665749,
+        -1.000000001110223e-7
+      ],
+      "max": [
+        14.097233750892679,
+        14.097233746657492,
+        42.849799203677804
+      ],
+      "size": [
+        28.194467501785713,
+        28.19446749331498,
+        42.849799303677806
+      ]
+    },
+    "meshedLeafCount": 5,
+    "kernelFaultCount": 0,
+    "kernelSuspect": false,
+    "kernelHealth": "ok",
+    "evalCount": 2,
+    "recycleRecommended": false,
+    "perturbationIssues": [
+      "At basketSize decrease (0.6x), \"burner\" detaches from \"flame\". Check that their positions are driven by formulas or Align rather than absolute coordinates.",
+      "At basketSize increase (1.5x), \"burner\" detaches from \"flame\". Check that their positions are driven by formulas or Align rather than absolute coordinates.",
+      "At balloonHeight decrease (0.6x), \"burner\" detaches from \"flame\". Check that their positions are driven by formulas or Align rather than absolute coordinates.",
+      "At balloonHeight increase (1.5x), \"burner\" detaches from \"flame\". Check that their positions are driven by formulas or Align rather than absolute coordinates."
+    ],
+    "proportionalIntegrity": 0.3333333333333333
+  },
+  "timeline": [
+    {
+      "at": "2026-07-23T12:11:51.077Z",
+      "turn": 2,
+      "trigger": "ai-ir",
+      "label": "attempt 1: rebuilt graph (21 nodes)",
+      "nodeCount": 21,
+      "edgeCount": 12,
+      "isolatedCount": 4,
+      "diff": {
+        "addedNodes": [
+          "balloonHeight",
+          "balloonRadius",
+          "basketSize",
+          "ropeCount",
+          "profX",
+          "profZ",
+          "profY",
+          "profPts",
+          "profCurve",
+          "envelope",
+          "basketCenter",
+          "basket",
+          "ropeBottom",
+          "ropeTop",
+          "ropePath",
+          "rope",
+          "ropes",
+          "burnerCenter",
+          "burner",
+          "flameCenter",
+          "flame"
+        ],
+        "removedNodes": [],
+        "changedNodes": [],
+        "addedEdges": 12,
+        "removedEdges": 0
+      },
+      "details": [
+        "warning: Dead design parameter: slider \"balloonRadius\" is not referenced by any formula or edge — moving it changes nothing. Wire dimensions to it or remove it."
+      ],
+      "nodes": [
+        {
+          "id": "balloonHeight",
+          "type": "NumberSlider",
+          "data": {
+            "value": 35,
+            "label": "balloonHeight",
+            "min": 15,
+            "max": 70,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 40
+          }
+        },
+        {
+          "id": "balloonRadius",
+          "type": "NumberSlider",
+          "data": {
+            "value": 14,
+            "label": "balloonRadius",
+            "min": 6,
+            "max": 30,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 230
+          }
+        },
+        {
+          "id": "basketSize",
+          "type": "NumberSlider",
+          "data": {
+            "value": 6,
+            "label": "basketSize",
+            "min": 3,
+            "max": 12,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 610
+          }
+        },
+        {
+          "id": "ropeCount",
+          "type": "NumberSlider",
+          "data": {
+            "value": 6,
+            "label": "ropeCount",
+            "min": 3,
+            "max": 12,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 1940
+          }
+        },
+        {
+          "id": "profX",
+          "type": "ListConstant",
+          "data": {
+            "values": "0, balloonRadius*0.35, balloonRadius*0.25, balloonRadius*0.7, balloonRadius, balloonRadius*0.9, balloonRadius*0.6, balloonRadius*0.25, 0"
+          },
+          "position": {
+            "x": 40,
+            "y": 1180
+          }
+        },
+        {
+          "id": "profZ",
+          "type": "ListConstant",
+          "data": {
+            "values": "basketSize+balloonHeight*0.12, basketSize+balloonHeight*0.15, basketSize+balloonHeight*0.2, basketSize+balloonHeight*0.32, basketSize+balloonHeight*0.54, basketSize+balloonHeight*0.74, basketSize+balloonHeight*0.92, basketSize+balloonHeight*1.05, basketSize+balloonHeight*1.12"
+          },
+          "position": {
+            "x": 40,
+            "y": 1560
+          }
+        },
+        {
+          "id": "profY",
+          "type": "ListConstant",
+          "data": {
+            "values": "0, 0, 0, 0, 0, 0, 0, 0, 0"
+          },
+          "position": {
+            "x": 40,
+            "y": 1370
+          }
+        },
+        {
+          "id": "profPts",
+          "type": "PointsFromLists",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 610
+          }
+        },
+        {
+          "id": "profCurve",
+          "type": "SplineCurve",
+          "data": {
+            "closed": false
+          },
+          "position": {
+            "x": 500,
+            "y": 40
+          }
+        },
+        {
+          "id": "envelope",
+          "type": "RevolveCurve",
+          "data": {
+            "angle": "360",
+            "axis": "Z",
+            "color": "#dc2626"
+          },
+          "position": {
+            "x": 730,
+            "y": 40
+          }
+        },
+        {
+          "id": "basketCenter",
+          "type": "Point",
+          "data": {
+            "x": "0",
+            "y": "0",
+            "z": "basketSize*0.3"
+          },
+          "position": {
+            "x": 40,
+            "y": 420
+          }
+        },
+        {
+          "id": "basket",
+          "type": "Box",
+          "data": {
+            "width": "basketSize",
+            "length": "basketSize*0.8",
+            "height": "basketSize*0.6",
+            "color": "#92400e"
+          },
+          "position": {
+            "x": 270,
+            "y": 40
+          }
+        },
+        {
+          "id": "ropeBottom",
+          "type": "Point",
+          "data": {
+            "x": "basketSize*0.4",
+            "y": "0",
+            "z": "basketSize*0.6"
+          },
+          "position": {
+            "x": 40,
+            "y": 1750
+          }
+        },
+        {
+          "id": "ropeTop",
+          "type": "Point",
+          "data": {
+            "x": "balloonRadius*0.25",
+            "y": "0",
+            "z": "basketSize+balloonHeight*0.12"
+          },
+          "position": {
+            "x": 40,
+            "y": 2130
+          }
+        },
+        {
+          "id": "ropePath",
+          "type": "Line",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 800
+          }
+        },
+        {
+          "id": "rope",
+          "type": "Pipe",
+          "data": {
+            "radius": "0.15"
+          },
+          "position": {
+            "x": 500,
+            "y": 230
+          }
+        },
+        {
+          "id": "ropes",
+          "type": "CircularPattern",
+          "data": {
+            "count": "ropeCount",
+            "radius": "0",
+            "angle": "360",
+            "color": "#525252"
+          },
+          "position": {
+            "x": 730,
+            "y": 230
+          }
+        },
+        {
+          "id": "burnerCenter",
+          "type": "Point",
+          "data": {
+            "x": "0",
+            "y": "0",
+            "z": "basketSize*0.6+balloonHeight*0.03"
+          },
+          "position": {
+            "x": 40,
+            "y": 800
+          }
+        },
+        {
+          "id": "burner",
+          "type": "Cylinder",
+          "data": {
+            "radius": "basketSize*0.12",
+            "height": "balloonHeight*0.03",
+            "color": "#52525b"
+          },
+          "position": {
+            "x": 270,
+            "y": 230
+          }
+        },
+        {
+          "id": "flameCenter",
+          "type": "Point",
+          "data": {
+            "x": "0",
+            "y": "0",
+            "z": "basketSize*0.6+balloonHeight*0.07"
+          },
+          "position": {
+            "x": 40,
+            "y": 990
+          }
+        },
+        {
+          "id": "flame",
+          "type": "Cone",
+          "data": {
+            "radius1": "basketSize*0.1",
+            "radius2": "0.01",
+            "height": "balloonHeight*0.04",
+            "color": "#f59e0b"
+          },
+          "position": {
+            "x": 270,
+            "y": 420
+          }
+        }
+      ],
+      "edges": [
+        {
+          "source": "profX",
+          "sourceHandle": "values",
+          "target": "profPts",
+          "targetHandle": "x",
+          "id": "e_profX_profPts_x"
+        },
+        {
+          "source": "profY",
+          "sourceHandle": "values",
+          "target": "profPts",
+          "targetHandle": "y",
+          "id": "e_profY_profPts_y"
+        },
+        {
+          "source": "profZ",
+          "sourceHandle": "values",
+          "target": "profPts",
+          "targetHandle": "z",
+          "id": "e_profZ_profPts_z"
+        },
+        {
+          "source": "profPts",
+          "sourceHandle": "points",
+          "target": "profCurve",
+          "targetHandle": "points",
+          "id": "e_profPts_profCurve_points"
+        },
+        {
+          "source": "profCurve",
+          "sourceHandle": "curve",
+          "target": "envelope",
+          "targetHandle": "profile",
+          "id": "e_profCurve_envelope_profile"
+        },
+        {
+          "source": "basketCenter",
+          "sourceHandle": "point",
+          "target": "basket",
+          "targetHandle": "center",
+          "id": "e_basketCenter_basket_center"
+        },
+        {
+          "source": "ropeBottom",
+          "sourceHandle": "point",
+          "target": "ropePath",
+          "targetHandle": "a",
+          "id": "e_ropeBottom_ropePath_a"
+        },
+        {
+          "source": "ropeTop",
+          "sourceHandle": "point",
+          "target": "ropePath",
+          "targetHandle": "b",
+          "id": "e_ropeTop_ropePath_b"
+        },
+        {
+          "source": "ropePath",
+          "sourceHandle": "curve",
+          "target": "rope",
+          "targetHandle": "path",
+          "id": "e_ropePath_rope_path"
+        },
+        {
+          "source": "rope",
+          "sourceHandle": "solid",
+          "target": "ropes",
+          "targetHandle": "solid",
+          "id": "e_rope_ropes_solid"
+        },
+        {
+          "source": "burnerCenter",
+          "sourceHandle": "point",
+          "target": "burner",
+          "targetHandle": "center",
+          "id": "e_burnerCenter_burner_center"
+        },
+        {
+          "source": "flameCenter",
+          "sourceHandle": "point",
+          "target": "flame",
+          "targetHandle": "center",
+          "id": "e_flameCenter_flame_center"
+        }
+      ]
+    },
+    {
+      "at": "2026-07-23T12:12:15.163Z",
+      "turn": 2,
+      "trigger": "ai-repair",
+      "label": "attempt 2: added 14 node(s) [VectorXYZ, Point, CircleCurve, LoftCurves]; removed 6 node(s); added 18 edge(s); removed 5 edge(s)",
+      "nodeCount": 29,
+      "edgeCount": 25,
+      "isolatedCount": 4,
+      "diff": {
+        "addedNodes": [
+          "upVec",
+          "c1c",
+          "c2c",
+          "c3c",
+          "c4c",
+          "c5c",
+          "c6c",
+          "circ1",
+          "circ2",
+          "circ3",
+          "circ4",
+          "circ5",
+          "circ6"
+        ],
+        "removedNodes": [
+          "profX",
+          "profZ",
+          "profY",
+          "profPts",
+          "profCurve"
+        ],
+        "changedNodes": [
+          "envelope"
+        ],
+        "addedEdges": 18,
+        "removedEdges": 5
+      },
+      "nodes": [
+        {
+          "id": "balloonHeight",
+          "type": "NumberSlider",
+          "data": {
+            "value": 35,
+            "label": "balloonHeight",
+            "min": 15,
+            "max": 70,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 40
+          }
+        },
+        {
+          "id": "balloonRadius",
+          "type": "NumberSlider",
+          "data": {
+            "value": 14,
+            "label": "balloonRadius",
+            "min": 6,
+            "max": 30,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 230
+          }
+        },
+        {
+          "id": "basketSize",
+          "type": "NumberSlider",
+          "data": {
+            "value": 6,
+            "label": "basketSize",
+            "min": 3,
+            "max": 12,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 610
+          }
+        },
+        {
+          "id": "ropeCount",
+          "type": "NumberSlider",
+          "data": {
+            "value": 6,
+            "label": "ropeCount",
+            "min": 3,
+            "max": 12,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 2510
+          }
+        },
+        {
+          "id": "basketCenter",
+          "type": "Point",
+          "data": {
+            "x": "0",
+            "y": "0",
+            "z": "basketSize*0.3"
+          },
+          "position": {
+            "x": 40,
+            "y": 420
+          }
+        },
+        {
+          "id": "basket",
+          "type": "Box",
+          "data": {
+            "width": "basketSize",
+            "length": "basketSize*0.8",
+            "height": "basketSize*0.6",
+            "color": "#92400e"
+          },
+          "position": {
+            "x": 270,
+            "y": 40
+          }
+        },
+        {
+          "id": "ropeBottom",
+          "type": "Point",
+          "data": {
+            "x": "basketSize*0.4",
+            "y": "0",
+            "z": "basketSize*0.6"
+          },
+          "position": {
+            "x": 40,
+            "y": 2320
+          }
+        },
+        {
+          "id": "ropeTop",
+          "type": "Point",
+          "data": {
+            "x": "balloonRadius*0.25",
+            "y": "0",
+            "z": "basketSize+balloonHeight*0.12"
+          },
+          "position": {
+            "x": 40,
+            "y": 2700
+          }
+        },
+        {
+          "id": "ropePath",
+          "type": "Line",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 1750
+          }
+        },
+        {
+          "id": "rope",
+          "type": "Pipe",
+          "data": {
+            "radius": "0.15"
+          },
+          "position": {
+            "x": 500,
+            "y": 230
+          }
+        },
+        {
+          "id": "ropes",
+          "type": "CircularPattern",
+          "data": {
+            "count": "ropeCount",
+            "radius": "0",
+            "angle": "360",
+            "color": "#525252"
+          },
+          "position": {
+            "x": 730,
+            "y": 40
+          }
+        },
+        {
+          "id": "burnerCenter",
+          "type": "Point",
+          "data": {
+            "x": "0",
+            "y": "0",
+            "z": "basketSize*0.6+balloonHeight*0.03"
+          },
+          "position": {
+            "x": 40,
+            "y": 800
+          }
+        },
+        {
+          "id": "burner",
+          "type": "Cylinder",
+          "data": {
+            "radius": "basketSize*0.12",
+            "height": "balloonHeight*0.03",
+            "color": "#52525b"
+          },
+          "position": {
+            "x": 270,
+            "y": 230
+          }
+        },
+        {
+          "id": "flameCenter",
+          "type": "Point",
+          "data": {
+            "x": "0",
+            "y": "0",
+            "z": "basketSize*0.6+balloonHeight*0.07"
+          },
+          "position": {
+            "x": 40,
+            "y": 2130
+          }
+        },
+        {
+          "id": "flame",
+          "type": "Cone",
+          "data": {
+            "radius1": "basketSize*0.1",
+            "radius2": "0.01",
+            "height": "balloonHeight*0.04",
+            "color": "#f59e0b"
+          },
+          "position": {
+            "x": 270,
+            "y": 990
+          }
+        },
+        {
+          "id": "upVec",
+          "type": "VectorXYZ",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": 1
+          },
+          "position": {
+            "x": 40,
+            "y": 2890
+          }
+        },
+        {
+          "id": "c1c",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "basketSize+balloonHeight*0.12"
+          },
+          "position": {
+            "x": 40,
+            "y": 990
+          }
+        },
+        {
+          "id": "c2c",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "basketSize+balloonHeight*0.2"
+          },
+          "position": {
+            "x": 40,
+            "y": 1180
+          }
+        },
+        {
+          "id": "c3c",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "basketSize+balloonHeight*0.54"
+          },
+          "position": {
+            "x": 40,
+            "y": 1370
+          }
+        },
+        {
+          "id": "c4c",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "basketSize+balloonHeight*0.74"
+          },
+          "position": {
+            "x": 40,
+            "y": 1560
+          }
+        },
+        {
+          "id": "c5c",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "basketSize+balloonHeight*0.92"
+          },
+          "position": {
+            "x": 40,
+            "y": 1750
+          }
+        },
+        {
+          "id": "c6c",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "basketSize+balloonHeight*1.05"
+          },
+          "position": {
+            "x": 40,
+            "y": 1940
+          }
+        },
+        {
+          "id": "circ1",
+          "type": "CircleCurve",
+          "data": {
+            "radius": "balloonRadius*0.35",
+            "color": "#dc2626"
+          },
+          "position": {
+            "x": 270,
+            "y": 420
+          }
+        },
+        {
+          "id": "circ2",
+          "type": "CircleCurve",
+          "data": {
+            "radius": "balloonRadius*0.7",
+            "color": "#dc2626"
+          },
+          "position": {
+            "x": 270,
+            "y": 610
+          }
+        },
+        {
+          "id": "circ3",
+          "type": "CircleCurve",
+          "data": {
+            "radius": "balloonRadius",
+            "color": "#dc2626"
+          },
+          "position": {
+            "x": 270,
+            "y": 800
+          }
+        },
+        {
+          "id": "circ4",
+          "type": "CircleCurve",
+          "data": {
+            "radius": "balloonRadius*0.9",
+            "color": "#dc2626"
+          },
+          "position": {
+            "x": 270,
+            "y": 1180
+          }
+        },
+        {
+          "id": "circ5",
+          "type": "CircleCurve",
+          "data": {
+            "radius": "balloonRadius*0.6",
+            "color": "#dc2626"
+          },
+          "position": {
+            "x": 270,
+            "y": 1370
+          }
+        },
+        {
+          "id": "circ6",
+          "type": "CircleCurve",
+          "data": {
+            "radius": "balloonRadius*0.25",
+            "color": "#dc2626"
+          },
+          "position": {
+            "x": 270,
+            "y": 1560
+          }
+        },
+        {
+          "id": "envelope",
+          "type": "LoftCurves",
+          "data": {
+            "ruled": false,
+            "closed": false,
+            "color": "#dc2626"
+          },
+          "position": {
+            "x": 500,
+            "y": 40
+          }
+        }
+      ],
+      "edges": [
+        {
+          "source": "basketCenter",
+          "sourceHandle": "point",
+          "target": "basket",
+          "targetHandle": "center",
+          "id": "e_basketCenter_basket_center"
+        },
+        {
+          "source": "ropeBottom",
+          "sourceHandle": "point",
+          "target": "ropePath",
+          "targetHandle": "a",
+          "id": "e_ropeBottom_ropePath_a"
+        },
+        {
+          "source": "ropeTop",
+          "sourceHandle": "point",
+          "target": "ropePath",
+          "targetHandle": "b",
+          "id": "e_ropeTop_ropePath_b"
+        },
+        {
+          "source": "ropePath",
+          "sourceHandle": "curve",
+          "target": "rope",
+          "targetHandle": "path",
+          "id": "e_ropePath_rope_path"
+        },
+        {
+          "source": "rope",
+          "sourceHandle": "solid",
+          "target": "ropes",
+          "targetHandle": "solid",
+          "id": "e_rope_ropes_solid"
+        },
+        {
+          "source": "burnerCenter",
+          "sourceHandle": "point",
+          "target": "burner",
+          "targetHandle": "center",
+          "id": "e_burnerCenter_burner_center"
+        },
+        {
+          "source": "flameCenter",
+          "sourceHandle": "point",
+          "target": "flame",
+          "targetHandle": "center",
+          "id": "e_flameCenter_flame_center"
+        },
+        {
+          "source": "c1c",
+          "target": "circ1",
+          "id": "e_c1c_circ1_center",
+          "sourceHandle": "point",
+          "targetHandle": "center"
+        },
+        {
+          "source": "c2c",
+          "target": "circ2",
+          "id": "e_c2c_circ2_center",
+          "sourceHandle": "point",
+          "targetHandle": "center"
+        },
+        {
+          "source": "c3c",
+          "target": "circ3",
+          "id": "e_c3c_circ3_center",
+          "sourceHandle": "point",
+          "targetHandle": "center"
+        },
+        {
+          "source": "c4c",
+          "target": "circ4",
+          "id": "e_c4c_circ4_center",
+          "sourceHandle": "point",
+          "targetHandle": "center"
+        },
+        {
+          "source": "c5c",
+          "target": "circ5",
+          "id": "e_c5c_circ5_center",
+          "sourceHandle": "point",
+          "targetHandle": "center"
+        },
+        {
+          "source": "c6c",
+          "target": "circ6",
+          "id": "e_c6c_circ6_center",
+          "sourceHandle": "point",
+          "targetHandle": "center"
+        },
+        {
+          "source": "upVec",
+          "target": "circ1",
+          "id": "e_upVec_circ1_normal",
+          "sourceHandle": "vector",
+          "targetHandle": "normal"
+        },
+        {
+          "source": "upVec",
+          "target": "circ2",
+          "id": "e_upVec_circ2_normal",
+          "sourceHandle": "vector",
+          "targetHandle": "normal"
+        },
+        {
+          "source": "upVec",
+          "target": "circ3",
+          "id": "e_upVec_circ3_normal",
+          "sourceHandle": "vector",
+          "targetHandle": "normal"
+        },
+        {
+          "source": "upVec",
+          "target": "circ4",
+          "id": "e_upVec_circ4_normal",
+          "sourceHandle": "vector",
+          "targetHandle": "normal"
+        },
+        {
+          "source": "upVec",
+          "target": "circ5",
+          "id": "e_upVec_circ5_normal",
+          "sourceHandle": "vector",
+          "targetHandle": "normal"
+        },
+        {
+          "source": "upVec",
+          "target": "circ6",
+          "id": "e_upVec_circ6_normal",
+          "sourceHandle": "vector",
+          "targetHandle": "normal"
+        },
+        {
+          "source": "circ1",
+          "target": "envelope",
+          "id": "e_circ1_envelope_curve1",
+          "sourceHandle": "curve",
+          "targetHandle": "curve1"
+        },
+        {
+          "source": "circ2",
+          "target": "envelope",
+          "id": "e_circ2_envelope_curve2",
+          "sourceHandle": "curve",
+          "targetHandle": "curve2"
+        },
+        {
+          "source": "circ3",
+          "target": "envelope",
+          "id": "e_circ3_envelope_curve3",
+          "sourceHandle": "curve",
+          "targetHandle": "curve3"
+        },
+        {
+          "source": "circ4",
+          "target": "envelope",
+          "id": "e_circ4_envelope_curve4",
+          "sourceHandle": "curve",
+          "targetHandle": "curve4"
+        },
+        {
+          "source": "circ5",
+          "target": "envelope",
+          "id": "e_circ5_envelope_curve5",
+          "sourceHandle": "curve",
+          "targetHandle": "curve5"
+        },
+        {
+          "source": "circ6",
+          "target": "envelope",
+          "id": "e_circ6_envelope_curve6",
+          "sourceHandle": "curve",
+          "targetHandle": "curve6"
+        }
+      ]
+    }
+  ]
+}

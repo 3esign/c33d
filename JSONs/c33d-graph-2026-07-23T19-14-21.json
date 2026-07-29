@@ -1,0 +1,80 @@
+{
+  "c33dExport": 2,
+  "exportedAt": "2026-07-23T19:14:21.974Z",
+  "comment": "fail",
+  "agent": {
+    "name": "Ollama (Local)",
+    "provider": "ollama",
+    "model": "gemma4:31b-cloud"
+  },
+  "graph": {
+    "nodes": [],
+    "edges": []
+  },
+  "conversation": [
+    {
+      "role": "system",
+      "content": "Workspace cleared."
+    },
+    {
+      "role": "user",
+      "content": "lets make a skelleton real one, i would start from the point and from that point up will go the neck and end of that neck line is head center and from first point bellow will go spine and left and right would go sholders and from the end of sholder lines we would have three segmets on both sides for hands and from the bottom spine point we would also like with shoulders but much shorter go left and right and then go three segment of legs down and would place a wire frame ball like shape for skull this is basic sceleton and you can place details based on it"
+    },
+    {
+      "role": "system",
+      "content": "IR program had compile errors (attempt 1/3) — asking the model to fix."
+    },
+    {
+      "role": "system",
+      "content": "IR program had compile errors (attempt 2/3) — asking the model to fix."
+    },
+    {
+      "role": "system",
+      "content": "Error: IR compile failed: body[8] (head = compound): \"compound\" has no argument \"0\". Valid arguments: a, b, c, d."
+    }
+  ],
+  "plan": "A parametric human figure constructed from organic primitives (Ellipsoids and Cylinders). The torso is the central anchor, with the head aligned above and limbs distributed symmetrically. I will use a 'mannequin' aesthetic for clarity and parametric stability.\nGENOME [human-figure, detail:medium]: torso focal; head focal on torso; arms repeated ×2 on torso; legs repeated ×2 on torso; hands detail on arms; feet detail on legs",
+  "genome": {
+    "archetype": "anatomical-skeleton",
+    "parts": [
+      {
+        "id": "skull",
+        "role": "head"
+      },
+      {
+        "id": "spine",
+        "role": "core"
+      },
+      {
+        "id": "arms",
+        "role": "limbs"
+      },
+      {
+        "id": "legs",
+        "role": "limbs"
+      }
+    ],
+    "detailBudget": "medium"
+  },
+  "geometryReport": null,
+  "timeline": [
+    {
+      "at": "2026-07-23T19:14:21.971Z",
+      "turn": 1,
+      "trigger": "export",
+      "label": "state at export (includes any unrecorded manual edits)",
+      "nodeCount": 0,
+      "edgeCount": 0,
+      "isolatedCount": 0,
+      "diff": {
+        "addedNodes": [],
+        "removedNodes": [],
+        "changedNodes": [],
+        "addedEdges": 0,
+        "removedEdges": 0
+      },
+      "nodes": [],
+      "edges": []
+    }
+  ]
+}

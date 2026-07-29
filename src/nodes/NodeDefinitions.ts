@@ -103,6 +103,78 @@ export const NODE_LIBRARY: Record<string, NodeDefinition> = {
     outputs: [{ name: 'length', type: 'number' }],
     params: [],
   },
+  SliceList: {
+    type: 'SliceList',
+    label: 'Slice List (Cull)',
+    category: 'math',
+    inputs: [
+      { name: 'list', type: 'Solid' },
+    ],
+    outputs: [{ name: 'list', type: 'Solid' }],
+    params: [
+      { name: 'startIndex', type: 'number', default: 0, min: -100, max: 100, step: 1 },
+      { name: 'endIndex', type: 'number', default: 0, min: -100, max: 100, step: 1 },
+    ],
+  },
+  GetMatrixItem: {
+    type: 'GetMatrixItem',
+    label: 'Get Matrix Item',
+    category: 'math',
+    inputs: [
+      { name: 'list', type: 'Solid' },
+    ],
+    outputs: [{ name: 'item', type: 'Solid' }],
+    params: [
+      { name: 'rowIndex', type: 'number', default: 0, min: 0, max: 1000, step: 1 },
+      { name: 'colIndex', type: 'number', default: 0, min: 0, max: 1000, step: 1 },
+    ],
+  },
+  TreeBranch: {
+    type: 'TreeBranch',
+    label: 'Tree Branch',
+    category: 'math',
+    inputs: [
+      { name: 'list', type: 'Solid' },
+    ],
+    outputs: [{ name: 'branch', type: 'Solid' }],
+    params: [
+      { name: 'branchIndex', type: 'number', default: 0, min: 0, max: 1000, step: 1 },
+    ],
+  },
+  DispatchList: {
+    type: 'DispatchList',
+    label: 'Dispatch List',
+    category: 'math',
+    inputs: [
+      { name: 'list', type: 'Solid' },
+      { name: 'pattern', type: 'number' },
+    ],
+    outputs: [
+      { name: 'listA', type: 'Solid' },
+      { name: 'listB', type: 'Solid' },
+    ],
+    params: [],
+  },
+  FlattenTree: {
+    type: 'FlattenTree',
+    label: 'Flatten Tree',
+    category: 'math',
+    inputs: [
+      { name: 'list', type: 'Solid' },
+    ],
+    outputs: [{ name: 'list', type: 'Solid' }],
+    params: [],
+  },
+  GraftTree: {
+    type: 'GraftTree',
+    label: 'Graft Tree',
+    category: 'math',
+    inputs: [
+      { name: 'list', type: 'Solid' },
+    ],
+    outputs: [{ name: 'list', type: 'Solid' }],
+    params: [],
+  },
   ListConstant: {
     type: 'ListConstant',
     label: 'List (Data)',
@@ -114,6 +186,27 @@ export const NODE_LIBRARY: Record<string, NodeDefinition> = {
       // referencing slider labels (e.g. "R*0.2, R*0.5, R").
       { name: 'values', type: 'string', default: '1, 2, 3, 4' },
     ],
+  },
+  // Grasshopper-style "Merge": collect separately-built points (or point lists)
+  // into ONE list. Without this there was no way to turn N individually created
+  // points into the point[] that polyline/spline/instances consume — models
+  // wrote ["$p1","$p2","$p3"] and the compiler had nothing to expand it into.
+  MergePoints: {
+    type: 'MergePoints',
+    label: 'Merge Points',
+    category: 'math',
+    inputs: [
+      { name: 'p1', type: 'Point' },
+      { name: 'p2', type: 'Point' },
+      { name: 'p3', type: 'Point' },
+      { name: 'p4', type: 'Point' },
+      { name: 'p5', type: 'Point' },
+      { name: 'p6', type: 'Point' },
+      { name: 'p7', type: 'Point' },
+      { name: 'p8', type: 'Point' },
+    ],
+    outputs: [{ name: 'points', type: 'Point' }],
+    params: [],
   },
   PointsFromLists: {
     type: 'PointsFromLists',

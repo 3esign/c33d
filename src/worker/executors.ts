@@ -10,6 +10,20 @@ import {
 import { parseSVGPath } from './svgPath.ts';
 import { evaluateSelectionQuery } from './selectionQuery.ts';
 
+export const mapOverTree = (input: any, fn: (shape: any) => any): any => {
+  if (Array.isArray(input)) {
+    return input.map(item => mapOverTree(item, fn));
+  }
+  if (!input) return null;
+  const res = fn(input);
+  if (res && typeof res === 'object') {
+    if (input.wireIndex !== undefined) res.wireIndex = input.wireIndex;
+    if (input.row !== undefined) res.row = input.row;
+    if (input.col !== undefined) res.col = input.col;
+  }
+  return res;
+};
+
 // ---------- Text3D font loading ----------
 // replicad.sketchText requires a font registered via loadFont(); without it
 // every Text3D call dies with "Cannot read properties of undefined (reading
@@ -762,27 +776,29 @@ export const EXECUTORS: Record<
     if (!solidInput) return null;
     const selection = inputs.find((i) => i.targetHandle === 'selection')?.value;
     const r = parseFloat(params.radius) || 1;
-    try {
-      if (selection && selection.query) {
-        const descends = solidInput.sourceNodeId === selection.sourceNodeId || 
-                         (solidInput.ancestorNodeIds && solidInput.ancestorNodeIds.includes(selection.sourceNodeId));
-        if (!descends) {
-          warn(`Selection sourceNodeId "${selection.sourceNodeId}" is not an ancestor of solid "${solidInput.sourceNodeId}". Filtering all edges.`);
+    return mapOverTree(solidInput, (shape) => {
+      try {
+        if (selection && selection.query) {
+          const descends = shape.sourceNodeId === selection.sourceNodeId || 
+                           (shape.ancestorNodeIds && shape.ancestorNodeIds.includes(selection.sourceNodeId));
+          if (!descends) {
+            warn(`Selection sourceNodeId "${selection.sourceNodeId}" is not an ancestor of solid "${shape.sourceNodeId}". Filtering all edges.`);
+          }
+          const resolved = evaluateSelectionQuery(selection.query, selection.domain, shape, scope || {}, 0.1);
+          return shape.fillet(r, (edge: any) => {
+            const h = typeof edge.hashCode === 'function' ? edge.hashCode() : edge.hashCode;
+            return resolved.hashes.includes(h);
+          });
         }
-        const resolved = evaluateSelectionQuery(selection.query, selection.domain, solidInput, scope || {}, 0.1);
-        return solidInput.fillet(r, (edge: any) => {
-          const h = typeof edge.hashCode === 'function' ? edge.hashCode() : edge.hashCode;
-          return resolved.hashes.includes(h);
-        });
+        return shape.fillet(r);
+      } catch (err) {
+        console.warn("Fillet failed:", err);
+        warn(
+          `Fillet radius ${r} failed (likely larger than an adjacent edge/thickness) — passed the solid through UNFILLETED. Reduce the radius if rounding matters.`
+        );
+        return shape.clone();
       }
-      return solidInput.fillet(r);
-    } catch (err) {
-      console.warn("Fillet failed:", err);
-      warn(
-        `Fillet radius ${r} failed (likely larger than an adjacent edge/thickness) — passed the solid through UNFILLETED. Reduce the radius if rounding matters.`
-      );
-      return solidInput.clone();
-    }
+    });
   },
 
   Chamfer: (params, inputs, warn, scope) => {
@@ -790,27 +806,29 @@ export const EXECUTORS: Record<
     if (!solidInput) return null;
     const selection = inputs.find((i) => i.targetHandle === 'selection')?.value;
     const r = parseFloat(params.radius) || 1;
-    try {
-      if (selection && selection.query) {
-        const descends = solidInput.sourceNodeId === selection.sourceNodeId || 
-                         (solidInput.ancestorNodeIds && solidInput.ancestorNodeIds.includes(selection.sourceNodeId));
-        if (!descends) {
-          warn(`Selection sourceNodeId "${selection.sourceNodeId}" is not an ancestor of solid "${solidInput.sourceNodeId}". Filtering all edges.`);
+    return mapOverTree(solidInput, (shape) => {
+      try {
+        if (selection && selection.query) {
+          const descends = shape.sourceNodeId === selection.sourceNodeId || 
+                           (shape.ancestorNodeIds && shape.ancestorNodeIds.includes(selection.sourceNodeId));
+          if (!descends) {
+            warn(`Selection sourceNodeId "${selection.sourceNodeId}" is not an ancestor of solid "${shape.sourceNodeId}". Filtering all edges.`);
+          }
+          const resolved = evaluateSelectionQuery(selection.query, selection.domain, shape, scope || {}, 0.1);
+          return shape.chamfer(r, (edge: any) => {
+            const h = typeof edge.hashCode === 'function' ? edge.hashCode() : edge.hashCode;
+            return resolved.hashes.includes(h);
+          });
         }
-        const resolved = evaluateSelectionQuery(selection.query, selection.domain, solidInput, scope || {}, 0.1);
-        return solidInput.chamfer(r, (edge: any) => {
-          const h = typeof edge.hashCode === 'function' ? edge.hashCode() : edge.hashCode;
-          return resolved.hashes.includes(h);
-        });
+        return shape.chamfer(r);
+      } catch (err) {
+        console.warn("Chamfer failed:", err);
+        warn(
+          `Chamfer distance ${r} failed (likely too large for the solid) — passed the solid through UNCHAMFERED. Reduce it if the bevel matters.`
+        );
+        return shape.clone();
       }
-      return solidInput.chamfer(r);
-    } catch (err) {
-      console.warn("Chamfer failed:", err);
-      warn(
-        `Chamfer distance ${r} failed (likely too large for the solid) — passed the solid through UNCHAMFERED. Reduce it if the bevel matters.`
-      );
-      return solidInput.clone();
-    }
+    });
   },
 
   Extrude: (params, inputs, warn) => {
@@ -822,34 +840,38 @@ export const EXECUTORS: Record<
     const twist = num(params.twistAngle, 0);
     const hasTaper = Math.abs(endFactor - 1) > 1e-6;
     const hasTwist = Math.abs(twist) > 1e-6;
-    try {
-      if (hasTaper || hasTwist) {
-        const opts: any = {};
-        if (hasTaper) opts.extrusionProfile = { profile: profileName, endFactor };
-        if (hasTwist) opts.twistAngle = twist;
-        return solidInput.extrude(h, opts);
+    return mapOverTree(solidInput, (shape) => {
+      try {
+        if (hasTaper || hasTwist) {
+          const opts: any = {};
+          if (hasTaper) opts.extrusionProfile = { profile: profileName, endFactor };
+          if (hasTwist) opts.twistAngle = twist;
+          return shape.extrude(h, opts);
+        }
+        return shape.extrude(h);
+      } catch (err) {
+        console.warn("Extrude failed:", err);
+        warn(
+          `Extrude failed (input is probably already a 3D solid, not a 2D face/sketch) — passed the input through UNCHANGED.`
+        );
+        return shape.clone();
       }
-      return solidInput.extrude(h);
-    } catch (err) {
-      console.warn("Extrude failed:", err);
-      warn(
-        `Extrude failed (input is probably already a 3D solid, not a 2D face/sketch) — passed the input through UNCHANGED.`
-      );
-      return solidInput.clone();
-    }
+    });
   },
 
   Mirror: (params, inputs, warn) => {
     const solidInput = inputs.find((i) => i.targetHandle === 'solid')?.value;
     if (!solidInput) return null;
     const plane = params.plane || 'YZ';
-    try {
-      return solidInput.mirror(plane);
-    } catch (err) {
-      console.warn("Mirror failed:", err);
-      warn(`Mirror across "${plane}" failed — passed the solid through UNMIRRORED.`);
-      return solidInput.clone();
-    }
+    return mapOverTree(solidInput, (shape) => {
+      try {
+        return shape.mirror(plane);
+      } catch (err) {
+        console.warn("Mirror failed:", err);
+        warn(`Mirror across "${plane}" failed — passed the solid through UNMIRRORED.`);
+        return shape.clone();
+      }
+    });
   },
 
   Sketch: (params, _inputs, warn) => {
@@ -1188,23 +1210,60 @@ export const EXECUTORS: Record<
     }
   },
 
-  Boolean: (params, inputs) => {
-    const target = inputs.find((i) => i.targetHandle === 'target')?.value;
-    const tool = inputs.find((i) => i.targetHandle === 'tool')?.value;
-    if (!target || !tool) {
-      return target ? target.clone() : tool ? tool.clone() : null;
+  Boolean: (params, inputs, warn) => {
+    const rawTarget = inputs.find((i) => i.targetHandle === 'target')?.value;
+    const rawTool = inputs.find((i) => i.targetHandle === 'tool')?.value;
+
+    if (!rawTarget || !rawTool) {
+      if (!rawTarget && !rawTool) return null;
+      const fallback = rawTarget || rawTool;
+      return mapOverTree(fallback, (s) => s.clone());
     }
 
     const op = params.operation || 'union';
-    if (op === 'union') return target.fuse(tool);
-    if (op === 'difference') return target.cut(tool);
-    if (op === 'intersect') return target.intersect(tool);
-    return target.clone();
+
+    const getToolShape = (t: any) => {
+      if (!Array.isArray(t)) return t;
+      const flat = t.flat(Infinity).filter(Boolean);
+      if (flat.length === 0) return null;
+      if (flat.length === 1) return flat[0];
+      try {
+        const uniqueShapes = [];
+        const seen = new Set();
+        for (const s of flat) {
+          if (!seen.has(s)) {
+            seen.add(s);
+            uniqueShapes.push(s.clone());
+          }
+        }
+        return replicad.makeCompound(uniqueShapes);
+      } catch (err) {
+        warn(`Boolean tool compounding failed: ${err}`);
+        return flat[0];
+      }
+    };
+
+    const toolShape = getToolShape(rawTool);
+    if (!toolShape) {
+       return mapOverTree(rawTarget, (s) => s.clone());
+    }
+
+    return mapOverTree(rawTarget, (shape) => {
+      try {
+        if (op === 'union') return shape.fuse(toolShape);
+        if (op === 'difference') return shape.cut(toolShape);
+        if (op === 'intersect') return shape.intersect(toolShape);
+        return shape.clone();
+      } catch(err) {
+        warn(`Boolean ${op} failed: ${err}`);
+        return shape.clone();
+      }
+    });
   },
 
   SubdivideSurface: (params, inputs, _warn) => {
-    const solidInput = inputs.find((i) => i.targetHandle === 'solid')?.value;
-    if (!solidInput) return null;
+    const rawSolidInput = inputs.find((i) => i.targetHandle === 'solid')?.value;
+    if (!rawSolidInput) return null;
 
     const uDivs = Math.max(1, parseInt(params.uDivisions) || 3);
     const vDivs = Math.max(1, parseInt(params.vDivisions) || 3);
@@ -1219,121 +1278,127 @@ export const EXECUTORS: Record<
 
     const OC = (replicad as any).getOC();
 
-    const faces = solidInput.faces || [];
-    if (faces.length === 0) return solidInput;
+    return mapOverTree(rawSolidInput, (solidInput) => {
+      const faces = solidInput.faces || [];
+      if (faces.length === 0) return solidInput;
 
-    let s = seed;
-    const random = () => {
-      const x = Math.sin(s++) * 10000;
-      return x - Math.floor(x);
-    };
+      let s = seed;
+      const random = () => {
+        const x = Math.sin(s++) * 10000;
+        return x - Math.floor(x);
+      };
 
-    const cellSolids: any[] = [];
+      const cellSolids: any[] = [];
 
-    const processFace = (face: any) => {
-      for (let i = 0; i < uDivs; i++) {
-        for (let j = 0; j < vDivs; j++) {
-          let u1 = i / uDivs;
-          let u2 = (i + 1) / uDivs;
-          let v1 = j / vDivs;
-          let v2 = (j + 1) / vDivs;
+      const processFace = (face: any) => {
+        for (let i = 0; i < uDivs; i++) {
+          for (let j = 0; j < vDivs; j++) {
+            let u1 = i / uDivs;
+            let u2 = (i + 1) / uDivs;
+            let v1 = j / vDivs;
+            let v2 = (j + 1) / vDivs;
 
-          if (inset > 0) {
-            const uMid = (u1 + u2) / 2;
-            const vMid = (v1 + v2) / 2;
-            const uHalf = ((u2 - u1) / 2) * (1 - inset);
-            const vHalf = ((v2 - v1) / 2) * (1 - inset);
-            u1 = uMid - uHalf;
-            u2 = uMid + uHalf;
-            v1 = vMid - vHalf;
-            v2 = vMid + vHalf;
-          }
-
-          try {
-            const A = face.pointOnSurface(u1, v1);
-            const B = face.pointOnSurface(u2, v1);
-            const C = face.pointOnSurface(u2, v2);
-            const D = face.pointOnSurface(u1, v2);
-
-            const v1x = C[0] - A[0];
-            const v1y = C[1] - A[1];
-            const v1z = C[2] - A[2];
-
-            const v2x = D[0] - B[0];
-            const v2y = D[1] - B[1];
-            const v2z = D[2] - B[2];
-
-            let nx = v1y * v2z - v1z * v2y;
-            let ny = v1z * v2x - v1x * v2z;
-            let nz = v1x * v2y - v1y * v2x;
-
-            const len = Math.sqrt(nx * nx + ny * ny + nz * nz);
-            if (len > 0) {
-              nx /= len;
-              ny /= len;
-              nz /= len;
-            } else {
-              nz = 1;
+            if (inset > 0) {
+              const uMid = (u1 + u2) / 2;
+              const vMid = (v1 + v2) / 2;
+              const uHalf = ((u2 - u1) / 2) * (1 - inset);
+              const vHalf = ((v2 - v1) / 2) * (1 - inset);
+              u1 = uMid - uHalf;
+              u2 = uMid + uHalf;
+              v1 = vMid - vHalf;
+              v2 = vMid + vHalf;
             }
 
-            const gp_PntA = new OC.gp_Pnt(A[0], A[1], A[2]);
-            const gp_PntB = new OC.gp_Pnt(B[0], B[1], B[2]);
-            const gp_PntC = new OC.gp_Pnt(C[0], C[1], C[2]);
-            const gp_PntD = new OC.gp_Pnt(D[0], D[1], D[2]);
+            try {
+              const A = face.pointOnSurface(u1, v1);
+              const B = face.pointOnSurface(u2, v1);
+              const C = face.pointOnSurface(u2, v2);
+              const D = face.pointOnSurface(u1, v2);
 
-            const edge1 = new OC.BRepBuilderAPI_MakeEdge_3(gp_PntA, gp_PntB);
-            const edge2 = new OC.BRepBuilderAPI_MakeEdge_3(gp_PntB, gp_PntC);
-            const edge3 = new OC.BRepBuilderAPI_MakeEdge_3(gp_PntC, gp_PntD);
-            const edge4 = new OC.BRepBuilderAPI_MakeEdge_3(gp_PntD, gp_PntA);
+              const v1x = C[0] - A[0];
+              const v1y = C[1] - A[1];
+              const v1z = C[2] - A[2];
 
-            const makeWire = new OC.BRepBuilderAPI_MakeWire();
-            makeWire.Add_1(edge1.Edge());
-            makeWire.Add_1(edge2.Edge());
-            makeWire.Add_1(edge3.Edge());
-            makeWire.Add_1(edge4.Edge());
-            const wire = makeWire.Wire();
+              const v2x = D[0] - B[0];
+              const v2y = D[1] - B[1];
+              const v2z = D[2] - B[2];
 
-            const makeFace = new OC.BRepBuilderAPI_MakeFace_1(wire, true);
-            const faceShape = makeFace.Shape();
-            const cellFace = replicad.cast(faceShape);
+              let nx = v1y * v2z - v1z * v2y;
+              let ny = v1z * v2x - v1x * v2z;
+              let nz = v1x * v2y - v1y * v2x;
 
-            const h = extrudeMin + random() * (extrudeMax - extrudeMin);
-            if (h > 0.01) {
-              const cellExtruded = (cellFace as any).extrude(h, [nx, ny, nz]);
-              cellSolids.push(cellExtruded);
-            } else {
-              cellSolids.push(cellFace);
+              const len = Math.sqrt(nx * nx + ny * ny + nz * nz);
+              if (len > 0) {
+                nx /= len;
+                ny /= len;
+                nz /= len;
+              } else {
+                nz = 1;
+              }
+
+              const gp_PntA = new OC.gp_Pnt(A[0], A[1], A[2]);
+              const gp_PntB = new OC.gp_Pnt(B[0], B[1], B[2]);
+              const gp_PntC = new OC.gp_Pnt(C[0], C[1], C[2]);
+              const gp_PntD = new OC.gp_Pnt(D[0], D[1], D[2]);
+
+              const edge1 = new OC.BRepBuilderAPI_MakeEdge_3(gp_PntA, gp_PntB);
+              const edge2 = new OC.BRepBuilderAPI_MakeEdge_3(gp_PntB, gp_PntC);
+              const edge3 = new OC.BRepBuilderAPI_MakeEdge_3(gp_PntC, gp_PntD);
+              const edge4 = new OC.BRepBuilderAPI_MakeEdge_3(gp_PntD, gp_PntA);
+
+              const makeWire = new OC.BRepBuilderAPI_MakeWire();
+              makeWire.Add_1(edge1.Edge());
+              makeWire.Add_1(edge2.Edge());
+              makeWire.Add_1(edge3.Edge());
+              makeWire.Add_1(edge4.Edge());
+              const wire = makeWire.Wire();
+
+              const makeFace = new OC.BRepBuilderAPI_MakeFace_1(wire, true);
+              const faceShape = makeFace.Shape();
+              const cellFace = replicad.cast(faceShape);
+
+              const h = extrudeMin + random() * (extrudeMax - extrudeMin);
+              let finalCell;
+              if (h > 0.01) {
+                finalCell = (cellFace as any).extrude(h, [nx, ny, nz]);
+              } else {
+                finalCell = cellFace;
+              }
+              
+              finalCell.row = j;
+              finalCell.col = i;
+              cellSolids.push(finalCell);
+
+              gp_PntA.delete();
+              gp_PntB.delete();
+              gp_PntC.delete();
+              gp_PntD.delete();
+              edge1.delete();
+              edge2.delete();
+              edge3.delete();
+              edge4.delete();
+              makeWire.delete();
+              makeFace.delete();
+            } catch (err) {
+              console.warn(`Subdivision cell failed:`, err);
             }
-
-            gp_PntA.delete();
-            gp_PntB.delete();
-            gp_PntC.delete();
-            gp_PntD.delete();
-            edge1.delete();
-            edge2.delete();
-            edge3.delete();
-            edge4.delete();
-            makeWire.delete();
-            makeFace.delete();
-          } catch (err) {
-            console.warn(`Subdivision cell failed:`, err);
           }
         }
+      };
+
+      if (faceIndex === -1) {
+        faces.forEach(processFace);
+      } else {
+        const fIdx = Math.max(0, Math.min(faces.length - 1, faceIndex));
+        processFace(faces[fIdx]);
       }
-    };
 
-    if (faceIndex === -1) {
-      faces.forEach(processFace);
-    } else {
-      const fIdx = Math.max(0, Math.min(faces.length - 1, faceIndex));
-      processFace(faces[fIdx]);
-    }
+      if (includeBase) {
+        cellSolids.push(solidInput.clone());
+      }
 
-    if (includeBase) {
-      cellSolids.push(solidInput.clone());
-    }
-
-    return replicad.makeCompound(cellSolids);
+      return cellSolids;
+    });
   },
 
   FilterFaces: (params, inputs) => {
@@ -2221,6 +2286,23 @@ export const EXECUTORS: Record<
   // (Series/Range/ListConstant/Expression). Shorter lists broadcast (scalar → all,
   // exhausted list → last value). The optional "scale" list attaches a per-point
   // scale CHANNEL consumed by InstanceOnPoints for exact per-instance sizes.
+  MergePoints: (_params, inputs, warn) => {
+    // Concatenate p1..p8 IN HANDLE ORDER (not edge order — edge order is an
+    // artifact of how the graph was assembled). Point lists flatten one level
+    // so merging a generated list with a hand-placed point works.
+    const out: any[] = [];
+    for (let i = 1; i <= 8; i++) {
+      const v = inputs.find((inp: any) => inp.targetHandle === `p${i}`)?.value;
+      if (v === undefined || v === null) continue;
+      if (Array.isArray(v)) out.push(...v.filter(Boolean));
+      else out.push(v);
+    }
+    if (out.length === 0) {
+      warn('MergePoints: connect at least one point or point list to p1…p8.');
+      return null;
+    }
+    return out;
+  },
   PointsFromLists: (_params, inputs, warn) => {
     const grab = (h: string) => inputs.find((i: any) => i.targetHandle === h)?.value;
     const toList = (v: any): number[] => {
@@ -2328,9 +2410,13 @@ export const EXECUTORS: Record<
   },
 
   LoftCurves: (params, inputs, warn) => {
-    const curves = ['curve1', 'curve2', 'curve3', 'curve4', 'curve5', 'curve6']
+    let curves = ['curve1', 'curve2', 'curve3', 'curve4', 'curve5', 'curve6']
       .map((h) => inputs.find((i: any) => i.targetHandle === h)?.value)
-      .filter((c: any) => c && c.type === 'Curve');
+      .filter(v => v !== undefined && v !== null);
+      
+    // Flatten arrays of curves (e.g. from SliceList or array nodes)
+    curves = curves.flat(3).filter((c: any) => c && c.type === 'Curve');
+    
     if (curves.length < 1) {
       warn('LoftCurves needs curve sections: either 2+ curves, or ONE multi-wire curve (e.g. SplineCurve with groupBy).');
       return null;
@@ -2468,12 +2554,109 @@ export const EXECUTORS: Record<
     }
   },
 
+  SliceList: (params, inputs) => {
+    const listInput = inputs.find(i => i.targetHandle === 'list')?.value;
+    if (!listInput) return [];
+    const start = Math.round(num(params.startIndex, 0));
+    const end = Math.round(num(params.endIndex, 0));
+
+    const list = Array.isArray(listInput) ? listInput : [listInput];
+    
+    // Attempt to partition by wireIndex if it exists (so we slice sub-folders), otherwise treat as flat
+    const hasWireIndex = list.some(item => item && typeof item === 'object' && 'wireIndex' in item);
+    const groups = hasWireIndex ? partitionByChannel(list, 'wireIndex') : [list];
+    
+    const sliced = [];
+    for (const group of groups) {
+      if (group.length === 0) continue;
+      let s = start < 0 ? group.length + start : start;
+      let e = end <= 0 ? group.length + end : end;
+      
+      s = Math.max(0, Math.min(group.length, s));
+      e = Math.max(0, Math.min(group.length, e));
+      if (s < e) {
+        sliced.push(...group.slice(s, e));
+      }
+    }
+    return sliced;
+  },
+
+  GetMatrixItem: (params, inputs) => {
+    const listInput = inputs.find(i => i.targetHandle === 'list')?.value;
+    if (!listInput) return [];
+    const list = Array.isArray(listInput) ? listInput : [listInput];
+    const r = Math.round(num(params.rowIndex, 0));
+    const c = Math.round(num(params.colIndex, 0));
+    return list.filter(item => item && typeof item === 'object' && item.row === r && item.col === c);
+  },
+
+  TreeBranch: (params, inputs) => {
+    const listInput = inputs.find(i => i.targetHandle === 'list')?.value;
+    if (!listInput) return [];
+    const list = Array.isArray(listInput) ? listInput : [listInput];
+    const b = Math.round(num(params.branchIndex, 0));
+    return list.filter(item => item && typeof item === 'object' && item.wireIndex === b);
+  },
+
+  DispatchList: (_params, inputs) => {
+    const listInput = inputs.find(i => i.targetHandle === 'list')?.value;
+    const patInput = inputs.find(i => i.targetHandle === 'pattern')?.value;
+    
+    if (!listInput) return { __multi: true, values: { listA: [], listB: [] } };
+    const list = Array.isArray(listInput) ? listInput : [listInput];
+    
+    let pattern = [1, 0]; // Default alternating
+    if (patInput !== undefined) {
+      pattern = (Array.isArray(patInput) ? patInput : [patInput]).map(x => Math.round(Number(x)));
+      if (pattern.length === 0) pattern = [1, 0];
+    }
+    
+    const listA: any[] = [];
+    const listB: any[] = [];
+    for (let i = 0; i < list.length; i++) {
+      const p = pattern[i % pattern.length];
+      if (p !== 0) listA.push(list[i]);
+      else listB.push(list[i]);
+    }
+    return { __multi: true, values: { listA, listB } };
+  },
+
+  FlattenTree: (_params, inputs) => {
+    const listInput = inputs.find(i => i.targetHandle === 'list')?.value;
+    if (!listInput) return [];
+    const list = Array.isArray(listInput) ? listInput : [listInput];
+    return list.map(item => {
+      if (item && typeof item === 'object') {
+        const { wireIndex, row, col, ...rest } = item;
+        return rest; // Strip tree metadata
+      }
+      return item;
+    });
+  },
+
+  GraftTree: (_params, inputs) => {
+    const listInput = inputs.find(i => i.targetHandle === 'list')?.value;
+    if (!listInput) return [];
+    const list = Array.isArray(listInput) ? listInput : [listInput];
+    return list.map((item, i) => {
+      if (item && typeof item === 'object') {
+        return { ...item, wireIndex: i }; // Each item gets its own branch
+      }
+      return item; // If it's a primitive, we can't easily tag it without wrapping it
+    });
+  },
+
   InstanceOnPoints: (params, inputs, warn) => {
-    const shape = inputs.find((i: any) => i.targetHandle === 'shape')?.value;
+    const shapeInput = inputs.find((i: any) => i.targetHandle === 'shape')?.value;
     const raw = inputs.find((i: any) => i.targetHandle === 'points')?.value;
     const pts = Array.isArray(raw) ? raw.filter((p: any) => p && p.type === 'Point') : [];
-    if (!shape) {
+    if (!shapeInput) {
       warn('InstanceOnPoints: connect a solid to "shape".');
+      return null;
+    }
+    const shapes = Array.isArray(shapeInput) ? shapeInput : [shapeInput];
+    if (shapes.length === 0 || !shapes[0]) {
+      warn('InstanceOnPoints: "shape" input is empty.');
       return null;
     }
     if (pts.length === 0) {
@@ -2492,8 +2675,10 @@ export const EXECUTORS: Record<
       warn(`InstanceOnPoints: input has ${pts.length} points; capped at ${maxCount} instances (raise maxCount if intended).`);
     }
     try {
+      const hasWireIndex = sel.some((p: any) => p && typeof p === 'object' && 'wireIndex' in p);
       const copies = sel.map((p: any, i: number) => {
-        let inst = shape.clone();
+        const shapeIdx = hasWireIndex ? (p.wireIndex % shapes.length) : (i % shapes.length);
+        let inst = shapes[shapeIdx].clone();
         const f = sel.length > 1 ? i / (sel.length - 1) : 0;
         // Per-point "scale" channel (e.g. from PointsFromLists) wins over the
         // graded scaleStart→scaleEnd ramp — enables data-driven per-instance sizes.

@@ -1,0 +1,2559 @@
+{
+  "c33dExport": 2,
+  "exportedAt": "2026-07-24T19:50:04.443Z",
+  "comment": "fail",
+  "agent": {
+    "name": "Ollama (Local)",
+    "provider": "ollama",
+    "model": "nemotron-3-super:cloud"
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "p_overallSize",
+        "type": "NumberSlider",
+        "data": {
+          "label": "overallSize",
+          "value": 20,
+          "min": 5,
+          "max": 50,
+          "step": 0.5
+        },
+        "position": {
+          "x": 40,
+          "y": 990
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "p_bodyScale",
+        "type": "NumberSlider",
+        "data": {
+          "label": "bodyScale",
+          "value": 0.4,
+          "min": 0.1,
+          "max": 0.8,
+          "step": 0.05
+        },
+        "position": {
+          "x": 40,
+          "y": 610
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "p_headScale",
+        "type": "NumberSlider",
+        "data": {
+          "label": "headScale",
+          "value": 0.15,
+          "min": 0.05,
+          "max": 0.3,
+          "step": 0.01
+        },
+        "position": {
+          "x": 40,
+          "y": 800
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "p_wingScale",
+        "type": "NumberSlider",
+        "data": {
+          "label": "wingScale",
+          "value": 0.2,
+          "min": 0.05,
+          "max": 0.4,
+          "step": 0.01
+        },
+        "position": {
+          "x": 40,
+          "y": 1370
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "p_tailLength",
+        "type": "NumberSlider",
+        "data": {
+          "label": "tailLength",
+          "value": 0.3,
+          "min": 0.1,
+          "max": 0.6,
+          "step": 0.01
+        },
+        "position": {
+          "x": 40,
+          "y": 1180
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "n_bodyRadius",
+        "type": "Expression",
+        "data": {
+          "formula": "overallSize * bodyScale"
+        },
+        "position": {
+          "x": 270,
+          "y": 40
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "n_headRadius",
+        "type": "Expression",
+        "data": {
+          "formula": "overallSize * headScale"
+        },
+        "position": {
+          "x": 270,
+          "y": 230
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "n_wingBaseRadius",
+        "type": "Expression",
+        "data": {
+          "formula": "overallSize * wingScale"
+        },
+        "position": {
+          "x": 270,
+          "y": 610
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "n_tailLengthValue",
+        "type": "Expression",
+        "data": {
+          "formula": "overallSize * tailLength"
+        },
+        "position": {
+          "x": 270,
+          "y": 420
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "body",
+        "type": "Sphere",
+        "data": {
+          "radius": "$n_bodyRadius",
+          "color": "#3b82f6"
+        },
+        "position": {
+          "x": 500,
+          "y": 40
+        },
+        "measured": {
+          "width": 201,
+          "height": 216
+        }
+      },
+      {
+        "id": "headCenter",
+        "type": "Point",
+        "data": {
+          "x": {
+            "formula": "$n_bodyRadius + $n_headRadius"
+          },
+          "y": 0,
+          "z": 0
+        },
+        "position": {
+          "x": 40,
+          "y": 420
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "head",
+        "type": "Sphere",
+        "data": {
+          "radius": "$n_headRadius",
+          "color": "#3b82f6"
+        },
+        "position": {
+          "x": 500,
+          "y": 610
+        },
+        "measured": {
+          "width": 201,
+          "height": 216
+        }
+      },
+      {
+        "id": "beakBase",
+        "type": "Point",
+        "data": {
+          "x": {
+            "formula": "$n_bodyRadius + 2 * $n_headRadius"
+          },
+          "y": 0,
+          "z": 0
+        },
+        "position": {
+          "x": 40,
+          "y": 230
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "beakAxis",
+        "type": "VectorXYZ",
+        "data": {
+          "x": 1,
+          "y": 0,
+          "z": 0
+        },
+        "position": {
+          "x": 40,
+          "y": 40
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "beak",
+        "type": "Cone",
+        "data": {
+          "radius1": {
+            "formula": "$n_headRadius * 0.4"
+          },
+          "radius2": 0,
+          "height": {
+            "formula": "$n_headRadius * 0.8"
+          },
+          "color": "#bd362f"
+        },
+        "position": {
+          "x": 500,
+          "y": 420
+        },
+        "measured": {
+          "width": 201,
+          "height": 344
+        }
+      },
+      {
+        "id": "tailBase",
+        "type": "Point",
+        "data": {
+          "x": {
+            "formula": "-$n_bodyRadius"
+          },
+          "y": 0,
+          "z": 0
+        },
+        "position": {
+          "x": 500,
+          "y": 230
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "tailAxis",
+        "type": "VectorXYZ",
+        "data": {
+          "x": -1,
+          "y": 0,
+          "z": 0
+        },
+        "position": {
+          "x": 40,
+          "y": 1560
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "tail",
+        "type": "Cone",
+        "data": {
+          "radius1": {
+            "formula": "$n_tailLengthValue * 0.05"
+          },
+          "radius2": 0,
+          "height": "$n_tailLengthValue",
+          "color": "#8b4513"
+        },
+        "position": {
+          "x": 730,
+          "y": 40
+        },
+        "measured": {
+          "width": 201,
+          "height": 344
+        }
+      },
+      {
+        "id": "wingCenterY",
+        "type": "Expression",
+        "data": {
+          "formula": "$n_bodyRadius + $n_wingBaseRadius"
+        },
+        "position": {
+          "x": 500,
+          "y": 800
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "rightWingCenter",
+        "type": "Point",
+        "data": {
+          "x": 0,
+          "y": "$wingCenterY",
+          "z": 0
+        },
+        "position": {
+          "x": 730,
+          "y": 420
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "leftWingCenter",
+        "type": "Point",
+        "data": {
+          "x": 0,
+          "y": {
+            "formula": "-$wingCenterY"
+          },
+          "z": 0
+        },
+        "position": {
+          "x": 730,
+          "y": 230
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "wingBaseSphere",
+        "type": "Sphere",
+        "data": {
+          "radius": "$n_wingBaseRadius"
+        },
+        "position": {
+          "x": 500,
+          "y": 990
+        },
+        "measured": {
+          "width": 201,
+          "height": 216
+        }
+      },
+      {
+        "id": "rightWingScaled",
+        "type": "Scale",
+        "data": {
+          "factor": 0.2,
+          "isLocal": true
+        },
+        "position": {
+          "x": 730,
+          "y": 800
+        },
+        "measured": {
+          "width": 201,
+          "height": 206
+        }
+      },
+      {
+        "id": "rightWing",
+        "type": "MoveTo",
+        "data": {
+          "shape": "$rightWingScaled",
+          "target": "$rightWingCenter",
+          "color": "#3b82f6"
+        },
+        "position": {
+          "x": 960,
+          "y": 230
+        },
+        "measured": {
+          "width": 150,
+          "height": 22
+        }
+      },
+      {
+        "id": "leftWingScaled",
+        "type": "Scale",
+        "data": {
+          "factor": 0.2,
+          "isLocal": true
+        },
+        "position": {
+          "x": 730,
+          "y": 610
+        },
+        "measured": {
+          "width": 201,
+          "height": 206
+        }
+      },
+      {
+        "id": "leftWing",
+        "type": "MoveTo",
+        "data": {
+          "shape": "$leftWingScaled",
+          "target": "$leftWingCenter",
+          "color": "#3b82f6"
+        },
+        "position": {
+          "x": 960,
+          "y": 40
+        },
+        "measured": {
+          "width": 150,
+          "height": 22
+        }
+      },
+      {
+        "id": "robin",
+        "type": "Compound",
+        "data": {},
+        "position": {
+          "x": 1190,
+          "y": 40
+        },
+        "measured": {
+          "width": 150,
+          "height": 330
+        }
+      }
+    ],
+    "edges": [
+      {
+        "source": "p_overallSize",
+        "target": "n_bodyRadius",
+        "id": "e_p_overallSize_n_bodyRadius_a",
+        "sourceHandle": "value",
+        "targetHandle": "a"
+      },
+      {
+        "source": "p_bodyScale",
+        "target": "n_bodyRadius",
+        "id": "e_p_bodyScale_n_bodyRadius_b",
+        "sourceHandle": "value",
+        "targetHandle": "b"
+      },
+      {
+        "source": "p_overallSize",
+        "target": "n_headRadius",
+        "id": "e_p_overallSize_n_headRadius_a",
+        "sourceHandle": "value",
+        "targetHandle": "a"
+      },
+      {
+        "source": "p_headScale",
+        "target": "n_headRadius",
+        "id": "e_p_headScale_n_headRadius_b",
+        "sourceHandle": "value",
+        "targetHandle": "b"
+      },
+      {
+        "source": "p_overallSize",
+        "target": "n_wingBaseRadius",
+        "id": "e_p_overallSize_n_wingBaseRadius_a",
+        "sourceHandle": "value",
+        "targetHandle": "a"
+      },
+      {
+        "source": "p_wingScale",
+        "target": "n_wingBaseRadius",
+        "id": "e_p_wingScale_n_wingBaseRadius_b",
+        "sourceHandle": "value",
+        "targetHandle": "b"
+      },
+      {
+        "source": "p_overallSize",
+        "target": "n_tailLengthValue",
+        "id": "e_p_overallSize_n_tailLengthValue_a",
+        "sourceHandle": "value",
+        "targetHandle": "a"
+      },
+      {
+        "source": "p_tailLength",
+        "target": "n_tailLengthValue",
+        "id": "e_p_tailLength_n_tailLengthValue_b",
+        "sourceHandle": "value",
+        "targetHandle": "b"
+      },
+      {
+        "source": "n_bodyRadius",
+        "target": "body",
+        "id": "e_n_bodyRadius_body_center",
+        "sourceHandle": "value",
+        "targetHandle": "center"
+      },
+      {
+        "source": "n_headRadius",
+        "target": "head",
+        "id": "e_n_headRadius_head_center",
+        "sourceHandle": "value",
+        "targetHandle": "center"
+      },
+      {
+        "source": "headCenter",
+        "target": "head",
+        "id": "e_headCenter_head_center",
+        "sourceHandle": "point",
+        "targetHandle": "center"
+      },
+      {
+        "source": "n_headRadius",
+        "target": "beak",
+        "id": "e_n_headRadius_beak_center",
+        "sourceHandle": "value",
+        "targetHandle": "center"
+      },
+      {
+        "source": "beakBase",
+        "target": "beak",
+        "id": "e_beakBase_beak_axis",
+        "sourceHandle": "point",
+        "targetHandle": "axis"
+      },
+      {
+        "source": "beakAxis",
+        "target": "beak",
+        "id": "e_beakAxis_beak_center",
+        "sourceHandle": "vector",
+        "targetHandle": "center"
+      },
+      {
+        "source": "n_bodyRadius",
+        "target": "tailBase",
+        "id": "e_n_bodyRadius_tailBase_x",
+        "sourceHandle": "value",
+        "targetHandle": "x"
+      },
+      {
+        "source": "n_tailLengthValue",
+        "target": "tail",
+        "id": "e_n_tailLengthValue_tail_center",
+        "sourceHandle": "value",
+        "targetHandle": "center"
+      },
+      {
+        "source": "tailBase",
+        "target": "tail",
+        "id": "e_tailBase_tail_axis",
+        "sourceHandle": "point",
+        "targetHandle": "axis"
+      },
+      {
+        "source": "tailAxis",
+        "target": "tail",
+        "id": "e_tailAxis_tail_center",
+        "sourceHandle": "vector",
+        "targetHandle": "center"
+      },
+      {
+        "source": "n_bodyRadius",
+        "target": "wingCenterY",
+        "id": "e_n_bodyRadius_wingCenterY_a",
+        "sourceHandle": "value",
+        "targetHandle": "a"
+      },
+      {
+        "source": "n_wingBaseRadius",
+        "target": "wingCenterY",
+        "id": "e_n_wingBaseRadius_wingCenterY_b",
+        "sourceHandle": "value",
+        "targetHandle": "b"
+      },
+      {
+        "source": "wingCenterY",
+        "target": "rightWingCenter",
+        "id": "e_wingCenterY_rightWingCenter_x",
+        "sourceHandle": "value",
+        "targetHandle": "x"
+      },
+      {
+        "source": "wingCenterY",
+        "target": "leftWingCenter",
+        "id": "e_wingCenterY_leftWingCenter_x",
+        "sourceHandle": "value",
+        "targetHandle": "x"
+      },
+      {
+        "source": "n_wingBaseRadius",
+        "target": "wingBaseSphere",
+        "id": "e_n_wingBaseRadius_wingBaseSphere_center",
+        "sourceHandle": "value",
+        "targetHandle": "center"
+      },
+      {
+        "source": "wingBaseSphere",
+        "target": "rightWingScaled",
+        "id": "e_wingBaseSphere_rightWingScaled_solid",
+        "sourceHandle": "solid",
+        "targetHandle": "solid"
+      },
+      {
+        "source": "rightWingScaled",
+        "target": "rightWing",
+        "id": "e_rightWingScaled_rightWing_solid",
+        "sourceHandle": "solid",
+        "targetHandle": "solid"
+      },
+      {
+        "source": "rightWingCenter",
+        "target": "rightWing",
+        "id": "e_rightWingCenter_rightWing_solid",
+        "sourceHandle": "point",
+        "targetHandle": "solid"
+      },
+      {
+        "source": "wingBaseSphere",
+        "target": "leftWingScaled",
+        "id": "e_wingBaseSphere_leftWingScaled_solid",
+        "sourceHandle": "solid",
+        "targetHandle": "solid"
+      },
+      {
+        "source": "leftWingScaled",
+        "target": "leftWing",
+        "id": "e_leftWingScaled_leftWing_solid",
+        "sourceHandle": "solid",
+        "targetHandle": "solid"
+      },
+      {
+        "source": "leftWingCenter",
+        "target": "leftWing",
+        "id": "e_leftWingCenter_leftWing_solid",
+        "sourceHandle": "point",
+        "targetHandle": "solid"
+      },
+      {
+        "source": "body",
+        "target": "robin",
+        "id": "e_body_robin_solid1",
+        "sourceHandle": "solid",
+        "targetHandle": "solid1"
+      },
+      {
+        "source": "head",
+        "target": "robin",
+        "id": "e_head_robin_solid2",
+        "sourceHandle": "solid",
+        "targetHandle": "solid2"
+      },
+      {
+        "source": "beak",
+        "target": "robin",
+        "id": "e_beak_robin_solid3",
+        "sourceHandle": "solid",
+        "targetHandle": "solid3"
+      },
+      {
+        "source": "tail",
+        "target": "robin",
+        "id": "e_tail_robin_solid4",
+        "sourceHandle": "solid",
+        "targetHandle": "solid4"
+      },
+      {
+        "source": "rightWing",
+        "target": "robin",
+        "id": "e_rightWing_robin_solid5",
+        "sourceHandle": "solid",
+        "targetHandle": "solid5"
+      },
+      {
+        "source": "leftWing",
+        "target": "robin",
+        "id": "e_leftWing_robin_solid6",
+        "sourceHandle": "solid",
+        "targetHandle": "solid6"
+      }
+    ]
+  },
+  "conversation": [
+    {
+      "role": "system",
+      "content": "Workspace cleared."
+    },
+    {
+      "role": "user",
+      "content": "make a robinhood"
+    },
+    {
+      "role": "system",
+      "content": "Response was not valid JSON (attempt 1/3) — asking the model to resend."
+    },
+    {
+      "role": "assistant",
+      "content": "Create a parametric robin with adjustable overall size and proportional parts. Use spheres for body and head, cones for beak and tail, and scaled spheres for wings positioned relative to the body."
+    },
+    {
+      "role": "system",
+      "content": "Issues detected (auto-repair 2/2): Dropped invalid edge: Node \"13\" has invalid data: unknown parameter \"axisX\" on node \"13\" (node type \"Cone\" does not support \"axisX\"). Valid parameters: radius1, radius2, height, color, unknown parameter \"axisY\" on node \"13\" (node type \"Cone\" does not support \"axisY\"). Valid parameters: radius1, radius2, height, color, unknown parameter \"axisZ\" on node \"13\" (node type \"Cone\" does not support \"axisZ\"). Valid parameters: radius1, radius2, height, color; Dropped invalid edge: Node \"14\" has invalid data: unknown parameter \"axisX\" on node \"14\" (node type \"Cone\" does not support \"axisX\"). Valid parameters: radius1, radius2, height, color, unknown parameter \"axisY\" on node \"14\" (node type \"Cone\" does not support \"axisY\"). Valid parameters: radius1, radius2, height, color, unknown parameter \"axisZ\" on node \"14\" (node type \"Cone\" does not support \"axisZ\"). Valid parameters: radius1, radius2, height, color"
+    },
+    {
+      "role": "assistant",
+      "content": "Fixing the cone nodes by removing invalid parameters (axisX, axisY, axisZ) and using the correct 'axis' Vector input. Adjusting point positions to prevent beak burial and improve wing placement. Adding vector nodes for cone axes."
+    },
+    {
+      "role": "user",
+      "content": "try harder"
+    },
+    {
+      "role": "system",
+      "content": "IR program had compile errors (attempt 1/3) — asking the model to fix."
+    },
+    {
+      "role": "system",
+      "content": "IR program had compile errors (attempt 2/3) — asking the model to fix."
+    },
+    {
+      "role": "assistant",
+      "content": "Revised robin design using only permitted IR ops: NumberSlider for parameters, Expression for computations, Point/Vector for geometry, Sphere/Cone for primitives, MoveTo for placement, Scale for uniform wing scaling, and Union to combine parts. All operations use allowed ops."
+    },
+    {
+      "role": "system",
+      "content": "[Warning] \"center\" on node \"head\" is an INPUT SOCKET of Sphere, not a data parameter — it was ignored here. Wire an edge into it instead: {\"source\": <node>, \"target\": \"head\", \"targetHandle\": \"center\"}."
+    },
+    {
+      "role": "system",
+      "content": "[Warning] \"center\" on node \"beak\" is an INPUT SOCKET of Cone, not a data parameter — it was ignored here. Wire an edge into it instead: {\"source\": <node>, \"target\": \"beak\", \"targetHandle\": \"center\"}."
+    },
+    {
+      "role": "system",
+      "content": "[Warning] \"axis\" on node \"beak\" is an INPUT SOCKET of Cone, not a data parameter — it was ignored here. Wire an edge into it instead: {\"source\": <node>, \"target\": \"beak\", \"targetHandle\": \"axis\"}."
+    },
+    {
+      "role": "system",
+      "content": "[Warning] \"center\" on node \"tail\" is an INPUT SOCKET of Cone, not a data parameter — it was ignored here. Wire an edge into it instead: {\"source\": <node>, \"target\": \"tail\", \"targetHandle\": \"center\"}."
+    },
+    {
+      "role": "system",
+      "content": "[Warning] \"axis\" on node \"tail\" is an INPUT SOCKET of Cone, not a data parameter — it was ignored here. Wire an edge into it instead: {\"source\": <node>, \"target\": \"tail\", \"targetHandle\": \"axis\"}."
+    },
+    {
+      "role": "system",
+      "content": "[Warning] \"solid\" on node \"rightWingScaled\" is an INPUT SOCKET of Scale, not a data parameter — it was ignored here. Wire an edge into it instead: {\"source\": <node>, \"target\": \"rightWingScaled\", \"targetHandle\": \"solid\"}."
+    },
+    {
+      "role": "system",
+      "content": "[Warning] \"solid\" on node \"leftWingScaled\" is an INPUT SOCKET of Scale, not a data parameter — it was ignored here. Wire an edge into it instead: {\"source\": <node>, \"target\": \"leftWingScaled\", \"targetHandle\": \"solid\"}."
+    },
+    {
+      "role": "system",
+      "content": "[Warning] \"solid1\" on node \"robin\" is an INPUT SOCKET of Compound, not a data parameter — it was ignored here. Wire an edge into it instead: {\"source\": <node>, \"target\": \"robin\", \"targetHandle\": \"solid1\"}."
+    },
+    {
+      "role": "system",
+      "content": "[Warning] \"solid2\" on node \"robin\" is an INPUT SOCKET of Compound, not a data parameter — it was ignored here. Wire an edge into it instead: {\"source\": <node>, \"target\": \"robin\", \"targetHandle\": \"solid2\"}."
+    },
+    {
+      "role": "system",
+      "content": "[Warning] \"solid3\" on node \"robin\" is an INPUT SOCKET of Compound, not a data parameter — it was ignored here. Wire an edge into it instead: {\"source\": <node>, \"target\": \"robin\", \"targetHandle\": \"solid3\"}."
+    },
+    {
+      "role": "system",
+      "content": "[Warning] \"solid4\" on node \"robin\" is an INPUT SOCKET of Compound, not a data parameter — it was ignored here. Wire an edge into it instead: {\"source\": <node>, \"target\": \"robin\", \"targetHandle\": \"solid4\"}."
+    },
+    {
+      "role": "system",
+      "content": "[Warning] \"solid5\" on node \"robin\" is an INPUT SOCKET of Compound, not a data parameter — it was ignored here. Wire an edge into it instead: {\"source\": <node>, \"target\": \"robin\", \"targetHandle\": \"solid5\"}."
+    },
+    {
+      "role": "system",
+      "content": "[Warning] \"solid6\" on node \"robin\" is an INPUT SOCKET of Compound, not a data parameter — it was ignored here. Wire an edge into it instead: {\"source\": <node>, \"target\": \"robin\", \"targetHandle\": \"solid6\"}."
+    },
+    {
+      "role": "system",
+      "content": "Structural validation error (does not count against repair budget, 1/3): Type mismatch: Cannot connect number output \"value\" from \"n_bodyRadius\" to Point input \"center\" on \"body\". | Type mismatch: Cannot connect number output \"value\" from \"n_headRadius\" to Point input \"center\" on \"head\"."
+    },
+    {
+      "role": "system",
+      "content": "Error: AI did not return valid JSON. Response was: "
+    }
+  ],
+  "plan": "",
+  "genome": null,
+  "geometryReport": {
+    "leaves": [
+      {
+        "id": "rightWing",
+        "bbox": null,
+        "meshOk": false,
+        "vertexCount": 0,
+        "error": "Node \"rightWing\" (MoveTo) produced no geometry — check its parameters are valid numbers within range."
+      },
+      {
+        "id": "leftWing",
+        "bbox": null,
+        "meshOk": false,
+        "vertexCount": 0,
+        "error": "Node \"leftWing\" (MoveTo) produced no geometry — check its parameters are valid numbers within range."
+      },
+      {
+        "id": "robin",
+        "bbox": {
+          "min": [
+            -5.300208056685047,
+            -5.300208056685047,
+            -5.300208056685047
+          ],
+          "max": [
+            5.300208056685047,
+            5.300208056685047,
+            5.300208056685047
+          ],
+          "center": [
+            0,
+            0,
+            0
+          ],
+          "size": [
+            10.600416113370095,
+            10.600416113370095,
+            10.600416113370095
+          ]
+        },
+        "volume": 1570.9010674939677,
+        "meshOk": true,
+        "vertexCount": 788,
+        "error": null
+      }
+    ],
+    "nodeErrors": [
+      {
+        "id": "body",
+        "error": "param \"radius\" formula \"$n_bodyRadius\" error: Unexpected character '$' in expression"
+      },
+      {
+        "id": "head",
+        "error": "param \"radius\" formula \"$n_headRadius\" error: Unexpected character '$' in expression"
+      },
+      {
+        "id": "wingCenterY",
+        "error": "Expression error: Unexpected character '$' in expression"
+      },
+      {
+        "id": "wingBaseSphere",
+        "error": "param \"radius\" formula \"$n_wingBaseRadius\" error: Unexpected character '$' in expression"
+      },
+      {
+        "id": "tail",
+        "error": "param \"height\" formula \"$n_tailLengthValue\" error: Unexpected character '$' in expression"
+      },
+      {
+        "id": "rightWingCenter",
+        "error": "param \"y\" formula \"$wingCenterY\" error: Unexpected character '$' in expression"
+      }
+    ],
+    "numbers": {
+      "p_overallSize": 20,
+      "p_bodyScale": 0.4,
+      "p_headScale": 0.15,
+      "p_wingScale": 0.2,
+      "p_tailLength": 0.3,
+      "n_bodyRadius": 8,
+      "n_headRadius": 3,
+      "n_wingBaseRadius": 4,
+      "n_tailLengthValue": 6,
+      "wingCenterY": 0
+    },
+    "sliders": {
+      "overallSize": 20,
+      "bodyScale": 0.4,
+      "headScale": 0.15,
+      "wingScale": 0.2,
+      "tailLength": 0.3
+    },
+    "selections": {},
+    "helpers": {
+      "headCenter": {
+        "type": "Point",
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "sourceNodeId": "headCenter",
+        "ancestorNodeIds": []
+      },
+      "beakBase": {
+        "type": "Point",
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "sourceNodeId": "beakBase",
+        "ancestorNodeIds": []
+      },
+      "beakAxis": {
+        "type": "Vector",
+        "x": 1,
+        "y": 0,
+        "z": 0,
+        "sourceNodeId": "beakAxis",
+        "ancestorNodeIds": []
+      },
+      "tailAxis": {
+        "type": "Vector",
+        "x": -1,
+        "y": 0,
+        "z": 0,
+        "sourceNodeId": "tailAxis",
+        "ancestorNodeIds": []
+      },
+      "tailBase": {
+        "type": "Point",
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "sourceNodeId": "tailBase",
+        "ancestorNodeIds": []
+      },
+      "rightWingCenter": {
+        "type": "Point",
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "sourceNodeId": "rightWingCenter",
+        "ancestorNodeIds": []
+      },
+      "leftWingCenter": {
+        "type": "Point",
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "sourceNodeId": "leftWingCenter",
+        "ancestorNodeIds": []
+      }
+    },
+    "nodeCount": 27,
+    "edgeCount": 35,
+    "transformCount": 2,
+    "nodesPerLeafRatio": 9,
+    "nodeEconomyWarning": false,
+    "placement": {
+      "anchored": [
+        "rightWing",
+        "leftWing",
+        "robin"
+      ],
+      "literal": [],
+      "origin": [],
+      "literalNodeIds": [],
+      "ratio": 1
+    },
+    "scene": {
+      "min": [
+        -5.300208056685047,
+        -5.300208056685047,
+        -5.300208056685047
+      ],
+      "max": [
+        5.300208056685047,
+        5.300208056685047,
+        5.300208056685047
+      ],
+      "size": [
+        10.600416113370095,
+        10.600416113370095,
+        10.600416113370095
+      ]
+    },
+    "meshedLeafCount": 1,
+    "kernelFaultCount": 0,
+    "kernelSuspect": false,
+    "kernelHealth": "ok",
+    "evalCount": 3,
+    "recycleRecommended": false
+  },
+  "timeline": [
+    {
+      "at": "2026-07-24T19:43:49.875Z",
+      "turn": 1,
+      "trigger": "ai-repair",
+      "label": "attempt 2: rebuilt graph (20 nodes)",
+      "nodeCount": 20,
+      "edgeCount": 9,
+      "isolatedCount": 6,
+      "diff": {
+        "addedNodes": [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10",
+          "11",
+          "12",
+          "13",
+          "14",
+          "15",
+          "16",
+          "17",
+          "18",
+          "19",
+          "20"
+        ],
+        "removedNodes": [],
+        "changedNodes": [],
+        "addedEdges": 9,
+        "removedEdges": 0
+      },
+      "details": [
+        "dropped edge: Node \"13\" has invalid data: unknown parameter \"axisX\" on node \"13\" (node type \"Cone\" does not support \"axisX\"). Valid parameters: radius1, radius2, height, color, unknown parameter \"axisY\" on node \"13\" (node type \"Cone\" does not support \"axisY\"). Valid parameters: radius1, radius2, hei",
+        "dropped edge: Node \"14\" has invalid data: unknown parameter \"axisX\" on node \"14\" (node type \"Cone\" does not support \"axisX\"). Valid parameters: radius1, radius2, height, color, unknown parameter \"axisY\" on node \"14\" (node type \"Cone\" does not support \"axisY\"). Valid parameters: radius1, radius2, hei"
+      ],
+      "nodes": [
+        {
+          "id": "1",
+          "type": "NumberSlider",
+          "data": {
+            "label": "overallSize",
+            "value": 20,
+            "min": 5,
+            "max": 50,
+            "step": 0.5
+          },
+          "position": {
+            "x": 40,
+            "y": 40
+          }
+        },
+        {
+          "id": "2",
+          "type": "NumberSlider",
+          "data": {
+            "label": "bodyScale",
+            "value": 0.4,
+            "min": 0.1,
+            "max": 0.8,
+            "step": 0.05
+          },
+          "position": {
+            "x": 40,
+            "y": 990
+          }
+        },
+        {
+          "id": "3",
+          "type": "NumberSlider",
+          "data": {
+            "label": "headScale",
+            "value": 0.15,
+            "min": 0.05,
+            "max": 0.3,
+            "step": 0.01
+          },
+          "position": {
+            "x": 40,
+            "y": 1180
+          }
+        },
+        {
+          "id": "4",
+          "type": "NumberSlider",
+          "data": {
+            "label": "wingScale",
+            "value": 0.2,
+            "min": 0.05,
+            "max": 0.4,
+            "step": 0.01
+          },
+          "position": {
+            "x": 40,
+            "y": 1370
+          }
+        },
+        {
+          "id": "5",
+          "type": "NumberSlider",
+          "data": {
+            "label": "tailLength",
+            "value": 0.3,
+            "min": 0.1,
+            "max": 0.6,
+            "step": 0.01
+          },
+          "position": {
+            "x": 40,
+            "y": 1560
+          }
+        },
+        {
+          "id": "6",
+          "type": "Point",
+          "data": {
+            "x": "overallSize*0.05 + overallSize*headScale",
+            "y": "0",
+            "z": "overallSize*(bodyScale+headScale)"
+          },
+          "position": {
+            "x": 40,
+            "y": 1750
+          }
+        },
+        {
+          "id": "7",
+          "type": "Point",
+          "data": {
+            "x": "overallSize*0.05 + overallSize*headScale*1.4",
+            "y": "0",
+            "z": "overallSize*(bodyScale+headScale)"
+          },
+          "position": {
+            "x": 40,
+            "y": 1940
+          }
+        },
+        {
+          "id": "8",
+          "type": "Point",
+          "data": {
+            "x": "0",
+            "y": "overallSize*bodyScale + overallSize*wingScale/2",
+            "z": "0"
+          },
+          "position": {
+            "x": 40,
+            "y": 2130
+          }
+        },
+        {
+          "id": "9",
+          "type": "Point",
+          "data": {
+            "x": "0",
+            "y": "-(overallSize*bodyScale + overallSize*wingScale/2)",
+            "z": "0"
+          },
+          "position": {
+            "x": 40,
+            "y": 2320
+          }
+        },
+        {
+          "id": "10",
+          "type": "Point",
+          "data": {
+            "x": "0",
+            "y": "0",
+            "z": "-(overallSize*bodyScale + overallSize*tailLength/2)"
+          },
+          "position": {
+            "x": 40,
+            "y": 230
+          }
+        },
+        {
+          "id": "11",
+          "type": "Sphere",
+          "data": {
+            "radius": "overallSize*bodyScale"
+          },
+          "position": {
+            "x": 40,
+            "y": 420
+          }
+        },
+        {
+          "id": "12",
+          "type": "Sphere",
+          "data": {
+            "radius": "overallSize*headScale"
+          },
+          "position": {
+            "x": 270,
+            "y": 610
+          }
+        },
+        {
+          "id": "13",
+          "type": "Cone",
+          "data": {
+            "radius1": "overallSize*headScale*0.4",
+            "radius2": "0",
+            "height": "overallSize*headScale*0.8"
+          },
+          "position": {
+            "x": 270,
+            "y": 800
+          }
+        },
+        {
+          "id": "14",
+          "type": "Cone",
+          "data": {
+            "radius1": "overallSize*tailLength*0.05",
+            "radius2": "0",
+            "height": "overallSize*tailLength"
+          },
+          "position": {
+            "x": 270,
+            "y": 40
+          }
+        },
+        {
+          "id": "15",
+          "type": "Sphere",
+          "data": {
+            "radius": "overallSize*wingScale"
+          },
+          "position": {
+            "x": 40,
+            "y": 610
+          }
+        },
+        {
+          "id": "16",
+          "type": "ScaleXYZ",
+          "data": {
+            "factorX": "0.2",
+            "factorY": "1",
+            "factorZ": "0.5",
+            "isLocal": true
+          },
+          "position": {
+            "x": 270,
+            "y": 230
+          }
+        },
+        {
+          "id": "17",
+          "type": "Translate",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "isLocal": false
+          },
+          "position": {
+            "x": 500,
+            "y": 40
+          }
+        },
+        {
+          "id": "18",
+          "type": "Sphere",
+          "data": {
+            "radius": "overallSize*wingScale"
+          },
+          "position": {
+            "x": 40,
+            "y": 800
+          }
+        },
+        {
+          "id": "19",
+          "type": "ScaleXYZ",
+          "data": {
+            "factorX": "0.2",
+            "factorY": "1",
+            "factorZ": "0.5",
+            "isLocal": true
+          },
+          "position": {
+            "x": 270,
+            "y": 420
+          }
+        },
+        {
+          "id": "20",
+          "type": "Translate",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "isLocal": false
+          },
+          "position": {
+            "x": 500,
+            "y": 230
+          }
+        }
+      ],
+      "edges": [
+        {
+          "source": "6",
+          "target": "12",
+          "id": "e_6_12_center",
+          "sourceHandle": "point",
+          "targetHandle": "center"
+        },
+        {
+          "source": "7",
+          "target": "13",
+          "id": "e_7_13_center",
+          "sourceHandle": "point",
+          "targetHandle": "center"
+        },
+        {
+          "source": "10",
+          "target": "14",
+          "id": "e_10_14_center",
+          "sourceHandle": "point",
+          "targetHandle": "center"
+        },
+        {
+          "source": "15",
+          "target": "16",
+          "id": "e_15_16_solid",
+          "sourceHandle": "solid",
+          "targetHandle": "solid"
+        },
+        {
+          "source": "16",
+          "target": "17",
+          "id": "e_16_17_solid",
+          "sourceHandle": "solid",
+          "targetHandle": "solid"
+        },
+        {
+          "source": "8",
+          "target": "17",
+          "id": "e_8_17_target",
+          "sourceHandle": "point",
+          "targetHandle": "target"
+        },
+        {
+          "source": "18",
+          "target": "19",
+          "id": "e_18_19_solid",
+          "sourceHandle": "solid",
+          "targetHandle": "solid"
+        },
+        {
+          "source": "19",
+          "target": "20",
+          "id": "e_19_20_solid",
+          "sourceHandle": "solid",
+          "targetHandle": "solid"
+        },
+        {
+          "source": "9",
+          "target": "20",
+          "id": "e_9_20_target",
+          "sourceHandle": "point",
+          "targetHandle": "target"
+        }
+      ]
+    },
+    {
+      "at": "2026-07-24T19:45:05.876Z",
+      "turn": 1,
+      "trigger": "ai-repair",
+      "label": "attempt 3: added 2 node(s) [VectorXYZ]; updated 7 node(s) (type changes: 6→Point, 7→Point, 8→Point, 9→Point); added 2 edge(s)",
+      "nodeCount": 22,
+      "edgeCount": 11,
+      "isolatedCount": 6,
+      "diff": {
+        "addedNodes": [
+          "21",
+          "22"
+        ],
+        "removedNodes": [],
+        "changedNodes": [
+          "7",
+          "8",
+          "9",
+          "10",
+          "13",
+          "14"
+        ],
+        "addedEdges": 2,
+        "removedEdges": 0
+      },
+      "nodes": [
+        {
+          "id": "1",
+          "type": "NumberSlider",
+          "data": {
+            "label": "overallSize",
+            "value": 20,
+            "min": 5,
+            "max": 50,
+            "step": 0.5
+          },
+          "position": {
+            "x": 40,
+            "y": 40
+          },
+          "measured": {
+            "width": 201,
+            "height": 328
+          }
+        },
+        {
+          "id": "2",
+          "type": "NumberSlider",
+          "data": {
+            "label": "bodyScale",
+            "value": 0.4,
+            "min": 0.1,
+            "max": 0.8,
+            "step": 0.05
+          },
+          "position": {
+            "x": 40,
+            "y": 990
+          },
+          "measured": {
+            "width": 201,
+            "height": 328
+          }
+        },
+        {
+          "id": "3",
+          "type": "NumberSlider",
+          "data": {
+            "label": "headScale",
+            "value": 0.15,
+            "min": 0.05,
+            "max": 0.3,
+            "step": 0.01
+          },
+          "position": {
+            "x": 40,
+            "y": 1560
+          },
+          "measured": {
+            "width": 201,
+            "height": 328
+          }
+        },
+        {
+          "id": "4",
+          "type": "NumberSlider",
+          "data": {
+            "label": "wingScale",
+            "value": 0.2,
+            "min": 0.05,
+            "max": 0.4,
+            "step": 0.01
+          },
+          "position": {
+            "x": 40,
+            "y": 1750
+          },
+          "measured": {
+            "width": 201,
+            "height": 328
+          }
+        },
+        {
+          "id": "5",
+          "type": "NumberSlider",
+          "data": {
+            "label": "tailLength",
+            "value": 0.3,
+            "min": 0.1,
+            "max": 0.6,
+            "step": 0.01
+          },
+          "position": {
+            "x": 40,
+            "y": 1940
+          },
+          "measured": {
+            "width": 201,
+            "height": 328
+          }
+        },
+        {
+          "id": "6",
+          "type": "Point",
+          "data": {
+            "x": "overallSize*0.05 + overallSize*headScale",
+            "y": "0",
+            "z": "overallSize*(bodyScale+headScale)"
+          },
+          "position": {
+            "x": 40,
+            "y": 2130
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "7",
+          "type": "Point",
+          "data": {
+            "x": "overallSize*0.05 + 2*overallSize*headScale",
+            "y": "0",
+            "z": "overallSize*(bodyScale+headScale)"
+          },
+          "position": {
+            "x": 40,
+            "y": 2320
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "8",
+          "type": "Point",
+          "data": {
+            "x": "0",
+            "y": "overallSize*(bodyScale+wingScale)",
+            "z": "0"
+          },
+          "position": {
+            "x": 40,
+            "y": 2510
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "9",
+          "type": "Point",
+          "data": {
+            "x": "0",
+            "y": "-overallSize*(bodyScale+wingScale)",
+            "z": "0"
+          },
+          "position": {
+            "x": 40,
+            "y": 2700
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "10",
+          "type": "Point",
+          "data": {
+            "x": "0",
+            "y": "0",
+            "z": "-overallSize*bodyScale"
+          },
+          "position": {
+            "x": 40,
+            "y": 230
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "11",
+          "type": "Sphere",
+          "data": {
+            "radius": "overallSize*bodyScale"
+          },
+          "position": {
+            "x": 40,
+            "y": 420
+          },
+          "measured": {
+            "width": 201,
+            "height": 216
+          }
+        },
+        {
+          "id": "12",
+          "type": "Sphere",
+          "data": {
+            "radius": "overallSize*headScale"
+          },
+          "position": {
+            "x": 270,
+            "y": 800
+          },
+          "measured": {
+            "width": 201,
+            "height": 216
+          }
+        },
+        {
+          "id": "13",
+          "type": "Cone",
+          "data": {
+            "radius1": "overallSize*headScale*0.4",
+            "radius2": "0",
+            "height": "overallSize*headScale*0.8",
+            "color": "#bd362f"
+          },
+          "position": {
+            "x": 270,
+            "y": 610
+          },
+          "measured": {
+            "width": 201,
+            "height": 344
+          }
+        },
+        {
+          "id": "14",
+          "type": "Cone",
+          "data": {
+            "radius1": "overallSize*tailLength*0.05",
+            "radius2": "0",
+            "height": "overallSize*tailLength",
+            "color": "#8b4513"
+          },
+          "position": {
+            "x": 270,
+            "y": 230
+          },
+          "measured": {
+            "width": 201,
+            "height": 344
+          }
+        },
+        {
+          "id": "15",
+          "type": "Sphere",
+          "data": {
+            "radius": "overallSize*wingScale"
+          },
+          "position": {
+            "x": 40,
+            "y": 610
+          },
+          "measured": {
+            "width": 201,
+            "height": 216
+          }
+        },
+        {
+          "id": "16",
+          "type": "ScaleXYZ",
+          "data": {
+            "factorX": "0.2",
+            "factorY": "1",
+            "factorZ": "0.5",
+            "isLocal": true
+          },
+          "position": {
+            "x": 270,
+            "y": 40
+          },
+          "measured": {
+            "width": 201,
+            "height": 302
+          }
+        },
+        {
+          "id": "17",
+          "type": "Translate",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "isLocal": false
+          },
+          "position": {
+            "x": 500,
+            "y": 40
+          },
+          "measured": {
+            "width": 201,
+            "height": 334
+          }
+        },
+        {
+          "id": "18",
+          "type": "Sphere",
+          "data": {
+            "radius": "overallSize*wingScale"
+          },
+          "position": {
+            "x": 40,
+            "y": 800
+          },
+          "measured": {
+            "width": 201,
+            "height": 216
+          }
+        },
+        {
+          "id": "19",
+          "type": "ScaleXYZ",
+          "data": {
+            "factorX": "0.2",
+            "factorY": "1",
+            "factorZ": "0.5",
+            "isLocal": true
+          },
+          "position": {
+            "x": 270,
+            "y": 420
+          },
+          "measured": {
+            "width": 201,
+            "height": 302
+          }
+        },
+        {
+          "id": "20",
+          "type": "Translate",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "isLocal": false
+          },
+          "position": {
+            "x": 500,
+            "y": 230
+          },
+          "measured": {
+            "width": 201,
+            "height": 334
+          }
+        },
+        {
+          "id": "21",
+          "type": "VectorXYZ",
+          "data": {
+            "x": 1,
+            "y": 0,
+            "z": 0
+          },
+          "position": {
+            "x": 40,
+            "y": 1180
+          }
+        },
+        {
+          "id": "22",
+          "type": "VectorXYZ",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": -1
+          },
+          "position": {
+            "x": 40,
+            "y": 1370
+          }
+        }
+      ],
+      "edges": [
+        {
+          "source": "6",
+          "target": "12",
+          "id": "e_6_12_center",
+          "sourceHandle": "point",
+          "targetHandle": "center"
+        },
+        {
+          "source": "7",
+          "target": "13",
+          "id": "e_7_13_center",
+          "sourceHandle": "point",
+          "targetHandle": "center"
+        },
+        {
+          "source": "10",
+          "target": "14",
+          "id": "e_10_14_center",
+          "sourceHandle": "point",
+          "targetHandle": "center"
+        },
+        {
+          "source": "15",
+          "target": "16",
+          "id": "e_15_16_solid",
+          "sourceHandle": "solid",
+          "targetHandle": "solid"
+        },
+        {
+          "source": "16",
+          "target": "17",
+          "id": "e_16_17_solid",
+          "sourceHandle": "solid",
+          "targetHandle": "solid"
+        },
+        {
+          "source": "8",
+          "target": "17",
+          "id": "e_8_17_target",
+          "sourceHandle": "point",
+          "targetHandle": "target"
+        },
+        {
+          "source": "18",
+          "target": "19",
+          "id": "e_18_19_solid",
+          "sourceHandle": "solid",
+          "targetHandle": "solid"
+        },
+        {
+          "source": "19",
+          "target": "20",
+          "id": "e_19_20_solid",
+          "sourceHandle": "solid",
+          "targetHandle": "solid"
+        },
+        {
+          "source": "9",
+          "target": "20",
+          "id": "e_9_20_target",
+          "sourceHandle": "point",
+          "targetHandle": "target"
+        },
+        {
+          "source": "21",
+          "target": "13",
+          "targetHandle": "axis",
+          "id": "e_21_13_axis",
+          "sourceHandle": "vector"
+        },
+        {
+          "source": "22",
+          "target": "14",
+          "targetHandle": "axis",
+          "id": "e_22_14_axis",
+          "sourceHandle": "vector"
+        }
+      ]
+    },
+    {
+      "at": "2026-07-24T19:47:50.978Z",
+      "turn": 2,
+      "trigger": "ai-repair",
+      "label": "attempt 3: rebuilt graph (27 nodes)",
+      "nodeCount": 27,
+      "edgeCount": 35,
+      "isolatedCount": 0,
+      "diff": {
+        "addedNodes": [
+          "p_overallSize",
+          "p_bodyScale",
+          "p_headScale",
+          "p_wingScale",
+          "p_tailLength",
+          "n_bodyRadius",
+          "n_headRadius",
+          "n_wingBaseRadius",
+          "n_tailLengthValue",
+          "body",
+          "headCenter",
+          "head",
+          "beakBase",
+          "beakAxis",
+          "beak",
+          "tailBase",
+          "tailAxis",
+          "tail",
+          "wingCenterY",
+          "rightWingCenter",
+          "leftWingCenter",
+          "wingBaseSphere",
+          "rightWingScaled",
+          "rightWing",
+          "leftWingScaled",
+          "leftWing",
+          "robin"
+        ],
+        "removedNodes": [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10",
+          "11",
+          "12",
+          "13",
+          "14",
+          "15",
+          "16",
+          "17",
+          "18",
+          "19",
+          "20",
+          "21",
+          "22"
+        ],
+        "changedNodes": [],
+        "addedEdges": 35,
+        "removedEdges": 11
+      },
+      "details": [
+        "structural: Type mismatch: Cannot connect number output \"value\" from \"n_bodyRadius\" to Point input \"center\" on \"body\".",
+        "structural: Type mismatch: Cannot connect number output \"value\" from \"n_headRadius\" to Point input \"center\" on \"head\".",
+        "structural: Type mismatch: Cannot connect number output \"value\" from \"n_headRadius\" to Point input \"center\" on \"beak\".",
+        "structural: Type mismatch: Cannot connect Point output \"point\" from \"beakBase\" to Vector input \"axis\" on \"beak\".",
+        "structural: Type mismatch: Cannot connect Vector output \"vector\" from \"beakAxis\" to Point input \"center\" on \"beak\".",
+        "structural: Type mismatch: Cannot connect number output \"value\" from \"n_tailLengthValue\" to Point input \"center\" on \"tail\".",
+        "warning: PARAMETRIC COVERAGE IS LOW (44%): Only 4 of 9 dimensions are driven by slider-based formulas or edges. Hard-coded literals will break design scalability when sliders move. Please rewrite these bare literals as formulas of your sliders: beak.radius1=[object Object], beak.height=[object Objec"
+      ],
+      "nodes": [
+        {
+          "id": "p_overallSize",
+          "type": "NumberSlider",
+          "data": {
+            "label": "overallSize",
+            "value": 20,
+            "min": 5,
+            "max": 50,
+            "step": 0.5
+          },
+          "position": {
+            "x": 40,
+            "y": 990
+          }
+        },
+        {
+          "id": "p_bodyScale",
+          "type": "NumberSlider",
+          "data": {
+            "label": "bodyScale",
+            "value": 0.4,
+            "min": 0.1,
+            "max": 0.8,
+            "step": 0.05
+          },
+          "position": {
+            "x": 40,
+            "y": 610
+          }
+        },
+        {
+          "id": "p_headScale",
+          "type": "NumberSlider",
+          "data": {
+            "label": "headScale",
+            "value": 0.15,
+            "min": 0.05,
+            "max": 0.3,
+            "step": 0.01
+          },
+          "position": {
+            "x": 40,
+            "y": 800
+          }
+        },
+        {
+          "id": "p_wingScale",
+          "type": "NumberSlider",
+          "data": {
+            "label": "wingScale",
+            "value": 0.2,
+            "min": 0.05,
+            "max": 0.4,
+            "step": 0.01
+          },
+          "position": {
+            "x": 40,
+            "y": 1370
+          }
+        },
+        {
+          "id": "p_tailLength",
+          "type": "NumberSlider",
+          "data": {
+            "label": "tailLength",
+            "value": 0.3,
+            "min": 0.1,
+            "max": 0.6,
+            "step": 0.01
+          },
+          "position": {
+            "x": 40,
+            "y": 1180
+          }
+        },
+        {
+          "id": "n_bodyRadius",
+          "type": "Expression",
+          "data": {
+            "formula": "overallSize * bodyScale"
+          },
+          "position": {
+            "x": 270,
+            "y": 40
+          }
+        },
+        {
+          "id": "n_headRadius",
+          "type": "Expression",
+          "data": {
+            "formula": "overallSize * headScale"
+          },
+          "position": {
+            "x": 270,
+            "y": 230
+          }
+        },
+        {
+          "id": "n_wingBaseRadius",
+          "type": "Expression",
+          "data": {
+            "formula": "overallSize * wingScale"
+          },
+          "position": {
+            "x": 270,
+            "y": 610
+          }
+        },
+        {
+          "id": "n_tailLengthValue",
+          "type": "Expression",
+          "data": {
+            "formula": "overallSize * tailLength"
+          },
+          "position": {
+            "x": 270,
+            "y": 420
+          }
+        },
+        {
+          "id": "body",
+          "type": "Sphere",
+          "data": {
+            "radius": "$n_bodyRadius",
+            "color": "#3b82f6"
+          },
+          "position": {
+            "x": 500,
+            "y": 40
+          }
+        },
+        {
+          "id": "headCenter",
+          "type": "Point",
+          "data": {
+            "x": {
+              "formula": "$n_bodyRadius + $n_headRadius"
+            },
+            "y": 0,
+            "z": 0
+          },
+          "position": {
+            "x": 40,
+            "y": 420
+          }
+        },
+        {
+          "id": "head",
+          "type": "Sphere",
+          "data": {
+            "radius": "$n_headRadius",
+            "color": "#3b82f6"
+          },
+          "position": {
+            "x": 500,
+            "y": 610
+          }
+        },
+        {
+          "id": "beakBase",
+          "type": "Point",
+          "data": {
+            "x": {
+              "formula": "$n_bodyRadius + 2 * $n_headRadius"
+            },
+            "y": 0,
+            "z": 0
+          },
+          "position": {
+            "x": 40,
+            "y": 230
+          }
+        },
+        {
+          "id": "beakAxis",
+          "type": "VectorXYZ",
+          "data": {
+            "x": 1,
+            "y": 0,
+            "z": 0
+          },
+          "position": {
+            "x": 40,
+            "y": 40
+          }
+        },
+        {
+          "id": "beak",
+          "type": "Cone",
+          "data": {
+            "radius1": {
+              "formula": "$n_headRadius * 0.4"
+            },
+            "radius2": 0,
+            "height": {
+              "formula": "$n_headRadius * 0.8"
+            },
+            "color": "#bd362f"
+          },
+          "position": {
+            "x": 500,
+            "y": 420
+          }
+        },
+        {
+          "id": "tailBase",
+          "type": "Point",
+          "data": {
+            "x": {
+              "formula": "-$n_bodyRadius"
+            },
+            "y": 0,
+            "z": 0
+          },
+          "position": {
+            "x": 500,
+            "y": 230
+          }
+        },
+        {
+          "id": "tailAxis",
+          "type": "VectorXYZ",
+          "data": {
+            "x": -1,
+            "y": 0,
+            "z": 0
+          },
+          "position": {
+            "x": 40,
+            "y": 1560
+          }
+        },
+        {
+          "id": "tail",
+          "type": "Cone",
+          "data": {
+            "radius1": {
+              "formula": "$n_tailLengthValue * 0.05"
+            },
+            "radius2": 0,
+            "height": "$n_tailLengthValue",
+            "color": "#8b4513"
+          },
+          "position": {
+            "x": 730,
+            "y": 40
+          }
+        },
+        {
+          "id": "wingCenterY",
+          "type": "Expression",
+          "data": {
+            "formula": "$n_bodyRadius + $n_wingBaseRadius"
+          },
+          "position": {
+            "x": 500,
+            "y": 800
+          }
+        },
+        {
+          "id": "rightWingCenter",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": "$wingCenterY",
+            "z": 0
+          },
+          "position": {
+            "x": 730,
+            "y": 420
+          }
+        },
+        {
+          "id": "leftWingCenter",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": {
+              "formula": "-$wingCenterY"
+            },
+            "z": 0
+          },
+          "position": {
+            "x": 730,
+            "y": 230
+          }
+        },
+        {
+          "id": "wingBaseSphere",
+          "type": "Sphere",
+          "data": {
+            "radius": "$n_wingBaseRadius"
+          },
+          "position": {
+            "x": 500,
+            "y": 990
+          }
+        },
+        {
+          "id": "rightWingScaled",
+          "type": "Scale",
+          "data": {
+            "factor": 0.2,
+            "isLocal": true
+          },
+          "position": {
+            "x": 730,
+            "y": 800
+          }
+        },
+        {
+          "id": "rightWing",
+          "type": "MoveTo",
+          "data": {
+            "shape": "$rightWingScaled",
+            "target": "$rightWingCenter",
+            "color": "#3b82f6"
+          },
+          "position": {
+            "x": 960,
+            "y": 230
+          }
+        },
+        {
+          "id": "leftWingScaled",
+          "type": "Scale",
+          "data": {
+            "factor": 0.2,
+            "isLocal": true
+          },
+          "position": {
+            "x": 730,
+            "y": 610
+          }
+        },
+        {
+          "id": "leftWing",
+          "type": "MoveTo",
+          "data": {
+            "shape": "$leftWingScaled",
+            "target": "$leftWingCenter",
+            "color": "#3b82f6"
+          },
+          "position": {
+            "x": 960,
+            "y": 40
+          }
+        },
+        {
+          "id": "robin",
+          "type": "Compound",
+          "data": {},
+          "position": {
+            "x": 1190,
+            "y": 40
+          }
+        }
+      ],
+      "edges": [
+        {
+          "source": "p_overallSize",
+          "target": "n_bodyRadius",
+          "id": "e_p_overallSize_n_bodyRadius_a",
+          "sourceHandle": "value",
+          "targetHandle": "a"
+        },
+        {
+          "source": "p_bodyScale",
+          "target": "n_bodyRadius",
+          "id": "e_p_bodyScale_n_bodyRadius_b",
+          "sourceHandle": "value",
+          "targetHandle": "b"
+        },
+        {
+          "source": "p_overallSize",
+          "target": "n_headRadius",
+          "id": "e_p_overallSize_n_headRadius_a",
+          "sourceHandle": "value",
+          "targetHandle": "a"
+        },
+        {
+          "source": "p_headScale",
+          "target": "n_headRadius",
+          "id": "e_p_headScale_n_headRadius_b",
+          "sourceHandle": "value",
+          "targetHandle": "b"
+        },
+        {
+          "source": "p_overallSize",
+          "target": "n_wingBaseRadius",
+          "id": "e_p_overallSize_n_wingBaseRadius_a",
+          "sourceHandle": "value",
+          "targetHandle": "a"
+        },
+        {
+          "source": "p_wingScale",
+          "target": "n_wingBaseRadius",
+          "id": "e_p_wingScale_n_wingBaseRadius_b",
+          "sourceHandle": "value",
+          "targetHandle": "b"
+        },
+        {
+          "source": "p_overallSize",
+          "target": "n_tailLengthValue",
+          "id": "e_p_overallSize_n_tailLengthValue_a",
+          "sourceHandle": "value",
+          "targetHandle": "a"
+        },
+        {
+          "source": "p_tailLength",
+          "target": "n_tailLengthValue",
+          "id": "e_p_tailLength_n_tailLengthValue_b",
+          "sourceHandle": "value",
+          "targetHandle": "b"
+        },
+        {
+          "source": "n_bodyRadius",
+          "target": "body",
+          "id": "e_n_bodyRadius_body_center",
+          "sourceHandle": "value",
+          "targetHandle": "center"
+        },
+        {
+          "source": "n_headRadius",
+          "target": "head",
+          "id": "e_n_headRadius_head_center",
+          "sourceHandle": "value",
+          "targetHandle": "center"
+        },
+        {
+          "source": "headCenter",
+          "target": "head",
+          "id": "e_headCenter_head_center",
+          "sourceHandle": "point",
+          "targetHandle": "center"
+        },
+        {
+          "source": "n_headRadius",
+          "target": "beak",
+          "id": "e_n_headRadius_beak_center",
+          "sourceHandle": "value",
+          "targetHandle": "center"
+        },
+        {
+          "source": "beakBase",
+          "target": "beak",
+          "id": "e_beakBase_beak_axis",
+          "sourceHandle": "point",
+          "targetHandle": "axis"
+        },
+        {
+          "source": "beakAxis",
+          "target": "beak",
+          "id": "e_beakAxis_beak_center",
+          "sourceHandle": "vector",
+          "targetHandle": "center"
+        },
+        {
+          "source": "n_bodyRadius",
+          "target": "tailBase",
+          "id": "e_n_bodyRadius_tailBase_x",
+          "sourceHandle": "value",
+          "targetHandle": "x"
+        },
+        {
+          "source": "n_tailLengthValue",
+          "target": "tail",
+          "id": "e_n_tailLengthValue_tail_center",
+          "sourceHandle": "value",
+          "targetHandle": "center"
+        },
+        {
+          "source": "tailBase",
+          "target": "tail",
+          "id": "e_tailBase_tail_axis",
+          "sourceHandle": "point",
+          "targetHandle": "axis"
+        },
+        {
+          "source": "tailAxis",
+          "target": "tail",
+          "id": "e_tailAxis_tail_center",
+          "sourceHandle": "vector",
+          "targetHandle": "center"
+        },
+        {
+          "source": "n_bodyRadius",
+          "target": "wingCenterY",
+          "id": "e_n_bodyRadius_wingCenterY_a",
+          "sourceHandle": "value",
+          "targetHandle": "a"
+        },
+        {
+          "source": "n_wingBaseRadius",
+          "target": "wingCenterY",
+          "id": "e_n_wingBaseRadius_wingCenterY_b",
+          "sourceHandle": "value",
+          "targetHandle": "b"
+        },
+        {
+          "source": "wingCenterY",
+          "target": "rightWingCenter",
+          "id": "e_wingCenterY_rightWingCenter_x",
+          "sourceHandle": "value",
+          "targetHandle": "x"
+        },
+        {
+          "source": "wingCenterY",
+          "target": "leftWingCenter",
+          "id": "e_wingCenterY_leftWingCenter_x",
+          "sourceHandle": "value",
+          "targetHandle": "x"
+        },
+        {
+          "source": "n_wingBaseRadius",
+          "target": "wingBaseSphere",
+          "id": "e_n_wingBaseRadius_wingBaseSphere_center",
+          "sourceHandle": "value",
+          "targetHandle": "center"
+        },
+        {
+          "source": "wingBaseSphere",
+          "target": "rightWingScaled",
+          "id": "e_wingBaseSphere_rightWingScaled_solid",
+          "sourceHandle": "solid",
+          "targetHandle": "solid"
+        },
+        {
+          "source": "rightWingScaled",
+          "target": "rightWing",
+          "id": "e_rightWingScaled_rightWing_solid",
+          "sourceHandle": "solid",
+          "targetHandle": "solid"
+        },
+        {
+          "source": "rightWingCenter",
+          "target": "rightWing",
+          "id": "e_rightWingCenter_rightWing_solid",
+          "sourceHandle": "point",
+          "targetHandle": "solid"
+        },
+        {
+          "source": "wingBaseSphere",
+          "target": "leftWingScaled",
+          "id": "e_wingBaseSphere_leftWingScaled_solid",
+          "sourceHandle": "solid",
+          "targetHandle": "solid"
+        },
+        {
+          "source": "leftWingScaled",
+          "target": "leftWing",
+          "id": "e_leftWingScaled_leftWing_solid",
+          "sourceHandle": "solid",
+          "targetHandle": "solid"
+        },
+        {
+          "source": "leftWingCenter",
+          "target": "leftWing",
+          "id": "e_leftWingCenter_leftWing_solid",
+          "sourceHandle": "point",
+          "targetHandle": "solid"
+        },
+        {
+          "source": "body",
+          "target": "robin",
+          "id": "e_body_robin_solid1",
+          "sourceHandle": "solid",
+          "targetHandle": "solid1"
+        },
+        {
+          "source": "head",
+          "target": "robin",
+          "id": "e_head_robin_solid2",
+          "sourceHandle": "solid",
+          "targetHandle": "solid2"
+        },
+        {
+          "source": "beak",
+          "target": "robin",
+          "id": "e_beak_robin_solid3",
+          "sourceHandle": "solid",
+          "targetHandle": "solid3"
+        },
+        {
+          "source": "tail",
+          "target": "robin",
+          "id": "e_tail_robin_solid4",
+          "sourceHandle": "solid",
+          "targetHandle": "solid4"
+        },
+        {
+          "source": "rightWing",
+          "target": "robin",
+          "id": "e_rightWing_robin_solid5",
+          "sourceHandle": "solid",
+          "targetHandle": "solid5"
+        },
+        {
+          "source": "leftWing",
+          "target": "robin",
+          "id": "e_leftWing_robin_solid6",
+          "sourceHandle": "solid",
+          "targetHandle": "solid6"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,2876 @@
+{
+  "c33dExport": 2,
+  "exportedAt": "2026-07-23T19:07:37.567Z",
+  "comment": "interesting",
+  "agent": {
+    "name": "Ollama (Local)",
+    "provider": "ollama",
+    "model": "kimi-k2.7-code:cloud"
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "bodyHeight",
+        "type": "NumberSlider",
+        "data": {
+          "value": 170,
+          "label": "bodyHeight",
+          "min": 100,
+          "max": 250,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 230
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "bodyWidth",
+        "type": "NumberSlider",
+        "data": {
+          "value": 45,
+          "label": "bodyWidth",
+          "min": 20,
+          "max": 90,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 420
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "bodyDepth",
+        "type": "NumberSlider",
+        "data": {
+          "value": 25,
+          "label": "bodyDepth",
+          "min": 10,
+          "max": 60,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 40
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "limbThickness",
+        "type": "NumberSlider",
+        "data": {
+          "value": 4,
+          "label": "limbThickness",
+          "min": 1,
+          "max": 12,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 1940
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "pelvis_center",
+        "type": "Point",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": "bodyHeight*0.42"
+        },
+        "position": {
+          "x": 40,
+          "y": 2890
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "pelvis_normal",
+        "type": "VectorXYZ",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": 1
+        },
+        "position": {
+          "x": 40,
+          "y": 3080
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "pelvis",
+        "type": "EllipseCurve",
+        "data": {
+          "radiusX": "bodyWidth*0.42",
+          "radiusY": "bodyDepth*0.40"
+        },
+        "position": {
+          "x": 270,
+          "y": 1750
+        },
+        "measured": {
+          "width": 201,
+          "height": 296
+        }
+      },
+      {
+        "id": "waist_center",
+        "type": "Point",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": "bodyHeight*0.55"
+        },
+        "position": {
+          "x": 40,
+          "y": 4600
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "waist_normal",
+        "type": "VectorXYZ",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": 1
+        },
+        "position": {
+          "x": 40,
+          "y": 4790
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "waist",
+        "type": "EllipseCurve",
+        "data": {
+          "radiusX": "bodyWidth*0.35",
+          "radiusY": "bodyDepth*0.32"
+        },
+        "position": {
+          "x": 270,
+          "y": 3080
+        },
+        "measured": {
+          "width": 201,
+          "height": 296
+        }
+      },
+      {
+        "id": "chest_center",
+        "type": "Point",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": "bodyHeight*0.71"
+        },
+        "position": {
+          "x": 40,
+          "y": 610
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "chest_normal",
+        "type": "VectorXYZ",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": 1
+        },
+        "position": {
+          "x": 40,
+          "y": 800
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "chest",
+        "type": "EllipseCurve",
+        "data": {
+          "radiusX": "bodyWidth*0.46",
+          "radiusY": "bodyDepth*0.35"
+        },
+        "position": {
+          "x": 270,
+          "y": 40
+        },
+        "measured": {
+          "width": 201,
+          "height": 296
+        }
+      },
+      {
+        "id": "torso",
+        "type": "LoftCurves",
+        "data": {
+          "ruled": false,
+          "closed": false,
+          "color": "#3b82f6"
+        },
+        "position": {
+          "x": 500,
+          "y": 800
+        },
+        "measured": {
+          "width": 192,
+          "height": 416
+        }
+      },
+      {
+        "id": "neck_center",
+        "type": "Point",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": "bodyHeight*0.78"
+        },
+        "position": {
+          "x": 40,
+          "y": 2700
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "neck",
+        "type": "Cylinder",
+        "data": {
+          "radius": "limbThickness*0.65",
+          "height": "bodyHeight*0.07",
+          "color": "#fca5a5"
+        },
+        "position": {
+          "x": 270,
+          "y": 1560
+        },
+        "measured": {
+          "width": 201,
+          "height": 296
+        }
+      },
+      {
+        "id": "head_center",
+        "type": "Point",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": "bodyHeight*0.89"
+        },
+        "position": {
+          "x": 40,
+          "y": 990
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "head",
+        "type": "Sphere",
+        "data": {
+          "radius": "bodyHeight*0.085",
+          "color": "#fca5a5"
+        },
+        "position": {
+          "x": 270,
+          "y": 230
+        },
+        "measured": {
+          "width": 201,
+          "height": 216
+        }
+      },
+      {
+        "id": "rShoulder",
+        "type": "Point",
+        "data": {
+          "x": "bodyWidth*0.45",
+          "y": 0,
+          "z": "bodyHeight*0.72"
+        },
+        "position": {
+          "x": 40,
+          "y": 4220
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "rElbow",
+        "type": "Point",
+        "data": {
+          "x": "bodyWidth*0.5 + bodyHeight*0.02",
+          "y": "bodyHeight*0.05",
+          "z": "bodyHeight*0.55"
+        },
+        "position": {
+          "x": 40,
+          "y": 3460
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "rWrist",
+        "type": "Point",
+        "data": {
+          "x": "bodyWidth*0.45",
+          "y": "bodyHeight*0.04",
+          "z": "bodyHeight*0.40"
+        },
+        "position": {
+          "x": 40,
+          "y": 4410
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "rUpperArmCrv",
+        "type": "Line",
+        "data": {},
+        "position": {
+          "x": 270,
+          "y": 2320
+        },
+        "measured": {
+          "width": 177,
+          "height": 200
+        }
+      },
+      {
+        "id": "rLowerArmCrv",
+        "type": "Line",
+        "data": {},
+        "position": {
+          "x": 270,
+          "y": 2510
+        },
+        "measured": {
+          "width": 177,
+          "height": 200
+        }
+      },
+      {
+        "id": "rUpperArm",
+        "type": "Pipe",
+        "data": {
+          "radius": "limbThickness/2",
+          "color": "#3b82f6"
+        },
+        "position": {
+          "x": 500,
+          "y": 1180
+        },
+        "measured": {
+          "width": 201,
+          "height": 270
+        }
+      },
+      {
+        "id": "rLowerArm",
+        "type": "Pipe",
+        "data": {
+          "radius": "limbThickness*0.45",
+          "color": "#fca5a5"
+        },
+        "position": {
+          "x": 500,
+          "y": 1370
+        },
+        "measured": {
+          "width": 201,
+          "height": 270
+        }
+      },
+      {
+        "id": "rHand",
+        "type": "Sphere",
+        "data": {
+          "radius": "limbThickness*0.9",
+          "color": "#fca5a5"
+        },
+        "position": {
+          "x": 270,
+          "y": 2890
+        },
+        "measured": {
+          "width": 201,
+          "height": 216
+        }
+      },
+      {
+        "id": "lShoulder",
+        "type": "Point",
+        "data": {
+          "x": "-bodyWidth*0.45",
+          "y": 0,
+          "z": "bodyHeight*0.72"
+        },
+        "position": {
+          "x": 40,
+          "y": 2320
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "lElbow",
+        "type": "Point",
+        "data": {
+          "x": "-bodyWidth*0.5 - bodyHeight*0.02",
+          "y": "bodyHeight*0.05",
+          "z": "bodyHeight*0.55"
+        },
+        "position": {
+          "x": 40,
+          "y": 1370
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "lWrist",
+        "type": "Point",
+        "data": {
+          "x": "-bodyWidth*0.45",
+          "y": "bodyHeight*0.04",
+          "z": "bodyHeight*0.40"
+        },
+        "position": {
+          "x": 40,
+          "y": 2510
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "lUpperArmCrv",
+        "type": "Line",
+        "data": {},
+        "position": {
+          "x": 270,
+          "y": 800
+        },
+        "measured": {
+          "width": 177,
+          "height": 200
+        }
+      },
+      {
+        "id": "lLowerArmCrv",
+        "type": "Line",
+        "data": {},
+        "position": {
+          "x": 270,
+          "y": 990
+        },
+        "measured": {
+          "width": 177,
+          "height": 200
+        }
+      },
+      {
+        "id": "lUpperArm",
+        "type": "Pipe",
+        "data": {
+          "radius": "limbThickness/2",
+          "color": "#3b82f6"
+        },
+        "position": {
+          "x": 500,
+          "y": 230
+        },
+        "measured": {
+          "width": 201,
+          "height": 270
+        }
+      },
+      {
+        "id": "lLowerArm",
+        "type": "Pipe",
+        "data": {
+          "radius": "limbThickness*0.45",
+          "color": "#fca5a5"
+        },
+        "position": {
+          "x": 500,
+          "y": 420
+        },
+        "measured": {
+          "width": 201,
+          "height": 270
+        }
+      },
+      {
+        "id": "lHand",
+        "type": "Sphere",
+        "data": {
+          "radius": "limbThickness*0.9",
+          "color": "#fca5a5"
+        },
+        "position": {
+          "x": 270,
+          "y": 1370
+        },
+        "measured": {
+          "width": 201,
+          "height": 216
+        }
+      },
+      {
+        "id": "rHip",
+        "type": "Point",
+        "data": {
+          "x": "bodyWidth*0.25",
+          "y": 0,
+          "z": "bodyHeight*0.45"
+        },
+        "position": {
+          "x": 40,
+          "y": 3840
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "rKnee",
+        "type": "Point",
+        "data": {
+          "x": "bodyWidth*0.22",
+          "y": "bodyHeight*0.05",
+          "z": "bodyHeight*0.23"
+        },
+        "position": {
+          "x": 40,
+          "y": 4030
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "rAnkle",
+        "type": "Point",
+        "data": {
+          "x": "bodyWidth*0.16",
+          "y": "bodyHeight*0.02",
+          "z": "bodyHeight*0.04"
+        },
+        "position": {
+          "x": 40,
+          "y": 3270
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "rThighCrv",
+        "type": "Line",
+        "data": {},
+        "position": {
+          "x": 270,
+          "y": 2700
+        },
+        "measured": {
+          "width": 177,
+          "height": 200
+        }
+      },
+      {
+        "id": "rShinCrv",
+        "type": "Line",
+        "data": {},
+        "position": {
+          "x": 270,
+          "y": 2130
+        },
+        "measured": {
+          "width": 177,
+          "height": 200
+        }
+      },
+      {
+        "id": "rThigh",
+        "type": "Pipe",
+        "data": {
+          "radius": "limbThickness*0.55",
+          "color": "#1e293b"
+        },
+        "position": {
+          "x": 500,
+          "y": 1560
+        },
+        "measured": {
+          "width": 201,
+          "height": 270
+        }
+      },
+      {
+        "id": "rShin",
+        "type": "Pipe",
+        "data": {
+          "radius": "limbThickness*0.5",
+          "color": "#fca5a5"
+        },
+        "position": {
+          "x": 500,
+          "y": 990
+        },
+        "measured": {
+          "width": 201,
+          "height": 270
+        }
+      },
+      {
+        "id": "rFoot_center",
+        "type": "Point",
+        "data": {
+          "x": "bodyWidth*0.16",
+          "y": "bodyHeight*0.02",
+          "z": "bodyHeight*0.04"
+        },
+        "position": {
+          "x": 40,
+          "y": 3650
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "rFoot",
+        "type": "Box",
+        "data": {
+          "width": "bodyHeight*0.12",
+          "length": "bodyHeight*0.22",
+          "height": "bodyHeight*0.08",
+          "color": "#1e293b"
+        },
+        "position": {
+          "x": 270,
+          "y": 1940
+        },
+        "measured": {
+          "width": 201,
+          "height": 312
+        }
+      },
+      {
+        "id": "lHip",
+        "type": "Point",
+        "data": {
+          "x": "-bodyWidth*0.25",
+          "y": 0,
+          "z": "bodyHeight*0.45"
+        },
+        "position": {
+          "x": 40,
+          "y": 1750
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "lKnee",
+        "type": "Point",
+        "data": {
+          "x": "-bodyWidth*0.22",
+          "y": "bodyHeight*0.05",
+          "z": "bodyHeight*0.23"
+        },
+        "position": {
+          "x": 40,
+          "y": 2130
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "lAnkle",
+        "type": "Point",
+        "data": {
+          "x": "-bodyWidth*0.16",
+          "y": "bodyHeight*0.02",
+          "z": "bodyHeight*0.04"
+        },
+        "position": {
+          "x": 40,
+          "y": 1180
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "lThighCrv",
+        "type": "Line",
+        "data": {},
+        "position": {
+          "x": 270,
+          "y": 1180
+        },
+        "measured": {
+          "width": 177,
+          "height": 200
+        }
+      },
+      {
+        "id": "lShinCrv",
+        "type": "Line",
+        "data": {},
+        "position": {
+          "x": 270,
+          "y": 610
+        },
+        "measured": {
+          "width": 177,
+          "height": 200
+        }
+      },
+      {
+        "id": "lThigh",
+        "type": "Pipe",
+        "data": {
+          "radius": "limbThickness*0.55",
+          "color": "#1e293b"
+        },
+        "position": {
+          "x": 500,
+          "y": 610
+        },
+        "measured": {
+          "width": 201,
+          "height": 270
+        }
+      },
+      {
+        "id": "lShin",
+        "type": "Pipe",
+        "data": {
+          "radius": "limbThickness*0.5",
+          "color": "#fca5a5"
+        },
+        "position": {
+          "x": 500,
+          "y": 40
+        },
+        "measured": {
+          "width": 201,
+          "height": 270
+        }
+      },
+      {
+        "id": "lFoot_center",
+        "type": "Point",
+        "data": {
+          "x": "-bodyWidth*0.16",
+          "y": "bodyHeight*0.02",
+          "z": "bodyHeight*0.04"
+        },
+        "position": {
+          "x": 40,
+          "y": 1560
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "lFoot",
+        "type": "Box",
+        "data": {
+          "width": "bodyHeight*0.12",
+          "length": "bodyHeight*0.22",
+          "height": "bodyHeight*0.08",
+          "color": "#1e293b"
+        },
+        "position": {
+          "x": 270,
+          "y": 420
+        },
+        "measured": {
+          "width": 201,
+          "height": 312
+        }
+      }
+    ],
+    "edges": [
+      {
+        "source": "pelvis_center",
+        "sourceHandle": "point",
+        "target": "pelvis",
+        "targetHandle": "center",
+        "id": "e_pelvis_center_pelvis_center"
+      },
+      {
+        "source": "pelvis_normal",
+        "sourceHandle": "vector",
+        "target": "pelvis",
+        "targetHandle": "normal",
+        "id": "e_pelvis_normal_pelvis_normal"
+      },
+      {
+        "source": "waist_center",
+        "sourceHandle": "point",
+        "target": "waist",
+        "targetHandle": "center",
+        "id": "e_waist_center_waist_center"
+      },
+      {
+        "source": "waist_normal",
+        "sourceHandle": "vector",
+        "target": "waist",
+        "targetHandle": "normal",
+        "id": "e_waist_normal_waist_normal"
+      },
+      {
+        "source": "chest_center",
+        "sourceHandle": "point",
+        "target": "chest",
+        "targetHandle": "center",
+        "id": "e_chest_center_chest_center"
+      },
+      {
+        "source": "chest_normal",
+        "sourceHandle": "vector",
+        "target": "chest",
+        "targetHandle": "normal",
+        "id": "e_chest_normal_chest_normal"
+      },
+      {
+        "source": "pelvis",
+        "sourceHandle": "curve",
+        "target": "torso",
+        "targetHandle": "curve1",
+        "id": "e_pelvis_torso_curve1"
+      },
+      {
+        "source": "waist",
+        "sourceHandle": "curve",
+        "target": "torso",
+        "targetHandle": "curve2",
+        "id": "e_waist_torso_curve2"
+      },
+      {
+        "source": "chest",
+        "sourceHandle": "curve",
+        "target": "torso",
+        "targetHandle": "curve3",
+        "id": "e_chest_torso_curve3"
+      },
+      {
+        "source": "neck_center",
+        "sourceHandle": "point",
+        "target": "neck",
+        "targetHandle": "center",
+        "id": "e_neck_center_neck_center"
+      },
+      {
+        "source": "head_center",
+        "sourceHandle": "point",
+        "target": "head",
+        "targetHandle": "center",
+        "id": "e_head_center_head_center"
+      },
+      {
+        "source": "rShoulder",
+        "sourceHandle": "point",
+        "target": "rUpperArmCrv",
+        "targetHandle": "a",
+        "id": "e_rShoulder_rUpperArmCrv_a"
+      },
+      {
+        "source": "rElbow",
+        "sourceHandle": "point",
+        "target": "rUpperArmCrv",
+        "targetHandle": "b",
+        "id": "e_rElbow_rUpperArmCrv_b"
+      },
+      {
+        "source": "rElbow",
+        "sourceHandle": "point",
+        "target": "rLowerArmCrv",
+        "targetHandle": "a",
+        "id": "e_rElbow_rLowerArmCrv_a"
+      },
+      {
+        "source": "rWrist",
+        "sourceHandle": "point",
+        "target": "rLowerArmCrv",
+        "targetHandle": "b",
+        "id": "e_rWrist_rLowerArmCrv_b"
+      },
+      {
+        "source": "rUpperArmCrv",
+        "sourceHandle": "curve",
+        "target": "rUpperArm",
+        "targetHandle": "path",
+        "id": "e_rUpperArmCrv_rUpperArm_path"
+      },
+      {
+        "source": "rLowerArmCrv",
+        "sourceHandle": "curve",
+        "target": "rLowerArm",
+        "targetHandle": "path",
+        "id": "e_rLowerArmCrv_rLowerArm_path"
+      },
+      {
+        "source": "rWrist",
+        "sourceHandle": "point",
+        "target": "rHand",
+        "targetHandle": "center",
+        "id": "e_rWrist_rHand_center"
+      },
+      {
+        "source": "lShoulder",
+        "sourceHandle": "point",
+        "target": "lUpperArmCrv",
+        "targetHandle": "a",
+        "id": "e_lShoulder_lUpperArmCrv_a"
+      },
+      {
+        "source": "lElbow",
+        "sourceHandle": "point",
+        "target": "lUpperArmCrv",
+        "targetHandle": "b",
+        "id": "e_lElbow_lUpperArmCrv_b"
+      },
+      {
+        "source": "lElbow",
+        "sourceHandle": "point",
+        "target": "lLowerArmCrv",
+        "targetHandle": "a",
+        "id": "e_lElbow_lLowerArmCrv_a"
+      },
+      {
+        "source": "lWrist",
+        "sourceHandle": "point",
+        "target": "lLowerArmCrv",
+        "targetHandle": "b",
+        "id": "e_lWrist_lLowerArmCrv_b"
+      },
+      {
+        "source": "lUpperArmCrv",
+        "sourceHandle": "curve",
+        "target": "lUpperArm",
+        "targetHandle": "path",
+        "id": "e_lUpperArmCrv_lUpperArm_path"
+      },
+      {
+        "source": "lLowerArmCrv",
+        "sourceHandle": "curve",
+        "target": "lLowerArm",
+        "targetHandle": "path",
+        "id": "e_lLowerArmCrv_lLowerArm_path"
+      },
+      {
+        "source": "lWrist",
+        "sourceHandle": "point",
+        "target": "lHand",
+        "targetHandle": "center",
+        "id": "e_lWrist_lHand_center"
+      },
+      {
+        "source": "rHip",
+        "sourceHandle": "point",
+        "target": "rThighCrv",
+        "targetHandle": "a",
+        "id": "e_rHip_rThighCrv_a"
+      },
+      {
+        "source": "rKnee",
+        "sourceHandle": "point",
+        "target": "rThighCrv",
+        "targetHandle": "b",
+        "id": "e_rKnee_rThighCrv_b"
+      },
+      {
+        "source": "rKnee",
+        "sourceHandle": "point",
+        "target": "rShinCrv",
+        "targetHandle": "a",
+        "id": "e_rKnee_rShinCrv_a"
+      },
+      {
+        "source": "rAnkle",
+        "sourceHandle": "point",
+        "target": "rShinCrv",
+        "targetHandle": "b",
+        "id": "e_rAnkle_rShinCrv_b"
+      },
+      {
+        "source": "rThighCrv",
+        "sourceHandle": "curve",
+        "target": "rThigh",
+        "targetHandle": "path",
+        "id": "e_rThighCrv_rThigh_path"
+      },
+      {
+        "source": "rShinCrv",
+        "sourceHandle": "curve",
+        "target": "rShin",
+        "targetHandle": "path",
+        "id": "e_rShinCrv_rShin_path"
+      },
+      {
+        "source": "rFoot_center",
+        "sourceHandle": "point",
+        "target": "rFoot",
+        "targetHandle": "center",
+        "id": "e_rFoot_center_rFoot_center"
+      },
+      {
+        "source": "lHip",
+        "sourceHandle": "point",
+        "target": "lThighCrv",
+        "targetHandle": "a",
+        "id": "e_lHip_lThighCrv_a"
+      },
+      {
+        "source": "lKnee",
+        "sourceHandle": "point",
+        "target": "lThighCrv",
+        "targetHandle": "b",
+        "id": "e_lKnee_lThighCrv_b"
+      },
+      {
+        "source": "lKnee",
+        "sourceHandle": "point",
+        "target": "lShinCrv",
+        "targetHandle": "a",
+        "id": "e_lKnee_lShinCrv_a"
+      },
+      {
+        "source": "lAnkle",
+        "sourceHandle": "point",
+        "target": "lShinCrv",
+        "targetHandle": "b",
+        "id": "e_lAnkle_lShinCrv_b"
+      },
+      {
+        "source": "lThighCrv",
+        "sourceHandle": "curve",
+        "target": "lThigh",
+        "targetHandle": "path",
+        "id": "e_lThighCrv_lThigh_path"
+      },
+      {
+        "source": "lShinCrv",
+        "sourceHandle": "curve",
+        "target": "lShin",
+        "targetHandle": "path",
+        "id": "e_lShinCrv_lShin_path"
+      },
+      {
+        "source": "lFoot_center",
+        "sourceHandle": "point",
+        "target": "lFoot",
+        "targetHandle": "center",
+        "id": "e_lFoot_center_lFoot_center"
+      }
+    ]
+  },
+  "conversation": [
+    {
+      "role": "system",
+      "content": "Workspace cleared."
+    },
+    {
+      "role": "user",
+      "content": "make a human body"
+    },
+    {
+      "role": "system",
+      "content": "IR program had compile errors (attempt 1/3) — asking the model to fix."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline point() from \"pelvis.center\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"point\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline vector() from \"pelvis.normal\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"vector\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline point() from \"waist.center\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"point\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline vector() from \"waist.normal\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"vector\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline point() from \"chest.center\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"point\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline vector() from \"chest.normal\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"vector\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline point() from \"neck.center\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"point\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline point() from \"head.center\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"point\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline point() from \"rFoot.center\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"point\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline point() from \"lFoot.center\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"point\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "assistant",
+      "content": "Build a parametric standing human figure using shared body-proportion sliders, with a lofted elliptical torso, spherical head, piped limbs and separate colored leaves."
+    }
+  ],
+  "plan": "",
+  "genome": null,
+  "geometryReport": {
+    "leaves": [
+      {
+        "id": "neck",
+        "bbox": {
+          "min": [
+            -2.6499583709516012,
+            -2.6499583709516012,
+            126.60004162904839
+          ],
+          "max": [
+            2.6499583709516012,
+            2.6499583709516012,
+            138.59995837095158
+          ],
+          "center": [
+            0,
+            0,
+            132.6
+          ],
+          "size": [
+            5.2999167419032025,
+            5.2999167419032025,
+            11.999916741903192
+          ]
+        },
+        "volume": 252.72227942537734,
+        "meshOk": true,
+        "vertexCount": 66,
+        "error": null
+      },
+      {
+        "id": "head",
+        "bbox": {
+          "min": [
+            -14.602320585814734,
+            -14.637458506854582,
+            136.65082251672462
+          ],
+          "max": [
+            14.599823407221784,
+            14.637458506854582,
+            165.9491774832754
+          ],
+          "center": [
+            -0.0012485892964750889,
+            0,
+            151.3
+          ],
+          "size": [
+            29.20214399303652,
+            29.274917013709164,
+            29.29835496655079
+          ]
+        },
+        "volume": 12638.401574319458,
+        "meshOk": true,
+        "vertexCount": 764,
+        "error": null
+      },
+      {
+        "id": "rHand",
+        "bbox": {
+          "min": [
+            16.578046881801953,
+            3.140342706977941,
+            64.32804688180195
+          ],
+          "max": [
+            23.921953118198047,
+            10.45965729302206,
+            71.67195311819805
+          ],
+          "center": [
+            20.25,
+            6.800000000000001,
+            68
+          ],
+          "size": [
+            7.343906236396094,
+            7.319314586044118,
+            7.343906236396094
+          ]
+        },
+        "volume": 195.4321957945139,
+        "meshOk": true,
+        "vertexCount": 189,
+        "error": null
+      },
+      {
+        "id": "lHand",
+        "bbox": {
+          "min": [
+            -23.921953118198047,
+            3.140342706977941,
+            64.32804688180195
+          ],
+          "max": [
+            -16.578046881801953,
+            10.45965729302206,
+            71.67195311819805
+          ],
+          "center": [
+            -20.25,
+            6.800000000000001,
+            68
+          ],
+          "size": [
+            7.343906236396094,
+            7.319314586044118,
+            7.343906236396094
+          ]
+        },
+        "volume": 195.4321957945139,
+        "meshOk": true,
+        "vertexCount": 189,
+        "error": null
+      },
+      {
+        "id": "rFoot",
+        "bbox": {
+          "min": [
+            -3.000000100000001,
+            -15.300000100000002,
+            -1.0000000222044604e-7
+          ],
+          "max": [
+            17.4000001,
+            22.1000001,
+            13.600000100000003
+          ],
+          "center": [
+            7.199999999999999,
+            3.3999999999999986,
+            6.800000000000001
+          ],
+          "size": [
+            20.4000002,
+            37.4000002,
+            13.600000200000006
+          ]
+        },
+        "volume": 10376.255999999998,
+        "meshOk": true,
+        "vertexCount": 24,
+        "error": null
+      },
+      {
+        "id": "lFoot",
+        "bbox": {
+          "min": [
+            -17.4000001,
+            -15.300000100000002,
+            -1.0000000251214793e-7
+          ],
+          "max": [
+            3.0000001000000016,
+            22.1000001,
+            13.600000100000003
+          ],
+          "center": [
+            -7.199999999999999,
+            3.3999999999999986,
+            6.8
+          ],
+          "size": [
+            20.4000002,
+            37.4000002,
+            13.600000200000006
+          ]
+        },
+        "volume": 10376.255999999998,
+        "meshOk": true,
+        "vertexCount": 24,
+        "error": null
+      },
+      {
+        "id": "torso",
+        "bbox": {
+          "min": [
+            -20.832606102341625,
+            -10.123947549954819,
+            71.26739389765753
+          ],
+          "max": [
+            20.83260610234162,
+            10.123947549954837,
+            120.83260610234214
+          ],
+          "center": [
+            -3.552713678800501e-15,
+            8.881784197001252e-15,
+            96.04999999999984
+          ],
+          "size": [
+            41.66521220468324,
+            20.247895099909655,
+            49.56521220468461
+          ]
+        },
+        "volume": 22353.847128081252,
+        "meshOk": true,
+        "vertexCount": 946,
+        "error": null
+      },
+      {
+        "id": "rUpperArm",
+        "bbox": {
+          "min": [
+            20.21157046080645,
+            -2.03842953919355,
+            91.46157046080648
+          ],
+          "max": [
+            25.9384295391936,
+            10.538429539193583,
+            124.43842953919354
+          ],
+          "center": [
+            23.075000000000024,
+            4.250000000000017,
+            107.95000000000002
+          ],
+          "size": [
+            5.72685907838715,
+            12.576859078387134,
+            32.97685907838705
+          ]
+        },
+        "volume": 70.9999939711297,
+        "meshOk": true,
+        "vertexCount": 68,
+        "error": null
+      },
+      {
+        "id": "rLowerArm",
+        "bbox": {
+          "min": [
+            20.20487014192734,
+            4.954870141927298,
+            66.19999989999997
+          ],
+          "max": [
+            25.945129858072733,
+            10.345129858072735,
+            95.30000010000002
+          ],
+          "center": [
+            23.07500000000004,
+            7.650000000000016,
+            80.75
+          ],
+          "size": [
+            5.740259716145392,
+            5.390259716145437,
+            29.100000200000053
+          ]
+        },
+        "volume": 57.50999511661423,
+        "meshOk": true,
+        "vertexCount": 60,
+        "error": null
+      },
+      {
+        "id": "lUpperArm",
+        "bbox": {
+          "min": [
+            -25.9384295391936,
+            -2.03842953919355,
+            91.46157046080648
+          ],
+          "max": [
+            -20.21157046080645,
+            10.538429539193583,
+            124.43842953919354
+          ],
+          "center": [
+            -23.075000000000024,
+            4.250000000000017,
+            107.95000000000002
+          ],
+          "size": [
+            5.72685907838715,
+            12.576859078387134,
+            32.97685907838705
+          ]
+        },
+        "volume": 70.9999939711297,
+        "meshOk": true,
+        "vertexCount": 68,
+        "error": null
+      },
+      {
+        "id": "lLowerArm",
+        "bbox": {
+          "min": [
+            -25.945129858072733,
+            4.954870141927298,
+            66.19999989999997
+          ],
+          "max": [
+            -20.20487014192734,
+            10.345129858072735,
+            95.30000010000002
+          ],
+          "center": [
+            -23.07500000000004,
+            7.650000000000016,
+            80.75
+          ],
+          "size": [
+            5.740259716145392,
+            5.390259716145437,
+            29.100000200000053
+          ]
+        },
+        "volume": 57.50999511661423,
+        "meshOk": true,
+        "vertexCount": 60,
+        "error": null
+      },
+      {
+        "id": "rThigh",
+        "bbox": {
+          "min": [
+            9.857727516887113,
+            -2.2422724831128917,
+            36.85772751688712
+          ],
+          "max": [
+            11.292272483112892,
+            10.742272483112941,
+            78.7422724831129
+          ],
+          "center": [
+            10.575000000000003,
+            4.250000000000025,
+            57.80000000000001
+          ],
+          "size": [
+            1.4345449662257792,
+            12.984544966225833,
+            41.88454496622578
+          ]
+        },
+        "volume": 20.52716639855567,
+        "meshOk": true,
+        "vertexCount": 68,
+        "error": null
+      },
+      {
+        "id": "rShin",
+        "bbox": {
+          "min": [
+            7.161570460806459,
+            1.3615704608064199,
+            4.761570460806464
+          ],
+          "max": [
+            9.93842953919354,
+            10.53842953919354,
+            41.138429539193545
+          ],
+          "center": [
+            8.55,
+            5.949999999999981,
+            22.950000000000006
+          ],
+          "size": [
+            2.7768590783870817,
+            9.176859078387121,
+            36.376859078387085
+          ]
+        },
+        "volume": 33.92920065876977,
+        "meshOk": true,
+        "vertexCount": 68,
+        "error": null
+      },
+      {
+        "id": "lThigh",
+        "bbox": {
+          "min": [
+            -11.292272483112892,
+            -2.2422724831128917,
+            36.85772751688712
+          ],
+          "max": [
+            -9.857727516887113,
+            10.742272483112941,
+            78.7422724831129
+          ],
+          "center": [
+            -10.575000000000003,
+            4.250000000000025,
+            57.80000000000001
+          ],
+          "size": [
+            1.4345449662257792,
+            12.984544966225833,
+            41.88454496622578
+          ]
+        },
+        "volume": 20.52716639855567,
+        "meshOk": true,
+        "vertexCount": 68,
+        "error": null
+      },
+      {
+        "id": "lShin",
+        "bbox": {
+          "min": [
+            -9.93842953919354,
+            1.3615704608064199,
+            4.761570460806464
+          ],
+          "max": [
+            -7.161570460806459,
+            10.53842953919354,
+            41.138429539193545
+          ],
+          "center": [
+            -8.55,
+            5.949999999999981,
+            22.950000000000006
+          ],
+          "size": [
+            2.7768590783870817,
+            9.176859078387121,
+            36.376859078387085
+          ]
+        },
+        "volume": 33.92920065876977,
+        "meshOk": true,
+        "vertexCount": 68,
+        "error": null
+      }
+    ],
+    "nodeErrors": [],
+    "numbers": {
+      "bodyHeight": 170,
+      "bodyWidth": 45,
+      "bodyDepth": 25,
+      "limbThickness": 4
+    },
+    "sliders": {
+      "bodyHeight": 170,
+      "bodyWidth": 45,
+      "bodyDepth": 25,
+      "limbThickness": 4
+    },
+    "selections": {},
+    "helpers": {
+      "pelvis_normal": {
+        "type": "Vector",
+        "x": 0,
+        "y": 0,
+        "z": 1,
+        "sourceNodeId": "pelvis_normal",
+        "ancestorNodeIds": []
+      },
+      "waist_normal": {
+        "type": "Vector",
+        "x": 0,
+        "y": 0,
+        "z": 1,
+        "sourceNodeId": "waist_normal",
+        "ancestorNodeIds": []
+      },
+      "chest_normal": {
+        "type": "Vector",
+        "x": 0,
+        "y": 0,
+        "z": 1,
+        "sourceNodeId": "chest_normal",
+        "ancestorNodeIds": []
+      },
+      "pelvis_center": {
+        "type": "Point",
+        "x": 0,
+        "y": 0,
+        "z": 71.39999999999999,
+        "sourceNodeId": "pelvis_center",
+        "ancestorNodeIds": []
+      },
+      "waist_center": {
+        "type": "Point",
+        "x": 0,
+        "y": 0,
+        "z": 93.50000000000001,
+        "sourceNodeId": "waist_center",
+        "ancestorNodeIds": []
+      },
+      "chest_center": {
+        "type": "Point",
+        "x": 0,
+        "y": 0,
+        "z": 120.69999999999999,
+        "sourceNodeId": "chest_center",
+        "ancestorNodeIds": []
+      },
+      "neck_center": {
+        "type": "Point",
+        "x": 0,
+        "y": 0,
+        "z": 132.6,
+        "sourceNodeId": "neck_center",
+        "ancestorNodeIds": []
+      },
+      "head_center": {
+        "type": "Point",
+        "x": 0,
+        "y": 0,
+        "z": 151.3,
+        "sourceNodeId": "head_center",
+        "ancestorNodeIds": []
+      },
+      "rShoulder": {
+        "type": "Point",
+        "x": 20.25,
+        "y": 0,
+        "z": 122.39999999999999,
+        "sourceNodeId": "rShoulder",
+        "ancestorNodeIds": []
+      },
+      "rElbow": {
+        "type": "Point",
+        "x": 25.9,
+        "y": 8.5,
+        "z": 93.50000000000001,
+        "sourceNodeId": "rElbow",
+        "ancestorNodeIds": []
+      },
+      "rWrist": {
+        "type": "Point",
+        "x": 20.25,
+        "y": 6.8,
+        "z": 68,
+        "sourceNodeId": "rWrist",
+        "ancestorNodeIds": []
+      },
+      "lShoulder": {
+        "type": "Point",
+        "x": -20.25,
+        "y": 0,
+        "z": 122.39999999999999,
+        "sourceNodeId": "lShoulder",
+        "ancestorNodeIds": []
+      },
+      "lElbow": {
+        "type": "Point",
+        "x": -25.9,
+        "y": 8.5,
+        "z": 93.50000000000001,
+        "sourceNodeId": "lElbow",
+        "ancestorNodeIds": []
+      },
+      "lWrist": {
+        "type": "Point",
+        "x": -20.25,
+        "y": 6.8,
+        "z": 68,
+        "sourceNodeId": "lWrist",
+        "ancestorNodeIds": []
+      },
+      "rHip": {
+        "type": "Point",
+        "x": 11.25,
+        "y": 0,
+        "z": 76.5,
+        "sourceNodeId": "rHip",
+        "ancestorNodeIds": []
+      },
+      "rKnee": {
+        "type": "Point",
+        "x": 9.9,
+        "y": 8.5,
+        "z": 39.1,
+        "sourceNodeId": "rKnee",
+        "ancestorNodeIds": []
+      },
+      "rAnkle": {
+        "type": "Point",
+        "x": 7.2,
+        "y": 3.4,
+        "z": 6.8,
+        "sourceNodeId": "rAnkle",
+        "ancestorNodeIds": []
+      },
+      "rFoot_center": {
+        "type": "Point",
+        "x": 7.2,
+        "y": 3.4,
+        "z": 6.8,
+        "sourceNodeId": "rFoot_center",
+        "ancestorNodeIds": []
+      },
+      "lHip": {
+        "type": "Point",
+        "x": -11.25,
+        "y": 0,
+        "z": 76.5,
+        "sourceNodeId": "lHip",
+        "ancestorNodeIds": []
+      },
+      "lKnee": {
+        "type": "Point",
+        "x": -9.9,
+        "y": 8.5,
+        "z": 39.1,
+        "sourceNodeId": "lKnee",
+        "ancestorNodeIds": []
+      },
+      "lAnkle": {
+        "type": "Point",
+        "x": -7.2,
+        "y": 3.4,
+        "z": 6.8,
+        "sourceNodeId": "lAnkle",
+        "ancestorNodeIds": []
+      },
+      "lFoot_center": {
+        "type": "Point",
+        "x": -7.2,
+        "y": 3.4,
+        "z": 6.8,
+        "sourceNodeId": "lFoot_center",
+        "ancestorNodeIds": []
+      }
+    },
+    "nodeCount": 52,
+    "edgeCount": 39,
+    "transformCount": 1,
+    "nodesPerLeafRatio": 3.466666666666667,
+    "nodeEconomyWarning": false,
+    "placement": {
+      "anchored": [
+        "neck",
+        "head",
+        "rHand",
+        "lHand",
+        "rFoot",
+        "lFoot",
+        "torso",
+        "rUpperArm",
+        "rLowerArm",
+        "lUpperArm",
+        "lLowerArm",
+        "rThigh",
+        "rShin",
+        "lThigh",
+        "lShin"
+      ],
+      "literal": [],
+      "origin": [],
+      "literalNodeIds": [],
+      "ratio": 1
+    },
+    "scene": {
+      "min": [
+        -25.945129858072733,
+        -15.300000100000002,
+        -1.0000000251214793e-7
+      ],
+      "max": [
+        25.945129858072733,
+        22.1000001,
+        165.9491774832754
+      ],
+      "size": [
+        51.890259716145465,
+        37.4000002,
+        165.9491775832754
+      ]
+    },
+    "meshedLeafCount": 15,
+    "kernelFaultCount": 0,
+    "kernelSuspect": false,
+    "kernelHealth": "ok",
+    "evalCount": 1,
+    "recycleRecommended": false,
+    "perturbationIssues": [
+      "At limbThickness decrease (0.6x), \"rHand\" detaches from \"torso\". Check that their positions are driven by formulas or Align rather than absolute coordinates.",
+      "At limbThickness decrease (0.6x), \"lHand\" detaches from \"torso\". Check that their positions are driven by formulas or Align rather than absolute coordinates.",
+      "At bodyHeight decrease (0.6x), \"rFoot\" detaches from \"lFoot\". Check that their positions are driven by formulas or Align rather than absolute coordinates.",
+      "At bodyHeight increase (1.5x), \"rHand\" detaches from \"torso\". Check that their positions are driven by formulas or Align rather than absolute coordinates.",
+      "At bodyHeight increase (1.5x), \"lHand\" detaches from \"torso\". Check that their positions are driven by formulas or Align rather than absolute coordinates.",
+      "At bodyWidth increase (1.5x), \"rFoot\" detaches from \"lFoot\". Check that their positions are driven by formulas or Align rather than absolute coordinates."
+    ],
+    "proportionalIntegrity": 0.3333333333333333
+  },
+  "timeline": [
+    {
+      "at": "2026-07-23T18:34:28.651Z",
+      "turn": 1,
+      "trigger": "ai-ir",
+      "label": "attempt 2: rebuilt graph (52 nodes)",
+      "nodeCount": 52,
+      "edgeCount": 39,
+      "isolatedCount": 4,
+      "diff": {
+        "addedNodes": [
+          "bodyHeight",
+          "bodyWidth",
+          "bodyDepth",
+          "limbThickness",
+          "pelvis_center",
+          "pelvis_normal",
+          "pelvis",
+          "waist_center",
+          "waist_normal",
+          "waist",
+          "chest_center",
+          "chest_normal",
+          "chest",
+          "torso",
+          "neck_center",
+          "neck",
+          "head_center",
+          "head",
+          "rShoulder",
+          "rElbow",
+          "rWrist",
+          "rUpperArmCrv",
+          "rLowerArmCrv",
+          "rUpperArm",
+          "rLowerArm",
+          "rHand",
+          "lShoulder",
+          "lElbow",
+          "lWrist",
+          "lUpperArmCrv",
+          "lLowerArmCrv",
+          "lUpperArm",
+          "lLowerArm",
+          "lHand",
+          "rHip",
+          "rKnee",
+          "rAnkle",
+          "rThighCrv",
+          "rShinCrv",
+          "rThigh",
+          "rShin",
+          "rFoot_center",
+          "rFoot",
+          "lHip",
+          "lKnee",
+          "lAnkle",
+          "lThighCrv",
+          "lShinCrv",
+          "lThigh",
+          "lShin",
+          "lFoot_center",
+          "lFoot"
+        ],
+        "removedNodes": [],
+        "changedNodes": [],
+        "addedEdges": 39,
+        "removedEdges": 0
+      },
+      "nodes": [
+        {
+          "id": "bodyHeight",
+          "type": "NumberSlider",
+          "data": {
+            "value": 170,
+            "label": "bodyHeight",
+            "min": 100,
+            "max": 250,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 230
+          }
+        },
+        {
+          "id": "bodyWidth",
+          "type": "NumberSlider",
+          "data": {
+            "value": 45,
+            "label": "bodyWidth",
+            "min": 20,
+            "max": 90,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 420
+          }
+        },
+        {
+          "id": "bodyDepth",
+          "type": "NumberSlider",
+          "data": {
+            "value": 25,
+            "label": "bodyDepth",
+            "min": 10,
+            "max": 60,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 40
+          }
+        },
+        {
+          "id": "limbThickness",
+          "type": "NumberSlider",
+          "data": {
+            "value": 4,
+            "label": "limbThickness",
+            "min": 1,
+            "max": 12,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 1940
+          }
+        },
+        {
+          "id": "pelvis_center",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "bodyHeight*0.42"
+          },
+          "position": {
+            "x": 40,
+            "y": 2890
+          }
+        },
+        {
+          "id": "pelvis_normal",
+          "type": "VectorXYZ",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": 1
+          },
+          "position": {
+            "x": 40,
+            "y": 3080
+          }
+        },
+        {
+          "id": "pelvis",
+          "type": "EllipseCurve",
+          "data": {
+            "radiusX": "bodyWidth*0.42",
+            "radiusY": "bodyDepth*0.40"
+          },
+          "position": {
+            "x": 270,
+            "y": 1750
+          }
+        },
+        {
+          "id": "waist_center",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "bodyHeight*0.55"
+          },
+          "position": {
+            "x": 40,
+            "y": 4600
+          }
+        },
+        {
+          "id": "waist_normal",
+          "type": "VectorXYZ",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": 1
+          },
+          "position": {
+            "x": 40,
+            "y": 4790
+          }
+        },
+        {
+          "id": "waist",
+          "type": "EllipseCurve",
+          "data": {
+            "radiusX": "bodyWidth*0.35",
+            "radiusY": "bodyDepth*0.32"
+          },
+          "position": {
+            "x": 270,
+            "y": 3080
+          }
+        },
+        {
+          "id": "chest_center",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "bodyHeight*0.71"
+          },
+          "position": {
+            "x": 40,
+            "y": 610
+          }
+        },
+        {
+          "id": "chest_normal",
+          "type": "VectorXYZ",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": 1
+          },
+          "position": {
+            "x": 40,
+            "y": 800
+          }
+        },
+        {
+          "id": "chest",
+          "type": "EllipseCurve",
+          "data": {
+            "radiusX": "bodyWidth*0.46",
+            "radiusY": "bodyDepth*0.35"
+          },
+          "position": {
+            "x": 270,
+            "y": 40
+          }
+        },
+        {
+          "id": "torso",
+          "type": "LoftCurves",
+          "data": {
+            "ruled": false,
+            "closed": false,
+            "color": "#3b82f6"
+          },
+          "position": {
+            "x": 500,
+            "y": 800
+          }
+        },
+        {
+          "id": "neck_center",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "bodyHeight*0.78"
+          },
+          "position": {
+            "x": 40,
+            "y": 2700
+          }
+        },
+        {
+          "id": "neck",
+          "type": "Cylinder",
+          "data": {
+            "radius": "limbThickness*0.65",
+            "height": "bodyHeight*0.07",
+            "color": "#fca5a5"
+          },
+          "position": {
+            "x": 270,
+            "y": 1560
+          }
+        },
+        {
+          "id": "head_center",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "bodyHeight*0.89"
+          },
+          "position": {
+            "x": 40,
+            "y": 990
+          }
+        },
+        {
+          "id": "head",
+          "type": "Sphere",
+          "data": {
+            "radius": "bodyHeight*0.085",
+            "color": "#fca5a5"
+          },
+          "position": {
+            "x": 270,
+            "y": 230
+          }
+        },
+        {
+          "id": "rShoulder",
+          "type": "Point",
+          "data": {
+            "x": "bodyWidth*0.45",
+            "y": 0,
+            "z": "bodyHeight*0.72"
+          },
+          "position": {
+            "x": 40,
+            "y": 4220
+          }
+        },
+        {
+          "id": "rElbow",
+          "type": "Point",
+          "data": {
+            "x": "bodyWidth*0.5 + bodyHeight*0.02",
+            "y": "bodyHeight*0.05",
+            "z": "bodyHeight*0.55"
+          },
+          "position": {
+            "x": 40,
+            "y": 3460
+          }
+        },
+        {
+          "id": "rWrist",
+          "type": "Point",
+          "data": {
+            "x": "bodyWidth*0.45",
+            "y": "bodyHeight*0.04",
+            "z": "bodyHeight*0.40"
+          },
+          "position": {
+            "x": 40,
+            "y": 4410
+          }
+        },
+        {
+          "id": "rUpperArmCrv",
+          "type": "Line",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 2320
+          }
+        },
+        {
+          "id": "rLowerArmCrv",
+          "type": "Line",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 2510
+          }
+        },
+        {
+          "id": "rUpperArm",
+          "type": "Pipe",
+          "data": {
+            "radius": "limbThickness/2",
+            "color": "#3b82f6"
+          },
+          "position": {
+            "x": 500,
+            "y": 1180
+          }
+        },
+        {
+          "id": "rLowerArm",
+          "type": "Pipe",
+          "data": {
+            "radius": "limbThickness*0.45",
+            "color": "#fca5a5"
+          },
+          "position": {
+            "x": 500,
+            "y": 1370
+          }
+        },
+        {
+          "id": "rHand",
+          "type": "Sphere",
+          "data": {
+            "radius": "limbThickness*0.9",
+            "color": "#fca5a5"
+          },
+          "position": {
+            "x": 270,
+            "y": 2890
+          }
+        },
+        {
+          "id": "lShoulder",
+          "type": "Point",
+          "data": {
+            "x": "-bodyWidth*0.45",
+            "y": 0,
+            "z": "bodyHeight*0.72"
+          },
+          "position": {
+            "x": 40,
+            "y": 2320
+          }
+        },
+        {
+          "id": "lElbow",
+          "type": "Point",
+          "data": {
+            "x": "-bodyWidth*0.5 - bodyHeight*0.02",
+            "y": "bodyHeight*0.05",
+            "z": "bodyHeight*0.55"
+          },
+          "position": {
+            "x": 40,
+            "y": 1370
+          }
+        },
+        {
+          "id": "lWrist",
+          "type": "Point",
+          "data": {
+            "x": "-bodyWidth*0.45",
+            "y": "bodyHeight*0.04",
+            "z": "bodyHeight*0.40"
+          },
+          "position": {
+            "x": 40,
+            "y": 2510
+          }
+        },
+        {
+          "id": "lUpperArmCrv",
+          "type": "Line",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 800
+          }
+        },
+        {
+          "id": "lLowerArmCrv",
+          "type": "Line",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 990
+          }
+        },
+        {
+          "id": "lUpperArm",
+          "type": "Pipe",
+          "data": {
+            "radius": "limbThickness/2",
+            "color": "#3b82f6"
+          },
+          "position": {
+            "x": 500,
+            "y": 230
+          }
+        },
+        {
+          "id": "lLowerArm",
+          "type": "Pipe",
+          "data": {
+            "radius": "limbThickness*0.45",
+            "color": "#fca5a5"
+          },
+          "position": {
+            "x": 500,
+            "y": 420
+          }
+        },
+        {
+          "id": "lHand",
+          "type": "Sphere",
+          "data": {
+            "radius": "limbThickness*0.9",
+            "color": "#fca5a5"
+          },
+          "position": {
+            "x": 270,
+            "y": 1370
+          }
+        },
+        {
+          "id": "rHip",
+          "type": "Point",
+          "data": {
+            "x": "bodyWidth*0.25",
+            "y": 0,
+            "z": "bodyHeight*0.45"
+          },
+          "position": {
+            "x": 40,
+            "y": 3840
+          }
+        },
+        {
+          "id": "rKnee",
+          "type": "Point",
+          "data": {
+            "x": "bodyWidth*0.22",
+            "y": "bodyHeight*0.05",
+            "z": "bodyHeight*0.23"
+          },
+          "position": {
+            "x": 40,
+            "y": 4030
+          }
+        },
+        {
+          "id": "rAnkle",
+          "type": "Point",
+          "data": {
+            "x": "bodyWidth*0.16",
+            "y": "bodyHeight*0.02",
+            "z": "bodyHeight*0.04"
+          },
+          "position": {
+            "x": 40,
+            "y": 3270
+          }
+        },
+        {
+          "id": "rThighCrv",
+          "type": "Line",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 2700
+          }
+        },
+        {
+          "id": "rShinCrv",
+          "type": "Line",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 2130
+          }
+        },
+        {
+          "id": "rThigh",
+          "type": "Pipe",
+          "data": {
+            "radius": "limbThickness*0.55",
+            "color": "#1e293b"
+          },
+          "position": {
+            "x": 500,
+            "y": 1560
+          }
+        },
+        {
+          "id": "rShin",
+          "type": "Pipe",
+          "data": {
+            "radius": "limbThickness*0.5",
+            "color": "#fca5a5"
+          },
+          "position": {
+            "x": 500,
+            "y": 990
+          }
+        },
+        {
+          "id": "rFoot_center",
+          "type": "Point",
+          "data": {
+            "x": "bodyWidth*0.16",
+            "y": "bodyHeight*0.02",
+            "z": "bodyHeight*0.04"
+          },
+          "position": {
+            "x": 40,
+            "y": 3650
+          }
+        },
+        {
+          "id": "rFoot",
+          "type": "Box",
+          "data": {
+            "width": "bodyHeight*0.12",
+            "length": "bodyHeight*0.22",
+            "height": "bodyHeight*0.08",
+            "color": "#1e293b"
+          },
+          "position": {
+            "x": 270,
+            "y": 1940
+          }
+        },
+        {
+          "id": "lHip",
+          "type": "Point",
+          "data": {
+            "x": "-bodyWidth*0.25",
+            "y": 0,
+            "z": "bodyHeight*0.45"
+          },
+          "position": {
+            "x": 40,
+            "y": 1750
+          }
+        },
+        {
+          "id": "lKnee",
+          "type": "Point",
+          "data": {
+            "x": "-bodyWidth*0.22",
+            "y": "bodyHeight*0.05",
+            "z": "bodyHeight*0.23"
+          },
+          "position": {
+            "x": 40,
+            "y": 2130
+          }
+        },
+        {
+          "id": "lAnkle",
+          "type": "Point",
+          "data": {
+            "x": "-bodyWidth*0.16",
+            "y": "bodyHeight*0.02",
+            "z": "bodyHeight*0.04"
+          },
+          "position": {
+            "x": 40,
+            "y": 1180
+          }
+        },
+        {
+          "id": "lThighCrv",
+          "type": "Line",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 1180
+          }
+        },
+        {
+          "id": "lShinCrv",
+          "type": "Line",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 610
+          }
+        },
+        {
+          "id": "lThigh",
+          "type": "Pipe",
+          "data": {
+            "radius": "limbThickness*0.55",
+            "color": "#1e293b"
+          },
+          "position": {
+            "x": 500,
+            "y": 610
+          }
+        },
+        {
+          "id": "lShin",
+          "type": "Pipe",
+          "data": {
+            "radius": "limbThickness*0.5",
+            "color": "#fca5a5"
+          },
+          "position": {
+            "x": 500,
+            "y": 40
+          }
+        },
+        {
+          "id": "lFoot_center",
+          "type": "Point",
+          "data": {
+            "x": "-bodyWidth*0.16",
+            "y": "bodyHeight*0.02",
+            "z": "bodyHeight*0.04"
+          },
+          "position": {
+            "x": 40,
+            "y": 1560
+          }
+        },
+        {
+          "id": "lFoot",
+          "type": "Box",
+          "data": {
+            "width": "bodyHeight*0.12",
+            "length": "bodyHeight*0.22",
+            "height": "bodyHeight*0.08",
+            "color": "#1e293b"
+          },
+          "position": {
+            "x": 270,
+            "y": 420
+          }
+        }
+      ],
+      "edges": [
+        {
+          "source": "pelvis_center",
+          "sourceHandle": "point",
+          "target": "pelvis",
+          "targetHandle": "center",
+          "id": "e_pelvis_center_pelvis_center"
+        },
+        {
+          "source": "pelvis_normal",
+          "sourceHandle": "vector",
+          "target": "pelvis",
+          "targetHandle": "normal",
+          "id": "e_pelvis_normal_pelvis_normal"
+        },
+        {
+          "source": "waist_center",
+          "sourceHandle": "point",
+          "target": "waist",
+          "targetHandle": "center",
+          "id": "e_waist_center_waist_center"
+        },
+        {
+          "source": "waist_normal",
+          "sourceHandle": "vector",
+          "target": "waist",
+          "targetHandle": "normal",
+          "id": "e_waist_normal_waist_normal"
+        },
+        {
+          "source": "chest_center",
+          "sourceHandle": "point",
+          "target": "chest",
+          "targetHandle": "center",
+          "id": "e_chest_center_chest_center"
+        },
+        {
+          "source": "chest_normal",
+          "sourceHandle": "vector",
+          "target": "chest",
+          "targetHandle": "normal",
+          "id": "e_chest_normal_chest_normal"
+        },
+        {
+          "source": "pelvis",
+          "sourceHandle": "curve",
+          "target": "torso",
+          "targetHandle": "curve1",
+          "id": "e_pelvis_torso_curve1"
+        },
+        {
+          "source": "waist",
+          "sourceHandle": "curve",
+          "target": "torso",
+          "targetHandle": "curve2",
+          "id": "e_waist_torso_curve2"
+        },
+        {
+          "source": "chest",
+          "sourceHandle": "curve",
+          "target": "torso",
+          "targetHandle": "curve3",
+          "id": "e_chest_torso_curve3"
+        },
+        {
+          "source": "neck_center",
+          "sourceHandle": "point",
+          "target": "neck",
+          "targetHandle": "center",
+          "id": "e_neck_center_neck_center"
+        },
+        {
+          "source": "head_center",
+          "sourceHandle": "point",
+          "target": "head",
+          "targetHandle": "center",
+          "id": "e_head_center_head_center"
+        },
+        {
+          "source": "rShoulder",
+          "sourceHandle": "point",
+          "target": "rUpperArmCrv",
+          "targetHandle": "a",
+          "id": "e_rShoulder_rUpperArmCrv_a"
+        },
+        {
+          "source": "rElbow",
+          "sourceHandle": "point",
+          "target": "rUpperArmCrv",
+          "targetHandle": "b",
+          "id": "e_rElbow_rUpperArmCrv_b"
+        },
+        {
+          "source": "rElbow",
+          "sourceHandle": "point",
+          "target": "rLowerArmCrv",
+          "targetHandle": "a",
+          "id": "e_rElbow_rLowerArmCrv_a"
+        },
+        {
+          "source": "rWrist",
+          "sourceHandle": "point",
+          "target": "rLowerArmCrv",
+          "targetHandle": "b",
+          "id": "e_rWrist_rLowerArmCrv_b"
+        },
+        {
+          "source": "rUpperArmCrv",
+          "sourceHandle": "curve",
+          "target": "rUpperArm",
+          "targetHandle": "path",
+          "id": "e_rUpperArmCrv_rUpperArm_path"
+        },
+        {
+          "source": "rLowerArmCrv",
+          "sourceHandle": "curve",
+          "target": "rLowerArm",
+          "targetHandle": "path",
+          "id": "e_rLowerArmCrv_rLowerArm_path"
+        },
+        {
+          "source": "rWrist",
+          "sourceHandle": "point",
+          "target": "rHand",
+          "targetHandle": "center",
+          "id": "e_rWrist_rHand_center"
+        },
+        {
+          "source": "lShoulder",
+          "sourceHandle": "point",
+          "target": "lUpperArmCrv",
+          "targetHandle": "a",
+          "id": "e_lShoulder_lUpperArmCrv_a"
+        },
+        {
+          "source": "lElbow",
+          "sourceHandle": "point",
+          "target": "lUpperArmCrv",
+          "targetHandle": "b",
+          "id": "e_lElbow_lUpperArmCrv_b"
+        },
+        {
+          "source": "lElbow",
+          "sourceHandle": "point",
+          "target": "lLowerArmCrv",
+          "targetHandle": "a",
+          "id": "e_lElbow_lLowerArmCrv_a"
+        },
+        {
+          "source": "lWrist",
+          "sourceHandle": "point",
+          "target": "lLowerArmCrv",
+          "targetHandle": "b",
+          "id": "e_lWrist_lLowerArmCrv_b"
+        },
+        {
+          "source": "lUpperArmCrv",
+          "sourceHandle": "curve",
+          "target": "lUpperArm",
+          "targetHandle": "path",
+          "id": "e_lUpperArmCrv_lUpperArm_path"
+        },
+        {
+          "source": "lLowerArmCrv",
+          "sourceHandle": "curve",
+          "target": "lLowerArm",
+          "targetHandle": "path",
+          "id": "e_lLowerArmCrv_lLowerArm_path"
+        },
+        {
+          "source": "lWrist",
+          "sourceHandle": "point",
+          "target": "lHand",
+          "targetHandle": "center",
+          "id": "e_lWrist_lHand_center"
+        },
+        {
+          "source": "rHip",
+          "sourceHandle": "point",
+          "target": "rThighCrv",
+          "targetHandle": "a",
+          "id": "e_rHip_rThighCrv_a"
+        },
+        {
+          "source": "rKnee",
+          "sourceHandle": "point",
+          "target": "rThighCrv",
+          "targetHandle": "b",
+          "id": "e_rKnee_rThighCrv_b"
+        },
+        {
+          "source": "rKnee",
+          "sourceHandle": "point",
+          "target": "rShinCrv",
+          "targetHandle": "a",
+          "id": "e_rKnee_rShinCrv_a"
+        },
+        {
+          "source": "rAnkle",
+          "sourceHandle": "point",
+          "target": "rShinCrv",
+          "targetHandle": "b",
+          "id": "e_rAnkle_rShinCrv_b"
+        },
+        {
+          "source": "rThighCrv",
+          "sourceHandle": "curve",
+          "target": "rThigh",
+          "targetHandle": "path",
+          "id": "e_rThighCrv_rThigh_path"
+        },
+        {
+          "source": "rShinCrv",
+          "sourceHandle": "curve",
+          "target": "rShin",
+          "targetHandle": "path",
+          "id": "e_rShinCrv_rShin_path"
+        },
+        {
+          "source": "rFoot_center",
+          "sourceHandle": "point",
+          "target": "rFoot",
+          "targetHandle": "center",
+          "id": "e_rFoot_center_rFoot_center"
+        },
+        {
+          "source": "lHip",
+          "sourceHandle": "point",
+          "target": "lThighCrv",
+          "targetHandle": "a",
+          "id": "e_lHip_lThighCrv_a"
+        },
+        {
+          "source": "lKnee",
+          "sourceHandle": "point",
+          "target": "lThighCrv",
+          "targetHandle": "b",
+          "id": "e_lKnee_lThighCrv_b"
+        },
+        {
+          "source": "lKnee",
+          "sourceHandle": "point",
+          "target": "lShinCrv",
+          "targetHandle": "a",
+          "id": "e_lKnee_lShinCrv_a"
+        },
+        {
+          "source": "lAnkle",
+          "sourceHandle": "point",
+          "target": "lShinCrv",
+          "targetHandle": "b",
+          "id": "e_lAnkle_lShinCrv_b"
+        },
+        {
+          "source": "lThighCrv",
+          "sourceHandle": "curve",
+          "target": "lThigh",
+          "targetHandle": "path",
+          "id": "e_lThighCrv_lThigh_path"
+        },
+        {
+          "source": "lShinCrv",
+          "sourceHandle": "curve",
+          "target": "lShin",
+          "targetHandle": "path",
+          "id": "e_lShinCrv_lShin_path"
+        },
+        {
+          "source": "lFoot_center",
+          "sourceHandle": "point",
+          "target": "lFoot",
+          "targetHandle": "center",
+          "id": "e_lFoot_center_lFoot_center"
+        }
+      ]
+    }
+  ]
+}

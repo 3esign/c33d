@@ -1,0 +1,2613 @@
+{
+  "c33dExport": 2,
+  "exportedAt": "2026-07-24T22:21:16.495Z",
+  "comment": "interesting",
+  "agent": {
+    "name": "Ollama (Local)",
+    "provider": "ollama",
+    "model": "glm-5.2:cloud"
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "terrainSize",
+        "type": "NumberSlider",
+        "data": {
+          "value": 70,
+          "label": "terrainSize",
+          "min": 30,
+          "max": 120,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 3080
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "treeHeight",
+        "type": "NumberSlider",
+        "data": {
+          "value": 14,
+          "label": "treeHeight",
+          "min": 6,
+          "max": 30,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 3270
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "ringCount",
+        "type": "NumberSlider",
+        "data": {
+          "value": 8,
+          "label": "ringCount",
+          "min": 4,
+          "max": 16,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 2510
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "terrainBox",
+        "type": "Box",
+        "data": {
+          "width": "terrainSize",
+          "length": "terrainSize*0.85",
+          "height": "terrainSize*0.06"
+        },
+        "position": {
+          "x": 40,
+          "y": 2890
+        },
+        "measured": {
+          "width": 201,
+          "height": 312
+        }
+      },
+      {
+        "id": "ground",
+        "type": "Translate",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": "-terrainSize*0.03",
+          "color": "#2d4a3a"
+        },
+        "position": {
+          "x": 270,
+          "y": 2130
+        },
+        "measured": {
+          "width": 201,
+          "height": 334
+        }
+      },
+      {
+        "id": "conifer",
+        "type": "Cone",
+        "data": {
+          "radius1": "treeHeight*0.16",
+          "radius2": "treeHeight*0.01",
+          "height": "treeHeight"
+        },
+        "position": {
+          "x": 40,
+          "y": 420
+        },
+        "measured": {
+          "width": 201,
+          "height": 344
+        }
+      },
+      {
+        "id": "blobTrunk",
+        "type": "Cylinder",
+        "data": {
+          "radius": "treeHeight*0.035",
+          "height": "treeHeight*0.5"
+        },
+        "position": {
+          "x": 40,
+          "y": 40
+        },
+        "measured": {
+          "width": 201,
+          "height": 296
+        }
+      },
+      {
+        "id": "canopyPt",
+        "type": "Point",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": "treeHeight*0.55"
+        },
+        "position": {
+          "x": 40,
+          "y": 230
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "blobCanopy",
+        "type": "Sphere",
+        "data": {
+          "radius": "treeHeight*0.22"
+        },
+        "position": {
+          "x": 270,
+          "y": 40
+        },
+        "measured": {
+          "width": 201,
+          "height": 216
+        }
+      },
+      {
+        "id": "blobTree",
+        "type": "Compound",
+        "data": {},
+        "position": {
+          "x": 500,
+          "y": 40
+        },
+        "measured": {
+          "width": 150,
+          "height": 330
+        }
+      },
+      {
+        "id": "spire",
+        "type": "Cone",
+        "data": {
+          "radius1": "treeHeight*0.08",
+          "radius2": "treeHeight*0.005",
+          "height": "treeHeight*1.25"
+        },
+        "position": {
+          "x": 40,
+          "y": 2700
+        },
+        "measured": {
+          "width": 201,
+          "height": 344
+        }
+      },
+      {
+        "id": "fairyRingRaw",
+        "type": "Torus",
+        "data": {
+          "majorRadius": "terrainSize*0.12",
+          "minorRadius": "terrainSize*0.01"
+        },
+        "position": {
+          "x": 40,
+          "y": 610
+        },
+        "measured": {
+          "width": 201,
+          "height": 296
+        }
+      },
+      {
+        "id": "fairyRing",
+        "type": "Translate",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": 0.2,
+          "color": "#fbbf24"
+        },
+        "position": {
+          "x": 270,
+          "y": 230
+        },
+        "measured": {
+          "width": 201,
+          "height": 334
+        }
+      },
+      {
+        "id": "innerPts",
+        "type": "ListConstant",
+        "data": {
+          "values": "terrainSize*0.16"
+        },
+        "position": {
+          "x": 40,
+          "y": 800
+        },
+        "measured": {
+          "width": 177,
+          "height": 136
+        }
+      },
+      {
+        "id": "innerPts_x",
+        "type": "ListLength",
+        "data": {},
+        "position": {
+          "x": 270,
+          "y": 420
+        },
+        "measured": {
+          "width": 150,
+          "height": 106
+        }
+      },
+      {
+        "id": "innerPts_x_2",
+        "type": "RepeatEach",
+        "data": {
+          "count": "max(ringCount-2,3)"
+        },
+        "position": {
+          "x": 270,
+          "y": 610
+        },
+        "measured": {
+          "width": 201,
+          "height": 194
+        }
+      },
+      {
+        "id": "innerPts_x_3",
+        "type": "Series",
+        "data": {
+          "start": 0,
+          "step": "2*pi/(max(ringCount-2,3))",
+          "count": "max(ringCount-2,3)"
+        },
+        "position": {
+          "x": 40,
+          "y": 990
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "innerPts_x_4",
+        "type": "Tile",
+        "data": {},
+        "position": {
+          "x": 500,
+          "y": 230
+        },
+        "measured": {
+          "width": 201,
+          "height": 194
+        }
+      },
+      {
+        "id": "innerPts_x_5",
+        "type": "Expression",
+        "data": {
+          "formula": "a*cos(b)"
+        },
+        "position": {
+          "x": 730,
+          "y": 40
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "innerPts_x_6",
+        "type": "Expression",
+        "data": {
+          "formula": "a*sin(b)"
+        },
+        "position": {
+          "x": 730,
+          "y": 230
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "innerPts_x_7",
+        "type": "ListConstant",
+        "data": {
+          "values": "0.2"
+        },
+        "position": {
+          "x": 40,
+          "y": 1180
+        },
+        "measured": {
+          "width": 177,
+          "height": 136
+        }
+      },
+      {
+        "id": "innerPts_x_8",
+        "type": "RepeatEach",
+        "data": {
+          "count": "max(ringCount-2,3)"
+        },
+        "position": {
+          "x": 270,
+          "y": 800
+        },
+        "measured": {
+          "width": 201,
+          "height": 194
+        }
+      },
+      {
+        "id": "innerPts_x_9",
+        "type": "PointsFromLists",
+        "data": {},
+        "position": {
+          "x": 960,
+          "y": 40
+        },
+        "measured": {
+          "width": 150,
+          "height": 234
+        }
+      },
+      {
+        "id": "innerJit",
+        "type": "Jitter",
+        "data": {
+          "amount": "terrainSize*0.02",
+          "seed": 3
+        },
+        "position": {
+          "x": 1190,
+          "y": 40
+        },
+        "measured": {
+          "width": 201,
+          "height": 210
+        }
+      },
+      {
+        "id": "blobs",
+        "type": "InstanceOnPoints",
+        "data": {
+          "scaleStart": "0.8",
+          "scaleEnd": "1.35",
+          "alignToTangent": false,
+          "color": "#7c3aed"
+        },
+        "position": {
+          "x": 1420,
+          "y": 40
+        },
+        "measured": {
+          "width": 201,
+          "height": 436
+        }
+      },
+      {
+        "id": "midPts",
+        "type": "ListConstant",
+        "data": {
+          "values": "terrainSize*0.3"
+        },
+        "position": {
+          "x": 40,
+          "y": 1370
+        },
+        "measured": {
+          "width": 177,
+          "height": 136
+        }
+      },
+      {
+        "id": "midPts_x",
+        "type": "ListLength",
+        "data": {},
+        "position": {
+          "x": 270,
+          "y": 990
+        },
+        "measured": {
+          "width": 150,
+          "height": 106
+        }
+      },
+      {
+        "id": "midPts_x_2",
+        "type": "RepeatEach",
+        "data": {
+          "count": "ringCount+2"
+        },
+        "position": {
+          "x": 270,
+          "y": 1180
+        },
+        "measured": {
+          "width": 201,
+          "height": 194
+        }
+      },
+      {
+        "id": "midPts_x_3",
+        "type": "Series",
+        "data": {
+          "start": 15,
+          "step": "2*pi/(ringCount+2)",
+          "count": "ringCount+2"
+        },
+        "position": {
+          "x": 40,
+          "y": 1560
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "midPts_x_4",
+        "type": "Tile",
+        "data": {},
+        "position": {
+          "x": 500,
+          "y": 420
+        },
+        "measured": {
+          "width": 201,
+          "height": 194
+        }
+      },
+      {
+        "id": "midPts_x_5",
+        "type": "Expression",
+        "data": {
+          "formula": "a*cos(b)"
+        },
+        "position": {
+          "x": 730,
+          "y": 420
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "midPts_x_6",
+        "type": "Expression",
+        "data": {
+          "formula": "a*sin(b)"
+        },
+        "position": {
+          "x": 730,
+          "y": 610
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "midPts_x_7",
+        "type": "ListConstant",
+        "data": {
+          "values": "0.2"
+        },
+        "position": {
+          "x": 40,
+          "y": 1750
+        },
+        "measured": {
+          "width": 177,
+          "height": 136
+        }
+      },
+      {
+        "id": "midPts_x_8",
+        "type": "RepeatEach",
+        "data": {
+          "count": "ringCount+2"
+        },
+        "position": {
+          "x": 270,
+          "y": 1370
+        },
+        "measured": {
+          "width": 201,
+          "height": 194
+        }
+      },
+      {
+        "id": "midPts_x_9",
+        "type": "PointsFromLists",
+        "data": {},
+        "position": {
+          "x": 960,
+          "y": 230
+        },
+        "measured": {
+          "width": 150,
+          "height": 234
+        }
+      },
+      {
+        "id": "midJit",
+        "type": "Jitter",
+        "data": {
+          "amount": "terrainSize*0.03",
+          "seed": 7
+        },
+        "position": {
+          "x": 1190,
+          "y": 230
+        },
+        "measured": {
+          "width": 201,
+          "height": 210
+        }
+      },
+      {
+        "id": "conifers",
+        "type": "InstanceOnPoints",
+        "data": {
+          "scaleStart": "0.7",
+          "scaleEnd": "1.4",
+          "alignToTangent": false,
+          "color": "#10b981"
+        },
+        "position": {
+          "x": 1420,
+          "y": 230
+        },
+        "measured": {
+          "width": 201,
+          "height": 436
+        }
+      },
+      {
+        "id": "outerPts",
+        "type": "ListConstant",
+        "data": {
+          "values": "terrainSize*0.4"
+        },
+        "position": {
+          "x": 40,
+          "y": 1940
+        },
+        "measured": {
+          "width": 177,
+          "height": 136
+        }
+      },
+      {
+        "id": "outerPts_x",
+        "type": "ListLength",
+        "data": {},
+        "position": {
+          "x": 270,
+          "y": 1560
+        },
+        "measured": {
+          "width": 150,
+          "height": 106
+        }
+      },
+      {
+        "id": "outerPts_x_2",
+        "type": "RepeatEach",
+        "data": {
+          "count": "ringCount"
+        },
+        "position": {
+          "x": 270,
+          "y": 1750
+        },
+        "measured": {
+          "width": 201,
+          "height": 194
+        }
+      },
+      {
+        "id": "outerPts_x_3",
+        "type": "Series",
+        "data": {
+          "start": 50,
+          "step": "2*pi/(ringCount)",
+          "count": "ringCount"
+        },
+        "position": {
+          "x": 40,
+          "y": 2130
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "outerPts_x_4",
+        "type": "Tile",
+        "data": {},
+        "position": {
+          "x": 500,
+          "y": 610
+        },
+        "measured": {
+          "width": 201,
+          "height": 194
+        }
+      },
+      {
+        "id": "outerPts_x_5",
+        "type": "Expression",
+        "data": {
+          "formula": "a*cos(b)"
+        },
+        "position": {
+          "x": 730,
+          "y": 800
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "outerPts_x_6",
+        "type": "Expression",
+        "data": {
+          "formula": "a*sin(b)"
+        },
+        "position": {
+          "x": 730,
+          "y": 990
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "outerPts_x_7",
+        "type": "ListConstant",
+        "data": {
+          "values": "0.2"
+        },
+        "position": {
+          "x": 40,
+          "y": 2320
+        },
+        "measured": {
+          "width": 177,
+          "height": 136
+        }
+      },
+      {
+        "id": "outerPts_x_8",
+        "type": "RepeatEach",
+        "data": {
+          "count": "ringCount"
+        },
+        "position": {
+          "x": 270,
+          "y": 1940
+        },
+        "measured": {
+          "width": 201,
+          "height": 194
+        }
+      },
+      {
+        "id": "outerPts_x_9",
+        "type": "PointsFromLists",
+        "data": {},
+        "position": {
+          "x": 960,
+          "y": 420
+        },
+        "measured": {
+          "width": 150,
+          "height": 234
+        }
+      },
+      {
+        "id": "outerJit",
+        "type": "Jitter",
+        "data": {
+          "amount": "terrainSize*0.025",
+          "seed": 11
+        },
+        "position": {
+          "x": 1190,
+          "y": 420
+        },
+        "measured": {
+          "width": 201,
+          "height": 210
+        }
+      },
+      {
+        "id": "spires",
+        "type": "InstanceOnPoints",
+        "data": {
+          "scaleStart": "0.6",
+          "scaleEnd": "1.2",
+          "alignToTangent": false,
+          "color": "#cbd5e1"
+        },
+        "position": {
+          "x": 1420,
+          "y": 420
+        },
+        "measured": {
+          "width": 201,
+          "height": 436
+        }
+      }
+    ],
+    "edges": [
+      {
+        "source": "terrainBox",
+        "sourceHandle": "solid",
+        "target": "ground",
+        "targetHandle": "solid",
+        "id": "e_terrainBox_ground_solid"
+      },
+      {
+        "source": "canopyPt",
+        "sourceHandle": "point",
+        "target": "blobCanopy",
+        "targetHandle": "center",
+        "id": "e_canopyPt_blobCanopy_center"
+      },
+      {
+        "source": "blobTrunk",
+        "sourceHandle": "solid",
+        "target": "blobTree",
+        "targetHandle": "solid1",
+        "id": "e_blobTrunk_blobTree_solid1"
+      },
+      {
+        "source": "blobCanopy",
+        "sourceHandle": "solid",
+        "target": "blobTree",
+        "targetHandle": "solid2",
+        "id": "e_blobCanopy_blobTree_solid2"
+      },
+      {
+        "source": "fairyRingRaw",
+        "sourceHandle": "solid",
+        "target": "fairyRing",
+        "targetHandle": "solid",
+        "id": "e_fairyRingRaw_fairyRing_solid"
+      },
+      {
+        "source": "innerPts",
+        "sourceHandle": "values",
+        "target": "innerPts_x",
+        "targetHandle": "list",
+        "id": "e_innerPts_innerPts_x_list"
+      },
+      {
+        "source": "innerPts",
+        "sourceHandle": "values",
+        "target": "innerPts_x_2",
+        "targetHandle": "list",
+        "id": "e_innerPts_innerPts_x_2_list"
+      },
+      {
+        "source": "innerPts_x",
+        "sourceHandle": "length",
+        "target": "innerPts_x_4",
+        "targetHandle": "count",
+        "id": "e_innerPts_x_innerPts_x_4_count"
+      },
+      {
+        "source": "innerPts_x_3",
+        "sourceHandle": "values",
+        "target": "innerPts_x_4",
+        "targetHandle": "list",
+        "id": "e_innerPts_x_3_innerPts_x_4_list"
+      },
+      {
+        "source": "innerPts_x_2",
+        "sourceHandle": "values",
+        "target": "innerPts_x_5",
+        "targetHandle": "a",
+        "id": "e_innerPts_x_2_innerPts_x_5_a"
+      },
+      {
+        "source": "innerPts_x_4",
+        "sourceHandle": "values",
+        "target": "innerPts_x_5",
+        "targetHandle": "b",
+        "id": "e_innerPts_x_4_innerPts_x_5_b"
+      },
+      {
+        "source": "innerPts_x_2",
+        "sourceHandle": "values",
+        "target": "innerPts_x_6",
+        "targetHandle": "a",
+        "id": "e_innerPts_x_2_innerPts_x_6_a"
+      },
+      {
+        "source": "innerPts_x_4",
+        "sourceHandle": "values",
+        "target": "innerPts_x_6",
+        "targetHandle": "b",
+        "id": "e_innerPts_x_4_innerPts_x_6_b"
+      },
+      {
+        "source": "innerPts_x_7",
+        "sourceHandle": "values",
+        "target": "innerPts_x_8",
+        "targetHandle": "list",
+        "id": "e_innerPts_x_7_innerPts_x_8_list"
+      },
+      {
+        "source": "innerPts_x_5",
+        "sourceHandle": "value",
+        "target": "innerPts_x_9",
+        "targetHandle": "x",
+        "id": "e_innerPts_x_5_innerPts_x_9_x"
+      },
+      {
+        "source": "innerPts_x_6",
+        "sourceHandle": "value",
+        "target": "innerPts_x_9",
+        "targetHandle": "y",
+        "id": "e_innerPts_x_6_innerPts_x_9_y"
+      },
+      {
+        "source": "innerPts_x_8",
+        "sourceHandle": "values",
+        "target": "innerPts_x_9",
+        "targetHandle": "z",
+        "id": "e_innerPts_x_8_innerPts_x_9_z"
+      },
+      {
+        "source": "innerPts_x_2",
+        "sourceHandle": "values",
+        "target": "innerPts_x_9",
+        "targetHandle": "group",
+        "id": "e_innerPts_x_2_innerPts_x_9_group"
+      },
+      {
+        "source": "innerPts_x_9",
+        "sourceHandle": "points",
+        "target": "innerJit",
+        "targetHandle": "points",
+        "id": "e_innerPts_x_9_innerJit_points"
+      },
+      {
+        "source": "blobTree",
+        "sourceHandle": "solid",
+        "target": "blobs",
+        "targetHandle": "shape",
+        "id": "e_blobTree_blobs_shape"
+      },
+      {
+        "source": "innerJit",
+        "sourceHandle": "points",
+        "target": "blobs",
+        "targetHandle": "points",
+        "id": "e_innerJit_blobs_points"
+      },
+      {
+        "source": "midPts",
+        "sourceHandle": "values",
+        "target": "midPts_x",
+        "targetHandle": "list",
+        "id": "e_midPts_midPts_x_list"
+      },
+      {
+        "source": "midPts",
+        "sourceHandle": "values",
+        "target": "midPts_x_2",
+        "targetHandle": "list",
+        "id": "e_midPts_midPts_x_2_list"
+      },
+      {
+        "source": "midPts_x",
+        "sourceHandle": "length",
+        "target": "midPts_x_4",
+        "targetHandle": "count",
+        "id": "e_midPts_x_midPts_x_4_count"
+      },
+      {
+        "source": "midPts_x_3",
+        "sourceHandle": "values",
+        "target": "midPts_x_4",
+        "targetHandle": "list",
+        "id": "e_midPts_x_3_midPts_x_4_list"
+      },
+      {
+        "source": "midPts_x_2",
+        "sourceHandle": "values",
+        "target": "midPts_x_5",
+        "targetHandle": "a",
+        "id": "e_midPts_x_2_midPts_x_5_a"
+      },
+      {
+        "source": "midPts_x_4",
+        "sourceHandle": "values",
+        "target": "midPts_x_5",
+        "targetHandle": "b",
+        "id": "e_midPts_x_4_midPts_x_5_b"
+      },
+      {
+        "source": "midPts_x_2",
+        "sourceHandle": "values",
+        "target": "midPts_x_6",
+        "targetHandle": "a",
+        "id": "e_midPts_x_2_midPts_x_6_a"
+      },
+      {
+        "source": "midPts_x_4",
+        "sourceHandle": "values",
+        "target": "midPts_x_6",
+        "targetHandle": "b",
+        "id": "e_midPts_x_4_midPts_x_6_b"
+      },
+      {
+        "source": "midPts_x_7",
+        "sourceHandle": "values",
+        "target": "midPts_x_8",
+        "targetHandle": "list",
+        "id": "e_midPts_x_7_midPts_x_8_list"
+      },
+      {
+        "source": "midPts_x_5",
+        "sourceHandle": "value",
+        "target": "midPts_x_9",
+        "targetHandle": "x",
+        "id": "e_midPts_x_5_midPts_x_9_x"
+      },
+      {
+        "source": "midPts_x_6",
+        "sourceHandle": "value",
+        "target": "midPts_x_9",
+        "targetHandle": "y",
+        "id": "e_midPts_x_6_midPts_x_9_y"
+      },
+      {
+        "source": "midPts_x_8",
+        "sourceHandle": "values",
+        "target": "midPts_x_9",
+        "targetHandle": "z",
+        "id": "e_midPts_x_8_midPts_x_9_z"
+      },
+      {
+        "source": "midPts_x_2",
+        "sourceHandle": "values",
+        "target": "midPts_x_9",
+        "targetHandle": "group",
+        "id": "e_midPts_x_2_midPts_x_9_group"
+      },
+      {
+        "source": "midPts_x_9",
+        "sourceHandle": "points",
+        "target": "midJit",
+        "targetHandle": "points",
+        "id": "e_midPts_x_9_midJit_points"
+      },
+      {
+        "source": "conifer",
+        "sourceHandle": "solid",
+        "target": "conifers",
+        "targetHandle": "shape",
+        "id": "e_conifer_conifers_shape"
+      },
+      {
+        "source": "midJit",
+        "sourceHandle": "points",
+        "target": "conifers",
+        "targetHandle": "points",
+        "id": "e_midJit_conifers_points"
+      },
+      {
+        "source": "outerPts",
+        "sourceHandle": "values",
+        "target": "outerPts_x",
+        "targetHandle": "list",
+        "id": "e_outerPts_outerPts_x_list"
+      },
+      {
+        "source": "outerPts",
+        "sourceHandle": "values",
+        "target": "outerPts_x_2",
+        "targetHandle": "list",
+        "id": "e_outerPts_outerPts_x_2_list"
+      },
+      {
+        "source": "outerPts_x",
+        "sourceHandle": "length",
+        "target": "outerPts_x_4",
+        "targetHandle": "count",
+        "id": "e_outerPts_x_outerPts_x_4_count"
+      },
+      {
+        "source": "outerPts_x_3",
+        "sourceHandle": "values",
+        "target": "outerPts_x_4",
+        "targetHandle": "list",
+        "id": "e_outerPts_x_3_outerPts_x_4_list"
+      },
+      {
+        "source": "outerPts_x_2",
+        "sourceHandle": "values",
+        "target": "outerPts_x_5",
+        "targetHandle": "a",
+        "id": "e_outerPts_x_2_outerPts_x_5_a"
+      },
+      {
+        "source": "outerPts_x_4",
+        "sourceHandle": "values",
+        "target": "outerPts_x_5",
+        "targetHandle": "b",
+        "id": "e_outerPts_x_4_outerPts_x_5_b"
+      },
+      {
+        "source": "outerPts_x_2",
+        "sourceHandle": "values",
+        "target": "outerPts_x_6",
+        "targetHandle": "a",
+        "id": "e_outerPts_x_2_outerPts_x_6_a"
+      },
+      {
+        "source": "outerPts_x_4",
+        "sourceHandle": "values",
+        "target": "outerPts_x_6",
+        "targetHandle": "b",
+        "id": "e_outerPts_x_4_outerPts_x_6_b"
+      },
+      {
+        "source": "outerPts_x_7",
+        "sourceHandle": "values",
+        "target": "outerPts_x_8",
+        "targetHandle": "list",
+        "id": "e_outerPts_x_7_outerPts_x_8_list"
+      },
+      {
+        "source": "outerPts_x_5",
+        "sourceHandle": "value",
+        "target": "outerPts_x_9",
+        "targetHandle": "x",
+        "id": "e_outerPts_x_5_outerPts_x_9_x"
+      },
+      {
+        "source": "outerPts_x_6",
+        "sourceHandle": "value",
+        "target": "outerPts_x_9",
+        "targetHandle": "y",
+        "id": "e_outerPts_x_6_outerPts_x_9_y"
+      },
+      {
+        "source": "outerPts_x_8",
+        "sourceHandle": "values",
+        "target": "outerPts_x_9",
+        "targetHandle": "z",
+        "id": "e_outerPts_x_8_outerPts_x_9_z"
+      },
+      {
+        "source": "outerPts_x_2",
+        "sourceHandle": "values",
+        "target": "outerPts_x_9",
+        "targetHandle": "group",
+        "id": "e_outerPts_x_2_outerPts_x_9_group"
+      },
+      {
+        "source": "outerPts_x_9",
+        "sourceHandle": "points",
+        "target": "outerJit",
+        "targetHandle": "points",
+        "id": "e_outerPts_x_9_outerJit_points"
+      },
+      {
+        "source": "spire",
+        "sourceHandle": "solid",
+        "target": "spires",
+        "targetHandle": "shape",
+        "id": "e_spire_spires_shape"
+      },
+      {
+        "source": "outerJit",
+        "sourceHandle": "points",
+        "target": "spires",
+        "targetHandle": "points",
+        "id": "e_outerJit_spires_points"
+      }
+    ]
+  },
+  "conversation": [
+    {
+      "role": "system",
+      "content": "Workspace cleared."
+    },
+    {
+      "role": "user",
+      "content": "make a procedural forest make it beautiful mystical magical make sure to use least number of nodes but acheive dense visually rich forest with different types of trees find ways to design differnt trees and scatter make a procedural terrain and scatter trees in the middle of it "
+    },
+    {
+      "role": "system",
+      "content": "IR program had compile errors (attempt 1/3) — asking the model to fix."
+    },
+    {
+      "role": "assistant",
+      "content": "Mystical asymmetric forest: three tree species — emerald conifers, purple blob-canopy trees, pale slender spires — scattered in jittered offset rings across a mossy flat island, anchored by a glowing fairy ring"
+    }
+  ],
+  "plan": "",
+  "genome": null,
+  "geometryReport": {
+    "leaves": [
+      {
+        "id": "ground",
+        "bbox": {
+          "min": [
+            -35.0000001,
+            -29.7500001,
+            -4.200000100000003
+          ],
+          "max": [
+            35.0000001,
+            29.7500001,
+            1.0000000251214793e-7
+          ],
+          "center": [
+            0,
+            0,
+            -2.1
+          ],
+          "size": [
+            70.0000002,
+            59.5000002,
+            4.200000200000006
+          ]
+        },
+        "volume": 17493,
+        "meshOk": true,
+        "vertexCount": 24,
+        "error": null
+      },
+      {
+        "id": "fairyRing",
+        "bbox": {
+          "min": [
+            -9.190639243343986,
+            -9.140788491195273,
+            -0.5800046704525327
+          ],
+          "max": [
+            9.190639243343986,
+            9.140788491195273,
+            0.9800046704525325
+          ],
+          "center": [
+            0,
+            0,
+            0.19999999999999984
+          ],
+          "size": [
+            18.38127848668797,
+            18.281576982390547,
+            1.560009340905065
+          ]
+        },
+        "volume": 81.2465834297676,
+        "meshOk": true,
+        "vertexCount": 310,
+        "error": null
+      },
+      {
+        "id": "blobs",
+        "bbox": {
+          "min": [
+            -14.73359667057454,
+            -14.164596898493278,
+            -5.402347112327756
+          ],
+          "max": [
+            12.9000682049174,
+            13.26949259044497,
+            14.58273522591773
+          ],
+          "center": [
+            -0.9167642328285712,
+            -0.4475521540241534,
+            4.590194056794988
+          ],
+          "size": [
+            27.633664875491938,
+            27.43408948893825,
+            19.985082338245487
+          ]
+        },
+        "volume": 1712.8784004118183,
+        "meshOk": true,
+        "vertexCount": 2082,
+        "error": null
+      },
+      {
+        "id": "conifers",
+        "bbox": {
+          "min": [
+            -22.268593829010584,
+            -23.45935703935533,
+            -9.067547661504426
+          ],
+          "max": [
+            25.506460125344397,
+            25.129840199862638,
+            11.053465595428067
+          ],
+          "center": [
+            1.6189331481669065,
+            0.8352415802536548,
+            0.9929589669618206
+          ],
+          "size": [
+            47.77505395435498,
+            48.58919723921797,
+            20.121013256932493
+          ]
+        },
+        "volume": 1031.4450066344991,
+        "meshOk": true,
+        "vertexCount": 1464,
+        "error": null
+      },
+      {
+        "id": "spires",
+        "bbox": {
+          "min": [
+            -29.260634736392,
+            -27.77780962365372,
+            -11.723917088930472
+          ],
+          "max": [
+            26.42523625184068,
+            27.765237807043817,
+            9.632644800576976
+          ],
+          "center": [
+            -1.4176992422756598,
+            -0.006285908304949572,
+            -1.0456361441767488
+          ],
+          "size": [
+            55.68587098823268,
+            55.54304743069754,
+            21.356561889507446
+          ]
+        },
+        "volume": 202.98116019775134,
+        "meshOk": true,
+        "vertexCount": 1240,
+        "error": null
+      }
+    ],
+    "nodeErrors": [],
+    "numbers": {
+      "terrainSize": 70,
+      "treeHeight": 14,
+      "ringCount": 8,
+      "innerPts_x_7": [
+        0.2
+      ],
+      "midPts_x_7": [
+        0.2
+      ],
+      "outerPts_x_7": [
+        0.2
+      ],
+      "innerPts": [
+        11.200000000000001
+      ],
+      "midPts": [
+        21
+      ],
+      "outerPts": [
+        28
+      ],
+      "innerPts_x_3": [
+        0,
+        1.0471975511965976,
+        2.0943951023931953,
+        3.141592653589793,
+        4.1887902047863905,
+        5.235987755982988
+      ],
+      "midPts_x_3": [
+        15,
+        15.628318530717959,
+        16.256637061435917,
+        16.884955592153876,
+        17.513274122871834,
+        18.141592653589793,
+        18.76991118430775,
+        19.39822971502571,
+        20.02654824574367,
+        20.654866776461628
+      ],
+      "outerPts_x_3": [
+        50,
+        50.785398163397446,
+        51.5707963267949,
+        52.356194490192344,
+        53.1415926535898,
+        53.92699081698724,
+        54.71238898038469,
+        55.49778714378214
+      ],
+      "innerPts_x_8": [
+        0.2,
+        0.2,
+        0.2,
+        0.2,
+        0.2,
+        0.2
+      ],
+      "midPts_x_8": [
+        0.2,
+        0.2,
+        0.2,
+        0.2,
+        0.2,
+        0.2,
+        0.2,
+        0.2,
+        0.2,
+        0.2
+      ],
+      "outerPts_x_8": [
+        0.2,
+        0.2,
+        0.2,
+        0.2,
+        0.2,
+        0.2,
+        0.2,
+        0.2
+      ],
+      "innerPts_x": 1,
+      "innerPts_x_2": [
+        11.200000000000001,
+        11.200000000000001,
+        11.200000000000001,
+        11.200000000000001,
+        11.200000000000001,
+        11.200000000000001
+      ],
+      "midPts_x": 1,
+      "midPts_x_2": [
+        21,
+        21,
+        21,
+        21,
+        21,
+        21,
+        21,
+        21,
+        21,
+        21
+      ],
+      "outerPts_x": 1,
+      "outerPts_x_2": [
+        28,
+        28,
+        28,
+        28,
+        28,
+        28,
+        28,
+        28
+      ],
+      "innerPts_x_4": [
+        0,
+        1.0471975511965976,
+        2.0943951023931953,
+        3.141592653589793,
+        4.1887902047863905,
+        5.235987755982988
+      ],
+      "midPts_x_4": [
+        15,
+        15.628318530717959,
+        16.256637061435917,
+        16.884955592153876,
+        17.513274122871834,
+        18.141592653589793,
+        18.76991118430775,
+        19.39822971502571,
+        20.02654824574367,
+        20.654866776461628
+      ],
+      "outerPts_x_4": [
+        50,
+        50.785398163397446,
+        51.5707963267949,
+        52.356194490192344,
+        53.1415926535898,
+        53.92699081698724,
+        54.71238898038469,
+        55.49778714378214
+      ],
+      "innerPts_x_5": [
+        11.200000000000001,
+        5.600000000000001,
+        -5.599999999999998,
+        -11.200000000000001,
+        -5.600000000000006,
+        5.599999999999993,
+        5.599999999999993,
+        5.599999999999993,
+        5.599999999999993,
+        5.599999999999993
+      ],
+      "innerPts_x_6": [
+        0,
+        9.699484522385713,
+        9.699484522385715,
+        1.3716044150450357e-15,
+        -9.699484522385712,
+        -9.699484522385719,
+        -9.699484522385719,
+        -9.699484522385719,
+        -9.699484522385719,
+        -9.699484522385719
+      ],
+      "midPts_x_5": [
+        -15.953446170035248,
+        -20.933430716383477,
+        -17.91755623021428,
+        -8.057784259440666,
+        4.879787424425384,
+        15.953446170035246,
+        20.933430716383477,
+        17.91755623021428,
+        8.057784259440668,
+        -4.879787424425381
+      ],
+      "midPts_x_6": [
+        13.656044643299452,
+        1.6707718103836693,
+        -10.952679066653483,
+        -19.39257880809848,
+        -20.425172574360783,
+        -13.656044643299456,
+        -1.6707718103836717,
+        10.95267906665348,
+        19.392578808098477,
+        20.425172574360783
+      ],
+      "outerPts_x_5": [
+        27.019048797779174,
+        24.300109697592465,
+        7.34649590370996,
+        -13.910595554647323,
+        -27.0190487977792,
+        -24.30010969759242,
+        -7.346495903710059,
+        13.910595554647408,
+        13.910595554647408,
+        13.910595554647408
+      ],
+      "outerPts_x_6": [
+        -7.3464959037100055,
+        13.910595554647283,
+        27.019048797779185,
+        24.30010969759244,
+        7.346495903709914,
+        -13.910595554647365,
+        -27.019048797779156,
+        -24.30010969759239,
+        -24.30010969759239,
+        -24.30010969759239
+      ]
+    },
+    "sliders": {
+      "terrainSize": 70,
+      "treeHeight": 14,
+      "ringCount": 8
+    },
+    "selections": {},
+    "helpers": {
+      "canopyPt": {
+        "type": "Point",
+        "x": 0,
+        "y": 0,
+        "z": 7.700000000000001,
+        "sourceNodeId": "canopyPt",
+        "ancestorNodeIds": []
+      }
+    },
+    "nodeCount": 49,
+    "edgeCount": 53,
+    "transformCount": 5,
+    "nodesPerLeafRatio": 9.8,
+    "nodeEconomyWarning": false,
+    "placement": {
+      "anchored": [
+        "blobs",
+        "conifers",
+        "spires"
+      ],
+      "literal": [
+        "ground",
+        "fairyRing"
+      ],
+      "origin": [],
+      "literalNodeIds": [
+        "ground",
+        "fairyRing"
+      ],
+      "ratio": 0.6
+    },
+    "scene": {
+      "min": [
+        -35.0000001,
+        -29.7500001,
+        -11.723917088930472
+      ],
+      "max": [
+        35.0000001,
+        29.7500001,
+        14.58273522591773
+      ],
+      "size": [
+        70.0000002,
+        59.5000002,
+        26.3066523148482
+      ]
+    },
+    "meshedLeafCount": 5,
+    "kernelFaultCount": 0,
+    "kernelSuspect": false,
+    "kernelHealth": "ok",
+    "evalCount": 1,
+    "recycleRecommended": false,
+    "perturbationIssues": [
+      "At terrainSize decrease (0.6x), \"ground\" becomes fully buried inside \"conifers\".",
+      "At terrainSize decrease (0.6x), \"ground\" becomes fully buried inside \"spires\"."
+    ],
+    "proportionalIntegrity": 0.8333333333333334
+  },
+  "timeline": [
+    {
+      "at": "2026-07-24T21:40:26.249Z",
+      "turn": 1,
+      "trigger": "ai-ir",
+      "label": "attempt 2: rebuilt graph (49 nodes)",
+      "nodeCount": 49,
+      "edgeCount": 53,
+      "isolatedCount": 3,
+      "diff": {
+        "addedNodes": [
+          "terrainSize",
+          "treeHeight",
+          "ringCount",
+          "terrainBox",
+          "ground",
+          "conifer",
+          "blobTrunk",
+          "canopyPt",
+          "blobCanopy",
+          "blobTree",
+          "spire",
+          "fairyRingRaw",
+          "fairyRing",
+          "innerPts",
+          "innerPts_x",
+          "innerPts_x_2",
+          "innerPts_x_3",
+          "innerPts_x_4",
+          "innerPts_x_5",
+          "innerPts_x_6",
+          "innerPts_x_7",
+          "innerPts_x_8",
+          "innerPts_x_9",
+          "innerJit",
+          "blobs",
+          "midPts",
+          "midPts_x",
+          "midPts_x_2",
+          "midPts_x_3",
+          "midPts_x_4",
+          "midPts_x_5",
+          "midPts_x_6",
+          "midPts_x_7",
+          "midPts_x_8",
+          "midPts_x_9",
+          "midJit",
+          "conifers",
+          "outerPts",
+          "outerPts_x",
+          "outerPts_x_2",
+          "outerPts_x_3",
+          "outerPts_x_4",
+          "outerPts_x_5",
+          "outerPts_x_6",
+          "outerPts_x_7",
+          "outerPts_x_8",
+          "outerPts_x_9",
+          "outerJit",
+          "spires"
+        ],
+        "removedNodes": [],
+        "changedNodes": [],
+        "addedEdges": 53,
+        "removedEdges": 0
+      },
+      "details": [
+        "warning: Dead design parameter: slider \"ringCount\" is not referenced by any formula or edge — moving it changes nothing. Wire dimensions to it or remove it."
+      ],
+      "nodes": [
+        {
+          "id": "terrainSize",
+          "type": "NumberSlider",
+          "data": {
+            "value": 70,
+            "label": "terrainSize",
+            "min": 30,
+            "max": 120,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 3080
+          }
+        },
+        {
+          "id": "treeHeight",
+          "type": "NumberSlider",
+          "data": {
+            "value": 14,
+            "label": "treeHeight",
+            "min": 6,
+            "max": 30,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 3270
+          }
+        },
+        {
+          "id": "ringCount",
+          "type": "NumberSlider",
+          "data": {
+            "value": 8,
+            "label": "ringCount",
+            "min": 4,
+            "max": 16,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 2510
+          }
+        },
+        {
+          "id": "terrainBox",
+          "type": "Box",
+          "data": {
+            "width": "terrainSize",
+            "length": "terrainSize*0.85",
+            "height": "terrainSize*0.06"
+          },
+          "position": {
+            "x": 40,
+            "y": 2890
+          }
+        },
+        {
+          "id": "ground",
+          "type": "Translate",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "-terrainSize*0.03",
+            "color": "#2d4a3a"
+          },
+          "position": {
+            "x": 270,
+            "y": 2130
+          }
+        },
+        {
+          "id": "conifer",
+          "type": "Cone",
+          "data": {
+            "radius1": "treeHeight*0.16",
+            "radius2": "treeHeight*0.01",
+            "height": "treeHeight"
+          },
+          "position": {
+            "x": 40,
+            "y": 420
+          }
+        },
+        {
+          "id": "blobTrunk",
+          "type": "Cylinder",
+          "data": {
+            "radius": "treeHeight*0.035",
+            "height": "treeHeight*0.5"
+          },
+          "position": {
+            "x": 40,
+            "y": 40
+          }
+        },
+        {
+          "id": "canopyPt",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "treeHeight*0.55"
+          },
+          "position": {
+            "x": 40,
+            "y": 230
+          }
+        },
+        {
+          "id": "blobCanopy",
+          "type": "Sphere",
+          "data": {
+            "radius": "treeHeight*0.22"
+          },
+          "position": {
+            "x": 270,
+            "y": 40
+          }
+        },
+        {
+          "id": "blobTree",
+          "type": "Compound",
+          "data": {},
+          "position": {
+            "x": 500,
+            "y": 40
+          }
+        },
+        {
+          "id": "spire",
+          "type": "Cone",
+          "data": {
+            "radius1": "treeHeight*0.08",
+            "radius2": "treeHeight*0.005",
+            "height": "treeHeight*1.25"
+          },
+          "position": {
+            "x": 40,
+            "y": 2700
+          }
+        },
+        {
+          "id": "fairyRingRaw",
+          "type": "Torus",
+          "data": {
+            "majorRadius": "terrainSize*0.12",
+            "minorRadius": "terrainSize*0.01"
+          },
+          "position": {
+            "x": 40,
+            "y": 610
+          }
+        },
+        {
+          "id": "fairyRing",
+          "type": "Translate",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": 0.2,
+            "color": "#fbbf24"
+          },
+          "position": {
+            "x": 270,
+            "y": 230
+          }
+        },
+        {
+          "id": "innerPts",
+          "type": "ListConstant",
+          "data": {
+            "values": "terrainSize*0.16"
+          },
+          "position": {
+            "x": 40,
+            "y": 800
+          }
+        },
+        {
+          "id": "innerPts_x",
+          "type": "ListLength",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 420
+          }
+        },
+        {
+          "id": "innerPts_x_2",
+          "type": "RepeatEach",
+          "data": {
+            "count": "max(ringCount-2,3)"
+          },
+          "position": {
+            "x": 270,
+            "y": 610
+          }
+        },
+        {
+          "id": "innerPts_x_3",
+          "type": "Series",
+          "data": {
+            "start": 0,
+            "step": "2*pi/(max(ringCount-2,3))",
+            "count": "max(ringCount-2,3)"
+          },
+          "position": {
+            "x": 40,
+            "y": 990
+          }
+        },
+        {
+          "id": "innerPts_x_4",
+          "type": "Tile",
+          "data": {},
+          "position": {
+            "x": 500,
+            "y": 230
+          }
+        },
+        {
+          "id": "innerPts_x_5",
+          "type": "Expression",
+          "data": {
+            "formula": "a*cos(b)"
+          },
+          "position": {
+            "x": 730,
+            "y": 40
+          }
+        },
+        {
+          "id": "innerPts_x_6",
+          "type": "Expression",
+          "data": {
+            "formula": "a*sin(b)"
+          },
+          "position": {
+            "x": 730,
+            "y": 230
+          }
+        },
+        {
+          "id": "innerPts_x_7",
+          "type": "ListConstant",
+          "data": {
+            "values": "0.2"
+          },
+          "position": {
+            "x": 40,
+            "y": 1180
+          }
+        },
+        {
+          "id": "innerPts_x_8",
+          "type": "RepeatEach",
+          "data": {
+            "count": "max(ringCount-2,3)"
+          },
+          "position": {
+            "x": 270,
+            "y": 800
+          }
+        },
+        {
+          "id": "innerPts_x_9",
+          "type": "PointsFromLists",
+          "data": {},
+          "position": {
+            "x": 960,
+            "y": 40
+          }
+        },
+        {
+          "id": "innerJit",
+          "type": "Jitter",
+          "data": {
+            "amount": "terrainSize*0.02",
+            "seed": 3
+          },
+          "position": {
+            "x": 1190,
+            "y": 40
+          }
+        },
+        {
+          "id": "blobs",
+          "type": "InstanceOnPoints",
+          "data": {
+            "scaleStart": "0.8",
+            "scaleEnd": "1.35",
+            "alignToTangent": false,
+            "color": "#7c3aed"
+          },
+          "position": {
+            "x": 1420,
+            "y": 40
+          }
+        },
+        {
+          "id": "midPts",
+          "type": "ListConstant",
+          "data": {
+            "values": "terrainSize*0.3"
+          },
+          "position": {
+            "x": 40,
+            "y": 1370
+          }
+        },
+        {
+          "id": "midPts_x",
+          "type": "ListLength",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 990
+          }
+        },
+        {
+          "id": "midPts_x_2",
+          "type": "RepeatEach",
+          "data": {
+            "count": "ringCount+2"
+          },
+          "position": {
+            "x": 270,
+            "y": 1180
+          }
+        },
+        {
+          "id": "midPts_x_3",
+          "type": "Series",
+          "data": {
+            "start": 15,
+            "step": "2*pi/(ringCount+2)",
+            "count": "ringCount+2"
+          },
+          "position": {
+            "x": 40,
+            "y": 1560
+          }
+        },
+        {
+          "id": "midPts_x_4",
+          "type": "Tile",
+          "data": {},
+          "position": {
+            "x": 500,
+            "y": 420
+          }
+        },
+        {
+          "id": "midPts_x_5",
+          "type": "Expression",
+          "data": {
+            "formula": "a*cos(b)"
+          },
+          "position": {
+            "x": 730,
+            "y": 420
+          }
+        },
+        {
+          "id": "midPts_x_6",
+          "type": "Expression",
+          "data": {
+            "formula": "a*sin(b)"
+          },
+          "position": {
+            "x": 730,
+            "y": 610
+          }
+        },
+        {
+          "id": "midPts_x_7",
+          "type": "ListConstant",
+          "data": {
+            "values": "0.2"
+          },
+          "position": {
+            "x": 40,
+            "y": 1750
+          }
+        },
+        {
+          "id": "midPts_x_8",
+          "type": "RepeatEach",
+          "data": {
+            "count": "ringCount+2"
+          },
+          "position": {
+            "x": 270,
+            "y": 1370
+          }
+        },
+        {
+          "id": "midPts_x_9",
+          "type": "PointsFromLists",
+          "data": {},
+          "position": {
+            "x": 960,
+            "y": 230
+          }
+        },
+        {
+          "id": "midJit",
+          "type": "Jitter",
+          "data": {
+            "amount": "terrainSize*0.03",
+            "seed": 7
+          },
+          "position": {
+            "x": 1190,
+            "y": 230
+          }
+        },
+        {
+          "id": "conifers",
+          "type": "InstanceOnPoints",
+          "data": {
+            "scaleStart": "0.7",
+            "scaleEnd": "1.4",
+            "alignToTangent": false,
+            "color": "#10b981"
+          },
+          "position": {
+            "x": 1420,
+            "y": 230
+          }
+        },
+        {
+          "id": "outerPts",
+          "type": "ListConstant",
+          "data": {
+            "values": "terrainSize*0.4"
+          },
+          "position": {
+            "x": 40,
+            "y": 1940
+          }
+        },
+        {
+          "id": "outerPts_x",
+          "type": "ListLength",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 1560
+          }
+        },
+        {
+          "id": "outerPts_x_2",
+          "type": "RepeatEach",
+          "data": {
+            "count": "ringCount"
+          },
+          "position": {
+            "x": 270,
+            "y": 1750
+          }
+        },
+        {
+          "id": "outerPts_x_3",
+          "type": "Series",
+          "data": {
+            "start": 50,
+            "step": "2*pi/(ringCount)",
+            "count": "ringCount"
+          },
+          "position": {
+            "x": 40,
+            "y": 2130
+          }
+        },
+        {
+          "id": "outerPts_x_4",
+          "type": "Tile",
+          "data": {},
+          "position": {
+            "x": 500,
+            "y": 610
+          }
+        },
+        {
+          "id": "outerPts_x_5",
+          "type": "Expression",
+          "data": {
+            "formula": "a*cos(b)"
+          },
+          "position": {
+            "x": 730,
+            "y": 800
+          }
+        },
+        {
+          "id": "outerPts_x_6",
+          "type": "Expression",
+          "data": {
+            "formula": "a*sin(b)"
+          },
+          "position": {
+            "x": 730,
+            "y": 990
+          }
+        },
+        {
+          "id": "outerPts_x_7",
+          "type": "ListConstant",
+          "data": {
+            "values": "0.2"
+          },
+          "position": {
+            "x": 40,
+            "y": 2320
+          }
+        },
+        {
+          "id": "outerPts_x_8",
+          "type": "RepeatEach",
+          "data": {
+            "count": "ringCount"
+          },
+          "position": {
+            "x": 270,
+            "y": 1940
+          }
+        },
+        {
+          "id": "outerPts_x_9",
+          "type": "PointsFromLists",
+          "data": {},
+          "position": {
+            "x": 960,
+            "y": 420
+          }
+        },
+        {
+          "id": "outerJit",
+          "type": "Jitter",
+          "data": {
+            "amount": "terrainSize*0.025",
+            "seed": 11
+          },
+          "position": {
+            "x": 1190,
+            "y": 420
+          }
+        },
+        {
+          "id": "spires",
+          "type": "InstanceOnPoints",
+          "data": {
+            "scaleStart": "0.6",
+            "scaleEnd": "1.2",
+            "alignToTangent": false,
+            "color": "#cbd5e1"
+          },
+          "position": {
+            "x": 1420,
+            "y": 420
+          }
+        }
+      ],
+      "edges": [
+        {
+          "source": "terrainBox",
+          "sourceHandle": "solid",
+          "target": "ground",
+          "targetHandle": "solid",
+          "id": "e_terrainBox_ground_solid"
+        },
+        {
+          "source": "canopyPt",
+          "sourceHandle": "point",
+          "target": "blobCanopy",
+          "targetHandle": "center",
+          "id": "e_canopyPt_blobCanopy_center"
+        },
+        {
+          "source": "blobTrunk",
+          "sourceHandle": "solid",
+          "target": "blobTree",
+          "targetHandle": "solid1",
+          "id": "e_blobTrunk_blobTree_solid1"
+        },
+        {
+          "source": "blobCanopy",
+          "sourceHandle": "solid",
+          "target": "blobTree",
+          "targetHandle": "solid2",
+          "id": "e_blobCanopy_blobTree_solid2"
+        },
+        {
+          "source": "fairyRingRaw",
+          "sourceHandle": "solid",
+          "target": "fairyRing",
+          "targetHandle": "solid",
+          "id": "e_fairyRingRaw_fairyRing_solid"
+        },
+        {
+          "source": "innerPts",
+          "sourceHandle": "values",
+          "target": "innerPts_x",
+          "targetHandle": "list",
+          "id": "e_innerPts_innerPts_x_list"
+        },
+        {
+          "source": "innerPts",
+          "sourceHandle": "values",
+          "target": "innerPts_x_2",
+          "targetHandle": "list",
+          "id": "e_innerPts_innerPts_x_2_list"
+        },
+        {
+          "source": "innerPts_x",
+          "sourceHandle": "length",
+          "target": "innerPts_x_4",
+          "targetHandle": "count",
+          "id": "e_innerPts_x_innerPts_x_4_count"
+        },
+        {
+          "source": "innerPts_x_3",
+          "sourceHandle": "values",
+          "target": "innerPts_x_4",
+          "targetHandle": "list",
+          "id": "e_innerPts_x_3_innerPts_x_4_list"
+        },
+        {
+          "source": "innerPts_x_2",
+          "sourceHandle": "values",
+          "target": "innerPts_x_5",
+          "targetHandle": "a",
+          "id": "e_innerPts_x_2_innerPts_x_5_a"
+        },
+        {
+          "source": "innerPts_x_4",
+          "sourceHandle": "values",
+          "target": "innerPts_x_5",
+          "targetHandle": "b",
+          "id": "e_innerPts_x_4_innerPts_x_5_b"
+        },
+        {
+          "source": "innerPts_x_2",
+          "sourceHandle": "values",
+          "target": "innerPts_x_6",
+          "targetHandle": "a",
+          "id": "e_innerPts_x_2_innerPts_x_6_a"
+        },
+        {
+          "source": "innerPts_x_4",
+          "sourceHandle": "values",
+          "target": "innerPts_x_6",
+          "targetHandle": "b",
+          "id": "e_innerPts_x_4_innerPts_x_6_b"
+        },
+        {
+          "source": "innerPts_x_7",
+          "sourceHandle": "values",
+          "target": "innerPts_x_8",
+          "targetHandle": "list",
+          "id": "e_innerPts_x_7_innerPts_x_8_list"
+        },
+        {
+          "source": "innerPts_x_5",
+          "sourceHandle": "value",
+          "target": "innerPts_x_9",
+          "targetHandle": "x",
+          "id": "e_innerPts_x_5_innerPts_x_9_x"
+        },
+        {
+          "source": "innerPts_x_6",
+          "sourceHandle": "value",
+          "target": "innerPts_x_9",
+          "targetHandle": "y",
+          "id": "e_innerPts_x_6_innerPts_x_9_y"
+        },
+        {
+          "source": "innerPts_x_8",
+          "sourceHandle": "values",
+          "target": "innerPts_x_9",
+          "targetHandle": "z",
+          "id": "e_innerPts_x_8_innerPts_x_9_z"
+        },
+        {
+          "source": "innerPts_x_2",
+          "sourceHandle": "values",
+          "target": "innerPts_x_9",
+          "targetHandle": "group",
+          "id": "e_innerPts_x_2_innerPts_x_9_group"
+        },
+        {
+          "source": "innerPts_x_9",
+          "sourceHandle": "points",
+          "target": "innerJit",
+          "targetHandle": "points",
+          "id": "e_innerPts_x_9_innerJit_points"
+        },
+        {
+          "source": "blobTree",
+          "sourceHandle": "solid",
+          "target": "blobs",
+          "targetHandle": "shape",
+          "id": "e_blobTree_blobs_shape"
+        },
+        {
+          "source": "innerJit",
+          "sourceHandle": "points",
+          "target": "blobs",
+          "targetHandle": "points",
+          "id": "e_innerJit_blobs_points"
+        },
+        {
+          "source": "midPts",
+          "sourceHandle": "values",
+          "target": "midPts_x",
+          "targetHandle": "list",
+          "id": "e_midPts_midPts_x_list"
+        },
+        {
+          "source": "midPts",
+          "sourceHandle": "values",
+          "target": "midPts_x_2",
+          "targetHandle": "list",
+          "id": "e_midPts_midPts_x_2_list"
+        },
+        {
+          "source": "midPts_x",
+          "sourceHandle": "length",
+          "target": "midPts_x_4",
+          "targetHandle": "count",
+          "id": "e_midPts_x_midPts_x_4_count"
+        },
+        {
+          "source": "midPts_x_3",
+          "sourceHandle": "values",
+          "target": "midPts_x_4",
+          "targetHandle": "list",
+          "id": "e_midPts_x_3_midPts_x_4_list"
+        },
+        {
+          "source": "midPts_x_2",
+          "sourceHandle": "values",
+          "target": "midPts_x_5",
+          "targetHandle": "a",
+          "id": "e_midPts_x_2_midPts_x_5_a"
+        },
+        {
+          "source": "midPts_x_4",
+          "sourceHandle": "values",
+          "target": "midPts_x_5",
+          "targetHandle": "b",
+          "id": "e_midPts_x_4_midPts_x_5_b"
+        },
+        {
+          "source": "midPts_x_2",
+          "sourceHandle": "values",
+          "target": "midPts_x_6",
+          "targetHandle": "a",
+          "id": "e_midPts_x_2_midPts_x_6_a"
+        },
+        {
+          "source": "midPts_x_4",
+          "sourceHandle": "values",
+          "target": "midPts_x_6",
+          "targetHandle": "b",
+          "id": "e_midPts_x_4_midPts_x_6_b"
+        },
+        {
+          "source": "midPts_x_7",
+          "sourceHandle": "values",
+          "target": "midPts_x_8",
+          "targetHandle": "list",
+          "id": "e_midPts_x_7_midPts_x_8_list"
+        },
+        {
+          "source": "midPts_x_5",
+          "sourceHandle": "value",
+          "target": "midPts_x_9",
+          "targetHandle": "x",
+          "id": "e_midPts_x_5_midPts_x_9_x"
+        },
+        {
+          "source": "midPts_x_6",
+          "sourceHandle": "value",
+          "target": "midPts_x_9",
+          "targetHandle": "y",
+          "id": "e_midPts_x_6_midPts_x_9_y"
+        },
+        {
+          "source": "midPts_x_8",
+          "sourceHandle": "values",
+          "target": "midPts_x_9",
+          "targetHandle": "z",
+          "id": "e_midPts_x_8_midPts_x_9_z"
+        },
+        {
+          "source": "midPts_x_2",
+          "sourceHandle": "values",
+          "target": "midPts_x_9",
+          "targetHandle": "group",
+          "id": "e_midPts_x_2_midPts_x_9_group"
+        },
+        {
+          "source": "midPts_x_9",
+          "sourceHandle": "points",
+          "target": "midJit",
+          "targetHandle": "points",
+          "id": "e_midPts_x_9_midJit_points"
+        },
+        {
+          "source": "conifer",
+          "sourceHandle": "solid",
+          "target": "conifers",
+          "targetHandle": "shape",
+          "id": "e_conifer_conifers_shape"
+        },
+        {
+          "source": "midJit",
+          "sourceHandle": "points",
+          "target": "conifers",
+          "targetHandle": "points",
+          "id": "e_midJit_conifers_points"
+        },
+        {
+          "source": "outerPts",
+          "sourceHandle": "values",
+          "target": "outerPts_x",
+          "targetHandle": "list",
+          "id": "e_outerPts_outerPts_x_list"
+        },
+        {
+          "source": "outerPts",
+          "sourceHandle": "values",
+          "target": "outerPts_x_2",
+          "targetHandle": "list",
+          "id": "e_outerPts_outerPts_x_2_list"
+        },
+        {
+          "source": "outerPts_x",
+          "sourceHandle": "length",
+          "target": "outerPts_x_4",
+          "targetHandle": "count",
+          "id": "e_outerPts_x_outerPts_x_4_count"
+        },
+        {
+          "source": "outerPts_x_3",
+          "sourceHandle": "values",
+          "target": "outerPts_x_4",
+          "targetHandle": "list",
+          "id": "e_outerPts_x_3_outerPts_x_4_list"
+        },
+        {
+          "source": "outerPts_x_2",
+          "sourceHandle": "values",
+          "target": "outerPts_x_5",
+          "targetHandle": "a",
+          "id": "e_outerPts_x_2_outerPts_x_5_a"
+        },
+        {
+          "source": "outerPts_x_4",
+          "sourceHandle": "values",
+          "target": "outerPts_x_5",
+          "targetHandle": "b",
+          "id": "e_outerPts_x_4_outerPts_x_5_b"
+        },
+        {
+          "source": "outerPts_x_2",
+          "sourceHandle": "values",
+          "target": "outerPts_x_6",
+          "targetHandle": "a",
+          "id": "e_outerPts_x_2_outerPts_x_6_a"
+        },
+        {
+          "source": "outerPts_x_4",
+          "sourceHandle": "values",
+          "target": "outerPts_x_6",
+          "targetHandle": "b",
+          "id": "e_outerPts_x_4_outerPts_x_6_b"
+        },
+        {
+          "source": "outerPts_x_7",
+          "sourceHandle": "values",
+          "target": "outerPts_x_8",
+          "targetHandle": "list",
+          "id": "e_outerPts_x_7_outerPts_x_8_list"
+        },
+        {
+          "source": "outerPts_x_5",
+          "sourceHandle": "value",
+          "target": "outerPts_x_9",
+          "targetHandle": "x",
+          "id": "e_outerPts_x_5_outerPts_x_9_x"
+        },
+        {
+          "source": "outerPts_x_6",
+          "sourceHandle": "value",
+          "target": "outerPts_x_9",
+          "targetHandle": "y",
+          "id": "e_outerPts_x_6_outerPts_x_9_y"
+        },
+        {
+          "source": "outerPts_x_8",
+          "sourceHandle": "values",
+          "target": "outerPts_x_9",
+          "targetHandle": "z",
+          "id": "e_outerPts_x_8_outerPts_x_9_z"
+        },
+        {
+          "source": "outerPts_x_2",
+          "sourceHandle": "values",
+          "target": "outerPts_x_9",
+          "targetHandle": "group",
+          "id": "e_outerPts_x_2_outerPts_x_9_group"
+        },
+        {
+          "source": "outerPts_x_9",
+          "sourceHandle": "points",
+          "target": "outerJit",
+          "targetHandle": "points",
+          "id": "e_outerPts_x_9_outerJit_points"
+        },
+        {
+          "source": "spire",
+          "sourceHandle": "solid",
+          "target": "spires",
+          "targetHandle": "shape",
+          "id": "e_spire_spires_shape"
+        },
+        {
+          "source": "outerJit",
+          "sourceHandle": "points",
+          "target": "spires",
+          "targetHandle": "points",
+          "id": "e_outerJit_spires_points"
+        }
+      ]
+    }
+  ]
+}

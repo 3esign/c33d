@@ -1,0 +1,1079 @@
+{
+  "c33dExport": 2,
+  "exportedAt": "2026-07-24T18:39:29.546Z",
+  "comment": "this wasnt a bad result i played with sliders",
+  "agent": {
+    "name": "Ollama (Local)",
+    "provider": "ollama",
+    "model": "glm-5.2:cloud"
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "s_height",
+        "type": "NumberSlider",
+        "data": {
+          "label": "towerHeight",
+          "value": 80,
+          "min": 20,
+          "max": 150,
+          "step": 1
+        },
+        "position": {
+          "x": 40,
+          "y": 990
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "s_width",
+        "type": "NumberSlider",
+        "data": {
+          "label": "towerWidth",
+          "value": 18,
+          "min": 8,
+          "max": 40,
+          "step": 0.5
+        },
+        "position": {
+          "x": 40,
+          "y": 1370
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "s_density",
+        "type": "NumberSlider",
+        "data": {
+          "label": "panelDensity",
+          "value": 6,
+          "min": 2,
+          "max": 12,
+          "step": 1
+        },
+        "position": {
+          "x": 40,
+          "y": 610
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "s_inset",
+        "type": "NumberSlider",
+        "data": {
+          "label": "insetDepth",
+          "value": 0.08,
+          "min": 0.01,
+          "max": 0.4,
+          "step": 0.01
+        },
+        "position": {
+          "x": 40,
+          "y": 1180
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "s_extrude",
+        "type": "NumberSlider",
+        "data": {
+          "label": "extrudeVar",
+          "value": 1.5,
+          "min": 0.2,
+          "max": 5,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 800
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "box_tower",
+        "type": "Box",
+        "data": {
+          "width": "towerWidth",
+          "length": 15.6,
+          "height": "towerHeight",
+          "color": "#78716c"
+        },
+        "position": {
+          "x": 40,
+          "y": 230
+        },
+        "measured": {
+          "width": 201,
+          "height": 312
+        },
+        "selected": false
+      },
+      {
+        "id": "sub_tower",
+        "type": "SubdivideSurface",
+        "data": {
+          "uDivisions": "panelDensity",
+          "vDivisions": "min(panelDensity*4,40)",
+          "inset": "insetDepth",
+          "extrudeMin": "extrudeVar*0.15",
+          "extrudeMax": "extrudeVar",
+          "seed": 7,
+          "faceIndex": -1,
+          "includeBase": true
+        },
+        "position": {
+          "x": 270,
+          "y": 230
+        },
+        "measured": {
+          "width": 201,
+          "height": 494
+        }
+      },
+      {
+        "id": "box_base",
+        "type": "Box",
+        "data": {
+          "width": 45.2,
+          "length": 95.2,
+          "height": 18.7,
+          "color": "#3f3f46"
+        },
+        "position": {
+          "x": 40,
+          "y": 40
+        },
+        "measured": {
+          "width": 201,
+          "height": 312
+        },
+        "selected": false
+      },
+      {
+        "id": "sub_base",
+        "type": "SubdivideSurface",
+        "data": {
+          "uDivisions": 20,
+          "vDivisions": "max(panelDensity*2,4)",
+          "inset": "insetDepth*1.5",
+          "extrudeMin": "extrudeVar*0.08",
+          "extrudeMax": 24.4,
+          "seed": 13,
+          "faceIndex": -1,
+          "includeBase": true
+        },
+        "position": {
+          "x": 270,
+          "y": 40
+        },
+        "measured": {
+          "width": 201,
+          "height": 494
+        },
+        "selected": false
+      },
+      {
+        "id": "align_base",
+        "type": "Align",
+        "data": {
+          "mode": "ground",
+          "offsetX": 152.5
+        },
+        "position": {
+          "x": 500,
+          "y": 40
+        },
+        "measured": {
+          "width": 201,
+          "height": 344
+        },
+        "selected": false
+      },
+      {
+        "id": "align_tower",
+        "type": "Align",
+        "data": {
+          "mode": "above",
+          "offsetZ": 0.1,
+          "offsetX": 85.1
+        },
+        "position": {
+          "x": 730,
+          "y": 40
+        },
+        "measured": {
+          "width": 201,
+          "height": 344
+        },
+        "selected": true
+      },
+      {
+        "id": "cone_antenna",
+        "type": "Cone",
+        "data": {
+          "radius1": "towerWidth*0.04",
+          "radius2": "towerWidth*0.005",
+          "height": "towerHeight*0.12",
+          "color": "#52525b"
+        },
+        "position": {
+          "x": 40,
+          "y": 420
+        },
+        "measured": {
+          "width": 201,
+          "height": 344
+        }
+      },
+      {
+        "id": "align_antenna",
+        "type": "Align",
+        "data": {
+          "mode": "above",
+          "offsetZ": 0.1
+        },
+        "position": {
+          "x": 960,
+          "y": 40
+        },
+        "measured": {
+          "width": 201,
+          "height": 344
+        }
+      }
+    ],
+    "edges": [
+      {
+        "source": "box_tower",
+        "target": "sub_tower",
+        "id": "e_box_tower_sub_tower_solid",
+        "sourceHandle": "solid",
+        "targetHandle": "solid"
+      },
+      {
+        "source": "box_base",
+        "target": "sub_base",
+        "id": "e_box_base_sub_base_solid",
+        "sourceHandle": "solid",
+        "targetHandle": "solid"
+      },
+      {
+        "source": "sub_base",
+        "target": "align_base",
+        "id": "e_sub_base_align_base_shape",
+        "sourceHandle": "solid",
+        "targetHandle": "shape"
+      },
+      {
+        "source": "sub_tower",
+        "target": "align_tower",
+        "id": "e_sub_tower_align_tower_shape",
+        "sourceHandle": "solid",
+        "targetHandle": "shape"
+      },
+      {
+        "source": "align_base",
+        "target": "align_tower",
+        "id": "e_align_base_align_tower_reference",
+        "sourceHandle": "solid",
+        "targetHandle": "reference"
+      },
+      {
+        "source": "cone_antenna",
+        "target": "align_antenna",
+        "id": "e_cone_antenna_align_antenna_shape",
+        "sourceHandle": "solid",
+        "targetHandle": "shape"
+      },
+      {
+        "source": "align_tower",
+        "target": "align_antenna",
+        "id": "e_align_tower_align_antenna_reference",
+        "sourceHandle": "solid",
+        "targetHandle": "reference"
+      }
+    ]
+  },
+  "conversation": [
+    {
+      "role": "system",
+      "content": "Workspace cleared."
+    },
+    {
+      "role": "user",
+      "content": "\"Design a monolithic, brutalist sci-fi skyscraper. I want you to use a watertight box modeling approach for this. Do not build it by translating and stacking separate smaller boxes. Instead, start with a single, massive, tall Box as the core structure. Then, carve intricate, greebled paneling and window bays directly out of the core's faces using the SubdivideSurface node. Make sure the panels are inset slightly and have randomized extrusion depths to give the surface a highly detailed, textured sci-fi look across all of its sides.\""
+    },
+    {
+      "role": "assistant",
+      "content": "A brutalist sci-fi skyscraper built via watertight box modeling: a single tall Box core is carved across all six faces by SubdivideSurface with inset panels and randomized extrusion depths for greebled sci-fi paneling. A wider base plinth is similarly textured, and a thin antenna spike crowns the tower. Five sliders drive height, width, panel density, inset, and extrusion variation — all proportions are parametrically coupled so the whole monolith rescales together."
+    }
+  ],
+  "plan": "",
+  "genome": null,
+  "geometryReport": {
+    "leaves": [
+      {
+        "id": "align_base",
+        "bbox": {
+          "min": [
+            129.8999999,
+            -47.6000001,
+            -2.3841039319672766e-15
+          ],
+          "max": [
+            175.1000001,
+            47.6000001,
+            18.700000199999998
+          ],
+          "center": [
+            152.5,
+            0,
+            9.350000099999999
+          ],
+          "size": [
+            45.20000019999998,
+            95.2000002,
+            18.7000002
+          ]
+        },
+        "volume": 80466.84799999998,
+        "meshOk": true,
+        "vertexCount": 24,
+        "error": null
+      },
+      {
+        "id": "align_tower",
+        "bbox": {
+          "min": [
+            228.59999989999997,
+            -7.800000100000014,
+            18.800000199999985
+          ],
+          "max": [
+            246.60000010000002,
+            7.800000100000014,
+            98.8000004
+          ],
+          "center": [
+            237.6,
+            0,
+            58.800000299999994
+          ],
+          "size": [
+            18.000000200000045,
+            15.600000200000029,
+            80.00000020000002
+          ]
+        },
+        "volume": 22464,
+        "meshOk": true,
+        "vertexCount": 24,
+        "error": null
+      },
+      {
+        "id": "align_antenna",
+        "bbox": {
+          "min": [
+            236.76603670909233,
+            -0.7987239826401602,
+            98.78603720909234
+          ],
+          "max": [
+            238.43396329090766,
+            0.7987239826401602,
+            108.61396379090763
+          ],
+          "center": [
+            237.6,
+            0,
+            103.70000049999999
+          ],
+          "size": [
+            1.6679265818153226,
+            1.5974479652803204,
+            9.82792658181529
+          ]
+        },
+        "volume": 5.944395955416458,
+        "meshOk": true,
+        "vertexCount": 68,
+        "error": null
+      }
+    ],
+    "nodeErrors": [],
+    "numbers": {
+      "s_height": 80,
+      "s_width": 18,
+      "s_density": 6,
+      "s_inset": 0.08,
+      "s_extrude": 1.5
+    },
+    "sliders": {
+      "towerHeight": 80,
+      "towerWidth": 18,
+      "panelDensity": 6,
+      "insetDepth": 0.08,
+      "extrudeVar": 1.5
+    },
+    "selections": {},
+    "helpers": {},
+    "nodeCount": 13,
+    "edgeCount": 7,
+    "transformCount": 5,
+    "nodesPerLeafRatio": 4.333333333333333,
+    "nodeEconomyWarning": false,
+    "placement": {
+      "anchored": [
+        "align_base",
+        "align_tower",
+        "align_antenna"
+      ],
+      "literal": [],
+      "origin": [],
+      "literalNodeIds": [],
+      "ratio": 1
+    },
+    "scene": {
+      "min": [
+        129.8999999,
+        -47.6000001,
+        -2.3841039319672766e-15
+      ],
+      "max": [
+        246.60000010000002,
+        47.6000001,
+        108.61396379090763
+      ],
+      "size": [
+        116.7000002,
+        95.2000002,
+        108.61396379090763
+      ]
+    },
+    "meshedLeafCount": 3,
+    "kernelFaultCount": 0,
+    "kernelSuspect": false,
+    "kernelHealth": "ok",
+    "evalCount": 17,
+    "recycleRecommended": false,
+    "perturbationIssues": [
+      "At towerWidth decrease (0.6x), \"align_tower\" detaches from \"align_antenna\". Check that their positions are driven by formulas or Align rather than absolute coordinates.",
+      "At towerWidth increase (1.5x), \"align_tower\" detaches from \"align_antenna\". Check that their positions are driven by formulas or Align rather than absolute coordinates.",
+      "At panelDensity decrease (0.6x), \"align_tower\" detaches from \"align_antenna\". Check that their positions are driven by formulas or Align rather than absolute coordinates.",
+      "At panelDensity increase (1.5x), \"align_tower\" detaches from \"align_antenna\". Check that their positions are driven by formulas or Align rather than absolute coordinates.",
+      "At extrudeVar decrease (0.6x), \"align_tower\" detaches from \"align_antenna\". Check that their positions are driven by formulas or Align rather than absolute coordinates.",
+      "At extrudeVar increase (1.5x), \"align_tower\" detaches from \"align_antenna\". Check that their positions are driven by formulas or Align rather than absolute coordinates."
+    ],
+    "proportionalIntegrity": 0
+  },
+  "timeline": [
+    {
+      "at": "2026-07-24T16:33:07.695Z",
+      "turn": 1,
+      "trigger": "ai-json",
+      "label": "attempt 1: rebuilt graph (13 nodes)",
+      "nodeCount": 13,
+      "edgeCount": 7,
+      "isolatedCount": 5,
+      "diff": {
+        "addedNodes": [
+          "s_height",
+          "s_width",
+          "s_density",
+          "s_inset",
+          "s_extrude",
+          "box_tower",
+          "sub_tower",
+          "box_base",
+          "sub_base",
+          "align_base",
+          "align_tower",
+          "cone_antenna",
+          "align_antenna"
+        ],
+        "removedNodes": [],
+        "changedNodes": [],
+        "addedEdges": 7,
+        "removedEdges": 0
+      },
+      "nodes": [
+        {
+          "id": "s_height",
+          "type": "NumberSlider",
+          "data": {
+            "label": "towerHeight",
+            "value": 80,
+            "min": 20,
+            "max": 150,
+            "step": 1
+          },
+          "position": {
+            "x": 40,
+            "y": 990
+          }
+        },
+        {
+          "id": "s_width",
+          "type": "NumberSlider",
+          "data": {
+            "label": "towerWidth",
+            "value": 18,
+            "min": 8,
+            "max": 40,
+            "step": 0.5
+          },
+          "position": {
+            "x": 40,
+            "y": 1370
+          }
+        },
+        {
+          "id": "s_density",
+          "type": "NumberSlider",
+          "data": {
+            "label": "panelDensity",
+            "value": 6,
+            "min": 2,
+            "max": 12,
+            "step": 1
+          },
+          "position": {
+            "x": 40,
+            "y": 610
+          }
+        },
+        {
+          "id": "s_inset",
+          "type": "NumberSlider",
+          "data": {
+            "label": "insetDepth",
+            "value": 0.08,
+            "min": 0.01,
+            "max": 0.4,
+            "step": 0.01
+          },
+          "position": {
+            "x": 40,
+            "y": 1180
+          }
+        },
+        {
+          "id": "s_extrude",
+          "type": "NumberSlider",
+          "data": {
+            "label": "extrudeVar",
+            "value": 1.5,
+            "min": 0.2,
+            "max": 5,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 800
+          }
+        },
+        {
+          "id": "box_tower",
+          "type": "Box",
+          "data": {
+            "width": "towerWidth",
+            "length": "towerWidth",
+            "height": "towerHeight",
+            "color": "#78716c"
+          },
+          "position": {
+            "x": 40,
+            "y": 230
+          }
+        },
+        {
+          "id": "sub_tower",
+          "type": "SubdivideSurface",
+          "data": {
+            "uDivisions": "panelDensity",
+            "vDivisions": "min(panelDensity*4,40)",
+            "inset": "insetDepth",
+            "extrudeMin": "extrudeVar*0.15",
+            "extrudeMax": "extrudeVar",
+            "seed": 7,
+            "faceIndex": -1,
+            "includeBase": true
+          },
+          "position": {
+            "x": 270,
+            "y": 230
+          }
+        },
+        {
+          "id": "box_base",
+          "type": "Box",
+          "data": {
+            "width": "towerWidth*1.5",
+            "length": "towerWidth*1.5",
+            "height": "towerHeight*0.06",
+            "color": "#3f3f46"
+          },
+          "position": {
+            "x": 40,
+            "y": 40
+          }
+        },
+        {
+          "id": "sub_base",
+          "type": "SubdivideSurface",
+          "data": {
+            "uDivisions": "max(panelDensity*2,4)",
+            "vDivisions": "max(panelDensity*2,4)",
+            "inset": "insetDepth*1.5",
+            "extrudeMin": "extrudeVar*0.08",
+            "extrudeMax": "extrudeVar*0.3",
+            "seed": 13,
+            "faceIndex": -1,
+            "includeBase": true
+          },
+          "position": {
+            "x": 270,
+            "y": 40
+          }
+        },
+        {
+          "id": "align_base",
+          "type": "Align",
+          "data": {
+            "mode": "ground"
+          },
+          "position": {
+            "x": 500,
+            "y": 40
+          }
+        },
+        {
+          "id": "align_tower",
+          "type": "Align",
+          "data": {
+            "mode": "above",
+            "offsetZ": 0.1
+          },
+          "position": {
+            "x": 730,
+            "y": 40
+          }
+        },
+        {
+          "id": "cone_antenna",
+          "type": "Cone",
+          "data": {
+            "radius1": "towerWidth*0.04",
+            "radius2": "towerWidth*0.005",
+            "height": "towerHeight*0.12",
+            "color": "#52525b"
+          },
+          "position": {
+            "x": 40,
+            "y": 420
+          }
+        },
+        {
+          "id": "align_antenna",
+          "type": "Align",
+          "data": {
+            "mode": "above",
+            "offsetZ": 0.1
+          },
+          "position": {
+            "x": 960,
+            "y": 40
+          }
+        }
+      ],
+      "edges": [
+        {
+          "source": "box_tower",
+          "target": "sub_tower",
+          "id": "e_box_tower_sub_tower_solid",
+          "sourceHandle": "solid",
+          "targetHandle": "solid"
+        },
+        {
+          "source": "box_base",
+          "target": "sub_base",
+          "id": "e_box_base_sub_base_solid",
+          "sourceHandle": "solid",
+          "targetHandle": "solid"
+        },
+        {
+          "source": "sub_base",
+          "target": "align_base",
+          "id": "e_sub_base_align_base_shape",
+          "sourceHandle": "solid",
+          "targetHandle": "shape"
+        },
+        {
+          "source": "sub_tower",
+          "target": "align_tower",
+          "id": "e_sub_tower_align_tower_shape",
+          "sourceHandle": "solid",
+          "targetHandle": "shape"
+        },
+        {
+          "source": "align_base",
+          "target": "align_tower",
+          "id": "e_align_base_align_tower_reference",
+          "sourceHandle": "solid",
+          "targetHandle": "reference"
+        },
+        {
+          "source": "cone_antenna",
+          "target": "align_antenna",
+          "id": "e_cone_antenna_align_antenna_shape",
+          "sourceHandle": "solid",
+          "targetHandle": "shape"
+        },
+        {
+          "source": "align_tower",
+          "target": "align_antenna",
+          "id": "e_align_tower_align_antenna_reference",
+          "sourceHandle": "solid",
+          "targetHandle": "reference"
+        }
+      ]
+    },
+    {
+      "at": "2026-07-24T18:39:29.544Z",
+      "turn": 1,
+      "trigger": "export",
+      "label": "state at export (includes any unrecorded manual edits)",
+      "nodeCount": 13,
+      "edgeCount": 7,
+      "isolatedCount": 5,
+      "diff": {
+        "addedNodes": [],
+        "removedNodes": [],
+        "changedNodes": [
+          "box_tower",
+          "box_base",
+          "sub_base",
+          "align_base",
+          "align_tower"
+        ],
+        "addedEdges": 0,
+        "removedEdges": 0
+      },
+      "nodes": [
+        {
+          "id": "s_height",
+          "type": "NumberSlider",
+          "data": {
+            "label": "towerHeight",
+            "value": 80,
+            "min": 20,
+            "max": 150,
+            "step": 1
+          },
+          "position": {
+            "x": 40,
+            "y": 990
+          },
+          "measured": {
+            "width": 201,
+            "height": 328
+          }
+        },
+        {
+          "id": "s_width",
+          "type": "NumberSlider",
+          "data": {
+            "label": "towerWidth",
+            "value": 18,
+            "min": 8,
+            "max": 40,
+            "step": 0.5
+          },
+          "position": {
+            "x": 40,
+            "y": 1370
+          },
+          "measured": {
+            "width": 201,
+            "height": 328
+          }
+        },
+        {
+          "id": "s_density",
+          "type": "NumberSlider",
+          "data": {
+            "label": "panelDensity",
+            "value": 6,
+            "min": 2,
+            "max": 12,
+            "step": 1
+          },
+          "position": {
+            "x": 40,
+            "y": 610
+          },
+          "measured": {
+            "width": 201,
+            "height": 328
+          }
+        },
+        {
+          "id": "s_inset",
+          "type": "NumberSlider",
+          "data": {
+            "label": "insetDepth",
+            "value": 0.08,
+            "min": 0.01,
+            "max": 0.4,
+            "step": 0.01
+          },
+          "position": {
+            "x": 40,
+            "y": 1180
+          },
+          "measured": {
+            "width": 201,
+            "height": 328
+          }
+        },
+        {
+          "id": "s_extrude",
+          "type": "NumberSlider",
+          "data": {
+            "label": "extrudeVar",
+            "value": 1.5,
+            "min": 0.2,
+            "max": 5,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 800
+          },
+          "measured": {
+            "width": 201,
+            "height": 328
+          }
+        },
+        {
+          "id": "box_tower",
+          "type": "Box",
+          "data": {
+            "width": "towerWidth",
+            "length": 15.6,
+            "height": "towerHeight",
+            "color": "#78716c"
+          },
+          "position": {
+            "x": 40,
+            "y": 230
+          },
+          "measured": {
+            "width": 201,
+            "height": 312
+          },
+          "selected": false
+        },
+        {
+          "id": "sub_tower",
+          "type": "SubdivideSurface",
+          "data": {
+            "uDivisions": "panelDensity",
+            "vDivisions": "min(panelDensity*4,40)",
+            "inset": "insetDepth",
+            "extrudeMin": "extrudeVar*0.15",
+            "extrudeMax": "extrudeVar",
+            "seed": 7,
+            "faceIndex": -1,
+            "includeBase": true
+          },
+          "position": {
+            "x": 270,
+            "y": 230
+          },
+          "measured": {
+            "width": 201,
+            "height": 494
+          }
+        },
+        {
+          "id": "box_base",
+          "type": "Box",
+          "data": {
+            "width": 45.2,
+            "length": 95.2,
+            "height": 18.7,
+            "color": "#3f3f46"
+          },
+          "position": {
+            "x": 40,
+            "y": 40
+          },
+          "measured": {
+            "width": 201,
+            "height": 312
+          },
+          "selected": false
+        },
+        {
+          "id": "sub_base",
+          "type": "SubdivideSurface",
+          "data": {
+            "uDivisions": 20,
+            "vDivisions": "max(panelDensity*2,4)",
+            "inset": "insetDepth*1.5",
+            "extrudeMin": "extrudeVar*0.08",
+            "extrudeMax": 24.4,
+            "seed": 13,
+            "faceIndex": -1,
+            "includeBase": true
+          },
+          "position": {
+            "x": 270,
+            "y": 40
+          },
+          "measured": {
+            "width": 201,
+            "height": 494
+          },
+          "selected": false
+        },
+        {
+          "id": "align_base",
+          "type": "Align",
+          "data": {
+            "mode": "ground",
+            "offsetX": 152.5
+          },
+          "position": {
+            "x": 500,
+            "y": 40
+          },
+          "measured": {
+            "width": 201,
+            "height": 344
+          },
+          "selected": false
+        },
+        {
+          "id": "align_tower",
+          "type": "Align",
+          "data": {
+            "mode": "above",
+            "offsetZ": 0.1,
+            "offsetX": 85.1
+          },
+          "position": {
+            "x": 730,
+            "y": 40
+          },
+          "measured": {
+            "width": 201,
+            "height": 344
+          },
+          "selected": true
+        },
+        {
+          "id": "cone_antenna",
+          "type": "Cone",
+          "data": {
+            "radius1": "towerWidth*0.04",
+            "radius2": "towerWidth*0.005",
+            "height": "towerHeight*0.12",
+            "color": "#52525b"
+          },
+          "position": {
+            "x": 40,
+            "y": 420
+          },
+          "measured": {
+            "width": 201,
+            "height": 344
+          }
+        },
+        {
+          "id": "align_antenna",
+          "type": "Align",
+          "data": {
+            "mode": "above",
+            "offsetZ": 0.1
+          },
+          "position": {
+            "x": 960,
+            "y": 40
+          },
+          "measured": {
+            "width": 201,
+            "height": 344
+          }
+        }
+      ],
+      "edges": [
+        {
+          "source": "box_tower",
+          "target": "sub_tower",
+          "id": "e_box_tower_sub_tower_solid",
+          "sourceHandle": "solid",
+          "targetHandle": "solid"
+        },
+        {
+          "source": "box_base",
+          "target": "sub_base",
+          "id": "e_box_base_sub_base_solid",
+          "sourceHandle": "solid",
+          "targetHandle": "solid"
+        },
+        {
+          "source": "sub_base",
+          "target": "align_base",
+          "id": "e_sub_base_align_base_shape",
+          "sourceHandle": "solid",
+          "targetHandle": "shape"
+        },
+        {
+          "source": "sub_tower",
+          "target": "align_tower",
+          "id": "e_sub_tower_align_tower_shape",
+          "sourceHandle": "solid",
+          "targetHandle": "shape"
+        },
+        {
+          "source": "align_base",
+          "target": "align_tower",
+          "id": "e_align_base_align_tower_reference",
+          "sourceHandle": "solid",
+          "targetHandle": "reference"
+        },
+        {
+          "source": "cone_antenna",
+          "target": "align_antenna",
+          "id": "e_cone_antenna_align_antenna_shape",
+          "sourceHandle": "solid",
+          "targetHandle": "shape"
+        },
+        {
+          "source": "align_tower",
+          "target": "align_antenna",
+          "id": "e_align_tower_align_antenna_reference",
+          "sourceHandle": "solid",
+          "targetHandle": "reference"
+        }
+      ]
+    }
+  ]
+}

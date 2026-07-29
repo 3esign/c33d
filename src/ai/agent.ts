@@ -1,4 +1,5 @@
 import { chatCompletion, chatCompletionWithTools, providerSupportsTools, providerSupportsVision } from './api';
+import { beginRun, endRun, throwIfAborted, isAbortError } from './abort';
 import type { AgentMessage } from './api';
 import { useStore, generateUUID, waitForEvaluation } from '../store/useStore';
 import { NODE_LIBRARY } from '../nodes/NodeDefinitions';
@@ -242,6 +243,8 @@ export interface IntentOutcome {
   skeletonNodes?: number;
   magicNumberCount?: number;
   error?: string;
+  /** True when the user pressed Stop — not a model failure, excluded from the intelligence log. */
+  stopped?: boolean;
   repairRounds?: number;
   realizationScore?: number;
   deferredDetail?: string[];
@@ -825,6 +828,7 @@ export async function processUserIntent(userText: string, options?: { forEval?: 
   const statusId = generateUUID();
   store.addMessage({ id: statusId, role: 'system', content: `AI (${currentModelName()}) is working…` });
 
+  beginRun();
   let outcome: IntentOutcome;
   try {
     if (useTools) {
@@ -861,17 +865,27 @@ export async function processUserIntent(userText: string, options?: { forEval?: 
       outcome = await runLegacyJson(modifiedUserText, userText, options);
     }
   } catch (err: any) {
+    // A user-requested stop is not a failure — report it plainly and keep
+    // whatever the graph already contains, rather than logging an error and
+    // polluting the performance log with a fake model failure.
+    const stopped = isAbortError(err);
     outcome = {
       parsedOk: false, evaluatedOk: false, geometrySane: false,
       nodeCount: useStore.getState().nodes.length, edgeCount: useStore.getState().edges.length,
       durationMs: Math.round(performance.now() - startTime),
-      error: String(err.message || err),
+      error: stopped ? 'Stopped by user' : String(err.message || err),
+      ...(stopped ? { stopped: true } : {}),
     };
-    addSystemMessage(`Error: ${outcome.error}`);
+    addSystemMessage(stopped
+      ? 'Stopped. The graph is left exactly as it was — say what to change and it continues from here.'
+      : `Error: ${outcome.error}`);
+  } finally {
+    endRun();
   }
   useStore.getState().removeMessage(statusId);
 
   outcome.durationMs = Math.round(performance.now() - startTime);
+  if (outcome.stopped) return outcome; // a stop tells us nothing about the model
   useStore.getState().addPerformanceLog({
     model: currentModelName(),
     request: userText,
@@ -916,6 +930,7 @@ async function runToolLoop(modifiedUserText: string, originalText: string, optio
   const toolDiagnosis = newRepairDiagnosis();
 
   for (let turn = 0; turn < MAX_AGENT_TURNS; turn++) {
+    throwIfAborted();
     const modelTurn = await chatCompletionWithTools(messages, systemPrompt, AGENT_TOOLS);
     parsedOk = true;
 
@@ -1115,6 +1130,7 @@ async function runLegacyJson(modifiedUserText: string, originalText: string, opt
   const jsonDiagnosis = newRepairDiagnosis();
 
   for (let attempt = 0; attempt <= MAX_AUTO_REPAIRS; attempt++) {
+    throwIfAborted();
     repairsUsed = attempt;
     // Schema-constrained decoding: on an empty canvas the expected output is an
     // IR program, so constrain the sampler to the IR grammar (op-name enum kills

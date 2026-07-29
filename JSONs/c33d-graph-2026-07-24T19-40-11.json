@@ -1,0 +1,1392 @@
+{
+  "c33dExport": 2,
+  "exportedAt": "2026-07-24T19:40:11.543Z",
+  "comment": "failed",
+  "agent": {
+    "name": "Ollama (Local)",
+    "provider": "ollama",
+    "model": "nemotron-3-super:cloud"
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "baseRadius",
+        "type": "NumberSlider",
+        "data": {
+          "value": 20,
+          "label": "baseRadius",
+          "min": 5,
+          "max": 50,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 40
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "heightStep",
+        "type": "NumberSlider",
+        "data": {
+          "value": 10,
+          "label": "heightStep",
+          "min": 1,
+          "max": 30,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 420
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "scaleUp",
+        "type": "NumberSlider",
+        "data": {
+          "value": 1.5,
+          "label": "scaleUp",
+          "min": 0.1,
+          "max": 5,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 1370
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "scaleDown",
+        "type": "NumberSlider",
+        "data": {
+          "value": 0.5,
+          "label": "scaleDown",
+          "min": 0.1,
+          "max": 2,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 1180
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "scaleBase",
+        "type": "NumberSlider",
+        "data": {
+          "value": 1,
+          "label": "scaleBase",
+          "min": 0.1,
+          "max": 5,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 990
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "rotAngle",
+        "type": "NumberSlider",
+        "data": {
+          "value": 15,
+          "label": "rotAngle",
+          "min": 0,
+          "max": 360,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 800
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "baseShape",
+        "type": "Sphere",
+        "data": {
+          "radius": 1
+        },
+        "position": {
+          "x": 40,
+          "y": 230
+        },
+        "measured": {
+          "width": 201,
+          "height": 216
+        }
+      },
+      {
+        "id": "points",
+        "type": "ListLength",
+        "data": {},
+        "position": {
+          "x": 270,
+          "y": 40
+        },
+        "measured": {
+          "width": 150,
+          "height": 106
+        }
+      },
+      {
+        "id": "points_x",
+        "type": "RepeatEach",
+        "data": {
+          "count": 10
+        },
+        "position": {
+          "x": 270,
+          "y": 230
+        },
+        "measured": {
+          "width": 201,
+          "height": 194
+        }
+      },
+      {
+        "id": "points_x_2",
+        "type": "Series",
+        "data": {
+          "start": 0,
+          "step": "2*pi/(10)",
+          "count": 10
+        },
+        "position": {
+          "x": 40,
+          "y": 610
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "points_x_3",
+        "type": "Tile",
+        "data": {},
+        "position": {
+          "x": 500,
+          "y": 40
+        },
+        "measured": {
+          "width": 201,
+          "height": 194
+        }
+      },
+      {
+        "id": "points_x_4",
+        "type": "Expression",
+        "data": {
+          "formula": "a*cos(b)"
+        },
+        "position": {
+          "x": 730,
+          "y": 40
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "points_x_5",
+        "type": "Expression",
+        "data": {
+          "formula": "a*sin(b)"
+        },
+        "position": {
+          "x": 730,
+          "y": 230
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "points_x_6",
+        "type": "PointsFromLists",
+        "data": {},
+        "position": {
+          "x": 960,
+          "y": 40
+        },
+        "measured": {
+          "width": 150,
+          "height": 234
+        }
+      },
+      {
+        "id": "setA_inst",
+        "type": "InstanceOnPoints",
+        "data": {
+          "scaleStart": 1,
+          "scaleEnd": 1,
+          "alignToTangent": false
+        },
+        "position": {
+          "x": 1190,
+          "y": 40
+        },
+        "measured": {
+          "width": 201,
+          "height": 436
+        }
+      },
+      {
+        "id": "setA_trans",
+        "type": "Translate",
+        "data": {
+          "x": 0,
+          "y": 0
+        },
+        "position": {
+          "x": 1420,
+          "y": 40
+        },
+        "measured": {
+          "width": 201,
+          "height": 334
+        }
+      },
+      {
+        "id": "setA_scaled",
+        "type": "Scale",
+        "data": {
+          "color": "#3b82f6"
+        },
+        "position": {
+          "x": 1650,
+          "y": 40
+        },
+        "measured": {
+          "width": 201,
+          "height": 206
+        }
+      },
+      {
+        "id": "setB_inst",
+        "type": "InstanceOnPoints",
+        "data": {
+          "scaleStart": 1,
+          "scaleEnd": 1,
+          "alignToTangent": false
+        },
+        "position": {
+          "x": 1190,
+          "y": 230
+        },
+        "measured": {
+          "width": 201,
+          "height": 436
+        }
+      },
+      {
+        "id": "setB_trans",
+        "type": "Translate",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": "heightStep*2"
+        },
+        "position": {
+          "x": 1420,
+          "y": 230
+        },
+        "measured": {
+          "width": 201,
+          "height": 334
+        }
+      },
+      {
+        "id": "setB_scaled",
+        "type": "Scale",
+        "data": {
+          "color": "#ef4444"
+        },
+        "position": {
+          "x": 1650,
+          "y": 230
+        },
+        "measured": {
+          "width": 201,
+          "height": 206
+        }
+      },
+      {
+        "id": "setC_inst",
+        "type": "InstanceOnPoints",
+        "data": {
+          "scaleStart": 1,
+          "scaleEnd": 1,
+          "alignToTangent": false
+        },
+        "position": {
+          "x": 1190,
+          "y": 420
+        },
+        "measured": {
+          "width": 201,
+          "height": 436
+        }
+      },
+      {
+        "id": "setC_trans",
+        "type": "Translate",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": "heightStep*3"
+        },
+        "position": {
+          "x": 1420,
+          "y": 420
+        },
+        "measured": {
+          "width": 201,
+          "height": 334
+        }
+      },
+      {
+        "id": "setC_scaled",
+        "type": "Scale",
+        "data": {},
+        "position": {
+          "x": 1650,
+          "y": 420
+        },
+        "measured": {
+          "width": 201,
+          "height": 206
+        }
+      },
+      {
+        "id": "setC_rot",
+        "type": "Rotate",
+        "data": {
+          "axisX": 0,
+          "axisY": 0,
+          "axisZ": 1,
+          "color": "#10b981"
+        },
+        "position": {
+          "x": 1880,
+          "y": 40
+        },
+        "measured": {
+          "width": 201,
+          "height": 414
+        }
+      }
+    ],
+    "edges": [
+      {
+        "source": "baseRadius",
+        "sourceHandle": "value",
+        "target": "points",
+        "targetHandle": "list",
+        "id": "e_baseRadius_points_list"
+      },
+      {
+        "source": "baseRadius",
+        "sourceHandle": "value",
+        "target": "points_x",
+        "targetHandle": "list",
+        "id": "e_baseRadius_points_x_list"
+      },
+      {
+        "source": "points",
+        "sourceHandle": "length",
+        "target": "points_x_3",
+        "targetHandle": "count",
+        "id": "e_points_points_x_3_count"
+      },
+      {
+        "source": "points_x_2",
+        "sourceHandle": "values",
+        "target": "points_x_3",
+        "targetHandle": "list",
+        "id": "e_points_x_2_points_x_3_list"
+      },
+      {
+        "source": "points_x",
+        "sourceHandle": "values",
+        "target": "points_x_4",
+        "targetHandle": "a",
+        "id": "e_points_x_points_x_4_a"
+      },
+      {
+        "source": "points_x_3",
+        "sourceHandle": "values",
+        "target": "points_x_4",
+        "targetHandle": "b",
+        "id": "e_points_x_3_points_x_4_b"
+      },
+      {
+        "source": "points_x",
+        "sourceHandle": "values",
+        "target": "points_x_5",
+        "targetHandle": "a",
+        "id": "e_points_x_points_x_5_a"
+      },
+      {
+        "source": "points_x_3",
+        "sourceHandle": "values",
+        "target": "points_x_5",
+        "targetHandle": "b",
+        "id": "e_points_x_3_points_x_5_b"
+      },
+      {
+        "source": "points_x_4",
+        "sourceHandle": "value",
+        "target": "points_x_6",
+        "targetHandle": "x",
+        "id": "e_points_x_4_points_x_6_x"
+      },
+      {
+        "source": "points_x_5",
+        "sourceHandle": "value",
+        "target": "points_x_6",
+        "targetHandle": "y",
+        "id": "e_points_x_5_points_x_6_y"
+      },
+      {
+        "source": "points_x",
+        "sourceHandle": "values",
+        "target": "points_x_6",
+        "targetHandle": "group",
+        "id": "e_points_x_points_x_6_group"
+      },
+      {
+        "source": "baseShape",
+        "sourceHandle": "solid",
+        "target": "setA_inst",
+        "targetHandle": "shape",
+        "id": "e_baseShape_setA_inst_shape"
+      },
+      {
+        "source": "points_x_6",
+        "sourceHandle": "points",
+        "target": "setA_inst",
+        "targetHandle": "points",
+        "id": "e_points_x_6_setA_inst_points"
+      },
+      {
+        "source": "heightStep",
+        "sourceHandle": "value",
+        "target": "setA_trans",
+        "targetHandle": "param:z",
+        "id": "e_heightStep_setA_trans_param:z"
+      },
+      {
+        "source": "setA_inst",
+        "sourceHandle": "solid",
+        "target": "setA_trans",
+        "targetHandle": "solid",
+        "id": "e_setA_inst_setA_trans_solid"
+      },
+      {
+        "source": "scaleUp",
+        "sourceHandle": "value",
+        "target": "setA_scaled",
+        "targetHandle": "param:factor",
+        "id": "e_scaleUp_setA_scaled_param:factor"
+      },
+      {
+        "source": "setA_trans",
+        "sourceHandle": "solid",
+        "target": "setA_scaled",
+        "targetHandle": "solid",
+        "id": "e_setA_trans_setA_scaled_solid"
+      },
+      {
+        "source": "baseShape",
+        "sourceHandle": "solid",
+        "target": "setB_inst",
+        "targetHandle": "shape",
+        "id": "e_baseShape_setB_inst_shape"
+      },
+      {
+        "source": "points_x_6",
+        "sourceHandle": "points",
+        "target": "setB_inst",
+        "targetHandle": "points",
+        "id": "e_points_x_6_setB_inst_points"
+      },
+      {
+        "source": "setB_inst",
+        "sourceHandle": "solid",
+        "target": "setB_trans",
+        "targetHandle": "solid",
+        "id": "e_setB_inst_setB_trans_solid"
+      },
+      {
+        "source": "scaleDown",
+        "sourceHandle": "value",
+        "target": "setB_scaled",
+        "targetHandle": "param:factor",
+        "id": "e_scaleDown_setB_scaled_param:factor"
+      },
+      {
+        "source": "setB_trans",
+        "sourceHandle": "solid",
+        "target": "setB_scaled",
+        "targetHandle": "solid",
+        "id": "e_setB_trans_setB_scaled_solid"
+      },
+      {
+        "source": "baseShape",
+        "sourceHandle": "solid",
+        "target": "setC_inst",
+        "targetHandle": "shape",
+        "id": "e_baseShape_setC_inst_shape"
+      },
+      {
+        "source": "points_x_6",
+        "sourceHandle": "points",
+        "target": "setC_inst",
+        "targetHandle": "points",
+        "id": "e_points_x_6_setC_inst_points"
+      },
+      {
+        "source": "setC_inst",
+        "sourceHandle": "solid",
+        "target": "setC_trans",
+        "targetHandle": "solid",
+        "id": "e_setC_inst_setC_trans_solid"
+      },
+      {
+        "source": "scaleBase",
+        "sourceHandle": "value",
+        "target": "setC_scaled",
+        "targetHandle": "param:factor",
+        "id": "e_scaleBase_setC_scaled_param:factor"
+      },
+      {
+        "source": "setC_trans",
+        "sourceHandle": "solid",
+        "target": "setC_scaled",
+        "targetHandle": "solid",
+        "id": "e_setC_trans_setC_scaled_solid"
+      },
+      {
+        "source": "rotAngle",
+        "sourceHandle": "value",
+        "target": "setC_rot",
+        "targetHandle": "param:angle",
+        "id": "e_rotAngle_setC_rot_param:angle"
+      },
+      {
+        "source": "setC_scaled",
+        "sourceHandle": "solid",
+        "target": "setC_rot",
+        "targetHandle": "solid",
+        "id": "e_setC_scaled_setC_rot_solid"
+      }
+    ]
+  },
+  "conversation": [
+    {
+      "role": "system",
+      "content": "Workspace cleared."
+    },
+    {
+      "role": "user",
+      "content": "make a circle divide it on ten points translate them up and scale a bit then translate copy them again up and scale them down then translate them up again and copy and rotate a bit "
+    },
+    {
+      "role": "system",
+      "content": "IR program had compile errors (attempt 1/3) — asking the model to fix."
+    },
+    {
+      "role": "assistant",
+      "content": "Create three scaled and rotated arrays of spheres positioned on a circle"
+    }
+  ],
+  "plan": "",
+  "genome": null,
+  "geometryReport": {
+    "leaves": [
+      {
+        "id": "setA_scaled",
+        "bbox": {
+          "min": [
+            -31.52414112051118,
+            -30.04517412613623,
+            13.438250747761552
+          ],
+          "max": [
+            31.52414112051118,
+            30.04517412613623,
+            16.561749252238446
+          ],
+          "center": [
+            0,
+            0,
+            15
+          ],
+          "size": [
+            63.04828224102236,
+            60.09034825227246,
+            3.1234985044768937
+          ]
+        },
+        "volume": 141.37166941154067,
+        "meshOk": true,
+        "vertexCount": 910,
+        "error": null
+      },
+      {
+        "id": "setB_scaled",
+        "bbox": {
+          "min": [
+            -10.516296299883694,
+            -10.06384098497493,
+            9.434188134067517
+          ],
+          "max": [
+            10.565811865932483,
+            10.06384098497493,
+            10.565811865932483
+          ],
+          "center": [
+            0.024757783024394797,
+            0,
+            10
+          ],
+          "size": [
+            21.082108165816177,
+            20.12768196994986,
+            1.1316237318649662
+          ]
+        },
+        "volume": 5.235987755982991,
+        "meshOk": true,
+        "vertexCount": 300,
+        "error": null
+      },
+      {
+        "id": "setC_rot",
+        "bbox": {
+          "min": [
+            -20.34278270609478,
+            -20.99685687540489,
+            28.92548694607972
+          ],
+          "max": [
+            20.34278270609478,
+            20.99685687540489,
+            31.07451305392028
+          ],
+          "center": [
+            0,
+            0,
+            30
+          ],
+          "size": [
+            40.68556541218956,
+            41.99371375080978,
+            2.1490261078405624
+          ]
+        },
+        "volume": 41.8879020478639,
+        "meshOk": true,
+        "vertexCount": 500,
+        "error": null
+      }
+    ],
+    "nodeErrors": [],
+    "numbers": {
+      "baseRadius": 20,
+      "heightStep": 10,
+      "scaleUp": 1.5,
+      "scaleDown": 0.5,
+      "scaleBase": 1,
+      "rotAngle": 15,
+      "points_x_2": [
+        0,
+        0.6283185307179586,
+        1.2566370614359172,
+        1.8849555921538759,
+        2.5132741228718345,
+        3.141592653589793,
+        3.7699111843077517,
+        4.39822971502571,
+        5.026548245743669,
+        5.654866776461628
+      ],
+      "points": 1,
+      "points_x": [
+        20,
+        20,
+        20,
+        20,
+        20,
+        20,
+        20,
+        20,
+        20,
+        20
+      ],
+      "points_x_3": [
+        0,
+        0.6283185307179586,
+        1.2566370614359172,
+        1.8849555921538759,
+        2.5132741228718345,
+        3.141592653589793,
+        3.7699111843077517,
+        4.39822971502571,
+        5.026548245743669,
+        5.654866776461628
+      ],
+      "points_x_4": [
+        20,
+        16.18033988749895,
+        6.180339887498949,
+        -6.180339887498947,
+        -16.180339887498945,
+        -20,
+        -16.180339887498953,
+        -6.180339887498951,
+        6.180339887498945,
+        16.180339887498945
+      ],
+      "points_x_5": [
+        0,
+        11.755705045849464,
+        19.02113032590307,
+        19.021130325903073,
+        11.755705045849465,
+        2.4492935982947065e-15,
+        -11.75570504584946,
+        -19.02113032590307,
+        -19.021130325903073,
+        -11.755705045849467
+      ]
+    },
+    "sliders": {
+      "baseRadius": 20,
+      "heightStep": 10,
+      "scaleUp": 1.5,
+      "scaleDown": 0.5,
+      "scaleBase": 1,
+      "rotAngle": 15
+    },
+    "selections": {},
+    "helpers": {},
+    "nodeCount": 24,
+    "edgeCount": 29,
+    "transformCount": 10,
+    "nodesPerLeafRatio": 8,
+    "nodeEconomyWarning": true,
+    "placement": {
+      "anchored": [
+        "setA_scaled",
+        "setB_scaled",
+        "setC_rot"
+      ],
+      "literal": [],
+      "origin": [],
+      "literalNodeIds": [],
+      "ratio": 1
+    },
+    "scene": {
+      "min": [
+        -31.52414112051118,
+        -30.04517412613623,
+        9.434188134067517
+      ],
+      "max": [
+        31.52414112051118,
+        30.04517412613623,
+        31.07451305392028
+      ],
+      "size": [
+        63.04828224102236,
+        60.09034825227246,
+        21.640324919852766
+      ]
+    },
+    "meshedLeafCount": 3,
+    "kernelFaultCount": 0,
+    "kernelSuspect": false,
+    "kernelHealth": "ok",
+    "evalCount": 1,
+    "recycleRecommended": false,
+    "perturbationIssues": [
+      "At scaleUp decrease (0.6x), \"setA_scaled\" shifts non-proportionally relative to the assembly center (deviation 22%). Derive its position from the driver sliders or use Align.",
+      "At scaleUp increase (1.5x), \"setA_scaled\" shifts non-proportionally relative to the assembly center (deviation 35%). Derive its position from the driver sliders or use Align."
+    ],
+    "proportionalIntegrity": 0.6666666666666666
+  },
+  "timeline": [
+    {
+      "at": "2026-07-24T19:22:15.090Z",
+      "turn": 1,
+      "trigger": "ai-ir",
+      "label": "attempt 2: rebuilt graph (24 nodes)",
+      "nodeCount": 24,
+      "edgeCount": 29,
+      "isolatedCount": 0,
+      "diff": {
+        "addedNodes": [
+          "baseRadius",
+          "heightStep",
+          "scaleUp",
+          "scaleDown",
+          "scaleBase",
+          "rotAngle",
+          "baseShape",
+          "points",
+          "points_x",
+          "points_x_2",
+          "points_x_3",
+          "points_x_4",
+          "points_x_5",
+          "points_x_6",
+          "setA_inst",
+          "setA_trans",
+          "setA_scaled",
+          "setB_inst",
+          "setB_trans",
+          "setB_scaled",
+          "setC_inst",
+          "setC_trans",
+          "setC_scaled",
+          "setC_rot"
+        ],
+        "removedNodes": [],
+        "changedNodes": [],
+        "addedEdges": 29,
+        "removedEdges": 0
+      },
+      "nodes": [
+        {
+          "id": "baseRadius",
+          "type": "NumberSlider",
+          "data": {
+            "value": 20,
+            "label": "baseRadius",
+            "min": 5,
+            "max": 50,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 40
+          }
+        },
+        {
+          "id": "heightStep",
+          "type": "NumberSlider",
+          "data": {
+            "value": 10,
+            "label": "heightStep",
+            "min": 1,
+            "max": 30,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 420
+          }
+        },
+        {
+          "id": "scaleUp",
+          "type": "NumberSlider",
+          "data": {
+            "value": 1.5,
+            "label": "scaleUp",
+            "min": 0.1,
+            "max": 5,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 1370
+          }
+        },
+        {
+          "id": "scaleDown",
+          "type": "NumberSlider",
+          "data": {
+            "value": 0.5,
+            "label": "scaleDown",
+            "min": 0.1,
+            "max": 2,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 1180
+          }
+        },
+        {
+          "id": "scaleBase",
+          "type": "NumberSlider",
+          "data": {
+            "value": 1,
+            "label": "scaleBase",
+            "min": 0.1,
+            "max": 5,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 990
+          }
+        },
+        {
+          "id": "rotAngle",
+          "type": "NumberSlider",
+          "data": {
+            "value": 15,
+            "label": "rotAngle",
+            "min": 0,
+            "max": 360,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 800
+          }
+        },
+        {
+          "id": "baseShape",
+          "type": "Sphere",
+          "data": {
+            "radius": 1
+          },
+          "position": {
+            "x": 40,
+            "y": 230
+          }
+        },
+        {
+          "id": "points",
+          "type": "ListLength",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 40
+          }
+        },
+        {
+          "id": "points_x",
+          "type": "RepeatEach",
+          "data": {
+            "count": 10
+          },
+          "position": {
+            "x": 270,
+            "y": 230
+          }
+        },
+        {
+          "id": "points_x_2",
+          "type": "Series",
+          "data": {
+            "start": 0,
+            "step": "2*pi/(10)",
+            "count": 10
+          },
+          "position": {
+            "x": 40,
+            "y": 610
+          }
+        },
+        {
+          "id": "points_x_3",
+          "type": "Tile",
+          "data": {},
+          "position": {
+            "x": 500,
+            "y": 40
+          }
+        },
+        {
+          "id": "points_x_4",
+          "type": "Expression",
+          "data": {
+            "formula": "a*cos(b)"
+          },
+          "position": {
+            "x": 730,
+            "y": 40
+          }
+        },
+        {
+          "id": "points_x_5",
+          "type": "Expression",
+          "data": {
+            "formula": "a*sin(b)"
+          },
+          "position": {
+            "x": 730,
+            "y": 230
+          }
+        },
+        {
+          "id": "points_x_6",
+          "type": "PointsFromLists",
+          "data": {},
+          "position": {
+            "x": 960,
+            "y": 40
+          }
+        },
+        {
+          "id": "setA_inst",
+          "type": "InstanceOnPoints",
+          "data": {
+            "scaleStart": 1,
+            "scaleEnd": 1,
+            "alignToTangent": false
+          },
+          "position": {
+            "x": 1190,
+            "y": 40
+          }
+        },
+        {
+          "id": "setA_trans",
+          "type": "Translate",
+          "data": {
+            "x": 0,
+            "y": 0
+          },
+          "position": {
+            "x": 1420,
+            "y": 40
+          }
+        },
+        {
+          "id": "setA_scaled",
+          "type": "Scale",
+          "data": {
+            "color": "#3b82f6"
+          },
+          "position": {
+            "x": 1650,
+            "y": 40
+          }
+        },
+        {
+          "id": "setB_inst",
+          "type": "InstanceOnPoints",
+          "data": {
+            "scaleStart": 1,
+            "scaleEnd": 1,
+            "alignToTangent": false
+          },
+          "position": {
+            "x": 1190,
+            "y": 230
+          }
+        },
+        {
+          "id": "setB_trans",
+          "type": "Translate",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "heightStep*2"
+          },
+          "position": {
+            "x": 1420,
+            "y": 230
+          }
+        },
+        {
+          "id": "setB_scaled",
+          "type": "Scale",
+          "data": {
+            "color": "#ef4444"
+          },
+          "position": {
+            "x": 1650,
+            "y": 230
+          }
+        },
+        {
+          "id": "setC_inst",
+          "type": "InstanceOnPoints",
+          "data": {
+            "scaleStart": 1,
+            "scaleEnd": 1,
+            "alignToTangent": false
+          },
+          "position": {
+            "x": 1190,
+            "y": 420
+          }
+        },
+        {
+          "id": "setC_trans",
+          "type": "Translate",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "heightStep*3"
+          },
+          "position": {
+            "x": 1420,
+            "y": 420
+          }
+        },
+        {
+          "id": "setC_scaled",
+          "type": "Scale",
+          "data": {},
+          "position": {
+            "x": 1650,
+            "y": 420
+          }
+        },
+        {
+          "id": "setC_rot",
+          "type": "Rotate",
+          "data": {
+            "axisX": 0,
+            "axisY": 0,
+            "axisZ": 1,
+            "color": "#10b981"
+          },
+          "position": {
+            "x": 1880,
+            "y": 40
+          }
+        }
+      ],
+      "edges": [
+        {
+          "source": "baseRadius",
+          "sourceHandle": "value",
+          "target": "points",
+          "targetHandle": "list",
+          "id": "e_baseRadius_points_list"
+        },
+        {
+          "source": "baseRadius",
+          "sourceHandle": "value",
+          "target": "points_x",
+          "targetHandle": "list",
+          "id": "e_baseRadius_points_x_list"
+        },
+        {
+          "source": "points",
+          "sourceHandle": "length",
+          "target": "points_x_3",
+          "targetHandle": "count",
+          "id": "e_points_points_x_3_count"
+        },
+        {
+          "source": "points_x_2",
+          "sourceHandle": "values",
+          "target": "points_x_3",
+          "targetHandle": "list",
+          "id": "e_points_x_2_points_x_3_list"
+        },
+        {
+          "source": "points_x",
+          "sourceHandle": "values",
+          "target": "points_x_4",
+          "targetHandle": "a",
+          "id": "e_points_x_points_x_4_a"
+        },
+        {
+          "source": "points_x_3",
+          "sourceHandle": "values",
+          "target": "points_x_4",
+          "targetHandle": "b",
+          "id": "e_points_x_3_points_x_4_b"
+        },
+        {
+          "source": "points_x",
+          "sourceHandle": "values",
+          "target": "points_x_5",
+          "targetHandle": "a",
+          "id": "e_points_x_points_x_5_a"
+        },
+        {
+          "source": "points_x_3",
+          "sourceHandle": "values",
+          "target": "points_x_5",
+          "targetHandle": "b",
+          "id": "e_points_x_3_points_x_5_b"
+        },
+        {
+          "source": "points_x_4",
+          "sourceHandle": "value",
+          "target": "points_x_6",
+          "targetHandle": "x",
+          "id": "e_points_x_4_points_x_6_x"
+        },
+        {
+          "source": "points_x_5",
+          "sourceHandle": "value",
+          "target": "points_x_6",
+          "targetHandle": "y",
+          "id": "e_points_x_5_points_x_6_y"
+        },
+        {
+          "source": "points_x",
+          "sourceHandle": "values",
+          "target": "points_x_6",
+          "targetHandle": "group",
+          "id": "e_points_x_points_x_6_group"
+        },
+        {
+          "source": "baseShape",
+          "sourceHandle": "solid",
+          "target": "setA_inst",
+          "targetHandle": "shape",
+          "id": "e_baseShape_setA_inst_shape"
+        },
+        {
+          "source": "points_x_6",
+          "sourceHandle": "points",
+          "target": "setA_inst",
+          "targetHandle": "points",
+          "id": "e_points_x_6_setA_inst_points"
+        },
+        {
+          "source": "heightStep",
+          "sourceHandle": "value",
+          "target": "setA_trans",
+          "targetHandle": "param:z",
+          "id": "e_heightStep_setA_trans_param:z"
+        },
+        {
+          "source": "setA_inst",
+          "sourceHandle": "solid",
+          "target": "setA_trans",
+          "targetHandle": "solid",
+          "id": "e_setA_inst_setA_trans_solid"
+        },
+        {
+          "source": "scaleUp",
+          "sourceHandle": "value",
+          "target": "setA_scaled",
+          "targetHandle": "param:factor",
+          "id": "e_scaleUp_setA_scaled_param:factor"
+        },
+        {
+          "source": "setA_trans",
+          "sourceHandle": "solid",
+          "target": "setA_scaled",
+          "targetHandle": "solid",
+          "id": "e_setA_trans_setA_scaled_solid"
+        },
+        {
+          "source": "baseShape",
+          "sourceHandle": "solid",
+          "target": "setB_inst",
+          "targetHandle": "shape",
+          "id": "e_baseShape_setB_inst_shape"
+        },
+        {
+          "source": "points_x_6",
+          "sourceHandle": "points",
+          "target": "setB_inst",
+          "targetHandle": "points",
+          "id": "e_points_x_6_setB_inst_points"
+        },
+        {
+          "source": "setB_inst",
+          "sourceHandle": "solid",
+          "target": "setB_trans",
+          "targetHandle": "solid",
+          "id": "e_setB_inst_setB_trans_solid"
+        },
+        {
+          "source": "scaleDown",
+          "sourceHandle": "value",
+          "target": "setB_scaled",
+          "targetHandle": "param:factor",
+          "id": "e_scaleDown_setB_scaled_param:factor"
+        },
+        {
+          "source": "setB_trans",
+          "sourceHandle": "solid",
+          "target": "setB_scaled",
+          "targetHandle": "solid",
+          "id": "e_setB_trans_setB_scaled_solid"
+        },
+        {
+          "source": "baseShape",
+          "sourceHandle": "solid",
+          "target": "setC_inst",
+          "targetHandle": "shape",
+          "id": "e_baseShape_setC_inst_shape"
+        },
+        {
+          "source": "points_x_6",
+          "sourceHandle": "points",
+          "target": "setC_inst",
+          "targetHandle": "points",
+          "id": "e_points_x_6_setC_inst_points"
+        },
+        {
+          "source": "setC_inst",
+          "sourceHandle": "solid",
+          "target": "setC_trans",
+          "targetHandle": "solid",
+          "id": "e_setC_inst_setC_trans_solid"
+        },
+        {
+          "source": "scaleBase",
+          "sourceHandle": "value",
+          "target": "setC_scaled",
+          "targetHandle": "param:factor",
+          "id": "e_scaleBase_setC_scaled_param:factor"
+        },
+        {
+          "source": "setC_trans",
+          "sourceHandle": "solid",
+          "target": "setC_scaled",
+          "targetHandle": "solid",
+          "id": "e_setC_trans_setC_scaled_solid"
+        },
+        {
+          "source": "rotAngle",
+          "sourceHandle": "value",
+          "target": "setC_rot",
+          "targetHandle": "param:angle",
+          "id": "e_rotAngle_setC_rot_param:angle"
+        },
+        {
+          "source": "setC_scaled",
+          "sourceHandle": "solid",
+          "target": "setC_rot",
+          "targetHandle": "solid",
+          "id": "e_setC_scaled_setC_rot_solid"
+        }
+      ]
+    }
+  ]
+}

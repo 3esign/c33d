@@ -1,0 +1,2358 @@
+{
+  "c33dExport": 2,
+  "exportedAt": "2026-07-24T19:19:26.205Z",
+  "comment": "exported two columns onlu",
+  "agent": {
+    "name": "Ollama (Local)",
+    "provider": "ollama",
+    "model": "qwen3.5:cloud"
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "lineLength",
+        "type": "NumberSlider",
+        "data": {
+          "value": 30,
+          "label": "lineLength",
+          "min": 10,
+          "max": 100,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 610
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "lineSpacing",
+        "type": "NumberSlider",
+        "data": {
+          "value": 15,
+          "label": "lineSpacing",
+          "min": 5,
+          "max": 50,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 800
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "columnRadius",
+        "type": "NumberSlider",
+        "data": {
+          "value": 1.2,
+          "label": "columnRadius",
+          "min": 0.5,
+          "max": 5,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 230
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "roofExtrude",
+        "type": "NumberSlider",
+        "data": {
+          "value": 3,
+          "label": "roofExtrude",
+          "min": 1,
+          "max": 20,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 990
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "columnHeight",
+        "type": "Expression",
+        "data": {
+          "formula": "lineLength/3"
+        },
+        "position": {
+          "x": 40,
+          "y": 40
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "t10",
+        "type": "Range",
+        "data": {
+          "min": 0,
+          "max": 1,
+          "steps": 9
+        },
+        "position": {
+          "x": 40,
+          "y": 1370
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "x10",
+        "type": "Expression",
+        "data": {
+          "formula": "a*lineLength"
+        },
+        "position": {
+          "x": 270,
+          "y": 800
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "y0",
+        "type": "Expression",
+        "data": {
+          "formula": "0"
+        },
+        "position": {
+          "x": 270,
+          "y": 990
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "yS",
+        "type": "Expression",
+        "data": {
+          "formula": "lineSpacing"
+        },
+        "position": {
+          "x": 270,
+          "y": 1180
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "z0",
+        "type": "Expression",
+        "data": {
+          "formula": "0"
+        },
+        "position": {
+          "x": 270,
+          "y": 1370
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "pts1",
+        "type": "PointsFromLists",
+        "data": {},
+        "position": {
+          "x": 500,
+          "y": 230
+        },
+        "measured": {
+          "width": 150,
+          "height": 234
+        }
+      },
+      {
+        "id": "pts2",
+        "type": "PointsFromLists",
+        "data": {},
+        "position": {
+          "x": 500,
+          "y": 420
+        },
+        "measured": {
+          "width": 150,
+          "height": 234
+        }
+      },
+      {
+        "id": "colShape",
+        "type": "Cylinder",
+        "data": {},
+        "position": {
+          "x": 270,
+          "y": 40
+        },
+        "measured": {
+          "width": 201,
+          "height": 296
+        }
+      },
+      {
+        "id": "cols1",
+        "type": "InstanceOnPoints",
+        "data": {
+          "scaleStart": 1,
+          "scaleEnd": 1,
+          "alignToTangent": false
+        },
+        "position": {
+          "x": 730,
+          "y": 230
+        },
+        "measured": {
+          "width": 201,
+          "height": 436
+        }
+      },
+      {
+        "id": "cols2",
+        "type": "InstanceOnPoints",
+        "data": {
+          "scaleStart": 1,
+          "scaleEnd": 1,
+          "alignToTangent": false
+        },
+        "position": {
+          "x": 730,
+          "y": 420
+        },
+        "measured": {
+          "width": 201,
+          "height": 436
+        }
+      },
+      {
+        "id": "idx5",
+        "type": "Series",
+        "data": {
+          "start": 0,
+          "step": 2,
+          "count": 5
+        },
+        "position": {
+          "x": 40,
+          "y": 420
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "roofX",
+        "type": "Expression",
+        "data": {
+          "formula": "a*lineLength/4"
+        },
+        "position": {
+          "x": 270,
+          "y": 230
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "roofY",
+        "type": "Expression",
+        "data": {
+          "formula": "(a%2)*lineSpacing"
+        },
+        "position": {
+          "x": 270,
+          "y": 420
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "roofZ",
+        "type": "Expression",
+        "data": {
+          "formula": "columnHeight+roofExtrude"
+        },
+        "position": {
+          "x": 270,
+          "y": 610
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "roofPts",
+        "type": "PointsFromLists",
+        "data": {},
+        "position": {
+          "x": 500,
+          "y": 40
+        },
+        "measured": {
+          "width": 150,
+          "height": 234
+        }
+      },
+      {
+        "id": "roofPoly",
+        "type": "PolylineCurve",
+        "data": {
+          "closed": true
+        },
+        "position": {
+          "x": 730,
+          "y": 40
+        },
+        "measured": {
+          "width": 177,
+          "height": 266
+        }
+      },
+      {
+        "id": "roof",
+        "type": "ExtrudeCurve",
+        "data": {},
+        "position": {
+          "x": 960,
+          "y": 40
+        },
+        "measured": {
+          "width": 222,
+          "height": 216
+        }
+      },
+      {
+        "id": "all",
+        "type": "Compound",
+        "data": {
+          "color": "#3b82f6"
+        },
+        "position": {
+          "x": 1190,
+          "y": 40
+        },
+        "measured": {
+          "width": 150,
+          "height": 330
+        }
+      },
+      {
+        "id": "roofIdx",
+        "type": "Series",
+        "data": {
+          "start": 0,
+          "step": 1,
+          "count": 5
+        },
+        "position": {
+          "x": 40,
+          "y": 1180
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      }
+    ],
+    "edges": [
+      {
+        "source": "t10",
+        "sourceHandle": "values",
+        "target": "x10",
+        "targetHandle": "a",
+        "id": "e_t10_x10_a"
+      },
+      {
+        "source": "t10",
+        "sourceHandle": "values",
+        "target": "y0",
+        "targetHandle": "a",
+        "id": "e_t10_y0_a"
+      },
+      {
+        "source": "t10",
+        "sourceHandle": "values",
+        "target": "yS",
+        "targetHandle": "a",
+        "id": "e_t10_yS_a"
+      },
+      {
+        "source": "t10",
+        "sourceHandle": "values",
+        "target": "z0",
+        "targetHandle": "a",
+        "id": "e_t10_z0_a"
+      },
+      {
+        "source": "x10",
+        "sourceHandle": "value",
+        "target": "pts1",
+        "targetHandle": "x",
+        "id": "e_x10_pts1_x"
+      },
+      {
+        "source": "y0",
+        "sourceHandle": "value",
+        "target": "pts1",
+        "targetHandle": "y",
+        "id": "e_y0_pts1_y"
+      },
+      {
+        "source": "z0",
+        "sourceHandle": "value",
+        "target": "pts1",
+        "targetHandle": "z",
+        "id": "e_z0_pts1_z"
+      },
+      {
+        "source": "x10",
+        "sourceHandle": "value",
+        "target": "pts2",
+        "targetHandle": "x",
+        "id": "e_x10_pts2_x"
+      },
+      {
+        "source": "yS",
+        "sourceHandle": "value",
+        "target": "pts2",
+        "targetHandle": "y",
+        "id": "e_yS_pts2_y"
+      },
+      {
+        "source": "z0",
+        "sourceHandle": "value",
+        "target": "pts2",
+        "targetHandle": "z",
+        "id": "e_z0_pts2_z"
+      },
+      {
+        "source": "columnRadius",
+        "sourceHandle": "value",
+        "target": "colShape",
+        "targetHandle": "param:radius",
+        "id": "e_columnRadius_colShape_param:radius"
+      },
+      {
+        "source": "columnHeight",
+        "sourceHandle": "value",
+        "target": "colShape",
+        "targetHandle": "param:height",
+        "id": "e_columnHeight_colShape_param:height"
+      },
+      {
+        "source": "colShape",
+        "sourceHandle": "solid",
+        "target": "cols1",
+        "targetHandle": "shape",
+        "id": "e_colShape_cols1_shape"
+      },
+      {
+        "source": "pts1",
+        "sourceHandle": "points",
+        "target": "cols1",
+        "targetHandle": "points",
+        "id": "e_pts1_cols1_points"
+      },
+      {
+        "source": "colShape",
+        "sourceHandle": "solid",
+        "target": "cols2",
+        "targetHandle": "shape",
+        "id": "e_colShape_cols2_shape"
+      },
+      {
+        "source": "pts2",
+        "sourceHandle": "points",
+        "target": "cols2",
+        "targetHandle": "points",
+        "id": "e_pts2_cols2_points"
+      },
+      {
+        "source": "roofX",
+        "sourceHandle": "value",
+        "target": "roofPts",
+        "targetHandle": "x",
+        "id": "e_roofX_roofPts_x"
+      },
+      {
+        "source": "roofY",
+        "sourceHandle": "value",
+        "target": "roofPts",
+        "targetHandle": "y",
+        "id": "e_roofY_roofPts_y"
+      },
+      {
+        "source": "roofZ",
+        "sourceHandle": "value",
+        "target": "roofPts",
+        "targetHandle": "z",
+        "id": "e_roofZ_roofPts_z"
+      },
+      {
+        "source": "roofPts",
+        "sourceHandle": "points",
+        "target": "roofPoly",
+        "targetHandle": "points",
+        "id": "e_roofPts_roofPoly_points"
+      },
+      {
+        "source": "roofExtrude",
+        "sourceHandle": "value",
+        "target": "roof",
+        "targetHandle": "param:height",
+        "id": "e_roofExtrude_roof_param:height"
+      },
+      {
+        "source": "roofPoly",
+        "sourceHandle": "curve",
+        "target": "roof",
+        "targetHandle": "curve",
+        "id": "e_roofPoly_roof_curve"
+      },
+      {
+        "source": "cols1",
+        "sourceHandle": "solid",
+        "target": "all",
+        "targetHandle": "solid1",
+        "id": "e_cols1_all_solid1"
+      },
+      {
+        "source": "cols2",
+        "sourceHandle": "solid",
+        "target": "all",
+        "targetHandle": "solid2",
+        "id": "e_cols2_all_solid2"
+      },
+      {
+        "source": "roof",
+        "sourceHandle": "solid",
+        "target": "all",
+        "targetHandle": "solid3",
+        "id": "e_roof_all_solid3"
+      },
+      {
+        "source": "roofIdx",
+        "target": "roofX",
+        "id": "e_roofIdx_roofX_a",
+        "sourceHandle": "values",
+        "targetHandle": "a"
+      },
+      {
+        "source": "roofIdx",
+        "target": "roofY",
+        "id": "e_roofIdx_roofY_a",
+        "sourceHandle": "values",
+        "targetHandle": "a"
+      },
+      {
+        "source": "roofIdx",
+        "target": "roofZ",
+        "id": "e_roofIdx_roofZ_a",
+        "sourceHandle": "values",
+        "targetHandle": "a"
+      }
+    ]
+  },
+  "conversation": [
+    {
+      "role": "system",
+      "content": "Workspace cleared."
+    },
+    {
+      "role": "user",
+      "content": "make two paralel lines and divide them on 10 points  and use each point as a base for circle which will be extrued into column with height of third of line length and connect the tops of the centers of the columns and find middle lines between the top and move them up and also translate column top points so u get a polygon with 5 points and fill it and extrude it "
+    },
+    {
+      "role": "assistant",
+      "content": "Two parallel lines divided into 10 points each, with cylinders extruded at each point as columns, topped by a 5-point polygon roof"
+    },
+    {
+      "role": "system",
+      "content": "Issues detected (auto-repair 1/2): Node \"roof\" failed: ExtrudeCurve: connect a Curve to \"curve\" (Circle/Ellipse curve or a CLOSED Polyline/Spline).; Leaf \"roofPoly\" could not be meshed: Node \"roofPoly\" (PolylineCurve) produced no geometry despite connected inputs — likely invalid parameters (e.g. zero/negative size, self-intersecting fillet)..; Leaf \"roof\" could not be meshed: Node \"roof\" (ExtrudeCurve) is null because its input(s) came from failed upstream node(s): roofPoly. Fix the upstream node first.."
+    },
+    {
+      "role": "assistant",
+      "content": "The Expression nodes use wrong parameter names - 't' and 'idx' should be 'a' (the input port name). This caused all x coordinates to be 0, collapsing the roof polyline to a point. Fixing formulas to reference 'a' properly."
+    },
+    {
+      "role": "system",
+      "content": "Issues detected (auto-repair 2/2): Node \"roof\" failed: ExtrudeCurve: connect a Curve to \"curve\" (Circle/Ellipse curve or a CLOSED Polyline/Spline).; Leaf \"roofPoly\" could not be meshed: Node \"roofPoly\" (PolylineCurve) produced no geometry despite connected inputs — likely invalid parameters (e.g. zero/negative size, self-intersecting fillet)..; Leaf \"roof\" could not be meshed: Node \"roof\" (ExtrudeCurve) is null because its input(s) came from failed upstream node(s): roofPoly. Fix the upstream node first.."
+    },
+    {
+      "role": "assistant",
+      "content": "The roof points are collinear (all y=0) forming a line, not a polygon. Need to create a proper 5-point polygon by alternating Y positions between the two column lines. Also need to ensure exactly 5 points are generated."
+    },
+    {
+      "role": "system",
+      "content": "Auto-repair limit reached. Remaining issues: Node \"roof\" failed: ExtrudeCurve: connect a Curve to \"curve\" (Circle/Ellipse curve or a CLOSED Polyline/Spline). | Leaf \"roofPoly\" could not be meshed: Node \"roofPoly\" (PolylineCurve) produced no geometry despite connected inputs — likely invalid parameters (e.g. zero/negative size, self-intersectin"
+    }
+  ],
+  "plan": "The roof points are collinear (all y=0) forming a line, not a polygon. Need to create a proper 5-point polygon by alternating Y positions between the two column lines. Also need to ensure exactly 5 points are generated.",
+  "genome": null,
+  "geometryReport": {
+    "leaves": [
+      {
+        "id": "roofPoly",
+        "bbox": null,
+        "meshOk": false,
+        "vertexCount": 0,
+        "error": "Node \"roofPoly\" (PolylineCurve) produced no geometry despite connected inputs — likely invalid parameters (e.g. zero/negative size, self-intersecting fillet)."
+      },
+      {
+        "id": "roof",
+        "bbox": null,
+        "meshOk": false,
+        "vertexCount": 0,
+        "error": "Node \"roof\" (ExtrudeCurve) is null because its input(s) came from failed upstream node(s): roofPoly. Fix the upstream node first."
+      },
+      {
+        "id": "all",
+        "bbox": {
+          "min": [
+            -1.200000100000001,
+            -1.2363942619197232,
+            -5.048608531662604
+          ],
+          "max": [
+            1.248608531662604,
+            16.236394261919724,
+            5.048608531662604
+          ],
+          "center": [
+            0.0243042158313016,
+            7.500000000000001,
+            0
+          ],
+          "size": [
+            2.448608631662605,
+            17.472788523839448,
+            10.097217063325209
+          ]
+        },
+        "volume": 904.7786842338605,
+        "meshOk": true,
+        "vertexCount": 920,
+        "error": null
+      }
+    ],
+    "nodeErrors": [
+      {
+        "id": "roof",
+        "error": "ExtrudeCurve: connect a Curve to \"curve\" (Circle/Ellipse curve or a CLOSED Polyline/Spline)."
+      }
+    ],
+    "numbers": {
+      "lineLength": 30,
+      "lineSpacing": 15,
+      "columnRadius": 1.2,
+      "roofExtrude": 3,
+      "t10": [
+        0,
+        0.1111111111111111,
+        0.2222222222222222,
+        0.3333333333333333,
+        0.4444444444444444,
+        0.5555555555555556,
+        0.6666666666666666,
+        0.7777777777777778,
+        0.8888888888888888,
+        1
+      ],
+      "idx5": [
+        0,
+        2,
+        4,
+        6,
+        8
+      ],
+      "roofIdx": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "columnHeight": [
+        10,
+        10,
+        10,
+        10,
+        10,
+        10,
+        10,
+        10,
+        10,
+        10
+      ],
+      "x10": [
+        0,
+        3.333333333333333,
+        6.666666666666666,
+        10,
+        13.333333333333332,
+        16.666666666666668,
+        20,
+        23.333333333333332,
+        26.666666666666664,
+        30
+      ],
+      "y0": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "yS": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ],
+      "z0": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "roofX": [
+        0,
+        7.5,
+        15,
+        22.5,
+        30,
+        30,
+        30,
+        30,
+        30,
+        30
+      ],
+      "roofY": [
+        0,
+        15,
+        0,
+        15,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "roofZ": [
+        13,
+        13,
+        13,
+        13,
+        13,
+        13,
+        13,
+        13,
+        13,
+        13
+      ]
+    },
+    "sliders": {
+      "lineLength": 30,
+      "lineSpacing": 15,
+      "columnRadius": 1.2,
+      "roofExtrude": 3
+    },
+    "selections": {},
+    "helpers": {},
+    "nodeCount": 24,
+    "edgeCount": 28,
+    "transformCount": 3,
+    "nodesPerLeafRatio": 8,
+    "nodeEconomyWarning": false,
+    "placement": {
+      "anchored": [
+        "roof",
+        "all"
+      ],
+      "literal": [],
+      "origin": [
+        "roofPoly"
+      ],
+      "literalNodeIds": [],
+      "ratio": 1
+    },
+    "scene": {
+      "min": [
+        -1.200000100000001,
+        -1.2363942619197232,
+        -5.048608531662604
+      ],
+      "max": [
+        1.248608531662604,
+        16.236394261919724,
+        5.048608531662604
+      ],
+      "size": [
+        2.448608631662605,
+        17.472788523839448,
+        10.097217063325209
+      ]
+    },
+    "meshedLeafCount": 1,
+    "kernelFaultCount": 0,
+    "kernelSuspect": false,
+    "kernelHealth": "ok",
+    "evalCount": 3,
+    "recycleRecommended": false
+  },
+  "timeline": [
+    {
+      "at": "2026-07-24T19:03:44.214Z",
+      "turn": 1,
+      "trigger": "ai-ir",
+      "label": "attempt 1: rebuilt graph (23 nodes)",
+      "nodeCount": 23,
+      "edgeCount": 28,
+      "isolatedCount": 2,
+      "diff": {
+        "addedNodes": [
+          "lineLength",
+          "lineSpacing",
+          "columnRadius",
+          "roofExtrude",
+          "columnHeight",
+          "t10",
+          "x10",
+          "y0",
+          "yS",
+          "z0",
+          "pts1",
+          "pts2",
+          "colShape",
+          "cols1",
+          "cols2",
+          "idx5",
+          "roofX",
+          "roofY",
+          "roofZ",
+          "roofPts",
+          "roofPoly",
+          "roof",
+          "all"
+        ],
+        "removedNodes": [],
+        "changedNodes": [],
+        "addedEdges": 28,
+        "removedEdges": 0
+      },
+      "details": [
+        "warning: Dead design parameters: sliders \"lineLength\", \"lineSpacing\" are not referenced by any formula or edge — moving them changes nothing. Wire dimensions to them or remove them."
+      ],
+      "nodes": [
+        {
+          "id": "lineLength",
+          "type": "NumberSlider",
+          "data": {
+            "value": 30,
+            "label": "lineLength",
+            "min": 10,
+            "max": 100,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 610
+          }
+        },
+        {
+          "id": "lineSpacing",
+          "type": "NumberSlider",
+          "data": {
+            "value": 15,
+            "label": "lineSpacing",
+            "min": 5,
+            "max": 50,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 800
+          }
+        },
+        {
+          "id": "columnRadius",
+          "type": "NumberSlider",
+          "data": {
+            "value": 1.2,
+            "label": "columnRadius",
+            "min": 0.5,
+            "max": 5,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 230
+          }
+        },
+        {
+          "id": "roofExtrude",
+          "type": "NumberSlider",
+          "data": {
+            "value": 3,
+            "label": "roofExtrude",
+            "min": 1,
+            "max": 20,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 990
+          }
+        },
+        {
+          "id": "columnHeight",
+          "type": "Expression",
+          "data": {
+            "formula": "lineLength/3"
+          },
+          "position": {
+            "x": 40,
+            "y": 40
+          }
+        },
+        {
+          "id": "t10",
+          "type": "Range",
+          "data": {
+            "min": 0,
+            "max": 1,
+            "steps": 9
+          },
+          "position": {
+            "x": 40,
+            "y": 1180
+          }
+        },
+        {
+          "id": "x10",
+          "type": "Expression",
+          "data": {
+            "formula": "t*lineLength"
+          },
+          "position": {
+            "x": 270,
+            "y": 800
+          }
+        },
+        {
+          "id": "y0",
+          "type": "Expression",
+          "data": {
+            "formula": "0"
+          },
+          "position": {
+            "x": 270,
+            "y": 990
+          }
+        },
+        {
+          "id": "yS",
+          "type": "Expression",
+          "data": {
+            "formula": "lineSpacing"
+          },
+          "position": {
+            "x": 270,
+            "y": 1180
+          }
+        },
+        {
+          "id": "z0",
+          "type": "Expression",
+          "data": {
+            "formula": "0"
+          },
+          "position": {
+            "x": 270,
+            "y": 1370
+          }
+        },
+        {
+          "id": "pts1",
+          "type": "PointsFromLists",
+          "data": {},
+          "position": {
+            "x": 500,
+            "y": 230
+          }
+        },
+        {
+          "id": "pts2",
+          "type": "PointsFromLists",
+          "data": {},
+          "position": {
+            "x": 500,
+            "y": 420
+          }
+        },
+        {
+          "id": "colShape",
+          "type": "Cylinder",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 40
+          }
+        },
+        {
+          "id": "cols1",
+          "type": "InstanceOnPoints",
+          "data": {
+            "scaleStart": 1,
+            "scaleEnd": 1,
+            "alignToTangent": false
+          },
+          "position": {
+            "x": 730,
+            "y": 230
+          }
+        },
+        {
+          "id": "cols2",
+          "type": "InstanceOnPoints",
+          "data": {
+            "scaleStart": 1,
+            "scaleEnd": 1,
+            "alignToTangent": false
+          },
+          "position": {
+            "x": 730,
+            "y": 420
+          }
+        },
+        {
+          "id": "idx5",
+          "type": "Series",
+          "data": {
+            "start": 0,
+            "step": 2,
+            "count": 5
+          },
+          "position": {
+            "x": 40,
+            "y": 420
+          }
+        },
+        {
+          "id": "roofX",
+          "type": "Expression",
+          "data": {
+            "formula": "idx*lineLength/9"
+          },
+          "position": {
+            "x": 270,
+            "y": 230
+          }
+        },
+        {
+          "id": "roofY",
+          "type": "Expression",
+          "data": {
+            "formula": "0"
+          },
+          "position": {
+            "x": 270,
+            "y": 420
+          }
+        },
+        {
+          "id": "roofZ",
+          "type": "Expression",
+          "data": {
+            "formula": "columnHeight+roofExtrude"
+          },
+          "position": {
+            "x": 270,
+            "y": 610
+          }
+        },
+        {
+          "id": "roofPts",
+          "type": "PointsFromLists",
+          "data": {},
+          "position": {
+            "x": 500,
+            "y": 40
+          }
+        },
+        {
+          "id": "roofPoly",
+          "type": "PolylineCurve",
+          "data": {
+            "closed": true
+          },
+          "position": {
+            "x": 730,
+            "y": 40
+          }
+        },
+        {
+          "id": "roof",
+          "type": "ExtrudeCurve",
+          "data": {},
+          "position": {
+            "x": 960,
+            "y": 40
+          }
+        },
+        {
+          "id": "all",
+          "type": "Compound",
+          "data": {
+            "color": "#3b82f6"
+          },
+          "position": {
+            "x": 1190,
+            "y": 40
+          }
+        }
+      ],
+      "edges": [
+        {
+          "source": "t10",
+          "sourceHandle": "values",
+          "target": "x10",
+          "targetHandle": "a",
+          "id": "e_t10_x10_a"
+        },
+        {
+          "source": "t10",
+          "sourceHandle": "values",
+          "target": "y0",
+          "targetHandle": "a",
+          "id": "e_t10_y0_a"
+        },
+        {
+          "source": "t10",
+          "sourceHandle": "values",
+          "target": "yS",
+          "targetHandle": "a",
+          "id": "e_t10_yS_a"
+        },
+        {
+          "source": "t10",
+          "sourceHandle": "values",
+          "target": "z0",
+          "targetHandle": "a",
+          "id": "e_t10_z0_a"
+        },
+        {
+          "source": "x10",
+          "sourceHandle": "value",
+          "target": "pts1",
+          "targetHandle": "x",
+          "id": "e_x10_pts1_x"
+        },
+        {
+          "source": "y0",
+          "sourceHandle": "value",
+          "target": "pts1",
+          "targetHandle": "y",
+          "id": "e_y0_pts1_y"
+        },
+        {
+          "source": "z0",
+          "sourceHandle": "value",
+          "target": "pts1",
+          "targetHandle": "z",
+          "id": "e_z0_pts1_z"
+        },
+        {
+          "source": "x10",
+          "sourceHandle": "value",
+          "target": "pts2",
+          "targetHandle": "x",
+          "id": "e_x10_pts2_x"
+        },
+        {
+          "source": "yS",
+          "sourceHandle": "value",
+          "target": "pts2",
+          "targetHandle": "y",
+          "id": "e_yS_pts2_y"
+        },
+        {
+          "source": "z0",
+          "sourceHandle": "value",
+          "target": "pts2",
+          "targetHandle": "z",
+          "id": "e_z0_pts2_z"
+        },
+        {
+          "source": "columnRadius",
+          "sourceHandle": "value",
+          "target": "colShape",
+          "targetHandle": "param:radius",
+          "id": "e_columnRadius_colShape_param:radius"
+        },
+        {
+          "source": "columnHeight",
+          "sourceHandle": "value",
+          "target": "colShape",
+          "targetHandle": "param:height",
+          "id": "e_columnHeight_colShape_param:height"
+        },
+        {
+          "source": "colShape",
+          "sourceHandle": "solid",
+          "target": "cols1",
+          "targetHandle": "shape",
+          "id": "e_colShape_cols1_shape"
+        },
+        {
+          "source": "pts1",
+          "sourceHandle": "points",
+          "target": "cols1",
+          "targetHandle": "points",
+          "id": "e_pts1_cols1_points"
+        },
+        {
+          "source": "colShape",
+          "sourceHandle": "solid",
+          "target": "cols2",
+          "targetHandle": "shape",
+          "id": "e_colShape_cols2_shape"
+        },
+        {
+          "source": "pts2",
+          "sourceHandle": "points",
+          "target": "cols2",
+          "targetHandle": "points",
+          "id": "e_pts2_cols2_points"
+        },
+        {
+          "source": "idx5",
+          "sourceHandle": "values",
+          "target": "roofX",
+          "targetHandle": "a",
+          "id": "e_idx5_roofX_a"
+        },
+        {
+          "source": "idx5",
+          "sourceHandle": "values",
+          "target": "roofY",
+          "targetHandle": "a",
+          "id": "e_idx5_roofY_a"
+        },
+        {
+          "source": "idx5",
+          "sourceHandle": "values",
+          "target": "roofZ",
+          "targetHandle": "a",
+          "id": "e_idx5_roofZ_a"
+        },
+        {
+          "source": "roofX",
+          "sourceHandle": "value",
+          "target": "roofPts",
+          "targetHandle": "x",
+          "id": "e_roofX_roofPts_x"
+        },
+        {
+          "source": "roofY",
+          "sourceHandle": "value",
+          "target": "roofPts",
+          "targetHandle": "y",
+          "id": "e_roofY_roofPts_y"
+        },
+        {
+          "source": "roofZ",
+          "sourceHandle": "value",
+          "target": "roofPts",
+          "targetHandle": "z",
+          "id": "e_roofZ_roofPts_z"
+        },
+        {
+          "source": "roofPts",
+          "sourceHandle": "points",
+          "target": "roofPoly",
+          "targetHandle": "points",
+          "id": "e_roofPts_roofPoly_points"
+        },
+        {
+          "source": "roofExtrude",
+          "sourceHandle": "value",
+          "target": "roof",
+          "targetHandle": "param:height",
+          "id": "e_roofExtrude_roof_param:height"
+        },
+        {
+          "source": "roofPoly",
+          "sourceHandle": "curve",
+          "target": "roof",
+          "targetHandle": "curve",
+          "id": "e_roofPoly_roof_curve"
+        },
+        {
+          "source": "cols1",
+          "sourceHandle": "solid",
+          "target": "all",
+          "targetHandle": "solid1",
+          "id": "e_cols1_all_solid1"
+        },
+        {
+          "source": "cols2",
+          "sourceHandle": "solid",
+          "target": "all",
+          "targetHandle": "solid2",
+          "id": "e_cols2_all_solid2"
+        },
+        {
+          "source": "roof",
+          "sourceHandle": "solid",
+          "target": "all",
+          "targetHandle": "solid3",
+          "id": "e_roof_all_solid3"
+        }
+      ]
+    },
+    {
+      "at": "2026-07-24T19:04:06.491Z",
+      "turn": 1,
+      "trigger": "ai-repair",
+      "label": "attempt 2: updated 2 node(s)",
+      "nodeCount": 23,
+      "edgeCount": 28,
+      "isolatedCount": 2,
+      "diff": {
+        "addedNodes": [],
+        "removedNodes": [],
+        "changedNodes": [
+          "x10",
+          "roofX"
+        ],
+        "addedEdges": 0,
+        "removedEdges": 0
+      },
+      "details": [
+        "warning: Dead design parameters: sliders \"lineLength\", \"lineSpacing\" are not referenced by any formula or edge — moving them changes nothing. Wire dimensions to them or remove them."
+      ],
+      "nodes": [
+        {
+          "id": "lineLength",
+          "type": "NumberSlider",
+          "data": {
+            "value": 30,
+            "label": "lineLength",
+            "min": 10,
+            "max": 100,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 610
+          }
+        },
+        {
+          "id": "lineSpacing",
+          "type": "NumberSlider",
+          "data": {
+            "value": 15,
+            "label": "lineSpacing",
+            "min": 5,
+            "max": 50,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 800
+          }
+        },
+        {
+          "id": "columnRadius",
+          "type": "NumberSlider",
+          "data": {
+            "value": 1.2,
+            "label": "columnRadius",
+            "min": 0.5,
+            "max": 5,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 230
+          }
+        },
+        {
+          "id": "roofExtrude",
+          "type": "NumberSlider",
+          "data": {
+            "value": 3,
+            "label": "roofExtrude",
+            "min": 1,
+            "max": 20,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 990
+          }
+        },
+        {
+          "id": "columnHeight",
+          "type": "Expression",
+          "data": {
+            "formula": "lineLength/3"
+          },
+          "position": {
+            "x": 40,
+            "y": 40
+          }
+        },
+        {
+          "id": "t10",
+          "type": "Range",
+          "data": {
+            "min": 0,
+            "max": 1,
+            "steps": 9
+          },
+          "position": {
+            "x": 40,
+            "y": 1180
+          }
+        },
+        {
+          "id": "x10",
+          "type": "Expression",
+          "data": {
+            "formula": "a*lineLength"
+          },
+          "position": {
+            "x": 270,
+            "y": 800
+          }
+        },
+        {
+          "id": "y0",
+          "type": "Expression",
+          "data": {
+            "formula": "0"
+          },
+          "position": {
+            "x": 270,
+            "y": 990
+          }
+        },
+        {
+          "id": "yS",
+          "type": "Expression",
+          "data": {
+            "formula": "lineSpacing"
+          },
+          "position": {
+            "x": 270,
+            "y": 1180
+          }
+        },
+        {
+          "id": "z0",
+          "type": "Expression",
+          "data": {
+            "formula": "0"
+          },
+          "position": {
+            "x": 270,
+            "y": 1370
+          }
+        },
+        {
+          "id": "pts1",
+          "type": "PointsFromLists",
+          "data": {},
+          "position": {
+            "x": 500,
+            "y": 230
+          }
+        },
+        {
+          "id": "pts2",
+          "type": "PointsFromLists",
+          "data": {},
+          "position": {
+            "x": 500,
+            "y": 420
+          }
+        },
+        {
+          "id": "colShape",
+          "type": "Cylinder",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 40
+          }
+        },
+        {
+          "id": "cols1",
+          "type": "InstanceOnPoints",
+          "data": {
+            "scaleStart": 1,
+            "scaleEnd": 1,
+            "alignToTangent": false
+          },
+          "position": {
+            "x": 730,
+            "y": 230
+          }
+        },
+        {
+          "id": "cols2",
+          "type": "InstanceOnPoints",
+          "data": {
+            "scaleStart": 1,
+            "scaleEnd": 1,
+            "alignToTangent": false
+          },
+          "position": {
+            "x": 730,
+            "y": 420
+          }
+        },
+        {
+          "id": "idx5",
+          "type": "Series",
+          "data": {
+            "start": 0,
+            "step": 2,
+            "count": 5
+          },
+          "position": {
+            "x": 40,
+            "y": 420
+          }
+        },
+        {
+          "id": "roofX",
+          "type": "Expression",
+          "data": {
+            "formula": "a*lineLength/4"
+          },
+          "position": {
+            "x": 270,
+            "y": 230
+          }
+        },
+        {
+          "id": "roofY",
+          "type": "Expression",
+          "data": {
+            "formula": "0"
+          },
+          "position": {
+            "x": 270,
+            "y": 420
+          }
+        },
+        {
+          "id": "roofZ",
+          "type": "Expression",
+          "data": {
+            "formula": "columnHeight+roofExtrude"
+          },
+          "position": {
+            "x": 270,
+            "y": 610
+          }
+        },
+        {
+          "id": "roofPts",
+          "type": "PointsFromLists",
+          "data": {},
+          "position": {
+            "x": 500,
+            "y": 40
+          }
+        },
+        {
+          "id": "roofPoly",
+          "type": "PolylineCurve",
+          "data": {
+            "closed": true
+          },
+          "position": {
+            "x": 730,
+            "y": 40
+          }
+        },
+        {
+          "id": "roof",
+          "type": "ExtrudeCurve",
+          "data": {},
+          "position": {
+            "x": 960,
+            "y": 40
+          }
+        },
+        {
+          "id": "all",
+          "type": "Compound",
+          "data": {
+            "color": "#3b82f6"
+          },
+          "position": {
+            "x": 1190,
+            "y": 40
+          }
+        }
+      ],
+      "edges": [
+        {
+          "source": "t10",
+          "sourceHandle": "values",
+          "target": "x10",
+          "targetHandle": "a",
+          "id": "e_t10_x10_a"
+        },
+        {
+          "source": "t10",
+          "sourceHandle": "values",
+          "target": "y0",
+          "targetHandle": "a",
+          "id": "e_t10_y0_a"
+        },
+        {
+          "source": "t10",
+          "sourceHandle": "values",
+          "target": "yS",
+          "targetHandle": "a",
+          "id": "e_t10_yS_a"
+        },
+        {
+          "source": "t10",
+          "sourceHandle": "values",
+          "target": "z0",
+          "targetHandle": "a",
+          "id": "e_t10_z0_a"
+        },
+        {
+          "source": "x10",
+          "sourceHandle": "value",
+          "target": "pts1",
+          "targetHandle": "x",
+          "id": "e_x10_pts1_x"
+        },
+        {
+          "source": "y0",
+          "sourceHandle": "value",
+          "target": "pts1",
+          "targetHandle": "y",
+          "id": "e_y0_pts1_y"
+        },
+        {
+          "source": "z0",
+          "sourceHandle": "value",
+          "target": "pts1",
+          "targetHandle": "z",
+          "id": "e_z0_pts1_z"
+        },
+        {
+          "source": "x10",
+          "sourceHandle": "value",
+          "target": "pts2",
+          "targetHandle": "x",
+          "id": "e_x10_pts2_x"
+        },
+        {
+          "source": "yS",
+          "sourceHandle": "value",
+          "target": "pts2",
+          "targetHandle": "y",
+          "id": "e_yS_pts2_y"
+        },
+        {
+          "source": "z0",
+          "sourceHandle": "value",
+          "target": "pts2",
+          "targetHandle": "z",
+          "id": "e_z0_pts2_z"
+        },
+        {
+          "source": "columnRadius",
+          "sourceHandle": "value",
+          "target": "colShape",
+          "targetHandle": "param:radius",
+          "id": "e_columnRadius_colShape_param:radius"
+        },
+        {
+          "source": "columnHeight",
+          "sourceHandle": "value",
+          "target": "colShape",
+          "targetHandle": "param:height",
+          "id": "e_columnHeight_colShape_param:height"
+        },
+        {
+          "source": "colShape",
+          "sourceHandle": "solid",
+          "target": "cols1",
+          "targetHandle": "shape",
+          "id": "e_colShape_cols1_shape"
+        },
+        {
+          "source": "pts1",
+          "sourceHandle": "points",
+          "target": "cols1",
+          "targetHandle": "points",
+          "id": "e_pts1_cols1_points"
+        },
+        {
+          "source": "colShape",
+          "sourceHandle": "solid",
+          "target": "cols2",
+          "targetHandle": "shape",
+          "id": "e_colShape_cols2_shape"
+        },
+        {
+          "source": "pts2",
+          "sourceHandle": "points",
+          "target": "cols2",
+          "targetHandle": "points",
+          "id": "e_pts2_cols2_points"
+        },
+        {
+          "source": "idx5",
+          "sourceHandle": "values",
+          "target": "roofX",
+          "targetHandle": "a",
+          "id": "e_idx5_roofX_a"
+        },
+        {
+          "source": "idx5",
+          "sourceHandle": "values",
+          "target": "roofY",
+          "targetHandle": "a",
+          "id": "e_idx5_roofY_a"
+        },
+        {
+          "source": "idx5",
+          "sourceHandle": "values",
+          "target": "roofZ",
+          "targetHandle": "a",
+          "id": "e_idx5_roofZ_a"
+        },
+        {
+          "source": "roofX",
+          "sourceHandle": "value",
+          "target": "roofPts",
+          "targetHandle": "x",
+          "id": "e_roofX_roofPts_x"
+        },
+        {
+          "source": "roofY",
+          "sourceHandle": "value",
+          "target": "roofPts",
+          "targetHandle": "y",
+          "id": "e_roofY_roofPts_y"
+        },
+        {
+          "source": "roofZ",
+          "sourceHandle": "value",
+          "target": "roofPts",
+          "targetHandle": "z",
+          "id": "e_roofZ_roofPts_z"
+        },
+        {
+          "source": "roofPts",
+          "sourceHandle": "points",
+          "target": "roofPoly",
+          "targetHandle": "points",
+          "id": "e_roofPts_roofPoly_points"
+        },
+        {
+          "source": "roofExtrude",
+          "sourceHandle": "value",
+          "target": "roof",
+          "targetHandle": "param:height",
+          "id": "e_roofExtrude_roof_param:height"
+        },
+        {
+          "source": "roofPoly",
+          "sourceHandle": "curve",
+          "target": "roof",
+          "targetHandle": "curve",
+          "id": "e_roofPoly_roof_curve"
+        },
+        {
+          "source": "cols1",
+          "sourceHandle": "solid",
+          "target": "all",
+          "targetHandle": "solid1",
+          "id": "e_cols1_all_solid1"
+        },
+        {
+          "source": "cols2",
+          "sourceHandle": "solid",
+          "target": "all",
+          "targetHandle": "solid2",
+          "id": "e_cols2_all_solid2"
+        },
+        {
+          "source": "roof",
+          "sourceHandle": "solid",
+          "target": "all",
+          "targetHandle": "solid3",
+          "id": "e_roof_all_solid3"
+        }
+      ]
+    },
+    {
+      "at": "2026-07-24T19:05:05.123Z",
+      "turn": 1,
+      "trigger": "ai-repair",
+      "label": "attempt 3: added 1 node(s) [Series]; updated 3 node(s); added 3 edge(s); removed 3 edge(s)",
+      "nodeCount": 24,
+      "edgeCount": 28,
+      "isolatedCount": 3,
+      "diff": {
+        "addedNodes": [
+          "roofIdx"
+        ],
+        "removedNodes": [],
+        "changedNodes": [
+          "roofY"
+        ],
+        "addedEdges": 3,
+        "removedEdges": 3
+      },
+      "details": [
+        "warning: Dead design parameters: sliders \"lineLength\", \"lineSpacing\" are not referenced by any formula or edge — moving them changes nothing. Wire dimensions to them or remove them.",
+        "warning: \"idx5\" (Series) computes a number/list wired to nothing — it renders no geometry and changes nothing. Wire its output into a consumer (PointsFromLists x/y/z, an Expression a/b/c/d input, or a param:) or remove it."
+      ],
+      "nodes": [
+        {
+          "id": "lineLength",
+          "type": "NumberSlider",
+          "data": {
+            "value": 30,
+            "label": "lineLength",
+            "min": 10,
+            "max": 100,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 610
+          }
+        },
+        {
+          "id": "lineSpacing",
+          "type": "NumberSlider",
+          "data": {
+            "value": 15,
+            "label": "lineSpacing",
+            "min": 5,
+            "max": 50,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 800
+          }
+        },
+        {
+          "id": "columnRadius",
+          "type": "NumberSlider",
+          "data": {
+            "value": 1.2,
+            "label": "columnRadius",
+            "min": 0.5,
+            "max": 5,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 230
+          }
+        },
+        {
+          "id": "roofExtrude",
+          "type": "NumberSlider",
+          "data": {
+            "value": 3,
+            "label": "roofExtrude",
+            "min": 1,
+            "max": 20,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 990
+          }
+        },
+        {
+          "id": "columnHeight",
+          "type": "Expression",
+          "data": {
+            "formula": "lineLength/3"
+          },
+          "position": {
+            "x": 40,
+            "y": 40
+          }
+        },
+        {
+          "id": "t10",
+          "type": "Range",
+          "data": {
+            "min": 0,
+            "max": 1,
+            "steps": 9
+          },
+          "position": {
+            "x": 40,
+            "y": 1370
+          }
+        },
+        {
+          "id": "x10",
+          "type": "Expression",
+          "data": {
+            "formula": "a*lineLength"
+          },
+          "position": {
+            "x": 270,
+            "y": 800
+          }
+        },
+        {
+          "id": "y0",
+          "type": "Expression",
+          "data": {
+            "formula": "0"
+          },
+          "position": {
+            "x": 270,
+            "y": 990
+          }
+        },
+        {
+          "id": "yS",
+          "type": "Expression",
+          "data": {
+            "formula": "lineSpacing"
+          },
+          "position": {
+            "x": 270,
+            "y": 1180
+          }
+        },
+        {
+          "id": "z0",
+          "type": "Expression",
+          "data": {
+            "formula": "0"
+          },
+          "position": {
+            "x": 270,
+            "y": 1370
+          }
+        },
+        {
+          "id": "pts1",
+          "type": "PointsFromLists",
+          "data": {},
+          "position": {
+            "x": 500,
+            "y": 230
+          }
+        },
+        {
+          "id": "pts2",
+          "type": "PointsFromLists",
+          "data": {},
+          "position": {
+            "x": 500,
+            "y": 420
+          }
+        },
+        {
+          "id": "colShape",
+          "type": "Cylinder",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 40
+          }
+        },
+        {
+          "id": "cols1",
+          "type": "InstanceOnPoints",
+          "data": {
+            "scaleStart": 1,
+            "scaleEnd": 1,
+            "alignToTangent": false
+          },
+          "position": {
+            "x": 730,
+            "y": 230
+          }
+        },
+        {
+          "id": "cols2",
+          "type": "InstanceOnPoints",
+          "data": {
+            "scaleStart": 1,
+            "scaleEnd": 1,
+            "alignToTangent": false
+          },
+          "position": {
+            "x": 730,
+            "y": 420
+          }
+        },
+        {
+          "id": "idx5",
+          "type": "Series",
+          "data": {
+            "start": 0,
+            "step": 2,
+            "count": 5
+          },
+          "position": {
+            "x": 40,
+            "y": 420
+          }
+        },
+        {
+          "id": "roofX",
+          "type": "Expression",
+          "data": {
+            "formula": "a*lineLength/4"
+          },
+          "position": {
+            "x": 270,
+            "y": 230
+          }
+        },
+        {
+          "id": "roofY",
+          "type": "Expression",
+          "data": {
+            "formula": "(a%2)*lineSpacing"
+          },
+          "position": {
+            "x": 270,
+            "y": 420
+          }
+        },
+        {
+          "id": "roofZ",
+          "type": "Expression",
+          "data": {
+            "formula": "columnHeight+roofExtrude"
+          },
+          "position": {
+            "x": 270,
+            "y": 610
+          }
+        },
+        {
+          "id": "roofPts",
+          "type": "PointsFromLists",
+          "data": {},
+          "position": {
+            "x": 500,
+            "y": 40
+          }
+        },
+        {
+          "id": "roofPoly",
+          "type": "PolylineCurve",
+          "data": {
+            "closed": true
+          },
+          "position": {
+            "x": 730,
+            "y": 40
+          }
+        },
+        {
+          "id": "roof",
+          "type": "ExtrudeCurve",
+          "data": {},
+          "position": {
+            "x": 960,
+            "y": 40
+          }
+        },
+        {
+          "id": "all",
+          "type": "Compound",
+          "data": {
+            "color": "#3b82f6"
+          },
+          "position": {
+            "x": 1190,
+            "y": 40
+          }
+        },
+        {
+          "id": "roofIdx",
+          "type": "Series",
+          "data": {
+            "start": 0,
+            "step": 1,
+            "count": 5
+          },
+          "position": {
+            "x": 40,
+            "y": 1180
+          }
+        }
+      ],
+      "edges": [
+        {
+          "source": "t10",
+          "sourceHandle": "values",
+          "target": "x10",
+          "targetHandle": "a",
+          "id": "e_t10_x10_a"
+        },
+        {
+          "source": "t10",
+          "sourceHandle": "values",
+          "target": "y0",
+          "targetHandle": "a",
+          "id": "e_t10_y0_a"
+        },
+        {
+          "source": "t10",
+          "sourceHandle": "values",
+          "target": "yS",
+          "targetHandle": "a",
+          "id": "e_t10_yS_a"
+        },
+        {
+          "source": "t10",
+          "sourceHandle": "values",
+          "target": "z0",
+          "targetHandle": "a",
+          "id": "e_t10_z0_a"
+        },
+        {
+          "source": "x10",
+          "sourceHandle": "value",
+          "target": "pts1",
+          "targetHandle": "x",
+          "id": "e_x10_pts1_x"
+        },
+        {
+          "source": "y0",
+          "sourceHandle": "value",
+          "target": "pts1",
+          "targetHandle": "y",
+          "id": "e_y0_pts1_y"
+        },
+        {
+          "source": "z0",
+          "sourceHandle": "value",
+          "target": "pts1",
+          "targetHandle": "z",
+          "id": "e_z0_pts1_z"
+        },
+        {
+          "source": "x10",
+          "sourceHandle": "value",
+          "target": "pts2",
+          "targetHandle": "x",
+          "id": "e_x10_pts2_x"
+        },
+        {
+          "source": "yS",
+          "sourceHandle": "value",
+          "target": "pts2",
+          "targetHandle": "y",
+          "id": "e_yS_pts2_y"
+        },
+        {
+          "source": "z0",
+          "sourceHandle": "value",
+          "target": "pts2",
+          "targetHandle": "z",
+          "id": "e_z0_pts2_z"
+        },
+        {
+          "source": "columnRadius",
+          "sourceHandle": "value",
+          "target": "colShape",
+          "targetHandle": "param:radius",
+          "id": "e_columnRadius_colShape_param:radius"
+        },
+        {
+          "source": "columnHeight",
+          "sourceHandle": "value",
+          "target": "colShape",
+          "targetHandle": "param:height",
+          "id": "e_columnHeight_colShape_param:height"
+        },
+        {
+          "source": "colShape",
+          "sourceHandle": "solid",
+          "target": "cols1",
+          "targetHandle": "shape",
+          "id": "e_colShape_cols1_shape"
+        },
+        {
+          "source": "pts1",
+          "sourceHandle": "points",
+          "target": "cols1",
+          "targetHandle": "points",
+          "id": "e_pts1_cols1_points"
+        },
+        {
+          "source": "colShape",
+          "sourceHandle": "solid",
+          "target": "cols2",
+          "targetHandle": "shape",
+          "id": "e_colShape_cols2_shape"
+        },
+        {
+          "source": "pts2",
+          "sourceHandle": "points",
+          "target": "cols2",
+          "targetHandle": "points",
+          "id": "e_pts2_cols2_points"
+        },
+        {
+          "source": "roofX",
+          "sourceHandle": "value",
+          "target": "roofPts",
+          "targetHandle": "x",
+          "id": "e_roofX_roofPts_x"
+        },
+        {
+          "source": "roofY",
+          "sourceHandle": "value",
+          "target": "roofPts",
+          "targetHandle": "y",
+          "id": "e_roofY_roofPts_y"
+        },
+        {
+          "source": "roofZ",
+          "sourceHandle": "value",
+          "target": "roofPts",
+          "targetHandle": "z",
+          "id": "e_roofZ_roofPts_z"
+        },
+        {
+          "source": "roofPts",
+          "sourceHandle": "points",
+          "target": "roofPoly",
+          "targetHandle": "points",
+          "id": "e_roofPts_roofPoly_points"
+        },
+        {
+          "source": "roofExtrude",
+          "sourceHandle": "value",
+          "target": "roof",
+          "targetHandle": "param:height",
+          "id": "e_roofExtrude_roof_param:height"
+        },
+        {
+          "source": "roofPoly",
+          "sourceHandle": "curve",
+          "target": "roof",
+          "targetHandle": "curve",
+          "id": "e_roofPoly_roof_curve"
+        },
+        {
+          "source": "cols1",
+          "sourceHandle": "solid",
+          "target": "all",
+          "targetHandle": "solid1",
+          "id": "e_cols1_all_solid1"
+        },
+        {
+          "source": "cols2",
+          "sourceHandle": "solid",
+          "target": "all",
+          "targetHandle": "solid2",
+          "id": "e_cols2_all_solid2"
+        },
+        {
+          "source": "roof",
+          "sourceHandle": "solid",
+          "target": "all",
+          "targetHandle": "solid3",
+          "id": "e_roof_all_solid3"
+        },
+        {
+          "source": "roofIdx",
+          "target": "roofX",
+          "id": "e_roofIdx_roofX_a",
+          "sourceHandle": "values",
+          "targetHandle": "a"
+        },
+        {
+          "source": "roofIdx",
+          "target": "roofY",
+          "id": "e_roofIdx_roofY_a",
+          "sourceHandle": "values",
+          "targetHandle": "a"
+        },
+        {
+          "source": "roofIdx",
+          "target": "roofZ",
+          "id": "e_roofIdx_roofZ_a",
+          "sourceHandle": "values",
+          "targetHandle": "a"
+        }
+      ]
+    }
+  ]
+}

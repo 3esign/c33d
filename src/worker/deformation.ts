@@ -1,5 +1,14 @@
 import * as replicad from 'replicad';
 
+export function copyMetadata(source: any, target: any) {
+  if (!source || !target) return target;
+  const keys = ['wireIndex', 'row', 'col', 'group', 'sourceNodeId', 'ancestorNodeIds'];
+  for (const k of keys) {
+    if (source[k] !== undefined) target[k] = source[k];
+  }
+  return target;
+}
+
 export function dist3(a: number[], b: number[]) {
   return Math.hypot(a[0] - b[0], a[1] - b[1], a[2] - b[2]);
 }
@@ -112,7 +121,7 @@ export function solidFromDeformedMesh(
   }
   ex.delete();
   if (!solidShape) throw new Error('sewing did not close into a shell (mesh may be non-manifold)');
-  return replicad.cast(solidShape);
+  return copyMetadata(shape, replicad.cast(solidShape));
 }
 
 export function curveSegments(totalAngleDeg: number, perDeg: number, lo: number, hi: number): number {
@@ -192,7 +201,7 @@ export function safeTranslate(shape: any, vector: [number, number, number]) {
   transform.translate(vector);
   const rawShape = (transform as any).transform(shape.wrapped);
   transform.delete();
-  return replicad.cast(rawShape);
+  return copyMetadata(shape, replicad.cast(rawShape));
 }
 
 export function safeRotate(
@@ -205,7 +214,7 @@ export function safeRotate(
   transform.rotate(angle, position, direction);
   const rawShape = (transform as any).transform(shape.wrapped);
   transform.delete();
-  return replicad.cast(rawShape);
+  return copyMetadata(shape, replicad.cast(rawShape));
 }
 
 export function safeScale(shape: any, scaleFactor: number, center: [number, number, number] = [0, 0, 0]) {
@@ -213,5 +222,5 @@ export function safeScale(shape: any, scaleFactor: number, center: [number, numb
   transform.scale(center, scaleFactor);
   const rawShape = (transform as any).transform(shape.wrapped);
   transform.delete();
-  return replicad.cast(rawShape);
+  return copyMetadata(shape, replicad.cast(rawShape));
 }

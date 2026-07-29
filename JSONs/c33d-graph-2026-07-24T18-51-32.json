@@ -1,0 +1,1755 @@
+{
+  "c33dExport": 2,
+  "exportedAt": "2026-07-24T18:51:32.396Z",
+  "comment": "extremely primitive we only see one flat cylinder",
+  "agent": {
+    "name": "Ollama (Local)",
+    "provider": "ollama",
+    "model": "deepseek-v4-flash:cloud"
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "hatHeight",
+        "type": "NumberSlider",
+        "data": {
+          "value": 30,
+          "label": "hatHeight",
+          "min": 20,
+          "max": 50,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 2130
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "hatRadius",
+        "type": "NumberSlider",
+        "data": {
+          "value": 15,
+          "label": "hatRadius",
+          "min": 10,
+          "max": 25,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 2320
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "brimWidth",
+        "type": "NumberSlider",
+        "data": {
+          "value": 8,
+          "label": "brimWidth",
+          "min": 4,
+          "max": 15,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 610
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "brimAngle",
+        "type": "NumberSlider",
+        "data": {
+          "value": 30,
+          "label": "brimAngle",
+          "min": 10,
+          "max": 60,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 420
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "featherLength",
+        "type": "NumberSlider",
+        "data": {
+          "value": 20,
+          "label": "featherLength",
+          "min": 10,
+          "max": 35,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 1180
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "featherWidth",
+        "type": "NumberSlider",
+        "data": {
+          "value": 4,
+          "label": "featherWidth",
+          "min": 2,
+          "max": 8,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 1560
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "bandHeight",
+        "type": "NumberSlider",
+        "data": {
+          "value": 2,
+          "label": "bandHeight",
+          "min": 1,
+          "max": 5,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 230
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "crownX",
+        "type": "ListConstant",
+        "data": {
+          "values": "0, hatRadius, hatRadius*0.6, hatRadius*0.3, 0"
+        },
+        "position": {
+          "x": 40,
+          "y": 800
+        },
+        "measured": {
+          "width": 177,
+          "height": 136
+        }
+      },
+      {
+        "id": "crownY",
+        "type": "ListConstant",
+        "data": {
+          "values": "0, 0, hatHeight*0.3, hatHeight*0.7, hatHeight"
+        },
+        "position": {
+          "x": 40,
+          "y": 990
+        },
+        "measured": {
+          "width": 177,
+          "height": 136
+        }
+      },
+      {
+        "id": "crownPts",
+        "type": "PointsFromLists",
+        "data": {},
+        "position": {
+          "x": 270,
+          "y": 230
+        },
+        "measured": {
+          "width": 150,
+          "height": 234
+        }
+      },
+      {
+        "id": "crownProfile",
+        "type": "SplineCurve",
+        "data": {
+          "closed": true
+        },
+        "position": {
+          "x": 500,
+          "y": 40
+        },
+        "measured": {
+          "width": 177,
+          "height": 266
+        }
+      },
+      {
+        "id": "crown",
+        "type": "RevolveCurve",
+        "data": {
+          "angle": 360,
+          "axis": "Z"
+        },
+        "position": {
+          "x": 730,
+          "y": 40
+        },
+        "measured": {
+          "width": 221,
+          "height": 270
+        }
+      },
+      {
+        "id": "outerBrimCurve",
+        "type": "Point",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "position": {
+          "x": 40,
+          "y": 3080
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "outerBrimCurve_x",
+        "type": "VectorXYZ",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": 1
+        },
+        "position": {
+          "x": 40,
+          "y": 3270
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "outerBrimCurve_x_2",
+        "type": "CircleCurve",
+        "data": {
+          "radius": "hatRadius + brimWidth"
+        },
+        "position": {
+          "x": 270,
+          "y": 800
+        },
+        "measured": {
+          "width": 201,
+          "height": 248
+        }
+      },
+      {
+        "id": "outerBrim",
+        "type": "ExtrudeCurve",
+        "data": {
+          "height": 0.5
+        },
+        "position": {
+          "x": 500,
+          "y": 610
+        },
+        "measured": {
+          "width": 222,
+          "height": 216
+        }
+      },
+      {
+        "id": "innerBrimCurve",
+        "type": "Point",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "position": {
+          "x": 40,
+          "y": 2510
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "innerBrimCurve_x",
+        "type": "VectorXYZ",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": 1
+        },
+        "position": {
+          "x": 40,
+          "y": 2700
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "innerBrimCurve_x_2",
+        "type": "CircleCurve",
+        "data": {
+          "radius": "hatRadius - 0.5"
+        },
+        "position": {
+          "x": 270,
+          "y": 610
+        },
+        "measured": {
+          "width": 201,
+          "height": 248
+        }
+      },
+      {
+        "id": "innerBrim",
+        "type": "ExtrudeCurve",
+        "data": {
+          "height": 0.5
+        },
+        "position": {
+          "x": 500,
+          "y": 420
+        },
+        "measured": {
+          "width": 222,
+          "height": 216
+        }
+      },
+      {
+        "id": "brimRing",
+        "type": "Boolean",
+        "data": {
+          "operation": "difference"
+        },
+        "position": {
+          "x": 730,
+          "y": 420
+        },
+        "measured": {
+          "width": 177,
+          "height": 200
+        }
+      },
+      {
+        "id": "origin",
+        "type": "Point",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "position": {
+          "x": 40,
+          "y": 2890
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "brimTilted",
+        "type": "Rotate",
+        "data": {
+          "angle": "brimAngle",
+          "axisX": 1,
+          "axisY": 0,
+          "axisZ": 0
+        },
+        "position": {
+          "x": 960,
+          "y": 230
+        },
+        "measured": {
+          "width": 201,
+          "height": 414
+        }
+      },
+      {
+        "id": "featherX",
+        "type": "ListConstant",
+        "data": {
+          "values": "0, featherWidth/2, featherWidth/2, 0, -featherWidth/2, -featherWidth/2"
+        },
+        "position": {
+          "x": 40,
+          "y": 1750
+        },
+        "measured": {
+          "width": 177,
+          "height": 136
+        }
+      },
+      {
+        "id": "featherY",
+        "type": "ListConstant",
+        "data": {
+          "values": "0, featherLength*0.2, featherLength*0.8, featherLength, featherLength*0.8, featherLength*0.2"
+        },
+        "position": {
+          "x": 40,
+          "y": 1940
+        },
+        "measured": {
+          "width": 177,
+          "height": 136
+        }
+      },
+      {
+        "id": "featherPts",
+        "type": "PointsFromLists",
+        "data": {},
+        "position": {
+          "x": 270,
+          "y": 420
+        },
+        "measured": {
+          "width": 150,
+          "height": 234
+        }
+      },
+      {
+        "id": "featherProfile",
+        "type": "SplineCurve",
+        "data": {
+          "closed": true
+        },
+        "position": {
+          "x": 500,
+          "y": 230
+        },
+        "measured": {
+          "width": 177,
+          "height": 266
+        }
+      },
+      {
+        "id": "featherSolid",
+        "type": "ExtrudeCurve",
+        "data": {
+          "height": 0.2
+        },
+        "position": {
+          "x": 730,
+          "y": 230
+        },
+        "measured": {
+          "width": 222,
+          "height": 216
+        }
+      },
+      {
+        "id": "featherRotated",
+        "type": "Rotate",
+        "data": {
+          "angle": -30,
+          "axisX": 1,
+          "axisY": 0,
+          "axisZ": 0
+        },
+        "position": {
+          "x": 960,
+          "y": 40
+        },
+        "measured": {
+          "width": 201,
+          "height": 414
+        }
+      },
+      {
+        "id": "featherRotated2",
+        "type": "Rotate",
+        "data": {
+          "angle": 45,
+          "axisX": 0,
+          "axisY": 0,
+          "axisZ": 1
+        },
+        "position": {
+          "x": 1190,
+          "y": 40
+        },
+        "measured": {
+          "width": 201,
+          "height": 414
+        }
+      },
+      {
+        "id": "featherTarget",
+        "type": "Point",
+        "data": {
+          "x": "hatRadius*0.5",
+          "y": 0,
+          "z": "hatHeight*0.7"
+        },
+        "position": {
+          "x": 40,
+          "y": 1370
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "featherPlaced",
+        "type": "Translate",
+        "data": {},
+        "position": {
+          "x": 1420,
+          "y": 40
+        },
+        "measured": {
+          "width": 201,
+          "height": 334
+        }
+      },
+      {
+        "id": "bandCenter",
+        "type": "Point",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": "bandHeight/2"
+        },
+        "position": {
+          "x": 40,
+          "y": 40
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "band",
+        "type": "Cylinder",
+        "data": {
+          "radius": "hatRadius + 0.2",
+          "height": "bandHeight"
+        },
+        "position": {
+          "x": 270,
+          "y": 40
+        },
+        "measured": {
+          "width": 201,
+          "height": 296
+        }
+      },
+      {
+        "id": "hat",
+        "type": "Compound",
+        "data": {
+          "color": "#2d5a27"
+        },
+        "position": {
+          "x": 1650,
+          "y": 40
+        },
+        "measured": {
+          "width": 150,
+          "height": 330
+        }
+      }
+    ],
+    "edges": [
+      {
+        "source": "crownX",
+        "sourceHandle": "values",
+        "target": "crownPts",
+        "targetHandle": "x",
+        "id": "e_crownX_crownPts_x"
+      },
+      {
+        "source": "crownY",
+        "sourceHandle": "values",
+        "target": "crownPts",
+        "targetHandle": "y",
+        "id": "e_crownY_crownPts_y"
+      },
+      {
+        "source": "crownPts",
+        "sourceHandle": "points",
+        "target": "crownProfile",
+        "targetHandle": "points",
+        "id": "e_crownPts_crownProfile_points"
+      },
+      {
+        "source": "crownProfile",
+        "sourceHandle": "curve",
+        "target": "crown",
+        "targetHandle": "profile",
+        "id": "e_crownProfile_crown_profile"
+      },
+      {
+        "source": "outerBrimCurve",
+        "sourceHandle": "point",
+        "target": "outerBrimCurve_x_2",
+        "targetHandle": "center",
+        "id": "e_outerBrimCurve_outerBrimCurve_x_2_center"
+      },
+      {
+        "source": "outerBrimCurve_x",
+        "sourceHandle": "vector",
+        "target": "outerBrimCurve_x_2",
+        "targetHandle": "normal",
+        "id": "e_outerBrimCurve_x_outerBrimCurve_x_2_normal"
+      },
+      {
+        "source": "outerBrimCurve_x_2",
+        "sourceHandle": "curve",
+        "target": "outerBrim",
+        "targetHandle": "curve",
+        "id": "e_outerBrimCurve_x_2_outerBrim_curve"
+      },
+      {
+        "source": "innerBrimCurve",
+        "sourceHandle": "point",
+        "target": "innerBrimCurve_x_2",
+        "targetHandle": "center",
+        "id": "e_innerBrimCurve_innerBrimCurve_x_2_center"
+      },
+      {
+        "source": "innerBrimCurve_x",
+        "sourceHandle": "vector",
+        "target": "innerBrimCurve_x_2",
+        "targetHandle": "normal",
+        "id": "e_innerBrimCurve_x_innerBrimCurve_x_2_normal"
+      },
+      {
+        "source": "innerBrimCurve_x_2",
+        "sourceHandle": "curve",
+        "target": "innerBrim",
+        "targetHandle": "curve",
+        "id": "e_innerBrimCurve_x_2_innerBrim_curve"
+      },
+      {
+        "source": "outerBrim",
+        "sourceHandle": "solid",
+        "target": "brimRing",
+        "targetHandle": "target",
+        "id": "e_outerBrim_brimRing_target"
+      },
+      {
+        "source": "innerBrim",
+        "sourceHandle": "solid",
+        "target": "brimRing",
+        "targetHandle": "tool",
+        "id": "e_innerBrim_brimRing_tool"
+      },
+      {
+        "source": "brimRing",
+        "sourceHandle": "solid",
+        "target": "brimTilted",
+        "targetHandle": "solid",
+        "id": "e_brimRing_brimTilted_solid"
+      },
+      {
+        "source": "origin",
+        "sourceHandle": "point",
+        "target": "brimTilted",
+        "targetHandle": "pivot",
+        "id": "e_origin_brimTilted_pivot"
+      },
+      {
+        "source": "featherX",
+        "sourceHandle": "values",
+        "target": "featherPts",
+        "targetHandle": "x",
+        "id": "e_featherX_featherPts_x"
+      },
+      {
+        "source": "featherY",
+        "sourceHandle": "values",
+        "target": "featherPts",
+        "targetHandle": "y",
+        "id": "e_featherY_featherPts_y"
+      },
+      {
+        "source": "featherPts",
+        "sourceHandle": "points",
+        "target": "featherProfile",
+        "targetHandle": "points",
+        "id": "e_featherPts_featherProfile_points"
+      },
+      {
+        "source": "featherProfile",
+        "sourceHandle": "curve",
+        "target": "featherSolid",
+        "targetHandle": "curve",
+        "id": "e_featherProfile_featherSolid_curve"
+      },
+      {
+        "source": "featherSolid",
+        "sourceHandle": "solid",
+        "target": "featherRotated",
+        "targetHandle": "solid",
+        "id": "e_featherSolid_featherRotated_solid"
+      },
+      {
+        "source": "featherRotated",
+        "sourceHandle": "solid",
+        "target": "featherRotated2",
+        "targetHandle": "solid",
+        "id": "e_featherRotated_featherRotated2_solid"
+      },
+      {
+        "source": "featherRotated2",
+        "sourceHandle": "solid",
+        "target": "featherPlaced",
+        "targetHandle": "solid",
+        "id": "e_featherRotated2_featherPlaced_solid"
+      },
+      {
+        "source": "featherTarget",
+        "sourceHandle": "point",
+        "target": "featherPlaced",
+        "targetHandle": "target",
+        "id": "e_featherTarget_featherPlaced_target"
+      },
+      {
+        "source": "bandCenter",
+        "sourceHandle": "point",
+        "target": "band",
+        "targetHandle": "center",
+        "id": "e_bandCenter_band_center"
+      },
+      {
+        "source": "crown",
+        "sourceHandle": "solid",
+        "target": "hat",
+        "targetHandle": "solid1",
+        "id": "e_crown_hat_solid1"
+      },
+      {
+        "source": "brimTilted",
+        "sourceHandle": "solid",
+        "target": "hat",
+        "targetHandle": "solid2",
+        "id": "e_brimTilted_hat_solid2"
+      },
+      {
+        "source": "featherPlaced",
+        "sourceHandle": "solid",
+        "target": "hat",
+        "targetHandle": "solid3",
+        "id": "e_featherPlaced_hat_solid3"
+      },
+      {
+        "source": "band",
+        "sourceHandle": "solid",
+        "target": "hat",
+        "targetHandle": "solid4",
+        "id": "e_band_hat_solid4"
+      }
+    ]
+  },
+  "conversation": [
+    {
+      "role": "system",
+      "content": "Workspace cleared."
+    },
+    {
+      "role": "user",
+      "content": "be the best world designer and artist and make the best robin hood hat ever absolute real replica with all the details"
+    },
+    {
+      "role": "system",
+      "content": "IR program had compile errors (attempt 1/3) — asking the model to fix."
+    },
+    {
+      "role": "system",
+      "content": "IR program had compile errors (attempt 2/3) — asking the model to fix."
+    },
+    {
+      "role": "assistant",
+      "content": "A detailed, realistic Robin Hood hat with a pointed crown, turned-up brim, and a feather, built parametrically."
+    },
+    {
+      "role": "system",
+      "content": "Auto-repair limit reached. Remaining issues: Node \"outerBrim\" failed: ExtrudeCurve failed: Cannot read properties of undefined (reading '$$') | Node \"innerBrim\" failed: ExtrudeCurve failed: Cannot read properties of undefined (reading '$$') | Node \"crown\" failed: RevolveCurve failed: face.revolve is not a function. The profile must not cross t"
+    }
+  ],
+  "plan": "",
+  "genome": null,
+  "geometryReport": {
+    "leaves": [
+      {
+        "id": "outerBrim",
+        "bbox": null,
+        "meshOk": false,
+        "vertexCount": 0,
+        "error": "Node \"outerBrim\" (ExtrudeCurve) produced no geometry despite connected inputs — likely invalid parameters (e.g. zero/negative size, self-intersecting fillet)."
+      },
+      {
+        "id": "innerBrim",
+        "bbox": null,
+        "meshOk": false,
+        "vertexCount": 0,
+        "error": "Node \"innerBrim\" (ExtrudeCurve) produced no geometry despite connected inputs — likely invalid parameters (e.g. zero/negative size, self-intersecting fillet)."
+      },
+      {
+        "id": "brimRing",
+        "bbox": null,
+        "meshOk": false,
+        "vertexCount": 0,
+        "error": "Node \"brimRing\" (Boolean) is null because its input(s) came from failed upstream node(s): outerBrim, innerBrim. Fix the upstream node first."
+      },
+      {
+        "id": "crown",
+        "bbox": null,
+        "meshOk": false,
+        "vertexCount": 0,
+        "error": "Node \"crown\" (RevolveCurve) produced no geometry despite connected inputs — likely invalid parameters (e.g. zero/negative size, self-intersecting fillet)."
+      },
+      {
+        "id": "featherSolid",
+        "bbox": null,
+        "meshOk": false,
+        "vertexCount": 0,
+        "error": "Node \"featherSolid\" (ExtrudeCurve) produced no geometry despite connected inputs — likely invalid parameters (e.g. zero/negative size, self-intersecting fillet)."
+      },
+      {
+        "id": "brimTilted",
+        "bbox": null,
+        "meshOk": false,
+        "vertexCount": 0,
+        "error": "Node \"brimTilted\" (Rotate) is null because its input(s) came from failed upstream node(s): brimRing. Fix the upstream node first."
+      },
+      {
+        "id": "featherRotated",
+        "bbox": null,
+        "meshOk": false,
+        "vertexCount": 0,
+        "error": "Node \"featherRotated\" (Rotate) is null because its input(s) came from failed upstream node(s): featherSolid. Fix the upstream node first."
+      },
+      {
+        "id": "featherRotated2",
+        "bbox": null,
+        "meshOk": false,
+        "vertexCount": 0,
+        "error": "Node \"featherRotated2\" (Rotate) is null because its input(s) came from failed upstream node(s): featherRotated. Fix the upstream node first."
+      },
+      {
+        "id": "featherPlaced",
+        "bbox": null,
+        "meshOk": false,
+        "vertexCount": 0,
+        "error": "Node \"featherPlaced\" (Translate) is null because its input(s) came from failed upstream node(s): featherRotated2. Fix the upstream node first."
+      },
+      {
+        "id": "hat",
+        "bbox": {
+          "min": [
+            -15.200000100000002,
+            -15.23696178856787,
+            -0.04928901636001051
+          ],
+          "max": [
+            15.24928901636001,
+            15.23696178856787,
+            2.0492890163600106
+          ],
+          "center": [
+            0.02464445818000449,
+            0,
+            1
+          ],
+          "size": [
+            30.449289116360013,
+            30.47392357713574,
+            2.098578032720021
+          ]
+        },
+        "volume": 1451.6671333707714,
+        "meshOk": true,
+        "vertexCount": 158,
+        "error": null
+      }
+    ],
+    "nodeErrors": [
+      {
+        "id": "outerBrim",
+        "error": "ExtrudeCurve failed: Cannot read properties of undefined (reading '$$')"
+      },
+      {
+        "id": "innerBrim",
+        "error": "ExtrudeCurve failed: Cannot read properties of undefined (reading '$$')"
+      },
+      {
+        "id": "crown",
+        "error": "RevolveCurve failed: face.revolve is not a function. The profile must not cross the revolve axis."
+      },
+      {
+        "id": "featherSolid",
+        "error": "ExtrudeCurve failed: Cannot read properties of undefined (reading '$$')"
+      }
+    ],
+    "numbers": {
+      "hatHeight": 30,
+      "hatRadius": 15,
+      "brimWidth": 8,
+      "brimAngle": 30,
+      "featherLength": 20,
+      "featherWidth": 4,
+      "bandHeight": 2,
+      "crownY": [
+        0,
+        0,
+        9,
+        21,
+        30
+      ],
+      "crownX": [
+        0,
+        15,
+        9,
+        4.5,
+        0
+      ],
+      "featherY": [
+        0,
+        4,
+        16,
+        20,
+        16,
+        4
+      ],
+      "featherX": [
+        0,
+        2,
+        2,
+        0,
+        -2,
+        -2
+      ]
+    },
+    "sliders": {
+      "hatHeight": 30,
+      "hatRadius": 15,
+      "brimWidth": 8,
+      "brimAngle": 30,
+      "featherLength": 20,
+      "featherWidth": 4,
+      "bandHeight": 2
+    },
+    "selections": {},
+    "helpers": {
+      "outerBrimCurve": {
+        "type": "Point",
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "sourceNodeId": "outerBrimCurve",
+        "ancestorNodeIds": []
+      },
+      "outerBrimCurve_x": {
+        "type": "Vector",
+        "x": 0,
+        "y": 0,
+        "z": 1,
+        "sourceNodeId": "outerBrimCurve_x",
+        "ancestorNodeIds": []
+      },
+      "innerBrimCurve": {
+        "type": "Point",
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "sourceNodeId": "innerBrimCurve",
+        "ancestorNodeIds": []
+      },
+      "innerBrimCurve_x": {
+        "type": "Vector",
+        "x": 0,
+        "y": 0,
+        "z": 1,
+        "sourceNodeId": "innerBrimCurve_x",
+        "ancestorNodeIds": []
+      },
+      "origin": {
+        "type": "Point",
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "sourceNodeId": "origin",
+        "ancestorNodeIds": []
+      },
+      "featherTarget": {
+        "type": "Point",
+        "x": 7.5,
+        "y": 0,
+        "z": 21,
+        "sourceNodeId": "featherTarget",
+        "ancestorNodeIds": []
+      },
+      "bandCenter": {
+        "type": "Point",
+        "x": 0,
+        "y": 0,
+        "z": 1,
+        "sourceNodeId": "bandCenter",
+        "ancestorNodeIds": []
+      }
+    },
+    "nodeCount": 35,
+    "edgeCount": 27,
+    "transformCount": 8,
+    "nodesPerLeafRatio": 3.5,
+    "nodeEconomyWarning": false,
+    "placement": {
+      "anchored": [
+        "outerBrim",
+        "innerBrim",
+        "brimRing",
+        "crown",
+        "featherSolid",
+        "brimTilted",
+        "featherRotated",
+        "featherRotated2",
+        "featherPlaced",
+        "hat"
+      ],
+      "literal": [],
+      "origin": [],
+      "literalNodeIds": [],
+      "ratio": 1
+    },
+    "scene": {
+      "min": [
+        -15.200000100000002,
+        -15.23696178856787,
+        -0.04928901636001051
+      ],
+      "max": [
+        15.24928901636001,
+        15.23696178856787,
+        2.0492890163600106
+      ],
+      "size": [
+        30.449289116360013,
+        30.47392357713574,
+        2.098578032720021
+      ]
+    },
+    "meshedLeafCount": 1,
+    "kernelFaultCount": 0,
+    "kernelSuspect": false,
+    "kernelHealth": "ok",
+    "evalCount": 1,
+    "recycleRecommended": false
+  },
+  "timeline": [
+    {
+      "at": "2026-07-24T18:42:55.687Z",
+      "turn": 1,
+      "trigger": "ai-ir",
+      "label": "attempt 3: rebuilt graph (35 nodes)",
+      "nodeCount": 35,
+      "edgeCount": 27,
+      "isolatedCount": 7,
+      "diff": {
+        "addedNodes": [
+          "hatHeight",
+          "hatRadius",
+          "brimWidth",
+          "brimAngle",
+          "featherLength",
+          "featherWidth",
+          "bandHeight",
+          "crownX",
+          "crownY",
+          "crownPts",
+          "crownProfile",
+          "crown",
+          "outerBrimCurve",
+          "outerBrimCurve_x",
+          "outerBrimCurve_x_2",
+          "outerBrim",
+          "innerBrimCurve",
+          "innerBrimCurve_x",
+          "innerBrimCurve_x_2",
+          "innerBrim",
+          "brimRing",
+          "origin",
+          "brimTilted",
+          "featherX",
+          "featherY",
+          "featherPts",
+          "featherProfile",
+          "featherSolid",
+          "featherRotated",
+          "featherRotated2",
+          "featherTarget",
+          "featherPlaced",
+          "bandCenter",
+          "band",
+          "hat"
+        ],
+        "removedNodes": [],
+        "changedNodes": [],
+        "addedEdges": 27,
+        "removedEdges": 0
+      },
+      "details": [
+        "warning: Dead design parameters: sliders \"hatHeight\", \"featherLength\", \"featherWidth\" are not referenced by any formula or edge — moving them changes nothing. Wire dimensions to them or remove them.",
+        "warning: PARAMETRIC COVERAGE IS LOW (45%): Only 5 of 11 dimensions are driven by slider-based formulas or edges. Hard-coded literals will break design scalability when sliders move. Please rewrite these bare literals as formulas of your sliders: crown.angle=360, outerBrim.height=0.5, innerBrim.heigh"
+      ],
+      "nodes": [
+        {
+          "id": "hatHeight",
+          "type": "NumberSlider",
+          "data": {
+            "value": 30,
+            "label": "hatHeight",
+            "min": 20,
+            "max": 50,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 2130
+          }
+        },
+        {
+          "id": "hatRadius",
+          "type": "NumberSlider",
+          "data": {
+            "value": 15,
+            "label": "hatRadius",
+            "min": 10,
+            "max": 25,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 2320
+          }
+        },
+        {
+          "id": "brimWidth",
+          "type": "NumberSlider",
+          "data": {
+            "value": 8,
+            "label": "brimWidth",
+            "min": 4,
+            "max": 15,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 610
+          }
+        },
+        {
+          "id": "brimAngle",
+          "type": "NumberSlider",
+          "data": {
+            "value": 30,
+            "label": "brimAngle",
+            "min": 10,
+            "max": 60,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 420
+          }
+        },
+        {
+          "id": "featherLength",
+          "type": "NumberSlider",
+          "data": {
+            "value": 20,
+            "label": "featherLength",
+            "min": 10,
+            "max": 35,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 1180
+          }
+        },
+        {
+          "id": "featherWidth",
+          "type": "NumberSlider",
+          "data": {
+            "value": 4,
+            "label": "featherWidth",
+            "min": 2,
+            "max": 8,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 1560
+          }
+        },
+        {
+          "id": "bandHeight",
+          "type": "NumberSlider",
+          "data": {
+            "value": 2,
+            "label": "bandHeight",
+            "min": 1,
+            "max": 5,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 230
+          }
+        },
+        {
+          "id": "crownX",
+          "type": "ListConstant",
+          "data": {
+            "values": "0, hatRadius, hatRadius*0.6, hatRadius*0.3, 0"
+          },
+          "position": {
+            "x": 40,
+            "y": 800
+          }
+        },
+        {
+          "id": "crownY",
+          "type": "ListConstant",
+          "data": {
+            "values": "0, 0, hatHeight*0.3, hatHeight*0.7, hatHeight"
+          },
+          "position": {
+            "x": 40,
+            "y": 990
+          }
+        },
+        {
+          "id": "crownPts",
+          "type": "PointsFromLists",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 230
+          }
+        },
+        {
+          "id": "crownProfile",
+          "type": "SplineCurve",
+          "data": {
+            "closed": true
+          },
+          "position": {
+            "x": 500,
+            "y": 40
+          }
+        },
+        {
+          "id": "crown",
+          "type": "RevolveCurve",
+          "data": {
+            "angle": 360,
+            "axis": "Z"
+          },
+          "position": {
+            "x": 730,
+            "y": 40
+          }
+        },
+        {
+          "id": "outerBrimCurve",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "position": {
+            "x": 40,
+            "y": 3080
+          }
+        },
+        {
+          "id": "outerBrimCurve_x",
+          "type": "VectorXYZ",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": 1
+          },
+          "position": {
+            "x": 40,
+            "y": 3270
+          }
+        },
+        {
+          "id": "outerBrimCurve_x_2",
+          "type": "CircleCurve",
+          "data": {
+            "radius": "hatRadius + brimWidth"
+          },
+          "position": {
+            "x": 270,
+            "y": 800
+          }
+        },
+        {
+          "id": "outerBrim",
+          "type": "ExtrudeCurve",
+          "data": {
+            "height": 0.5
+          },
+          "position": {
+            "x": 500,
+            "y": 610
+          }
+        },
+        {
+          "id": "innerBrimCurve",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "position": {
+            "x": 40,
+            "y": 2510
+          }
+        },
+        {
+          "id": "innerBrimCurve_x",
+          "type": "VectorXYZ",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": 1
+          },
+          "position": {
+            "x": 40,
+            "y": 2700
+          }
+        },
+        {
+          "id": "innerBrimCurve_x_2",
+          "type": "CircleCurve",
+          "data": {
+            "radius": "hatRadius - 0.5"
+          },
+          "position": {
+            "x": 270,
+            "y": 610
+          }
+        },
+        {
+          "id": "innerBrim",
+          "type": "ExtrudeCurve",
+          "data": {
+            "height": 0.5
+          },
+          "position": {
+            "x": 500,
+            "y": 420
+          }
+        },
+        {
+          "id": "brimRing",
+          "type": "Boolean",
+          "data": {
+            "operation": "difference"
+          },
+          "position": {
+            "x": 730,
+            "y": 420
+          }
+        },
+        {
+          "id": "origin",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "position": {
+            "x": 40,
+            "y": 2890
+          }
+        },
+        {
+          "id": "brimTilted",
+          "type": "Rotate",
+          "data": {
+            "angle": "brimAngle",
+            "axisX": 1,
+            "axisY": 0,
+            "axisZ": 0
+          },
+          "position": {
+            "x": 960,
+            "y": 230
+          }
+        },
+        {
+          "id": "featherX",
+          "type": "ListConstant",
+          "data": {
+            "values": "0, featherWidth/2, featherWidth/2, 0, -featherWidth/2, -featherWidth/2"
+          },
+          "position": {
+            "x": 40,
+            "y": 1750
+          }
+        },
+        {
+          "id": "featherY",
+          "type": "ListConstant",
+          "data": {
+            "values": "0, featherLength*0.2, featherLength*0.8, featherLength, featherLength*0.8, featherLength*0.2"
+          },
+          "position": {
+            "x": 40,
+            "y": 1940
+          }
+        },
+        {
+          "id": "featherPts",
+          "type": "PointsFromLists",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 420
+          }
+        },
+        {
+          "id": "featherProfile",
+          "type": "SplineCurve",
+          "data": {
+            "closed": true
+          },
+          "position": {
+            "x": 500,
+            "y": 230
+          }
+        },
+        {
+          "id": "featherSolid",
+          "type": "ExtrudeCurve",
+          "data": {
+            "height": 0.2
+          },
+          "position": {
+            "x": 730,
+            "y": 230
+          }
+        },
+        {
+          "id": "featherRotated",
+          "type": "Rotate",
+          "data": {
+            "angle": -30,
+            "axisX": 1,
+            "axisY": 0,
+            "axisZ": 0
+          },
+          "position": {
+            "x": 960,
+            "y": 40
+          }
+        },
+        {
+          "id": "featherRotated2",
+          "type": "Rotate",
+          "data": {
+            "angle": 45,
+            "axisX": 0,
+            "axisY": 0,
+            "axisZ": 1
+          },
+          "position": {
+            "x": 1190,
+            "y": 40
+          }
+        },
+        {
+          "id": "featherTarget",
+          "type": "Point",
+          "data": {
+            "x": "hatRadius*0.5",
+            "y": 0,
+            "z": "hatHeight*0.7"
+          },
+          "position": {
+            "x": 40,
+            "y": 1370
+          }
+        },
+        {
+          "id": "featherPlaced",
+          "type": "Translate",
+          "data": {},
+          "position": {
+            "x": 1420,
+            "y": 40
+          }
+        },
+        {
+          "id": "bandCenter",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "bandHeight/2"
+          },
+          "position": {
+            "x": 40,
+            "y": 40
+          }
+        },
+        {
+          "id": "band",
+          "type": "Cylinder",
+          "data": {
+            "radius": "hatRadius + 0.2",
+            "height": "bandHeight"
+          },
+          "position": {
+            "x": 270,
+            "y": 40
+          }
+        },
+        {
+          "id": "hat",
+          "type": "Compound",
+          "data": {
+            "color": "#2d5a27"
+          },
+          "position": {
+            "x": 1650,
+            "y": 40
+          }
+        }
+      ],
+      "edges": [
+        {
+          "source": "crownX",
+          "sourceHandle": "values",
+          "target": "crownPts",
+          "targetHandle": "x",
+          "id": "e_crownX_crownPts_x"
+        },
+        {
+          "source": "crownY",
+          "sourceHandle": "values",
+          "target": "crownPts",
+          "targetHandle": "y",
+          "id": "e_crownY_crownPts_y"
+        },
+        {
+          "source": "crownPts",
+          "sourceHandle": "points",
+          "target": "crownProfile",
+          "targetHandle": "points",
+          "id": "e_crownPts_crownProfile_points"
+        },
+        {
+          "source": "crownProfile",
+          "sourceHandle": "curve",
+          "target": "crown",
+          "targetHandle": "profile",
+          "id": "e_crownProfile_crown_profile"
+        },
+        {
+          "source": "outerBrimCurve",
+          "sourceHandle": "point",
+          "target": "outerBrimCurve_x_2",
+          "targetHandle": "center",
+          "id": "e_outerBrimCurve_outerBrimCurve_x_2_center"
+        },
+        {
+          "source": "outerBrimCurve_x",
+          "sourceHandle": "vector",
+          "target": "outerBrimCurve_x_2",
+          "targetHandle": "normal",
+          "id": "e_outerBrimCurve_x_outerBrimCurve_x_2_normal"
+        },
+        {
+          "source": "outerBrimCurve_x_2",
+          "sourceHandle": "curve",
+          "target": "outerBrim",
+          "targetHandle": "curve",
+          "id": "e_outerBrimCurve_x_2_outerBrim_curve"
+        },
+        {
+          "source": "innerBrimCurve",
+          "sourceHandle": "point",
+          "target": "innerBrimCurve_x_2",
+          "targetHandle": "center",
+          "id": "e_innerBrimCurve_innerBrimCurve_x_2_center"
+        },
+        {
+          "source": "innerBrimCurve_x",
+          "sourceHandle": "vector",
+          "target": "innerBrimCurve_x_2",
+          "targetHandle": "normal",
+          "id": "e_innerBrimCurve_x_innerBrimCurve_x_2_normal"
+        },
+        {
+          "source": "innerBrimCurve_x_2",
+          "sourceHandle": "curve",
+          "target": "innerBrim",
+          "targetHandle": "curve",
+          "id": "e_innerBrimCurve_x_2_innerBrim_curve"
+        },
+        {
+          "source": "outerBrim",
+          "sourceHandle": "solid",
+          "target": "brimRing",
+          "targetHandle": "target",
+          "id": "e_outerBrim_brimRing_target"
+        },
+        {
+          "source": "innerBrim",
+          "sourceHandle": "solid",
+          "target": "brimRing",
+          "targetHandle": "tool",
+          "id": "e_innerBrim_brimRing_tool"
+        },
+        {
+          "source": "brimRing",
+          "sourceHandle": "solid",
+          "target": "brimTilted",
+          "targetHandle": "solid",
+          "id": "e_brimRing_brimTilted_solid"
+        },
+        {
+          "source": "origin",
+          "sourceHandle": "point",
+          "target": "brimTilted",
+          "targetHandle": "pivot",
+          "id": "e_origin_brimTilted_pivot"
+        },
+        {
+          "source": "featherX",
+          "sourceHandle": "values",
+          "target": "featherPts",
+          "targetHandle": "x",
+          "id": "e_featherX_featherPts_x"
+        },
+        {
+          "source": "featherY",
+          "sourceHandle": "values",
+          "target": "featherPts",
+          "targetHandle": "y",
+          "id": "e_featherY_featherPts_y"
+        },
+        {
+          "source": "featherPts",
+          "sourceHandle": "points",
+          "target": "featherProfile",
+          "targetHandle": "points",
+          "id": "e_featherPts_featherProfile_points"
+        },
+        {
+          "source": "featherProfile",
+          "sourceHandle": "curve",
+          "target": "featherSolid",
+          "targetHandle": "curve",
+          "id": "e_featherProfile_featherSolid_curve"
+        },
+        {
+          "source": "featherSolid",
+          "sourceHandle": "solid",
+          "target": "featherRotated",
+          "targetHandle": "solid",
+          "id": "e_featherSolid_featherRotated_solid"
+        },
+        {
+          "source": "featherRotated",
+          "sourceHandle": "solid",
+          "target": "featherRotated2",
+          "targetHandle": "solid",
+          "id": "e_featherRotated_featherRotated2_solid"
+        },
+        {
+          "source": "featherRotated2",
+          "sourceHandle": "solid",
+          "target": "featherPlaced",
+          "targetHandle": "solid",
+          "id": "e_featherRotated2_featherPlaced_solid"
+        },
+        {
+          "source": "featherTarget",
+          "sourceHandle": "point",
+          "target": "featherPlaced",
+          "targetHandle": "target",
+          "id": "e_featherTarget_featherPlaced_target"
+        },
+        {
+          "source": "bandCenter",
+          "sourceHandle": "point",
+          "target": "band",
+          "targetHandle": "center",
+          "id": "e_bandCenter_band_center"
+        },
+        {
+          "source": "crown",
+          "sourceHandle": "solid",
+          "target": "hat",
+          "targetHandle": "solid1",
+          "id": "e_crown_hat_solid1"
+        },
+        {
+          "source": "brimTilted",
+          "sourceHandle": "solid",
+          "target": "hat",
+          "targetHandle": "solid2",
+          "id": "e_brimTilted_hat_solid2"
+        },
+        {
+          "source": "featherPlaced",
+          "sourceHandle": "solid",
+          "target": "hat",
+          "targetHandle": "solid3",
+          "id": "e_featherPlaced_hat_solid3"
+        },
+        {
+          "source": "band",
+          "sourceHandle": "solid",
+          "target": "hat",
+          "targetHandle": "solid4",
+          "id": "e_band_hat_solid4"
+        }
+      ]
+    }
+  ]
+}

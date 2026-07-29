@@ -1,0 +1,3059 @@
+{
+  "c33dExport": 2,
+  "exportedAt": "2026-07-24T19:41:13.990Z",
+  "comment": "ok minimax provided best result for this",
+  "agent": {
+    "name": "Ollama (Local)",
+    "provider": "ollama",
+    "model": "minimax-m3:cloud"
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "baseRadius",
+        "type": "NumberSlider",
+        "data": {
+          "value": 10,
+          "label": "baseRadius",
+          "min": 4,
+          "max": 25,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 40
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "tierHeight",
+        "type": "NumberSlider",
+        "data": {
+          "value": 6,
+          "label": "tierHeight",
+          "min": 2,
+          "max": 15,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 3460
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "scaleUp",
+        "type": "NumberSlider",
+        "data": {
+          "value": 1.3,
+          "label": "scaleUp",
+          "min": 1,
+          "max": 3,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 3270
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "scaleDown",
+        "type": "NumberSlider",
+        "data": {
+          "value": 0.6,
+          "label": "scaleDown",
+          "min": 0.2,
+          "max": 1.2,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 3080
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "topTilt",
+        "type": "NumberSlider",
+        "data": {
+          "value": 18,
+          "label": "topTilt",
+          "min": -45,
+          "max": 45,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 3650
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "beadSize",
+        "type": "NumberSlider",
+        "data": {
+          "value": 1.4,
+          "label": "beadSize",
+          "min": 0.3,
+          "max": 4,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 420
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "bead",
+        "type": "Sphere",
+        "data": {
+          "radius": "beadSize"
+        },
+        "position": {
+          "x": 40,
+          "y": 230
+        },
+        "measured": {
+          "width": 201,
+          "height": 216
+        }
+      },
+      {
+        "id": "bead2",
+        "type": "Scale",
+        "data": {
+          "factor": "scaleUp"
+        },
+        "position": {
+          "x": 270,
+          "y": 40
+        },
+        "measured": {
+          "width": 201,
+          "height": 206
+        }
+      },
+      {
+        "id": "bead3",
+        "type": "Scale",
+        "data": {
+          "factor": "scaleDown"
+        },
+        "position": {
+          "x": 270,
+          "y": 230
+        },
+        "measured": {
+          "width": 201,
+          "height": 206
+        }
+      },
+      {
+        "id": "bead4",
+        "type": "Scale",
+        "data": {
+          "factor": "scaleDown*0.85"
+        },
+        "position": {
+          "x": 270,
+          "y": 420
+        },
+        "measured": {
+          "width": 201,
+          "height": 206
+        }
+      },
+      {
+        "id": "ring1",
+        "type": "ListConstant",
+        "data": {
+          "values": "baseRadius"
+        },
+        "position": {
+          "x": 40,
+          "y": 990
+        },
+        "measured": {
+          "width": 177,
+          "height": 136
+        }
+      },
+      {
+        "id": "ring1_x",
+        "type": "ListLength",
+        "data": {},
+        "position": {
+          "x": 270,
+          "y": 800
+        },
+        "measured": {
+          "width": 150,
+          "height": 106
+        }
+      },
+      {
+        "id": "ring1_x_2",
+        "type": "RepeatEach",
+        "data": {
+          "count": 10
+        },
+        "position": {
+          "x": 270,
+          "y": 990
+        },
+        "measured": {
+          "width": 201,
+          "height": 194
+        }
+      },
+      {
+        "id": "ring1_x_3",
+        "type": "Series",
+        "data": {
+          "start": 0,
+          "step": "2*pi/(10)",
+          "count": 10
+        },
+        "position": {
+          "x": 40,
+          "y": 1180
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "ring1_x_4",
+        "type": "Tile",
+        "data": {},
+        "position": {
+          "x": 500,
+          "y": 40
+        },
+        "measured": {
+          "width": 201,
+          "height": 194
+        }
+      },
+      {
+        "id": "ring1_x_5",
+        "type": "Expression",
+        "data": {
+          "formula": "a*cos(b)"
+        },
+        "position": {
+          "x": 730,
+          "y": 40
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "ring1_x_6",
+        "type": "Expression",
+        "data": {
+          "formula": "a*sin(b)"
+        },
+        "position": {
+          "x": 730,
+          "y": 230
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "ring1_x_7",
+        "type": "PointsFromLists",
+        "data": {},
+        "position": {
+          "x": 960,
+          "y": 40
+        },
+        "measured": {
+          "width": 150,
+          "height": 234
+        }
+      },
+      {
+        "id": "ring2",
+        "type": "ListConstant",
+        "data": {
+          "values": "baseRadius*scaleUp"
+        },
+        "position": {
+          "x": 40,
+          "y": 1370
+        },
+        "measured": {
+          "width": 177,
+          "height": 136
+        }
+      },
+      {
+        "id": "ring2_x",
+        "type": "ListLength",
+        "data": {},
+        "position": {
+          "x": 270,
+          "y": 1180
+        },
+        "measured": {
+          "width": 150,
+          "height": 106
+        }
+      },
+      {
+        "id": "ring2_x_2",
+        "type": "RepeatEach",
+        "data": {
+          "count": 10
+        },
+        "position": {
+          "x": 270,
+          "y": 1370
+        },
+        "measured": {
+          "width": 201,
+          "height": 194
+        }
+      },
+      {
+        "id": "ring2_x_3",
+        "type": "Series",
+        "data": {
+          "start": 0,
+          "step": "2*pi/(10)",
+          "count": 10
+        },
+        "position": {
+          "x": 40,
+          "y": 1560
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "ring2_x_4",
+        "type": "Tile",
+        "data": {},
+        "position": {
+          "x": 500,
+          "y": 230
+        },
+        "measured": {
+          "width": 201,
+          "height": 194
+        }
+      },
+      {
+        "id": "ring2_x_5",
+        "type": "Expression",
+        "data": {
+          "formula": "a*cos(b)"
+        },
+        "position": {
+          "x": 730,
+          "y": 420
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "ring2_x_6",
+        "type": "Expression",
+        "data": {
+          "formula": "a*sin(b)"
+        },
+        "position": {
+          "x": 730,
+          "y": 610
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "ring2_x_7",
+        "type": "ListConstant",
+        "data": {
+          "values": "tierHeight"
+        },
+        "position": {
+          "x": 40,
+          "y": 1750
+        },
+        "measured": {
+          "width": 177,
+          "height": 136
+        }
+      },
+      {
+        "id": "ring2_x_8",
+        "type": "RepeatEach",
+        "data": {
+          "count": 10
+        },
+        "position": {
+          "x": 270,
+          "y": 1560
+        },
+        "measured": {
+          "width": 201,
+          "height": 194
+        }
+      },
+      {
+        "id": "ring2_x_9",
+        "type": "PointsFromLists",
+        "data": {},
+        "position": {
+          "x": 960,
+          "y": 230
+        },
+        "measured": {
+          "width": 150,
+          "height": 234
+        }
+      },
+      {
+        "id": "ring3",
+        "type": "ListConstant",
+        "data": {
+          "values": "baseRadius*scaleUp*scaleDown"
+        },
+        "position": {
+          "x": 40,
+          "y": 1940
+        },
+        "measured": {
+          "width": 177,
+          "height": 136
+        }
+      },
+      {
+        "id": "ring3_x",
+        "type": "ListLength",
+        "data": {},
+        "position": {
+          "x": 270,
+          "y": 1750
+        },
+        "measured": {
+          "width": 150,
+          "height": 106
+        }
+      },
+      {
+        "id": "ring3_x_2",
+        "type": "RepeatEach",
+        "data": {
+          "count": 10
+        },
+        "position": {
+          "x": 270,
+          "y": 1940
+        },
+        "measured": {
+          "width": 201,
+          "height": 194
+        }
+      },
+      {
+        "id": "ring3_x_3",
+        "type": "Series",
+        "data": {
+          "start": 0,
+          "step": "2*pi/(10)",
+          "count": 10
+        },
+        "position": {
+          "x": 40,
+          "y": 2130
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "ring3_x_4",
+        "type": "Tile",
+        "data": {},
+        "position": {
+          "x": 500,
+          "y": 420
+        },
+        "measured": {
+          "width": 201,
+          "height": 194
+        }
+      },
+      {
+        "id": "ring3_x_5",
+        "type": "Expression",
+        "data": {
+          "formula": "a*cos(b)"
+        },
+        "position": {
+          "x": 730,
+          "y": 800
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "ring3_x_6",
+        "type": "Expression",
+        "data": {
+          "formula": "a*sin(b)"
+        },
+        "position": {
+          "x": 730,
+          "y": 990
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "ring3_x_7",
+        "type": "ListConstant",
+        "data": {
+          "values": "tierHeight*2"
+        },
+        "position": {
+          "x": 40,
+          "y": 2320
+        },
+        "measured": {
+          "width": 177,
+          "height": 136
+        }
+      },
+      {
+        "id": "ring3_x_8",
+        "type": "RepeatEach",
+        "data": {
+          "count": 10
+        },
+        "position": {
+          "x": 270,
+          "y": 2130
+        },
+        "measured": {
+          "width": 201,
+          "height": 194
+        }
+      },
+      {
+        "id": "ring3_x_9",
+        "type": "PointsFromLists",
+        "data": {},
+        "position": {
+          "x": 960,
+          "y": 420
+        },
+        "measured": {
+          "width": 150,
+          "height": 234
+        }
+      },
+      {
+        "id": "ring4",
+        "type": "ListConstant",
+        "data": {
+          "values": "baseRadius*scaleUp*scaleDown*0.9"
+        },
+        "position": {
+          "x": 40,
+          "y": 2510
+        },
+        "measured": {
+          "width": 177,
+          "height": 136
+        }
+      },
+      {
+        "id": "ring4_x",
+        "type": "ListLength",
+        "data": {},
+        "position": {
+          "x": 270,
+          "y": 2320
+        },
+        "measured": {
+          "width": 150,
+          "height": 106
+        }
+      },
+      {
+        "id": "ring4_x_2",
+        "type": "RepeatEach",
+        "data": {
+          "count": 10
+        },
+        "position": {
+          "x": 270,
+          "y": 2510
+        },
+        "measured": {
+          "width": 201,
+          "height": 194
+        }
+      },
+      {
+        "id": "ring4_x_3",
+        "type": "Series",
+        "data": {
+          "start": 0,
+          "step": "2*pi/(10)",
+          "count": 10
+        },
+        "position": {
+          "x": 40,
+          "y": 2700
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "ring4_x_4",
+        "type": "Tile",
+        "data": {},
+        "position": {
+          "x": 500,
+          "y": 610
+        },
+        "measured": {
+          "width": 201,
+          "height": 194
+        }
+      },
+      {
+        "id": "ring4_x_5",
+        "type": "Expression",
+        "data": {
+          "formula": "a*cos(b)"
+        },
+        "position": {
+          "x": 730,
+          "y": 1180
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "ring4_x_6",
+        "type": "Expression",
+        "data": {
+          "formula": "a*sin(b)"
+        },
+        "position": {
+          "x": 730,
+          "y": 1370
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "ring4_x_7",
+        "type": "ListConstant",
+        "data": {
+          "values": "tierHeight*3"
+        },
+        "position": {
+          "x": 40,
+          "y": 2890
+        },
+        "measured": {
+          "width": 177,
+          "height": 136
+        }
+      },
+      {
+        "id": "ring4_x_8",
+        "type": "RepeatEach",
+        "data": {
+          "count": 10
+        },
+        "position": {
+          "x": 270,
+          "y": 2700
+        },
+        "measured": {
+          "width": 201,
+          "height": 194
+        }
+      },
+      {
+        "id": "ring4_x_9",
+        "type": "PointsFromLists",
+        "data": {},
+        "position": {
+          "x": 960,
+          "y": 610
+        },
+        "measured": {
+          "width": 150,
+          "height": 234
+        }
+      },
+      {
+        "id": "tier1",
+        "type": "InstanceOnPoints",
+        "data": {
+          "scaleStart": 1,
+          "scaleEnd": 1,
+          "alignToTangent": false,
+          "color": "#3b82f6"
+        },
+        "position": {
+          "x": 1190,
+          "y": 40
+        },
+        "measured": {
+          "width": 201,
+          "height": 436
+        }
+      },
+      {
+        "id": "tier2",
+        "type": "InstanceOnPoints",
+        "data": {
+          "scaleStart": 1,
+          "scaleEnd": 1,
+          "alignToTangent": false,
+          "color": "#10b981"
+        },
+        "position": {
+          "x": 1190,
+          "y": 230
+        },
+        "measured": {
+          "width": 201,
+          "height": 436
+        }
+      },
+      {
+        "id": "tier3",
+        "type": "InstanceOnPoints",
+        "data": {
+          "scaleStart": 1,
+          "scaleEnd": 1,
+          "alignToTangent": false,
+          "color": "#f59e0b"
+        },
+        "position": {
+          "x": 1190,
+          "y": 420
+        },
+        "measured": {
+          "width": 201,
+          "height": 436
+        }
+      },
+      {
+        "id": "tier4Raw",
+        "type": "InstanceOnPoints",
+        "data": {
+          "scaleStart": 1,
+          "scaleEnd": 1,
+          "alignToTangent": false
+        },
+        "position": {
+          "x": 1190,
+          "y": 610
+        },
+        "measured": {
+          "width": 201,
+          "height": 436
+        }
+      },
+      {
+        "id": "pivot",
+        "type": "Point",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": "tierHeight*3"
+        },
+        "position": {
+          "x": 40,
+          "y": 800
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "tier4",
+        "type": "Rotate",
+        "data": {
+          "angle": "topTilt",
+          "axisX": 1,
+          "axisY": 0,
+          "axisZ": 0,
+          "color": "#ef4444"
+        },
+        "position": {
+          "x": 1420,
+          "y": 40
+        },
+        "measured": {
+          "width": 201,
+          "height": 414
+        }
+      },
+      {
+        "id": "mid",
+        "type": "Point",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": "tierHeight*1.5"
+        },
+        "position": {
+          "x": 40,
+          "y": 610
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "spine",
+        "type": "Cylinder",
+        "data": {
+          "radius": "beadSize*0.3",
+          "height": "tierHeight*3",
+          "color": "#64748b"
+        },
+        "position": {
+          "x": 270,
+          "y": 610
+        },
+        "measured": {
+          "width": 201,
+          "height": 296
+        }
+      }
+    ],
+    "edges": [
+      {
+        "source": "bead",
+        "sourceHandle": "solid",
+        "target": "bead2",
+        "targetHandle": "solid",
+        "id": "e_bead_bead2_solid"
+      },
+      {
+        "source": "bead",
+        "sourceHandle": "solid",
+        "target": "bead3",
+        "targetHandle": "solid",
+        "id": "e_bead_bead3_solid"
+      },
+      {
+        "source": "bead",
+        "sourceHandle": "solid",
+        "target": "bead4",
+        "targetHandle": "solid",
+        "id": "e_bead_bead4_solid"
+      },
+      {
+        "source": "ring1",
+        "sourceHandle": "values",
+        "target": "ring1_x",
+        "targetHandle": "list",
+        "id": "e_ring1_ring1_x_list"
+      },
+      {
+        "source": "ring1",
+        "sourceHandle": "values",
+        "target": "ring1_x_2",
+        "targetHandle": "list",
+        "id": "e_ring1_ring1_x_2_list"
+      },
+      {
+        "source": "ring1_x",
+        "sourceHandle": "length",
+        "target": "ring1_x_4",
+        "targetHandle": "count",
+        "id": "e_ring1_x_ring1_x_4_count"
+      },
+      {
+        "source": "ring1_x_3",
+        "sourceHandle": "values",
+        "target": "ring1_x_4",
+        "targetHandle": "list",
+        "id": "e_ring1_x_3_ring1_x_4_list"
+      },
+      {
+        "source": "ring1_x_2",
+        "sourceHandle": "values",
+        "target": "ring1_x_5",
+        "targetHandle": "a",
+        "id": "e_ring1_x_2_ring1_x_5_a"
+      },
+      {
+        "source": "ring1_x_4",
+        "sourceHandle": "values",
+        "target": "ring1_x_5",
+        "targetHandle": "b",
+        "id": "e_ring1_x_4_ring1_x_5_b"
+      },
+      {
+        "source": "ring1_x_2",
+        "sourceHandle": "values",
+        "target": "ring1_x_6",
+        "targetHandle": "a",
+        "id": "e_ring1_x_2_ring1_x_6_a"
+      },
+      {
+        "source": "ring1_x_4",
+        "sourceHandle": "values",
+        "target": "ring1_x_6",
+        "targetHandle": "b",
+        "id": "e_ring1_x_4_ring1_x_6_b"
+      },
+      {
+        "source": "ring1_x_5",
+        "sourceHandle": "value",
+        "target": "ring1_x_7",
+        "targetHandle": "x",
+        "id": "e_ring1_x_5_ring1_x_7_x"
+      },
+      {
+        "source": "ring1_x_6",
+        "sourceHandle": "value",
+        "target": "ring1_x_7",
+        "targetHandle": "y",
+        "id": "e_ring1_x_6_ring1_x_7_y"
+      },
+      {
+        "source": "ring1_x_2",
+        "sourceHandle": "values",
+        "target": "ring1_x_7",
+        "targetHandle": "group",
+        "id": "e_ring1_x_2_ring1_x_7_group"
+      },
+      {
+        "source": "ring2",
+        "sourceHandle": "values",
+        "target": "ring2_x",
+        "targetHandle": "list",
+        "id": "e_ring2_ring2_x_list"
+      },
+      {
+        "source": "ring2",
+        "sourceHandle": "values",
+        "target": "ring2_x_2",
+        "targetHandle": "list",
+        "id": "e_ring2_ring2_x_2_list"
+      },
+      {
+        "source": "ring2_x",
+        "sourceHandle": "length",
+        "target": "ring2_x_4",
+        "targetHandle": "count",
+        "id": "e_ring2_x_ring2_x_4_count"
+      },
+      {
+        "source": "ring2_x_3",
+        "sourceHandle": "values",
+        "target": "ring2_x_4",
+        "targetHandle": "list",
+        "id": "e_ring2_x_3_ring2_x_4_list"
+      },
+      {
+        "source": "ring2_x_2",
+        "sourceHandle": "values",
+        "target": "ring2_x_5",
+        "targetHandle": "a",
+        "id": "e_ring2_x_2_ring2_x_5_a"
+      },
+      {
+        "source": "ring2_x_4",
+        "sourceHandle": "values",
+        "target": "ring2_x_5",
+        "targetHandle": "b",
+        "id": "e_ring2_x_4_ring2_x_5_b"
+      },
+      {
+        "source": "ring2_x_2",
+        "sourceHandle": "values",
+        "target": "ring2_x_6",
+        "targetHandle": "a",
+        "id": "e_ring2_x_2_ring2_x_6_a"
+      },
+      {
+        "source": "ring2_x_4",
+        "sourceHandle": "values",
+        "target": "ring2_x_6",
+        "targetHandle": "b",
+        "id": "e_ring2_x_4_ring2_x_6_b"
+      },
+      {
+        "source": "ring2_x_7",
+        "sourceHandle": "values",
+        "target": "ring2_x_8",
+        "targetHandle": "list",
+        "id": "e_ring2_x_7_ring2_x_8_list"
+      },
+      {
+        "source": "ring2_x_5",
+        "sourceHandle": "value",
+        "target": "ring2_x_9",
+        "targetHandle": "x",
+        "id": "e_ring2_x_5_ring2_x_9_x"
+      },
+      {
+        "source": "ring2_x_6",
+        "sourceHandle": "value",
+        "target": "ring2_x_9",
+        "targetHandle": "y",
+        "id": "e_ring2_x_6_ring2_x_9_y"
+      },
+      {
+        "source": "ring2_x_8",
+        "sourceHandle": "values",
+        "target": "ring2_x_9",
+        "targetHandle": "z",
+        "id": "e_ring2_x_8_ring2_x_9_z"
+      },
+      {
+        "source": "ring2_x_2",
+        "sourceHandle": "values",
+        "target": "ring2_x_9",
+        "targetHandle": "group",
+        "id": "e_ring2_x_2_ring2_x_9_group"
+      },
+      {
+        "source": "ring3",
+        "sourceHandle": "values",
+        "target": "ring3_x",
+        "targetHandle": "list",
+        "id": "e_ring3_ring3_x_list"
+      },
+      {
+        "source": "ring3",
+        "sourceHandle": "values",
+        "target": "ring3_x_2",
+        "targetHandle": "list",
+        "id": "e_ring3_ring3_x_2_list"
+      },
+      {
+        "source": "ring3_x",
+        "sourceHandle": "length",
+        "target": "ring3_x_4",
+        "targetHandle": "count",
+        "id": "e_ring3_x_ring3_x_4_count"
+      },
+      {
+        "source": "ring3_x_3",
+        "sourceHandle": "values",
+        "target": "ring3_x_4",
+        "targetHandle": "list",
+        "id": "e_ring3_x_3_ring3_x_4_list"
+      },
+      {
+        "source": "ring3_x_2",
+        "sourceHandle": "values",
+        "target": "ring3_x_5",
+        "targetHandle": "a",
+        "id": "e_ring3_x_2_ring3_x_5_a"
+      },
+      {
+        "source": "ring3_x_4",
+        "sourceHandle": "values",
+        "target": "ring3_x_5",
+        "targetHandle": "b",
+        "id": "e_ring3_x_4_ring3_x_5_b"
+      },
+      {
+        "source": "ring3_x_2",
+        "sourceHandle": "values",
+        "target": "ring3_x_6",
+        "targetHandle": "a",
+        "id": "e_ring3_x_2_ring3_x_6_a"
+      },
+      {
+        "source": "ring3_x_4",
+        "sourceHandle": "values",
+        "target": "ring3_x_6",
+        "targetHandle": "b",
+        "id": "e_ring3_x_4_ring3_x_6_b"
+      },
+      {
+        "source": "ring3_x_7",
+        "sourceHandle": "values",
+        "target": "ring3_x_8",
+        "targetHandle": "list",
+        "id": "e_ring3_x_7_ring3_x_8_list"
+      },
+      {
+        "source": "ring3_x_5",
+        "sourceHandle": "value",
+        "target": "ring3_x_9",
+        "targetHandle": "x",
+        "id": "e_ring3_x_5_ring3_x_9_x"
+      },
+      {
+        "source": "ring3_x_6",
+        "sourceHandle": "value",
+        "target": "ring3_x_9",
+        "targetHandle": "y",
+        "id": "e_ring3_x_6_ring3_x_9_y"
+      },
+      {
+        "source": "ring3_x_8",
+        "sourceHandle": "values",
+        "target": "ring3_x_9",
+        "targetHandle": "z",
+        "id": "e_ring3_x_8_ring3_x_9_z"
+      },
+      {
+        "source": "ring3_x_2",
+        "sourceHandle": "values",
+        "target": "ring3_x_9",
+        "targetHandle": "group",
+        "id": "e_ring3_x_2_ring3_x_9_group"
+      },
+      {
+        "source": "ring4",
+        "sourceHandle": "values",
+        "target": "ring4_x",
+        "targetHandle": "list",
+        "id": "e_ring4_ring4_x_list"
+      },
+      {
+        "source": "ring4",
+        "sourceHandle": "values",
+        "target": "ring4_x_2",
+        "targetHandle": "list",
+        "id": "e_ring4_ring4_x_2_list"
+      },
+      {
+        "source": "ring4_x",
+        "sourceHandle": "length",
+        "target": "ring4_x_4",
+        "targetHandle": "count",
+        "id": "e_ring4_x_ring4_x_4_count"
+      },
+      {
+        "source": "ring4_x_3",
+        "sourceHandle": "values",
+        "target": "ring4_x_4",
+        "targetHandle": "list",
+        "id": "e_ring4_x_3_ring4_x_4_list"
+      },
+      {
+        "source": "ring4_x_2",
+        "sourceHandle": "values",
+        "target": "ring4_x_5",
+        "targetHandle": "a",
+        "id": "e_ring4_x_2_ring4_x_5_a"
+      },
+      {
+        "source": "ring4_x_4",
+        "sourceHandle": "values",
+        "target": "ring4_x_5",
+        "targetHandle": "b",
+        "id": "e_ring4_x_4_ring4_x_5_b"
+      },
+      {
+        "source": "ring4_x_2",
+        "sourceHandle": "values",
+        "target": "ring4_x_6",
+        "targetHandle": "a",
+        "id": "e_ring4_x_2_ring4_x_6_a"
+      },
+      {
+        "source": "ring4_x_4",
+        "sourceHandle": "values",
+        "target": "ring4_x_6",
+        "targetHandle": "b",
+        "id": "e_ring4_x_4_ring4_x_6_b"
+      },
+      {
+        "source": "ring4_x_7",
+        "sourceHandle": "values",
+        "target": "ring4_x_8",
+        "targetHandle": "list",
+        "id": "e_ring4_x_7_ring4_x_8_list"
+      },
+      {
+        "source": "ring4_x_5",
+        "sourceHandle": "value",
+        "target": "ring4_x_9",
+        "targetHandle": "x",
+        "id": "e_ring4_x_5_ring4_x_9_x"
+      },
+      {
+        "source": "ring4_x_6",
+        "sourceHandle": "value",
+        "target": "ring4_x_9",
+        "targetHandle": "y",
+        "id": "e_ring4_x_6_ring4_x_9_y"
+      },
+      {
+        "source": "ring4_x_8",
+        "sourceHandle": "values",
+        "target": "ring4_x_9",
+        "targetHandle": "z",
+        "id": "e_ring4_x_8_ring4_x_9_z"
+      },
+      {
+        "source": "ring4_x_2",
+        "sourceHandle": "values",
+        "target": "ring4_x_9",
+        "targetHandle": "group",
+        "id": "e_ring4_x_2_ring4_x_9_group"
+      },
+      {
+        "source": "bead",
+        "sourceHandle": "solid",
+        "target": "tier1",
+        "targetHandle": "shape",
+        "id": "e_bead_tier1_shape"
+      },
+      {
+        "source": "ring1_x_7",
+        "sourceHandle": "points",
+        "target": "tier1",
+        "targetHandle": "points",
+        "id": "e_ring1_x_7_tier1_points"
+      },
+      {
+        "source": "bead2",
+        "sourceHandle": "solid",
+        "target": "tier2",
+        "targetHandle": "shape",
+        "id": "e_bead2_tier2_shape"
+      },
+      {
+        "source": "ring2_x_9",
+        "sourceHandle": "points",
+        "target": "tier2",
+        "targetHandle": "points",
+        "id": "e_ring2_x_9_tier2_points"
+      },
+      {
+        "source": "bead3",
+        "sourceHandle": "solid",
+        "target": "tier3",
+        "targetHandle": "shape",
+        "id": "e_bead3_tier3_shape"
+      },
+      {
+        "source": "ring3_x_9",
+        "sourceHandle": "points",
+        "target": "tier3",
+        "targetHandle": "points",
+        "id": "e_ring3_x_9_tier3_points"
+      },
+      {
+        "source": "bead4",
+        "sourceHandle": "solid",
+        "target": "tier4Raw",
+        "targetHandle": "shape",
+        "id": "e_bead4_tier4Raw_shape"
+      },
+      {
+        "source": "ring4_x_9",
+        "sourceHandle": "points",
+        "target": "tier4Raw",
+        "targetHandle": "points",
+        "id": "e_ring4_x_9_tier4Raw_points"
+      },
+      {
+        "source": "tier4Raw",
+        "sourceHandle": "solid",
+        "target": "tier4",
+        "targetHandle": "solid",
+        "id": "e_tier4Raw_tier4_solid"
+      },
+      {
+        "source": "pivot",
+        "sourceHandle": "point",
+        "target": "tier4",
+        "targetHandle": "pivot",
+        "id": "e_pivot_tier4_pivot"
+      },
+      {
+        "source": "mid",
+        "sourceHandle": "point",
+        "target": "spine",
+        "targetHandle": "center",
+        "id": "e_mid_spine_center"
+      }
+    ]
+  },
+  "conversation": [
+    {
+      "role": "system",
+      "content": "Workspace cleared."
+    },
+    {
+      "role": "user",
+      "content": "make a circle divide it on ten points translate them up and scale a bit then translate copy them again up and scale them down then translate them up again and copy and rotate a bit "
+    },
+    {
+      "role": "assistant",
+      "content": "A 4-tier vertical cascade of 10 spheres per ring, with each tier lifted, scaled, and the top ring tilted, all threaded by a thin central spine"
+    }
+  ],
+  "plan": "",
+  "genome": null,
+  "geometryReport": {
+    "leaves": [
+      {
+        "id": "spine",
+        "bbox": {
+          "min": [
+            -0.42000010000000004,
+            -0.45106289859734994,
+            -0.041593175480984
+          ],
+          "max": [
+            0.461593175480984,
+            0.45106289859734994,
+            18.041593175480983
+          ],
+          "center": [
+            0.020796537740492005,
+            0,
+            9
+          ],
+          "size": [
+            0.8815932754809841,
+            0.9021257971946999,
+            18.083186350961967
+          ]
+        },
+        "volume": 9.975184993678313,
+        "meshOk": true,
+        "vertexCount": 30,
+        "error": null
+      },
+      {
+        "id": "tier1",
+        "bbox": {
+          "min": [
+            -11.426002097510393,
+            -10.93656726046193,
+            -1.4737059407056972
+          ],
+          "max": [
+            11.473705940705697,
+            10.93656726046193,
+            1.4737059407056972
+          ],
+          "center": [
+            0.023851921597652037,
+            0,
+            0
+          ],
+          "size": [
+            22.89970803821609,
+            21.87313452092386,
+            2.9474118814113943
+          ]
+        },
+        "volume": 114.94040321933852,
+        "meshOk": true,
+        "vertexCount": 720,
+        "error": null
+      },
+      {
+        "id": "tier2",
+        "bbox": {
+          "min": [
+            -14.844576432491184,
+            -14.208311144328182,
+            4.109792367679734
+          ],
+          "max": [
+            14.844576432491184,
+            14.208311144328182,
+            7.890207632320266
+          ],
+          "center": [
+            0,
+            0,
+            6
+          ],
+          "size": [
+            29.68915286498237,
+            28.416622288656363,
+            3.7804152646405313
+          ]
+        },
+        "volume": 252.52406587288678,
+        "meshOk": true,
+        "vertexCount": 970,
+        "error": null
+      },
+      {
+        "id": "tier3",
+        "bbox": {
+          "min": [
+            -8.661478454980966,
+            -8.279719282083164,
+            11.097409018706964
+          ],
+          "max": [
+            8.661478454980966,
+            8.279719282083164,
+            12.902590981293036
+          ],
+          "center": [
+            0,
+            0,
+            12
+          ],
+          "size": [
+            17.32295690996193,
+            16.559438564166328,
+            1.8051819625860723
+          ]
+        },
+        "volume": 24.827127095377133,
+        "meshOk": true,
+        "vertexCount": 500,
+        "error": null
+      },
+      {
+        "id": "tier4",
+        "bbox": {
+          "min": [
+            -7.757400190503235,
+            -7.1121840453493945,
+            15.199473573950188
+          ],
+          "max": [
+            7.757400190503235,
+            7.112184045349395,
+            20.800526426049817
+          ],
+          "center": [
+            0,
+            0,
+            18.000000000000004
+          ],
+          "size": [
+            15.51480038100647,
+            14.224368090698789,
+            5.601052852099629
+          ]
+        },
+        "volume": 15.246959427448482,
+        "meshOk": true,
+        "vertexCount": 460,
+        "error": null
+      }
+    ],
+    "nodeErrors": [],
+    "numbers": {
+      "baseRadius": 10,
+      "tierHeight": 6,
+      "scaleUp": 1.3,
+      "scaleDown": 0.6,
+      "topTilt": 18,
+      "beadSize": 1.4,
+      "ring1_x_3": [
+        0,
+        0.6283185307179586,
+        1.2566370614359172,
+        1.8849555921538759,
+        2.5132741228718345,
+        3.141592653589793,
+        3.7699111843077517,
+        4.39822971502571,
+        5.026548245743669,
+        5.654866776461628
+      ],
+      "ring2_x_3": [
+        0,
+        0.6283185307179586,
+        1.2566370614359172,
+        1.8849555921538759,
+        2.5132741228718345,
+        3.141592653589793,
+        3.7699111843077517,
+        4.39822971502571,
+        5.026548245743669,
+        5.654866776461628
+      ],
+      "ring3_x_3": [
+        0,
+        0.6283185307179586,
+        1.2566370614359172,
+        1.8849555921538759,
+        2.5132741228718345,
+        3.141592653589793,
+        3.7699111843077517,
+        4.39822971502571,
+        5.026548245743669,
+        5.654866776461628
+      ],
+      "ring4_x_3": [
+        0,
+        0.6283185307179586,
+        1.2566370614359172,
+        1.8849555921538759,
+        2.5132741228718345,
+        3.141592653589793,
+        3.7699111843077517,
+        4.39822971502571,
+        5.026548245743669,
+        5.654866776461628
+      ],
+      "ring1": [
+        10
+      ],
+      "ring2_x_7": [
+        6
+      ],
+      "ring3_x_7": [
+        12
+      ],
+      "ring4_x_7": [
+        18
+      ],
+      "ring2": [
+        13
+      ],
+      "ring3": [
+        7.8
+      ],
+      "ring4": [
+        7.02
+      ],
+      "ring1_x": 1,
+      "ring1_x_2": [
+        10,
+        10,
+        10,
+        10,
+        10,
+        10,
+        10,
+        10,
+        10,
+        10
+      ],
+      "ring2_x_8": [
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6
+      ],
+      "ring3_x_8": [
+        12,
+        12,
+        12,
+        12,
+        12,
+        12,
+        12,
+        12,
+        12,
+        12
+      ],
+      "ring4_x_8": [
+        18,
+        18,
+        18,
+        18,
+        18,
+        18,
+        18,
+        18,
+        18,
+        18
+      ],
+      "ring2_x": 1,
+      "ring2_x_2": [
+        13,
+        13,
+        13,
+        13,
+        13,
+        13,
+        13,
+        13,
+        13,
+        13
+      ],
+      "ring3_x": 1,
+      "ring3_x_2": [
+        7.8,
+        7.8,
+        7.8,
+        7.8,
+        7.8,
+        7.8,
+        7.8,
+        7.8,
+        7.8,
+        7.8
+      ],
+      "ring4_x": 1,
+      "ring4_x_2": [
+        7.02,
+        7.02,
+        7.02,
+        7.02,
+        7.02,
+        7.02,
+        7.02,
+        7.02,
+        7.02,
+        7.02
+      ],
+      "ring1_x_4": [
+        0,
+        0.6283185307179586,
+        1.2566370614359172,
+        1.8849555921538759,
+        2.5132741228718345,
+        3.141592653589793,
+        3.7699111843077517,
+        4.39822971502571,
+        5.026548245743669,
+        5.654866776461628
+      ],
+      "ring2_x_4": [
+        0,
+        0.6283185307179586,
+        1.2566370614359172,
+        1.8849555921538759,
+        2.5132741228718345,
+        3.141592653589793,
+        3.7699111843077517,
+        4.39822971502571,
+        5.026548245743669,
+        5.654866776461628
+      ],
+      "ring3_x_4": [
+        0,
+        0.6283185307179586,
+        1.2566370614359172,
+        1.8849555921538759,
+        2.5132741228718345,
+        3.141592653589793,
+        3.7699111843077517,
+        4.39822971502571,
+        5.026548245743669,
+        5.654866776461628
+      ],
+      "ring4_x_4": [
+        0,
+        0.6283185307179586,
+        1.2566370614359172,
+        1.8849555921538759,
+        2.5132741228718345,
+        3.141592653589793,
+        3.7699111843077517,
+        4.39822971502571,
+        5.026548245743669,
+        5.654866776461628
+      ],
+      "ring1_x_5": [
+        10,
+        8.090169943749475,
+        3.0901699437494745,
+        -3.0901699437494736,
+        -8.090169943749473,
+        -10,
+        -8.090169943749476,
+        -3.0901699437494754,
+        3.0901699437494723,
+        8.090169943749473
+      ],
+      "ring1_x_6": [
+        0,
+        5.877852522924732,
+        9.510565162951535,
+        9.510565162951536,
+        5.877852522924733,
+        1.2246467991473533e-15,
+        -5.87785252292473,
+        -9.510565162951535,
+        -9.510565162951536,
+        -5.877852522924734
+      ],
+      "ring2_x_5": [
+        13,
+        10.517220926874316,
+        4.017220926874317,
+        -4.017220926874315,
+        -10.517220926874316,
+        -13,
+        -10.517220926874318,
+        -4.017220926874319,
+        4.017220926874314,
+        10.517220926874316
+      ],
+      "ring2_x_6": [
+        0,
+        7.641208279802151,
+        12.363734711836996,
+        12.363734711836997,
+        7.641208279802152,
+        1.592040838891559e-15,
+        -7.641208279802149,
+        -12.363734711836996,
+        -12.363734711836997,
+        -7.641208279802154
+      ],
+      "ring3_x_5": [
+        7.8,
+        6.31033255612459,
+        2.41033255612459,
+        -2.4103325561245894,
+        -6.310332556124589,
+        -7.8,
+        -6.310332556124591,
+        -2.4103325561245907,
+        2.4103325561245885,
+        6.310332556124589
+      ],
+      "ring3_x_6": [
+        0,
+        4.58472496788129,
+        7.418240827102197,
+        7.418240827102198,
+        4.584724967881291,
+        9.552245033349355e-16,
+        -4.584724967881289,
+        -7.418240827102197,
+        -7.418240827102198,
+        -4.584724967881292
+      ],
+      "ring4_x_5": [
+        7.02,
+        5.679299300512131,
+        2.169299300512131,
+        -2.1692993005121304,
+        -5.67929930051213,
+        -7.02,
+        -5.679299300512132,
+        -2.1692993005121317,
+        2.1692993005121295,
+        5.67929930051213
+      ],
+      "ring4_x_6": [
+        0,
+        4.126252471093161,
+        6.676416744391977,
+        6.676416744391978,
+        4.126252471093162,
+        8.597020530014419e-16,
+        -4.12625247109316,
+        -6.676416744391977,
+        -6.676416744391978,
+        -4.126252471093163
+      ]
+    },
+    "sliders": {
+      "baseRadius": 10,
+      "tierHeight": 6,
+      "scaleUp": 1.3,
+      "scaleDown": 0.6,
+      "topTilt": 18,
+      "beadSize": 1.4
+    },
+    "selections": {},
+    "helpers": {
+      "pivot": {
+        "type": "Point",
+        "x": 0,
+        "y": 0,
+        "z": 18,
+        "sourceNodeId": "pivot",
+        "ancestorNodeIds": []
+      },
+      "mid": {
+        "type": "Point",
+        "x": 0,
+        "y": 0,
+        "z": 9,
+        "sourceNodeId": "mid",
+        "ancestorNodeIds": []
+      }
+    },
+    "nodeCount": 56,
+    "edgeCount": 64,
+    "transformCount": 8,
+    "nodesPerLeafRatio": 11.2,
+    "nodeEconomyWarning": false,
+    "placement": {
+      "anchored": [
+        "spine",
+        "tier1",
+        "tier2",
+        "tier3",
+        "tier4"
+      ],
+      "literal": [],
+      "origin": [],
+      "literalNodeIds": [],
+      "ratio": 1
+    },
+    "scene": {
+      "min": [
+        -14.844576432491184,
+        -14.208311144328182,
+        -1.4737059407056972
+      ],
+      "max": [
+        14.844576432491184,
+        14.208311144328182,
+        20.800526426049817
+      ],
+      "size": [
+        29.68915286498237,
+        28.416622288656363,
+        22.274232366755513
+      ]
+    },
+    "meshedLeafCount": 5,
+    "kernelFaultCount": 0,
+    "kernelSuspect": false,
+    "kernelHealth": "ok",
+    "evalCount": 1,
+    "recycleRecommended": false,
+    "perturbationIssues": [
+      "At tierHeight decrease (0.6x), \"spine\" detaches from \"tier3\". Check that their positions are driven by formulas or Align rather than absolute coordinates.",
+      "At tierHeight decrease (0.6x), \"spine\" detaches from \"tier4\". Check that their positions are driven by formulas or Align rather than absolute coordinates.",
+      "At tierHeight decrease (0.6x), \"spine\" shifts non-proportionally relative to the assembly center (deviation 16%). Derive its position from the driver sliders or use Align.",
+      "At tierHeight increase (1.5x), \"tier3\" shifts non-proportionally relative to the assembly center (deviation 13%). Derive its position from the driver sliders or use Align.",
+      "At tierHeight increase (1.5x), \"tier4\" shifts non-proportionally relative to the assembly center (deviation 20%). Derive its position from the driver sliders or use Align."
+    ],
+    "proportionalIntegrity": 0.6666666666666666
+  },
+  "timeline": [
+    {
+      "at": "2026-07-24T19:22:31.803Z",
+      "turn": 1,
+      "trigger": "ai-ir",
+      "label": "attempt 1: rebuilt graph (56 nodes)",
+      "nodeCount": 56,
+      "edgeCount": 64,
+      "isolatedCount": 6,
+      "diff": {
+        "addedNodes": [
+          "baseRadius",
+          "tierHeight",
+          "scaleUp",
+          "scaleDown",
+          "topTilt",
+          "beadSize",
+          "bead",
+          "bead2",
+          "bead3",
+          "bead4",
+          "ring1",
+          "ring1_x",
+          "ring1_x_2",
+          "ring1_x_3",
+          "ring1_x_4",
+          "ring1_x_5",
+          "ring1_x_6",
+          "ring1_x_7",
+          "ring2",
+          "ring2_x",
+          "ring2_x_2",
+          "ring2_x_3",
+          "ring2_x_4",
+          "ring2_x_5",
+          "ring2_x_6",
+          "ring2_x_7",
+          "ring2_x_8",
+          "ring2_x_9",
+          "ring3",
+          "ring3_x",
+          "ring3_x_2",
+          "ring3_x_3",
+          "ring3_x_4",
+          "ring3_x_5",
+          "ring3_x_6",
+          "ring3_x_7",
+          "ring3_x_8",
+          "ring3_x_9",
+          "ring4",
+          "ring4_x",
+          "ring4_x_2",
+          "ring4_x_3",
+          "ring4_x_4",
+          "ring4_x_5",
+          "ring4_x_6",
+          "ring4_x_7",
+          "ring4_x_8",
+          "ring4_x_9",
+          "tier1",
+          "tier2",
+          "tier3",
+          "tier4Raw",
+          "pivot",
+          "tier4",
+          "mid",
+          "spine"
+        ],
+        "removedNodes": [],
+        "changedNodes": [],
+        "addedEdges": 64,
+        "removedEdges": 0
+      },
+      "details": [
+        "warning: Dead design parameter: slider \"baseRadius\" is not referenced by any formula or edge — moving it changes nothing. Wire dimensions to it or remove it."
+      ],
+      "nodes": [
+        {
+          "id": "baseRadius",
+          "type": "NumberSlider",
+          "data": {
+            "value": 10,
+            "label": "baseRadius",
+            "min": 4,
+            "max": 25,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 40
+          }
+        },
+        {
+          "id": "tierHeight",
+          "type": "NumberSlider",
+          "data": {
+            "value": 6,
+            "label": "tierHeight",
+            "min": 2,
+            "max": 15,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 3460
+          }
+        },
+        {
+          "id": "scaleUp",
+          "type": "NumberSlider",
+          "data": {
+            "value": 1.3,
+            "label": "scaleUp",
+            "min": 1,
+            "max": 3,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 3270
+          }
+        },
+        {
+          "id": "scaleDown",
+          "type": "NumberSlider",
+          "data": {
+            "value": 0.6,
+            "label": "scaleDown",
+            "min": 0.2,
+            "max": 1.2,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 3080
+          }
+        },
+        {
+          "id": "topTilt",
+          "type": "NumberSlider",
+          "data": {
+            "value": 18,
+            "label": "topTilt",
+            "min": -45,
+            "max": 45,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 3650
+          }
+        },
+        {
+          "id": "beadSize",
+          "type": "NumberSlider",
+          "data": {
+            "value": 1.4,
+            "label": "beadSize",
+            "min": 0.3,
+            "max": 4,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 420
+          }
+        },
+        {
+          "id": "bead",
+          "type": "Sphere",
+          "data": {
+            "radius": "beadSize"
+          },
+          "position": {
+            "x": 40,
+            "y": 230
+          }
+        },
+        {
+          "id": "bead2",
+          "type": "Scale",
+          "data": {
+            "factor": "scaleUp"
+          },
+          "position": {
+            "x": 270,
+            "y": 40
+          }
+        },
+        {
+          "id": "bead3",
+          "type": "Scale",
+          "data": {
+            "factor": "scaleDown"
+          },
+          "position": {
+            "x": 270,
+            "y": 230
+          }
+        },
+        {
+          "id": "bead4",
+          "type": "Scale",
+          "data": {
+            "factor": "scaleDown*0.85"
+          },
+          "position": {
+            "x": 270,
+            "y": 420
+          }
+        },
+        {
+          "id": "ring1",
+          "type": "ListConstant",
+          "data": {
+            "values": "baseRadius"
+          },
+          "position": {
+            "x": 40,
+            "y": 990
+          }
+        },
+        {
+          "id": "ring1_x",
+          "type": "ListLength",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 800
+          }
+        },
+        {
+          "id": "ring1_x_2",
+          "type": "RepeatEach",
+          "data": {
+            "count": 10
+          },
+          "position": {
+            "x": 270,
+            "y": 990
+          }
+        },
+        {
+          "id": "ring1_x_3",
+          "type": "Series",
+          "data": {
+            "start": 0,
+            "step": "2*pi/(10)",
+            "count": 10
+          },
+          "position": {
+            "x": 40,
+            "y": 1180
+          }
+        },
+        {
+          "id": "ring1_x_4",
+          "type": "Tile",
+          "data": {},
+          "position": {
+            "x": 500,
+            "y": 40
+          }
+        },
+        {
+          "id": "ring1_x_5",
+          "type": "Expression",
+          "data": {
+            "formula": "a*cos(b)"
+          },
+          "position": {
+            "x": 730,
+            "y": 40
+          }
+        },
+        {
+          "id": "ring1_x_6",
+          "type": "Expression",
+          "data": {
+            "formula": "a*sin(b)"
+          },
+          "position": {
+            "x": 730,
+            "y": 230
+          }
+        },
+        {
+          "id": "ring1_x_7",
+          "type": "PointsFromLists",
+          "data": {},
+          "position": {
+            "x": 960,
+            "y": 40
+          }
+        },
+        {
+          "id": "ring2",
+          "type": "ListConstant",
+          "data": {
+            "values": "baseRadius*scaleUp"
+          },
+          "position": {
+            "x": 40,
+            "y": 1370
+          }
+        },
+        {
+          "id": "ring2_x",
+          "type": "ListLength",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 1180
+          }
+        },
+        {
+          "id": "ring2_x_2",
+          "type": "RepeatEach",
+          "data": {
+            "count": 10
+          },
+          "position": {
+            "x": 270,
+            "y": 1370
+          }
+        },
+        {
+          "id": "ring2_x_3",
+          "type": "Series",
+          "data": {
+            "start": 0,
+            "step": "2*pi/(10)",
+            "count": 10
+          },
+          "position": {
+            "x": 40,
+            "y": 1560
+          }
+        },
+        {
+          "id": "ring2_x_4",
+          "type": "Tile",
+          "data": {},
+          "position": {
+            "x": 500,
+            "y": 230
+          }
+        },
+        {
+          "id": "ring2_x_5",
+          "type": "Expression",
+          "data": {
+            "formula": "a*cos(b)"
+          },
+          "position": {
+            "x": 730,
+            "y": 420
+          }
+        },
+        {
+          "id": "ring2_x_6",
+          "type": "Expression",
+          "data": {
+            "formula": "a*sin(b)"
+          },
+          "position": {
+            "x": 730,
+            "y": 610
+          }
+        },
+        {
+          "id": "ring2_x_7",
+          "type": "ListConstant",
+          "data": {
+            "values": "tierHeight"
+          },
+          "position": {
+            "x": 40,
+            "y": 1750
+          }
+        },
+        {
+          "id": "ring2_x_8",
+          "type": "RepeatEach",
+          "data": {
+            "count": 10
+          },
+          "position": {
+            "x": 270,
+            "y": 1560
+          }
+        },
+        {
+          "id": "ring2_x_9",
+          "type": "PointsFromLists",
+          "data": {},
+          "position": {
+            "x": 960,
+            "y": 230
+          }
+        },
+        {
+          "id": "ring3",
+          "type": "ListConstant",
+          "data": {
+            "values": "baseRadius*scaleUp*scaleDown"
+          },
+          "position": {
+            "x": 40,
+            "y": 1940
+          }
+        },
+        {
+          "id": "ring3_x",
+          "type": "ListLength",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 1750
+          }
+        },
+        {
+          "id": "ring3_x_2",
+          "type": "RepeatEach",
+          "data": {
+            "count": 10
+          },
+          "position": {
+            "x": 270,
+            "y": 1940
+          }
+        },
+        {
+          "id": "ring3_x_3",
+          "type": "Series",
+          "data": {
+            "start": 0,
+            "step": "2*pi/(10)",
+            "count": 10
+          },
+          "position": {
+            "x": 40,
+            "y": 2130
+          }
+        },
+        {
+          "id": "ring3_x_4",
+          "type": "Tile",
+          "data": {},
+          "position": {
+            "x": 500,
+            "y": 420
+          }
+        },
+        {
+          "id": "ring3_x_5",
+          "type": "Expression",
+          "data": {
+            "formula": "a*cos(b)"
+          },
+          "position": {
+            "x": 730,
+            "y": 800
+          }
+        },
+        {
+          "id": "ring3_x_6",
+          "type": "Expression",
+          "data": {
+            "formula": "a*sin(b)"
+          },
+          "position": {
+            "x": 730,
+            "y": 990
+          }
+        },
+        {
+          "id": "ring3_x_7",
+          "type": "ListConstant",
+          "data": {
+            "values": "tierHeight*2"
+          },
+          "position": {
+            "x": 40,
+            "y": 2320
+          }
+        },
+        {
+          "id": "ring3_x_8",
+          "type": "RepeatEach",
+          "data": {
+            "count": 10
+          },
+          "position": {
+            "x": 270,
+            "y": 2130
+          }
+        },
+        {
+          "id": "ring3_x_9",
+          "type": "PointsFromLists",
+          "data": {},
+          "position": {
+            "x": 960,
+            "y": 420
+          }
+        },
+        {
+          "id": "ring4",
+          "type": "ListConstant",
+          "data": {
+            "values": "baseRadius*scaleUp*scaleDown*0.9"
+          },
+          "position": {
+            "x": 40,
+            "y": 2510
+          }
+        },
+        {
+          "id": "ring4_x",
+          "type": "ListLength",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 2320
+          }
+        },
+        {
+          "id": "ring4_x_2",
+          "type": "RepeatEach",
+          "data": {
+            "count": 10
+          },
+          "position": {
+            "x": 270,
+            "y": 2510
+          }
+        },
+        {
+          "id": "ring4_x_3",
+          "type": "Series",
+          "data": {
+            "start": 0,
+            "step": "2*pi/(10)",
+            "count": 10
+          },
+          "position": {
+            "x": 40,
+            "y": 2700
+          }
+        },
+        {
+          "id": "ring4_x_4",
+          "type": "Tile",
+          "data": {},
+          "position": {
+            "x": 500,
+            "y": 610
+          }
+        },
+        {
+          "id": "ring4_x_5",
+          "type": "Expression",
+          "data": {
+            "formula": "a*cos(b)"
+          },
+          "position": {
+            "x": 730,
+            "y": 1180
+          }
+        },
+        {
+          "id": "ring4_x_6",
+          "type": "Expression",
+          "data": {
+            "formula": "a*sin(b)"
+          },
+          "position": {
+            "x": 730,
+            "y": 1370
+          }
+        },
+        {
+          "id": "ring4_x_7",
+          "type": "ListConstant",
+          "data": {
+            "values": "tierHeight*3"
+          },
+          "position": {
+            "x": 40,
+            "y": 2890
+          }
+        },
+        {
+          "id": "ring4_x_8",
+          "type": "RepeatEach",
+          "data": {
+            "count": 10
+          },
+          "position": {
+            "x": 270,
+            "y": 2700
+          }
+        },
+        {
+          "id": "ring4_x_9",
+          "type": "PointsFromLists",
+          "data": {},
+          "position": {
+            "x": 960,
+            "y": 610
+          }
+        },
+        {
+          "id": "tier1",
+          "type": "InstanceOnPoints",
+          "data": {
+            "scaleStart": 1,
+            "scaleEnd": 1,
+            "alignToTangent": false,
+            "color": "#3b82f6"
+          },
+          "position": {
+            "x": 1190,
+            "y": 40
+          }
+        },
+        {
+          "id": "tier2",
+          "type": "InstanceOnPoints",
+          "data": {
+            "scaleStart": 1,
+            "scaleEnd": 1,
+            "alignToTangent": false,
+            "color": "#10b981"
+          },
+          "position": {
+            "x": 1190,
+            "y": 230
+          }
+        },
+        {
+          "id": "tier3",
+          "type": "InstanceOnPoints",
+          "data": {
+            "scaleStart": 1,
+            "scaleEnd": 1,
+            "alignToTangent": false,
+            "color": "#f59e0b"
+          },
+          "position": {
+            "x": 1190,
+            "y": 420
+          }
+        },
+        {
+          "id": "tier4Raw",
+          "type": "InstanceOnPoints",
+          "data": {
+            "scaleStart": 1,
+            "scaleEnd": 1,
+            "alignToTangent": false
+          },
+          "position": {
+            "x": 1190,
+            "y": 610
+          }
+        },
+        {
+          "id": "pivot",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "tierHeight*3"
+          },
+          "position": {
+            "x": 40,
+            "y": 800
+          }
+        },
+        {
+          "id": "tier4",
+          "type": "Rotate",
+          "data": {
+            "angle": "topTilt",
+            "axisX": 1,
+            "axisY": 0,
+            "axisZ": 0,
+            "color": "#ef4444"
+          },
+          "position": {
+            "x": 1420,
+            "y": 40
+          }
+        },
+        {
+          "id": "mid",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "tierHeight*1.5"
+          },
+          "position": {
+            "x": 40,
+            "y": 610
+          }
+        },
+        {
+          "id": "spine",
+          "type": "Cylinder",
+          "data": {
+            "radius": "beadSize*0.3",
+            "height": "tierHeight*3",
+            "color": "#64748b"
+          },
+          "position": {
+            "x": 270,
+            "y": 610
+          }
+        }
+      ],
+      "edges": [
+        {
+          "source": "bead",
+          "sourceHandle": "solid",
+          "target": "bead2",
+          "targetHandle": "solid",
+          "id": "e_bead_bead2_solid"
+        },
+        {
+          "source": "bead",
+          "sourceHandle": "solid",
+          "target": "bead3",
+          "targetHandle": "solid",
+          "id": "e_bead_bead3_solid"
+        },
+        {
+          "source": "bead",
+          "sourceHandle": "solid",
+          "target": "bead4",
+          "targetHandle": "solid",
+          "id": "e_bead_bead4_solid"
+        },
+        {
+          "source": "ring1",
+          "sourceHandle": "values",
+          "target": "ring1_x",
+          "targetHandle": "list",
+          "id": "e_ring1_ring1_x_list"
+        },
+        {
+          "source": "ring1",
+          "sourceHandle": "values",
+          "target": "ring1_x_2",
+          "targetHandle": "list",
+          "id": "e_ring1_ring1_x_2_list"
+        },
+        {
+          "source": "ring1_x",
+          "sourceHandle": "length",
+          "target": "ring1_x_4",
+          "targetHandle": "count",
+          "id": "e_ring1_x_ring1_x_4_count"
+        },
+        {
+          "source": "ring1_x_3",
+          "sourceHandle": "values",
+          "target": "ring1_x_4",
+          "targetHandle": "list",
+          "id": "e_ring1_x_3_ring1_x_4_list"
+        },
+        {
+          "source": "ring1_x_2",
+          "sourceHandle": "values",
+          "target": "ring1_x_5",
+          "targetHandle": "a",
+          "id": "e_ring1_x_2_ring1_x_5_a"
+        },
+        {
+          "source": "ring1_x_4",
+          "sourceHandle": "values",
+          "target": "ring1_x_5",
+          "targetHandle": "b",
+          "id": "e_ring1_x_4_ring1_x_5_b"
+        },
+        {
+          "source": "ring1_x_2",
+          "sourceHandle": "values",
+          "target": "ring1_x_6",
+          "targetHandle": "a",
+          "id": "e_ring1_x_2_ring1_x_6_a"
+        },
+        {
+          "source": "ring1_x_4",
+          "sourceHandle": "values",
+          "target": "ring1_x_6",
+          "targetHandle": "b",
+          "id": "e_ring1_x_4_ring1_x_6_b"
+        },
+        {
+          "source": "ring1_x_5",
+          "sourceHandle": "value",
+          "target": "ring1_x_7",
+          "targetHandle": "x",
+          "id": "e_ring1_x_5_ring1_x_7_x"
+        },
+        {
+          "source": "ring1_x_6",
+          "sourceHandle": "value",
+          "target": "ring1_x_7",
+          "targetHandle": "y",
+          "id": "e_ring1_x_6_ring1_x_7_y"
+        },
+        {
+          "source": "ring1_x_2",
+          "sourceHandle": "values",
+          "target": "ring1_x_7",
+          "targetHandle": "group",
+          "id": "e_ring1_x_2_ring1_x_7_group"
+        },
+        {
+          "source": "ring2",
+          "sourceHandle": "values",
+          "target": "ring2_x",
+          "targetHandle": "list",
+          "id": "e_ring2_ring2_x_list"
+        },
+        {
+          "source": "ring2",
+          "sourceHandle": "values",
+          "target": "ring2_x_2",
+          "targetHandle": "list",
+          "id": "e_ring2_ring2_x_2_list"
+        },
+        {
+          "source": "ring2_x",
+          "sourceHandle": "length",
+          "target": "ring2_x_4",
+          "targetHandle": "count",
+          "id": "e_ring2_x_ring2_x_4_count"
+        },
+        {
+          "source": "ring2_x_3",
+          "sourceHandle": "values",
+          "target": "ring2_x_4",
+          "targetHandle": "list",
+          "id": "e_ring2_x_3_ring2_x_4_list"
+        },
+        {
+          "source": "ring2_x_2",
+          "sourceHandle": "values",
+          "target": "ring2_x_5",
+          "targetHandle": "a",
+          "id": "e_ring2_x_2_ring2_x_5_a"
+        },
+        {
+          "source": "ring2_x_4",
+          "sourceHandle": "values",
+          "target": "ring2_x_5",
+          "targetHandle": "b",
+          "id": "e_ring2_x_4_ring2_x_5_b"
+        },
+        {
+          "source": "ring2_x_2",
+          "sourceHandle": "values",
+          "target": "ring2_x_6",
+          "targetHandle": "a",
+          "id": "e_ring2_x_2_ring2_x_6_a"
+        },
+        {
+          "source": "ring2_x_4",
+          "sourceHandle": "values",
+          "target": "ring2_x_6",
+          "targetHandle": "b",
+          "id": "e_ring2_x_4_ring2_x_6_b"
+        },
+        {
+          "source": "ring2_x_7",
+          "sourceHandle": "values",
+          "target": "ring2_x_8",
+          "targetHandle": "list",
+          "id": "e_ring2_x_7_ring2_x_8_list"
+        },
+        {
+          "source": "ring2_x_5",
+          "sourceHandle": "value",
+          "target": "ring2_x_9",
+          "targetHandle": "x",
+          "id": "e_ring2_x_5_ring2_x_9_x"
+        },
+        {
+          "source": "ring2_x_6",
+          "sourceHandle": "value",
+          "target": "ring2_x_9",
+          "targetHandle": "y",
+          "id": "e_ring2_x_6_ring2_x_9_y"
+        },
+        {
+          "source": "ring2_x_8",
+          "sourceHandle": "values",
+          "target": "ring2_x_9",
+          "targetHandle": "z",
+          "id": "e_ring2_x_8_ring2_x_9_z"
+        },
+        {
+          "source": "ring2_x_2",
+          "sourceHandle": "values",
+          "target": "ring2_x_9",
+          "targetHandle": "group",
+          "id": "e_ring2_x_2_ring2_x_9_group"
+        },
+        {
+          "source": "ring3",
+          "sourceHandle": "values",
+          "target": "ring3_x",
+          "targetHandle": "list",
+          "id": "e_ring3_ring3_x_list"
+        },
+        {
+          "source": "ring3",
+          "sourceHandle": "values",
+          "target": "ring3_x_2",
+          "targetHandle": "list",
+          "id": "e_ring3_ring3_x_2_list"
+        },
+        {
+          "source": "ring3_x",
+          "sourceHandle": "length",
+          "target": "ring3_x_4",
+          "targetHandle": "count",
+          "id": "e_ring3_x_ring3_x_4_count"
+        },
+        {
+          "source": "ring3_x_3",
+          "sourceHandle": "values",
+          "target": "ring3_x_4",
+          "targetHandle": "list",
+          "id": "e_ring3_x_3_ring3_x_4_list"
+        },
+        {
+          "source": "ring3_x_2",
+          "sourceHandle": "values",
+          "target": "ring3_x_5",
+          "targetHandle": "a",
+          "id": "e_ring3_x_2_ring3_x_5_a"
+        },
+        {
+          "source": "ring3_x_4",
+          "sourceHandle": "values",
+          "target": "ring3_x_5",
+          "targetHandle": "b",
+          "id": "e_ring3_x_4_ring3_x_5_b"
+        },
+        {
+          "source": "ring3_x_2",
+          "sourceHandle": "values",
+          "target": "ring3_x_6",
+          "targetHandle": "a",
+          "id": "e_ring3_x_2_ring3_x_6_a"
+        },
+        {
+          "source": "ring3_x_4",
+          "sourceHandle": "values",
+          "target": "ring3_x_6",
+          "targetHandle": "b",
+          "id": "e_ring3_x_4_ring3_x_6_b"
+        },
+        {
+          "source": "ring3_x_7",
+          "sourceHandle": "values",
+          "target": "ring3_x_8",
+          "targetHandle": "list",
+          "id": "e_ring3_x_7_ring3_x_8_list"
+        },
+        {
+          "source": "ring3_x_5",
+          "sourceHandle": "value",
+          "target": "ring3_x_9",
+          "targetHandle": "x",
+          "id": "e_ring3_x_5_ring3_x_9_x"
+        },
+        {
+          "source": "ring3_x_6",
+          "sourceHandle": "value",
+          "target": "ring3_x_9",
+          "targetHandle": "y",
+          "id": "e_ring3_x_6_ring3_x_9_y"
+        },
+        {
+          "source": "ring3_x_8",
+          "sourceHandle": "values",
+          "target": "ring3_x_9",
+          "targetHandle": "z",
+          "id": "e_ring3_x_8_ring3_x_9_z"
+        },
+        {
+          "source": "ring3_x_2",
+          "sourceHandle": "values",
+          "target": "ring3_x_9",
+          "targetHandle": "group",
+          "id": "e_ring3_x_2_ring3_x_9_group"
+        },
+        {
+          "source": "ring4",
+          "sourceHandle": "values",
+          "target": "ring4_x",
+          "targetHandle": "list",
+          "id": "e_ring4_ring4_x_list"
+        },
+        {
+          "source": "ring4",
+          "sourceHandle": "values",
+          "target": "ring4_x_2",
+          "targetHandle": "list",
+          "id": "e_ring4_ring4_x_2_list"
+        },
+        {
+          "source": "ring4_x",
+          "sourceHandle": "length",
+          "target": "ring4_x_4",
+          "targetHandle": "count",
+          "id": "e_ring4_x_ring4_x_4_count"
+        },
+        {
+          "source": "ring4_x_3",
+          "sourceHandle": "values",
+          "target": "ring4_x_4",
+          "targetHandle": "list",
+          "id": "e_ring4_x_3_ring4_x_4_list"
+        },
+        {
+          "source": "ring4_x_2",
+          "sourceHandle": "values",
+          "target": "ring4_x_5",
+          "targetHandle": "a",
+          "id": "e_ring4_x_2_ring4_x_5_a"
+        },
+        {
+          "source": "ring4_x_4",
+          "sourceHandle": "values",
+          "target": "ring4_x_5",
+          "targetHandle": "b",
+          "id": "e_ring4_x_4_ring4_x_5_b"
+        },
+        {
+          "source": "ring4_x_2",
+          "sourceHandle": "values",
+          "target": "ring4_x_6",
+          "targetHandle": "a",
+          "id": "e_ring4_x_2_ring4_x_6_a"
+        },
+        {
+          "source": "ring4_x_4",
+          "sourceHandle": "values",
+          "target": "ring4_x_6",
+          "targetHandle": "b",
+          "id": "e_ring4_x_4_ring4_x_6_b"
+        },
+        {
+          "source": "ring4_x_7",
+          "sourceHandle": "values",
+          "target": "ring4_x_8",
+          "targetHandle": "list",
+          "id": "e_ring4_x_7_ring4_x_8_list"
+        },
+        {
+          "source": "ring4_x_5",
+          "sourceHandle": "value",
+          "target": "ring4_x_9",
+          "targetHandle": "x",
+          "id": "e_ring4_x_5_ring4_x_9_x"
+        },
+        {
+          "source": "ring4_x_6",
+          "sourceHandle": "value",
+          "target": "ring4_x_9",
+          "targetHandle": "y",
+          "id": "e_ring4_x_6_ring4_x_9_y"
+        },
+        {
+          "source": "ring4_x_8",
+          "sourceHandle": "values",
+          "target": "ring4_x_9",
+          "targetHandle": "z",
+          "id": "e_ring4_x_8_ring4_x_9_z"
+        },
+        {
+          "source": "ring4_x_2",
+          "sourceHandle": "values",
+          "target": "ring4_x_9",
+          "targetHandle": "group",
+          "id": "e_ring4_x_2_ring4_x_9_group"
+        },
+        {
+          "source": "bead",
+          "sourceHandle": "solid",
+          "target": "tier1",
+          "targetHandle": "shape",
+          "id": "e_bead_tier1_shape"
+        },
+        {
+          "source": "ring1_x_7",
+          "sourceHandle": "points",
+          "target": "tier1",
+          "targetHandle": "points",
+          "id": "e_ring1_x_7_tier1_points"
+        },
+        {
+          "source": "bead2",
+          "sourceHandle": "solid",
+          "target": "tier2",
+          "targetHandle": "shape",
+          "id": "e_bead2_tier2_shape"
+        },
+        {
+          "source": "ring2_x_9",
+          "sourceHandle": "points",
+          "target": "tier2",
+          "targetHandle": "points",
+          "id": "e_ring2_x_9_tier2_points"
+        },
+        {
+          "source": "bead3",
+          "sourceHandle": "solid",
+          "target": "tier3",
+          "targetHandle": "shape",
+          "id": "e_bead3_tier3_shape"
+        },
+        {
+          "source": "ring3_x_9",
+          "sourceHandle": "points",
+          "target": "tier3",
+          "targetHandle": "points",
+          "id": "e_ring3_x_9_tier3_points"
+        },
+        {
+          "source": "bead4",
+          "sourceHandle": "solid",
+          "target": "tier4Raw",
+          "targetHandle": "shape",
+          "id": "e_bead4_tier4Raw_shape"
+        },
+        {
+          "source": "ring4_x_9",
+          "sourceHandle": "points",
+          "target": "tier4Raw",
+          "targetHandle": "points",
+          "id": "e_ring4_x_9_tier4Raw_points"
+        },
+        {
+          "source": "tier4Raw",
+          "sourceHandle": "solid",
+          "target": "tier4",
+          "targetHandle": "solid",
+          "id": "e_tier4Raw_tier4_solid"
+        },
+        {
+          "source": "pivot",
+          "sourceHandle": "point",
+          "target": "tier4",
+          "targetHandle": "pivot",
+          "id": "e_pivot_tier4_pivot"
+        },
+        {
+          "source": "mid",
+          "sourceHandle": "point",
+          "target": "spine",
+          "targetHandle": "center",
+          "id": "e_mid_spine_center"
+        }
+      ]
+    }
+  ]
+}

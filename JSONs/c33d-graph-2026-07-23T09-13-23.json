@@ -1,0 +1,3920 @@
+{
+  "c33dExport": 2,
+  "exportedAt": "2026-07-23T09:13:23.432Z",
+  "comment": "intention recognizable but very poor",
+  "agent": {
+    "name": "Ollama (Local)",
+    "provider": "ollama",
+    "model": "nemotron-3-super:cloud"
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "wheelbase",
+        "type": "NumberSlider",
+        "data": {
+          "value": 3000,
+          "label": "wheelbase",
+          "min": 2000,
+          "max": 4000,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 3270
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "trackWidth",
+        "type": "NumberSlider",
+        "data": {
+          "value": 1600,
+          "label": "trackWidth",
+          "min": 1200,
+          "max": 2000,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 3080
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "height",
+        "type": "NumberSlider",
+        "data": {
+          "value": 200,
+          "label": "height",
+          "min": 100,
+          "max": 400,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 800
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "noseLength",
+        "type": "NumberSlider",
+        "data": {
+          "value": 150,
+          "label": "noseLength",
+          "min": 50,
+          "max": 300,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 1750
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "rearWingHeight",
+        "type": "NumberSlider",
+        "data": {
+          "value": 200,
+          "label": "rearWingHeight",
+          "min": 50,
+          "max": 400,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 2320
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "wheelDiameter",
+        "type": "NumberSlider",
+        "data": {
+          "value": 660,
+          "label": "wheelDiameter",
+          "min": 500,
+          "max": 800,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 3460
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "wheelThicknessFactor",
+        "type": "NumberSlider",
+        "data": {
+          "value": 0.2,
+          "label": "wheelThicknessFactor",
+          "min": 0.1,
+          "max": 0.4,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 4410
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "rearWingThicknessFactor",
+        "type": "NumberSlider",
+        "data": {
+          "value": 0.1,
+          "label": "rearWingThicknessFactor",
+          "min": 0.05,
+          "max": 0.2,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 2890
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "wheelRadius",
+        "type": "Expression",
+        "data": {
+          "formula": "wheelDiameter/2"
+        },
+        "position": {
+          "x": 40,
+          "y": 3650
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "wheelThickness",
+        "type": "Expression",
+        "data": {
+          "formula": "wheelDiameter * wheelThicknessFactor"
+        },
+        "position": {
+          "x": 40,
+          "y": 4220
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "rearWingThickness",
+        "type": "Expression",
+        "data": {
+          "formula": "wheelDiameter * rearWingThicknessFactor"
+        },
+        "position": {
+          "x": 40,
+          "y": 2700
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "chassisCenterZ",
+        "type": "Expression",
+        "data": {
+          "formula": "height/2"
+        },
+        "position": {
+          "x": 40,
+          "y": 610
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "rearWingLength",
+        "type": "Expression",
+        "data": {
+          "formula": "trackWidth * 1.2"
+        },
+        "position": {
+          "x": 40,
+          "y": 2510
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "chassis_center",
+        "type": "Point",
+        "data": {
+          "x": 0,
+          "y": 0
+        },
+        "position": {
+          "x": 270,
+          "y": 610
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "chassis",
+        "type": "Box",
+        "data": {
+          "width": "trackWidth",
+          "length": "wheelbase",
+          "height": "height",
+          "color": "#1e293b"
+        },
+        "position": {
+          "x": 500,
+          "y": 230
+        },
+        "measured": {
+          "width": 201,
+          "height": 312
+        }
+      },
+      {
+        "id": "nose_radius1",
+        "type": "Expression",
+        "data": {
+          "formula": "trackWidth * 0.4"
+        },
+        "position": {
+          "x": 40,
+          "y": 1370
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "nose_radius2",
+        "type": "Expression",
+        "data": {
+          "formula": "trackWidth * 0.1"
+        },
+        "position": {
+          "x": 40,
+          "y": 1560
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "nose_center_x",
+        "type": "Expression",
+        "data": {
+          "formula": "wheelbase/2 + noseLength/2"
+        },
+        "position": {
+          "x": 40,
+          "y": 1180
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "nose_center",
+        "type": "Point",
+        "data": {
+          "y": 0
+        },
+        "position": {
+          "x": 270,
+          "y": 800
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "nose_axis",
+        "type": "VectorXYZ",
+        "data": {
+          "x": 1,
+          "y": 0,
+          "z": 0
+        },
+        "position": {
+          "x": 40,
+          "y": 990
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "nose",
+        "type": "Cone",
+        "data": {
+          "height": "noseLength",
+          "color": "#ef4444"
+        },
+        "position": {
+          "x": 500,
+          "y": 420
+        },
+        "measured": {
+          "width": 201,
+          "height": 344
+        }
+      },
+      {
+        "id": "rearWing_center_x",
+        "type": "Expression",
+        "data": {
+          "formula": "-wheelbase/2 - rearWingThickness/2"
+        },
+        "position": {
+          "x": 40,
+          "y": 1940
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "rearWing_center_z",
+        "type": "Expression",
+        "data": {
+          "formula": "chassisCenterZ + rearWingHeight/2"
+        },
+        "position": {
+          "x": 40,
+          "y": 2130
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "rearWing_center",
+        "type": "Point",
+        "data": {
+          "y": 0
+        },
+        "position": {
+          "x": 270,
+          "y": 990
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "rearWing",
+        "type": "Box",
+        "data": {
+          "height": "rearWingHeight",
+          "color": "#fbbf24"
+        },
+        "position": {
+          "x": 500,
+          "y": 610
+        },
+        "measured": {
+          "width": 201,
+          "height": 312
+        }
+      },
+      {
+        "id": "wheelShape_center",
+        "type": "Point",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "position": {
+          "x": 40,
+          "y": 4030
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "wheelShape_axis",
+        "type": "VectorXYZ",
+        "data": {
+          "x": 0,
+          "y": 1,
+          "z": 0
+        },
+        "position": {
+          "x": 40,
+          "y": 3840
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "wheelShape",
+        "type": "Cylinder",
+        "data": {},
+        "position": {
+          "x": 270,
+          "y": 1180
+        },
+        "measured": {
+          "width": 201,
+          "height": 296
+        }
+      },
+      {
+        "id": "baseXList",
+        "type": "ListConstant",
+        "data": {
+          "values": "[object Object], [object Object]"
+        },
+        "position": {
+          "x": 40,
+          "y": 40
+        },
+        "measured": {
+          "width": 177,
+          "height": 136
+        }
+      },
+      {
+        "id": "baseYList",
+        "type": "ListConstant",
+        "data": {
+          "values": "[object Object], [object Object]"
+        },
+        "position": {
+          "x": 40,
+          "y": 230
+        },
+        "measured": {
+          "width": 177,
+          "height": 136
+        }
+      },
+      {
+        "id": "baseZList",
+        "type": "ListConstant",
+        "data": {
+          "values": "[object Object]"
+        },
+        "position": {
+          "x": 40,
+          "y": 420
+        },
+        "measured": {
+          "width": 177,
+          "height": 136
+        }
+      },
+      {
+        "id": "xList",
+        "type": "RepeatEach",
+        "data": {
+          "count": 2
+        },
+        "position": {
+          "x": 270,
+          "y": 40
+        },
+        "measured": {
+          "width": 201,
+          "height": 194
+        }
+      },
+      {
+        "id": "yList",
+        "type": "Tile",
+        "data": {
+          "count": 2
+        },
+        "position": {
+          "x": 270,
+          "y": 230
+        },
+        "measured": {
+          "width": 201,
+          "height": 194
+        }
+      },
+      {
+        "id": "zList",
+        "type": "RepeatEach",
+        "data": {
+          "count": 4
+        },
+        "position": {
+          "x": 270,
+          "y": 420
+        },
+        "measured": {
+          "width": 201,
+          "height": 194
+        }
+      },
+      {
+        "id": "wheelPoints",
+        "type": "PointsFromLists",
+        "data": {},
+        "position": {
+          "x": 500,
+          "y": 40
+        },
+        "measured": {
+          "width": 150,
+          "height": 234
+        }
+      },
+      {
+        "id": "wheelInstances",
+        "type": "InstanceOnPoints",
+        "data": {
+          "scaleStart": 1,
+          "scaleEnd": 1,
+          "alignToTangent": false,
+          "color": "#6b7280"
+        },
+        "position": {
+          "x": 730,
+          "y": 40
+        },
+        "measured": {
+          "width": 201,
+          "height": 436
+        }
+      }
+    ],
+    "edges": [
+      {
+        "source": "chassisCenterZ",
+        "sourceHandle": "value",
+        "target": "chassis_center",
+        "targetHandle": "z",
+        "id": "e_chassisCenterZ_chassis_center_z"
+      },
+      {
+        "source": "chassis_center",
+        "sourceHandle": "point",
+        "target": "chassis",
+        "targetHandle": "center",
+        "id": "e_chassis_center_chassis_center"
+      },
+      {
+        "source": "nose_center_x",
+        "sourceHandle": "value",
+        "target": "nose_center",
+        "targetHandle": "x",
+        "id": "e_nose_center_x_nose_center_x"
+      },
+      {
+        "source": "chassisCenterZ",
+        "sourceHandle": "value",
+        "target": "nose_center",
+        "targetHandle": "z",
+        "id": "e_chassisCenterZ_nose_center_z"
+      },
+      {
+        "source": "nose_radius1",
+        "sourceHandle": "value",
+        "target": "nose",
+        "targetHandle": "param:radius1",
+        "id": "e_nose_radius1_nose_param:radius1"
+      },
+      {
+        "source": "nose_radius2",
+        "sourceHandle": "value",
+        "target": "nose",
+        "targetHandle": "param:radius2",
+        "id": "e_nose_radius2_nose_param:radius2"
+      },
+      {
+        "source": "nose_center",
+        "sourceHandle": "point",
+        "target": "nose",
+        "targetHandle": "center",
+        "id": "e_nose_center_nose_center"
+      },
+      {
+        "source": "nose_axis",
+        "sourceHandle": "vector",
+        "target": "nose",
+        "targetHandle": "axis",
+        "id": "e_nose_axis_nose_axis"
+      },
+      {
+        "source": "rearWing_center_x",
+        "sourceHandle": "value",
+        "target": "rearWing_center",
+        "targetHandle": "x",
+        "id": "e_rearWing_center_x_rearWing_center_x"
+      },
+      {
+        "source": "rearWing_center_z",
+        "sourceHandle": "value",
+        "target": "rearWing_center",
+        "targetHandle": "z",
+        "id": "e_rearWing_center_z_rearWing_center_z"
+      },
+      {
+        "source": "rearWingThickness",
+        "sourceHandle": "value",
+        "target": "rearWing",
+        "targetHandle": "param:width",
+        "id": "e_rearWingThickness_rearWing_param:width"
+      },
+      {
+        "source": "rearWingLength",
+        "sourceHandle": "value",
+        "target": "rearWing",
+        "targetHandle": "param:length",
+        "id": "e_rearWingLength_rearWing_param:length"
+      },
+      {
+        "source": "rearWing_center",
+        "sourceHandle": "point",
+        "target": "rearWing",
+        "targetHandle": "center",
+        "id": "e_rearWing_center_rearWing_center"
+      },
+      {
+        "source": "wheelRadius",
+        "sourceHandle": "value",
+        "target": "wheelShape",
+        "targetHandle": "param:radius",
+        "id": "e_wheelRadius_wheelShape_param:radius"
+      },
+      {
+        "source": "wheelThickness",
+        "sourceHandle": "value",
+        "target": "wheelShape",
+        "targetHandle": "param:height",
+        "id": "e_wheelThickness_wheelShape_param:height"
+      },
+      {
+        "source": "wheelShape_center",
+        "sourceHandle": "point",
+        "target": "wheelShape",
+        "targetHandle": "center",
+        "id": "e_wheelShape_center_wheelShape_center"
+      },
+      {
+        "source": "wheelShape_axis",
+        "sourceHandle": "vector",
+        "target": "wheelShape",
+        "targetHandle": "axis",
+        "id": "e_wheelShape_axis_wheelShape_axis"
+      },
+      {
+        "source": "baseXList",
+        "sourceHandle": "values",
+        "target": "xList",
+        "targetHandle": "list",
+        "id": "e_baseXList_xList_list"
+      },
+      {
+        "source": "baseYList",
+        "sourceHandle": "values",
+        "target": "yList",
+        "targetHandle": "list",
+        "id": "e_baseYList_yList_list"
+      },
+      {
+        "source": "baseZList",
+        "sourceHandle": "values",
+        "target": "zList",
+        "targetHandle": "list",
+        "id": "e_baseZList_zList_list"
+      },
+      {
+        "source": "xList",
+        "sourceHandle": "values",
+        "target": "wheelPoints",
+        "targetHandle": "x",
+        "id": "e_xList_wheelPoints_x"
+      },
+      {
+        "source": "yList",
+        "sourceHandle": "values",
+        "target": "wheelPoints",
+        "targetHandle": "y",
+        "id": "e_yList_wheelPoints_y"
+      },
+      {
+        "source": "zList",
+        "sourceHandle": "values",
+        "target": "wheelPoints",
+        "targetHandle": "z",
+        "id": "e_zList_wheelPoints_z"
+      },
+      {
+        "source": "wheelShape",
+        "sourceHandle": "solid",
+        "target": "wheelInstances",
+        "targetHandle": "shape",
+        "id": "e_wheelShape_wheelInstances_shape"
+      },
+      {
+        "source": "wheelPoints",
+        "sourceHandle": "points",
+        "target": "wheelInstances",
+        "targetHandle": "points",
+        "id": "e_wheelPoints_wheelInstances_points"
+      }
+    ]
+  },
+  "conversation": [
+    {
+      "role": "system",
+      "content": "Workspace cleared."
+    },
+    {
+      "role": "user",
+      "content": "make a formula 1"
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline expr() from \"chassis_center.z\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"expr\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline point() from \"chassis.center\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"point\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline expr() from \"nose.radius1\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"expr\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline expr() from \"nose.radius2\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"expr\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline expr() from \"nose_center.x\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"expr\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline expr() from \"nose_center.z\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"expr\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline point() from \"nose.center\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"point\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline vector() from \"nose.axis\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"vector\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Argument \"width\" of \"box\": treated \"rearWingThickness\" as the binding \"$rearWingThickness\" (add the \"$\" prefix to reference bindings)."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline expr() from \"rearWing.length\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"expr\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline expr() from \"rearWing_center.x\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"expr\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline expr() from \"rearWing_center.z\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"expr\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline point() from \"rearWing.center\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"point\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Argument \"radius\" of \"cylinder\": treated \"wheelRadius\" as the binding \"$wheelRadius\" (add the \"$\" prefix to reference bindings)."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Argument \"height\" of \"cylinder\": treated \"wheelThickness\" as the binding \"$wheelThickness\" (add the \"$\" prefix to reference bindings)."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline point() from \"wheelShape.center\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"point\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline vector() from \"wheelShape.axis\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"vector\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "assistant",
+      "content": "Formula 1 car with parametric wheelbase, track width, height, nose length, rear wing height, and wheel diameter."
+    },
+    {
+      "role": "system",
+      "content": "Issues detected (auto-repair 1/2): Node \"xList\" failed: ListConstant entry \"[object Object]\" error: Unexpected character '[' in expression; Node \"xList\" failed: ListConstant entry \"[object Object]\" error: Unexpected character '[' in expression; Node \"xList\" failed: ListConstant entry \"[object Object]\" error: Unexpected character '[' in expression"
+    },
+    {
+      "role": "assistant",
+      "content": "Fix ListConstant nodes that incorrectly received expression objects instead of formula strings. Replace xList, yList, zList with base lists + RepeatEach/Tile nodes to properly generate wheel coordinates."
+    },
+    {
+      "role": "system",
+      "content": "[Autofix] Wired \"xList\" → \"wheelPoints\":x (inferred from naming — PointsFromLists \"wheelPoints\" channel 'x' had no list; wired \"xList\" (\"xList\" is the only 'x'-named number producer and \"wheelPoints\" the only PointsFromLists))."
+    },
+    {
+      "role": "system",
+      "content": "[Autofix] Wired \"yList\" → \"wheelPoints\":y (inferred from naming — PointsFromLists \"wheelPoints\" channel 'y' had no list; wired \"yList\" (\"yList\" is the only 'y'-named number producer and \"wheelPoints\" the only PointsFromLists))."
+    },
+    {
+      "role": "system",
+      "content": "[Autofix] Wired \"zList\" → \"wheelPoints\":z (inferred from naming — PointsFromLists \"wheelPoints\" channel 'z' had no list; wired \"zList\" (\"zList\" is the only 'z'-named number producer and \"wheelPoints\" the only PointsFromLists))."
+    },
+    {
+      "role": "system",
+      "content": "[Patch] 3 removedEdgeIds entries matched NO edge (already gone or never existed) — nothing was removed for: xList->wheelPoints.x; yList->wheelPoints.y; zList->wheelPoints.z. This usually means those edges were already dropped or renamed — do NOT keep retrying them. Use the edge ids shown in the graph state, {\"source\",\"target\"} objects, or \"source->target\" strings."
+    },
+    {
+      "role": "system",
+      "content": "Issues detected (auto-repair 2/2): Node \"baseZList\" failed: ListConstant entry \"wheelRadius\" error: unknown variable 'wheelradius' — available: wheelbase, trackwidth, height, noselength, rearwingheight, wheeldiameter, wheelthicknessfactor, rearwingthicknessfactor, xlist, ylist, zlist, basexlist, nose_radius1, nose_radius2, rearwing_length, baseylist, chassis_center_z, nose_center_z, nose_center_x, rearwing_center_z, wheelradius, wheelthickness, rearwingthickness; Dropped invalid edge: baseXList → xList.list (target node \"xList.list\" does not exist); Dropped invalid edge: xList → wheelPoints.x (target node \"wheelPoints.x\" does not exist)"
+    },
+    {
+      "role": "assistant",
+      "content": "Fix ListConstant data to use lowercase variable names (system converts to lowercase). Fix wiring: baseXList → xList.list, baseYList → yList.list, baseZList → zList.list. Also fix baseZList value to 'wheelradius' (lowercase)."
+    },
+    {
+      "role": "system",
+      "content": "Auto-repair limit reached. Remaining issues: Node \"baseZList\" failed: ListConstant entry \"wheelradius\" error: unknown variable 'wheelradius' — available: wheelbase, trackwidth, height, noselength, rearwingheight, wheeldiameter, wheelthicknessfactor, rearwingthicknessfactor, xlist, ylist, zlist, basexlist, nose_radius1, nose_radius2, rearwing_l"
+    },
+    {
+      "role": "user",
+      "content": "try again this is very very bad but intention is somewhat recognizable"
+    },
+    {
+      "role": "system",
+      "content": "Response was not valid JSON (attempt 1/3) — asking the model to resend."
+    },
+    {
+      "role": "system",
+      "content": "IR program had compile errors (attempt 2/3) — asking the model to fix."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Argument \"z\" of \"point\": treated \"chassisCenterZ\" as the binding \"$chassisCenterZ\" (add the \"$\" prefix to reference bindings)."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline point() from \"chassis.center\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"point\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline expr() from \"nose.radius1\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"expr\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline expr() from \"nose.radius2\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"expr\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline expr() from \"nose_center.x\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"expr\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Argument \"z\" of \"point\": treated \"chassisCenterZ\" as the binding \"$chassisCenterZ\" (add the \"$\" prefix to reference bindings)."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline point() from \"nose.center\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"point\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline vector() from \"nose.axis\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"vector\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Argument \"width\" of \"box\": treated \"rearWingThickness\" as the binding \"$rearWingThickness\" (add the \"$\" prefix to reference bindings)."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Argument \"length\" of \"box\": treated \"rearWingLength\" as the binding \"$rearWingLength\" (add the \"$\" prefix to reference bindings)."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline expr() from \"rearWing_center.x\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"expr\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline expr() from \"rearWing_center.z\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"expr\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline point() from \"rearWing.center\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"point\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Argument \"radius\" of \"cylinder\": treated \"wheelRadius\" as the binding \"$wheelRadius\" (add the \"$\" prefix to reference bindings)."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Argument \"height\" of \"cylinder\": treated \"wheelThickness\" as the binding \"$wheelThickness\" (add the \"$\" prefix to reference bindings)."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline point() from \"wheelShape.center\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"point\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline vector() from \"wheelShape.axis\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"vector\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "assistant",
+      "content": "A parametric Formula 1 car with adjustable wheelbase, track width, height, nose length, rear wing height, and wheel dimensions"
+    },
+    {
+      "role": "system",
+      "content": "Auto-repair limit reached. Remaining issues: Node \"baseXList\" failed: ListConstant entry \"[object Object]\" error: Unexpected character '[' in expression | Node \"baseXList\" failed: ListConstant entry \"[object Object]\" error: Unexpected character '[' in expression | Node \"baseYList\" failed: ListConstant entry \"[object Object]\" error: Unexpected "
+    },
+    {
+      "role": "user",
+      "content": "try again"
+    },
+    {
+      "role": "system",
+      "content": "Response was not valid JSON (attempt 1/3) — asking the model to resend."
+    },
+    {
+      "role": "system",
+      "content": "IR program had compile errors (attempt 2/3) — asking the model to fix."
+    },
+    {
+      "role": "system",
+      "content": "Error: IR compile failed: body[8] (nose = cone): Argument \"axis\" of \"cone\" must be a reference like \"$myCurve\" (vector), got \"vector(1,0,0)\"."
+    }
+  ],
+  "plan": "",
+  "genome": {
+    "archetype": "formula1-car",
+    "parts": [
+      {
+        "id": "chassis",
+        "role": "body"
+      },
+      {
+        "id": "nose",
+        "role": "nose"
+      },
+      {
+        "id": "rearWing",
+        "role": "rearWing"
+      },
+      {
+        "id": "wheelInstances",
+        "role": "wheels"
+      }
+    ],
+    "detailBudget": "medium"
+  },
+  "geometryReport": {
+    "leaves": [
+      {
+        "id": "chassis",
+        "bbox": {
+          "min": [
+            -800.0000001000001,
+            -1500.0000001,
+            -100.00000010000005
+          ],
+          "max": [
+            800.0000001000001,
+            1500.0000001,
+            100.00000010000005
+          ],
+          "center": [
+            0,
+            0,
+            0
+          ],
+          "size": [
+            1600.0000002000002,
+            3000.0000002,
+            200.0000002000001
+          ]
+        },
+        "volume": 960000000,
+        "meshOk": true,
+        "vertexCount": 24,
+        "error": null
+      },
+      {
+        "id": "nose",
+        "bbox": {
+          "min": [
+            -77.21135072445634,
+            -642.2113507244562,
+            -642.2113507244562
+          ],
+          "max": [
+            77.21135072445628,
+            642.2113507244562,
+            642.2113507244562
+          ],
+          "center": [
+            -2.842170943040401e-14,
+            0,
+            0
+          ],
+          "size": [
+            154.42270144891262,
+            1284.4227014489124,
+            1284.4227014489124
+          ]
+        },
+        "volume": 84446010.52849366,
+        "meshOk": true,
+        "vertexCount": 4632,
+        "error": null
+      },
+      {
+        "id": "wheelInstances",
+        "bbox": {
+          "min": [
+            -330.00000010000014,
+            -66.04970688072646,
+            -330.03727995156214
+          ],
+          "max": [
+            330.04970688072643,
+            66.04970688072646,
+            330.0372799515622
+          ],
+          "center": [
+            0.024853390363148264,
+            0,
+            0
+          ],
+          "size": [
+            660.0497069807266,
+            132.09941376145292,
+            660.0745599031243
+          ]
+        },
+        "volume": 180639064.30729023,
+        "meshOk": true,
+        "vertexCount": 2904,
+        "error": null
+      },
+      {
+        "id": "rearWing",
+        "bbox": {
+          "min": [
+            -33.00000010000001,
+            -960.0000001,
+            -100.00000010000001
+          ],
+          "max": [
+            33.00000010000001,
+            960.0000001,
+            100.00000010000001
+          ],
+          "center": [
+            0,
+            0,
+            0
+          ],
+          "size": [
+            66.00000020000002,
+            1920.0000002,
+            200.00000020000002
+          ]
+        },
+        "volume": 25344000,
+        "meshOk": true,
+        "vertexCount": 24,
+        "error": null
+      }
+    ],
+    "nodeErrors": [
+      {
+        "id": "baseXList",
+        "error": "ListConstant entry \"[object Object]\" error: Unexpected character '[' in expression"
+      },
+      {
+        "id": "baseXList",
+        "error": "ListConstant entry \"[object Object]\" error: Unexpected character '[' in expression"
+      },
+      {
+        "id": "baseYList",
+        "error": "ListConstant entry \"[object Object]\" error: Unexpected character '[' in expression"
+      },
+      {
+        "id": "baseYList",
+        "error": "ListConstant entry \"[object Object]\" error: Unexpected character '[' in expression"
+      },
+      {
+        "id": "baseZList",
+        "error": "ListConstant entry \"[object Object]\" error: Unexpected character '[' in expression"
+      }
+    ],
+    "numbers": {
+      "wheelbase": 3000,
+      "trackWidth": 1600,
+      "height": 200,
+      "noseLength": 150,
+      "rearWingHeight": 200,
+      "wheelDiameter": 660,
+      "wheelThicknessFactor": 0.2,
+      "rearWingThicknessFactor": 0.1,
+      "baseXList": [
+        0,
+        0
+      ],
+      "baseYList": [
+        0,
+        0
+      ],
+      "baseZList": [
+        0
+      ],
+      "rearWingLength": [
+        1920,
+        1920
+      ],
+      "nose_radius1": [
+        640,
+        640
+      ],
+      "nose_radius2": [
+        160,
+        160
+      ],
+      "chassisCenterZ": [
+        100,
+        100
+      ],
+      "nose_center_x": [
+        1575,
+        1575
+      ],
+      "wheelRadius": [
+        330,
+        330
+      ],
+      "wheelThickness": [
+        132,
+        132
+      ],
+      "rearWingThickness": [
+        66,
+        66
+      ],
+      "xList": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "yList": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "zList": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "rearWing_center_z": [
+        200,
+        200,
+        200,
+        200
+      ],
+      "rearWing_center_x": [
+        -1533,
+        -1533,
+        -1533,
+        -1533
+      ]
+    },
+    "sliders": {
+      "wheelbase": 3000,
+      "trackWidth": 1600,
+      "height": 200,
+      "noseLength": 150,
+      "rearWingHeight": 200,
+      "wheelDiameter": 660,
+      "wheelThicknessFactor": 0.2,
+      "rearWingThicknessFactor": 0.1
+    },
+    "selections": {},
+    "helpers": {
+      "nose_axis": {
+        "type": "Vector",
+        "x": 1,
+        "y": 0,
+        "z": 0,
+        "sourceNodeId": "nose_axis",
+        "ancestorNodeIds": []
+      },
+      "wheelShape_center": {
+        "type": "Point",
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "sourceNodeId": "wheelShape_center",
+        "ancestorNodeIds": []
+      },
+      "wheelShape_axis": {
+        "type": "Vector",
+        "x": 0,
+        "y": 1,
+        "z": 0,
+        "sourceNodeId": "wheelShape_axis",
+        "ancestorNodeIds": []
+      },
+      "chassis_center": {
+        "type": "Point",
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "sourceNodeId": "chassis_center",
+        "ancestorNodeIds": []
+      },
+      "nose_center": {
+        "type": "Point",
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "sourceNodeId": "nose_center",
+        "ancestorNodeIds": []
+      },
+      "rearWing_center": {
+        "type": "Point",
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "sourceNodeId": "rearWing_center",
+        "ancestorNodeIds": []
+      }
+    },
+    "nodeCount": 36,
+    "edgeCount": 25,
+    "transformCount": 1,
+    "nodesPerLeafRatio": 9,
+    "nodeEconomyWarning": false,
+    "placement": {
+      "anchored": [
+        "chassis",
+        "nose",
+        "wheelInstances",
+        "rearWing"
+      ],
+      "literal": [],
+      "origin": [],
+      "literalNodeIds": [],
+      "ratio": 1
+    },
+    "scene": {
+      "min": [
+        -800.0000001000001,
+        -1500.0000001,
+        -642.2113507244562
+      ],
+      "max": [
+        800.0000001000001,
+        1500.0000001,
+        642.2113507244562
+      ],
+      "size": [
+        1600.0000002000002,
+        3000.0000002,
+        1284.4227014489124
+      ]
+    },
+    "meshedLeafCount": 4,
+    "kernelFaultCount": 0,
+    "kernelSuspect": false,
+    "kernelHealth": "ok",
+    "evalCount": 4,
+    "recycleRecommended": false
+  },
+  "timeline": [
+    {
+      "at": "2026-07-23T08:44:42.893Z",
+      "turn": 1,
+      "trigger": "ai-ir",
+      "label": "attempt 1: rebuilt graph (34 nodes)",
+      "nodeCount": 34,
+      "edgeCount": 22,
+      "isolatedCount": 8,
+      "diff": {
+        "addedNodes": [
+          "wheelbase",
+          "trackWidth",
+          "height",
+          "noseLength",
+          "rearWingHeight",
+          "wheelDiameter",
+          "wheelThicknessFactor",
+          "rearWingThicknessFactor",
+          "wheelRadius",
+          "wheelThickness",
+          "rearWingThickness",
+          "chassis_center_z",
+          "chassis_center",
+          "chassis",
+          "nose_radius1",
+          "nose_radius2",
+          "nose_center_x",
+          "nose_center_z",
+          "nose_center",
+          "nose_axis",
+          "nose",
+          "rearWing_length",
+          "rearWing_center_x",
+          "rearWing_center_z",
+          "rearWing_center",
+          "rearWing",
+          "wheelShape_center",
+          "wheelShape_axis",
+          "wheelShape",
+          "xList",
+          "yList",
+          "zList",
+          "wheelPoints",
+          "wheelInstances"
+        ],
+        "removedNodes": [],
+        "changedNodes": [],
+        "addedEdges": 22,
+        "removedEdges": 0
+      },
+      "details": [
+        "warning: Dead design parameters: sliders \"wheelDiameter\", \"wheelThicknessFactor\", \"rearWingThicknessFactor\" are not referenced by any formula or edge — moving them changes nothing. Wire dimensions to them or remove them."
+      ],
+      "nodes": [
+        {
+          "id": "wheelbase",
+          "type": "NumberSlider",
+          "data": {
+            "value": 3000,
+            "label": "wheelbase",
+            "min": 2000,
+            "max": 4000,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 2890
+          }
+        },
+        {
+          "id": "trackWidth",
+          "type": "NumberSlider",
+          "data": {
+            "value": 1600,
+            "label": "trackWidth",
+            "min": 1200,
+            "max": 2000,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 2700
+          }
+        },
+        {
+          "id": "height",
+          "type": "NumberSlider",
+          "data": {
+            "value": 200,
+            "label": "height",
+            "min": 100,
+            "max": 400,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 230
+          }
+        },
+        {
+          "id": "noseLength",
+          "type": "NumberSlider",
+          "data": {
+            "value": 150,
+            "label": "noseLength",
+            "min": 50,
+            "max": 300,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 1370
+          }
+        },
+        {
+          "id": "rearWingHeight",
+          "type": "NumberSlider",
+          "data": {
+            "value": 200,
+            "label": "rearWingHeight",
+            "min": 50,
+            "max": 400,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 2130
+          }
+        },
+        {
+          "id": "wheelDiameter",
+          "type": "NumberSlider",
+          "data": {
+            "value": 660,
+            "label": "wheelDiameter",
+            "min": 500,
+            "max": 800,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 3080
+          }
+        },
+        {
+          "id": "wheelThicknessFactor",
+          "type": "NumberSlider",
+          "data": {
+            "value": 0.2,
+            "label": "wheelThicknessFactor",
+            "min": 0.1,
+            "max": 0.4,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 4030
+          }
+        },
+        {
+          "id": "rearWingThicknessFactor",
+          "type": "NumberSlider",
+          "data": {
+            "value": 0.1,
+            "label": "rearWingThicknessFactor",
+            "min": 0.05,
+            "max": 0.2,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 2510
+          }
+        },
+        {
+          "id": "wheelRadius",
+          "type": "Expression",
+          "data": {
+            "formula": "wheelDiameter/2"
+          },
+          "position": {
+            "x": 40,
+            "y": 3270
+          }
+        },
+        {
+          "id": "wheelThickness",
+          "type": "Expression",
+          "data": {
+            "formula": "wheelDiameter*wheelThicknessFactor"
+          },
+          "position": {
+            "x": 40,
+            "y": 3840
+          }
+        },
+        {
+          "id": "rearWingThickness",
+          "type": "Expression",
+          "data": {
+            "formula": "wheelDiameter*rearWingThicknessFactor"
+          },
+          "position": {
+            "x": 40,
+            "y": 2320
+          }
+        },
+        {
+          "id": "chassis_center_z",
+          "type": "Expression",
+          "data": {
+            "formula": "height/2"
+          },
+          "position": {
+            "x": 40,
+            "y": 40
+          }
+        },
+        {
+          "id": "chassis_center",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0
+          },
+          "position": {
+            "x": 270,
+            "y": 40
+          }
+        },
+        {
+          "id": "chassis",
+          "type": "Box",
+          "data": {
+            "width": "trackWidth",
+            "length": "wheelbase",
+            "height": "height",
+            "color": "#1e293b"
+          },
+          "position": {
+            "x": 500,
+            "y": 40
+          }
+        },
+        {
+          "id": "nose_radius1",
+          "type": "Expression",
+          "data": {
+            "formula": "trackWidth*0.4"
+          },
+          "position": {
+            "x": 40,
+            "y": 990
+          }
+        },
+        {
+          "id": "nose_radius2",
+          "type": "Expression",
+          "data": {
+            "formula": "trackWidth*0.1"
+          },
+          "position": {
+            "x": 40,
+            "y": 1180
+          }
+        },
+        {
+          "id": "nose_center_x",
+          "type": "Expression",
+          "data": {
+            "formula": "wheelbase/2 + noseLength/2"
+          },
+          "position": {
+            "x": 40,
+            "y": 610
+          }
+        },
+        {
+          "id": "nose_center_z",
+          "type": "Expression",
+          "data": {
+            "formula": "height/2"
+          },
+          "position": {
+            "x": 40,
+            "y": 800
+          }
+        },
+        {
+          "id": "nose_center",
+          "type": "Point",
+          "data": {
+            "y": 0
+          },
+          "position": {
+            "x": 270,
+            "y": 230
+          }
+        },
+        {
+          "id": "nose_axis",
+          "type": "VectorXYZ",
+          "data": {
+            "x": 1,
+            "y": 0,
+            "z": 0
+          },
+          "position": {
+            "x": 40,
+            "y": 420
+          }
+        },
+        {
+          "id": "nose",
+          "type": "Cone",
+          "data": {
+            "height": "noseLength",
+            "color": "#ef4444"
+          },
+          "position": {
+            "x": 500,
+            "y": 230
+          }
+        },
+        {
+          "id": "rearWing_length",
+          "type": "Expression",
+          "data": {
+            "formula": "trackWidth*1.2"
+          },
+          "position": {
+            "x": 40,
+            "y": 1940
+          }
+        },
+        {
+          "id": "rearWing_center_x",
+          "type": "Expression",
+          "data": {
+            "formula": "-wheelbase/2 - rearWingThickness/2"
+          },
+          "position": {
+            "x": 40,
+            "y": 1560
+          }
+        },
+        {
+          "id": "rearWing_center_z",
+          "type": "Expression",
+          "data": {
+            "formula": "height + rearWingHeight/2"
+          },
+          "position": {
+            "x": 40,
+            "y": 1750
+          }
+        },
+        {
+          "id": "rearWing_center",
+          "type": "Point",
+          "data": {
+            "y": 0
+          },
+          "position": {
+            "x": 270,
+            "y": 420
+          }
+        },
+        {
+          "id": "rearWing",
+          "type": "Box",
+          "data": {
+            "height": "rearWingHeight",
+            "color": "#fbbf24"
+          },
+          "position": {
+            "x": 500,
+            "y": 610
+          }
+        },
+        {
+          "id": "wheelShape_center",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "position": {
+            "x": 40,
+            "y": 3650
+          }
+        },
+        {
+          "id": "wheelShape_axis",
+          "type": "VectorXYZ",
+          "data": {
+            "x": 0,
+            "y": 1,
+            "z": 0
+          },
+          "position": {
+            "x": 40,
+            "y": 3460
+          }
+        },
+        {
+          "id": "wheelShape",
+          "type": "Cylinder",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 610
+          }
+        },
+        {
+          "id": "xList",
+          "type": "ListConstant",
+          "data": {
+            "values": "[object Object], [object Object], [object Object], [object Object]"
+          },
+          "position": {
+            "x": 40,
+            "y": 4220
+          }
+        },
+        {
+          "id": "yList",
+          "type": "ListConstant",
+          "data": {
+            "values": "[object Object], [object Object], [object Object], [object Object]"
+          },
+          "position": {
+            "x": 40,
+            "y": 4410
+          }
+        },
+        {
+          "id": "zList",
+          "type": "ListConstant",
+          "data": {
+            "values": "[object Object], [object Object], [object Object], [object Object]"
+          },
+          "position": {
+            "x": 40,
+            "y": 4600
+          }
+        },
+        {
+          "id": "wheelPoints",
+          "type": "PointsFromLists",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 800
+          }
+        },
+        {
+          "id": "wheelInstances",
+          "type": "InstanceOnPoints",
+          "data": {
+            "scaleStart": 1,
+            "scaleEnd": 1,
+            "alignToTangent": false,
+            "color": "#6b7280"
+          },
+          "position": {
+            "x": 500,
+            "y": 420
+          }
+        }
+      ],
+      "edges": [
+        {
+          "source": "chassis_center_z",
+          "sourceHandle": "value",
+          "target": "chassis_center",
+          "targetHandle": "z",
+          "id": "e_chassis_center_z_chassis_center_z"
+        },
+        {
+          "source": "chassis_center",
+          "sourceHandle": "point",
+          "target": "chassis",
+          "targetHandle": "center",
+          "id": "e_chassis_center_chassis_center"
+        },
+        {
+          "source": "nose_center_x",
+          "sourceHandle": "value",
+          "target": "nose_center",
+          "targetHandle": "x",
+          "id": "e_nose_center_x_nose_center_x"
+        },
+        {
+          "source": "nose_center_z",
+          "sourceHandle": "value",
+          "target": "nose_center",
+          "targetHandle": "z",
+          "id": "e_nose_center_z_nose_center_z"
+        },
+        {
+          "source": "nose_radius1",
+          "sourceHandle": "value",
+          "target": "nose",
+          "targetHandle": "param:radius1",
+          "id": "e_nose_radius1_nose_param:radius1"
+        },
+        {
+          "source": "nose_radius2",
+          "sourceHandle": "value",
+          "target": "nose",
+          "targetHandle": "param:radius2",
+          "id": "e_nose_radius2_nose_param:radius2"
+        },
+        {
+          "source": "nose_center",
+          "sourceHandle": "point",
+          "target": "nose",
+          "targetHandle": "center",
+          "id": "e_nose_center_nose_center"
+        },
+        {
+          "source": "nose_axis",
+          "sourceHandle": "vector",
+          "target": "nose",
+          "targetHandle": "axis",
+          "id": "e_nose_axis_nose_axis"
+        },
+        {
+          "source": "rearWing_center_x",
+          "sourceHandle": "value",
+          "target": "rearWing_center",
+          "targetHandle": "x",
+          "id": "e_rearWing_center_x_rearWing_center_x"
+        },
+        {
+          "source": "rearWing_center_z",
+          "sourceHandle": "value",
+          "target": "rearWing_center",
+          "targetHandle": "z",
+          "id": "e_rearWing_center_z_rearWing_center_z"
+        },
+        {
+          "source": "rearWingThickness",
+          "sourceHandle": "value",
+          "target": "rearWing",
+          "targetHandle": "param:width",
+          "id": "e_rearWingThickness_rearWing_param:width"
+        },
+        {
+          "source": "rearWing_length",
+          "sourceHandle": "value",
+          "target": "rearWing",
+          "targetHandle": "param:length",
+          "id": "e_rearWing_length_rearWing_param:length"
+        },
+        {
+          "source": "rearWing_center",
+          "sourceHandle": "point",
+          "target": "rearWing",
+          "targetHandle": "center",
+          "id": "e_rearWing_center_rearWing_center"
+        },
+        {
+          "source": "wheelRadius",
+          "sourceHandle": "value",
+          "target": "wheelShape",
+          "targetHandle": "param:radius",
+          "id": "e_wheelRadius_wheelShape_param:radius"
+        },
+        {
+          "source": "wheelThickness",
+          "sourceHandle": "value",
+          "target": "wheelShape",
+          "targetHandle": "param:height",
+          "id": "e_wheelThickness_wheelShape_param:height"
+        },
+        {
+          "source": "wheelShape_center",
+          "sourceHandle": "point",
+          "target": "wheelShape",
+          "targetHandle": "center",
+          "id": "e_wheelShape_center_wheelShape_center"
+        },
+        {
+          "source": "wheelShape_axis",
+          "sourceHandle": "vector",
+          "target": "wheelShape",
+          "targetHandle": "axis",
+          "id": "e_wheelShape_axis_wheelShape_axis"
+        },
+        {
+          "source": "xList",
+          "sourceHandle": "values",
+          "target": "wheelPoints",
+          "targetHandle": "x",
+          "id": "e_xList_wheelPoints_x"
+        },
+        {
+          "source": "yList",
+          "sourceHandle": "values",
+          "target": "wheelPoints",
+          "targetHandle": "y",
+          "id": "e_yList_wheelPoints_y"
+        },
+        {
+          "source": "zList",
+          "sourceHandle": "values",
+          "target": "wheelPoints",
+          "targetHandle": "z",
+          "id": "e_zList_wheelPoints_z"
+        },
+        {
+          "source": "wheelShape",
+          "sourceHandle": "solid",
+          "target": "wheelInstances",
+          "targetHandle": "shape",
+          "id": "e_wheelShape_wheelInstances_shape"
+        },
+        {
+          "source": "wheelPoints",
+          "sourceHandle": "points",
+          "target": "wheelInstances",
+          "targetHandle": "points",
+          "id": "e_wheelPoints_wheelInstances_points"
+        }
+      ]
+    },
+    {
+      "at": "2026-07-23T08:45:22.856Z",
+      "turn": 1,
+      "trigger": "ai-repair",
+      "label": "attempt 2: added 6 node(s) [ListConstant, RepeatEach, Tile]; removed 3 node(s); added 6 edge(s); removed 3 edge(s)",
+      "nodeCount": 37,
+      "edgeCount": 22,
+      "isolatedCount": 11,
+      "diff": {
+        "addedNodes": [
+          "baseXList",
+          "baseYList",
+          "baseZList"
+        ],
+        "removedNodes": [],
+        "changedNodes": [
+          "xList",
+          "yList",
+          "zList"
+        ],
+        "addedEdges": 0,
+        "removedEdges": 0
+      },
+      "details": [
+        "dropped edge: baseXList → xList.list (target node \"xList.list\" does not exist)",
+        "dropped edge: xList → wheelPoints.x (target node \"wheelPoints.x\" does not exist)",
+        "dropped edge: baseYList → yList.list (target node \"yList.list\" does not exist)",
+        "dropped edge: yList → wheelPoints.y (target node \"wheelPoints.y\" does not exist)",
+        "dropped edge: baseZList → zList.list (target node \"zList.list\" does not exist)",
+        "dropped edge: zList → wheelPoints.z (target node \"wheelPoints.z\" does not exist)",
+        "warning: Dead design parameters: sliders \"wheelDiameter\", \"wheelThicknessFactor\", \"rearWingThicknessFactor\" are not referenced by any formula or edge — moving them changes nothing. Wire dimensions to them or remove them.",
+        "warning: \"baseXList\" (ListConstant) computes a number/list wired to nothing — it renders no geometry and changes nothing. Wire its output into a consumer (PointsFromLists x/y/z, an Expression a/b/c/d input, or a param:) or remove it.",
+        "warning: \"baseYList\" (ListConstant) computes a number/list wired to nothing — it renders no geometry and changes nothing. Wire its output into a consumer (PointsFromLists x/y/z, an Expression a/b/c/d input, or a param:) or remove it.",
+        "warning: \"baseZList\" (ListConstant) computes a number/list wired to nothing — it renders no geometry and changes nothing. Wire its output into a consumer (PointsFromLists x/y/z, an Expression a/b/c/d input, or a param:) or remove it."
+      ],
+      "nodes": [
+        {
+          "id": "wheelbase",
+          "type": "NumberSlider",
+          "data": {
+            "value": 3000,
+            "label": "wheelbase",
+            "min": 2000,
+            "max": 4000,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 3460
+          }
+        },
+        {
+          "id": "trackWidth",
+          "type": "NumberSlider",
+          "data": {
+            "value": 1600,
+            "label": "trackWidth",
+            "min": 1200,
+            "max": 2000,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 3270
+          }
+        },
+        {
+          "id": "height",
+          "type": "NumberSlider",
+          "data": {
+            "value": 200,
+            "label": "height",
+            "min": 100,
+            "max": 400,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 800
+          }
+        },
+        {
+          "id": "noseLength",
+          "type": "NumberSlider",
+          "data": {
+            "value": 150,
+            "label": "noseLength",
+            "min": 50,
+            "max": 300,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 1940
+          }
+        },
+        {
+          "id": "rearWingHeight",
+          "type": "NumberSlider",
+          "data": {
+            "value": 200,
+            "label": "rearWingHeight",
+            "min": 50,
+            "max": 400,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 2700
+          }
+        },
+        {
+          "id": "wheelDiameter",
+          "type": "NumberSlider",
+          "data": {
+            "value": 660,
+            "label": "wheelDiameter",
+            "min": 500,
+            "max": 800,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 3650
+          }
+        },
+        {
+          "id": "wheelThicknessFactor",
+          "type": "NumberSlider",
+          "data": {
+            "value": 0.2,
+            "label": "wheelThicknessFactor",
+            "min": 0.1,
+            "max": 0.4,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 4600
+          }
+        },
+        {
+          "id": "rearWingThicknessFactor",
+          "type": "NumberSlider",
+          "data": {
+            "value": 0.1,
+            "label": "rearWingThicknessFactor",
+            "min": 0.05,
+            "max": 0.2,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 3080
+          }
+        },
+        {
+          "id": "wheelRadius",
+          "type": "Expression",
+          "data": {
+            "formula": "wheelDiameter/2"
+          },
+          "position": {
+            "x": 40,
+            "y": 3840
+          }
+        },
+        {
+          "id": "wheelThickness",
+          "type": "Expression",
+          "data": {
+            "formula": "wheelDiameter*wheelThicknessFactor"
+          },
+          "position": {
+            "x": 40,
+            "y": 4410
+          }
+        },
+        {
+          "id": "rearWingThickness",
+          "type": "Expression",
+          "data": {
+            "formula": "wheelDiameter*rearWingThicknessFactor"
+          },
+          "position": {
+            "x": 40,
+            "y": 2890
+          }
+        },
+        {
+          "id": "chassis_center_z",
+          "type": "Expression",
+          "data": {
+            "formula": "height/2"
+          },
+          "position": {
+            "x": 40,
+            "y": 610
+          }
+        },
+        {
+          "id": "chassis_center",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0
+          },
+          "position": {
+            "x": 270,
+            "y": 40
+          }
+        },
+        {
+          "id": "chassis",
+          "type": "Box",
+          "data": {
+            "width": "trackWidth",
+            "length": "wheelbase",
+            "height": "height",
+            "color": "#1e293b"
+          },
+          "position": {
+            "x": 500,
+            "y": 40
+          }
+        },
+        {
+          "id": "nose_radius1",
+          "type": "Expression",
+          "data": {
+            "formula": "trackWidth*0.4"
+          },
+          "position": {
+            "x": 40,
+            "y": 1560
+          }
+        },
+        {
+          "id": "nose_radius2",
+          "type": "Expression",
+          "data": {
+            "formula": "trackWidth*0.1"
+          },
+          "position": {
+            "x": 40,
+            "y": 1750
+          }
+        },
+        {
+          "id": "nose_center_x",
+          "type": "Expression",
+          "data": {
+            "formula": "wheelbase/2 + noseLength/2"
+          },
+          "position": {
+            "x": 40,
+            "y": 1180
+          }
+        },
+        {
+          "id": "nose_center_z",
+          "type": "Expression",
+          "data": {
+            "formula": "height/2"
+          },
+          "position": {
+            "x": 40,
+            "y": 1370
+          }
+        },
+        {
+          "id": "nose_center",
+          "type": "Point",
+          "data": {
+            "y": 0
+          },
+          "position": {
+            "x": 270,
+            "y": 230
+          }
+        },
+        {
+          "id": "nose_axis",
+          "type": "VectorXYZ",
+          "data": {
+            "x": 1,
+            "y": 0,
+            "z": 0
+          },
+          "position": {
+            "x": 40,
+            "y": 990
+          }
+        },
+        {
+          "id": "nose",
+          "type": "Cone",
+          "data": {
+            "height": "noseLength",
+            "color": "#ef4444"
+          },
+          "position": {
+            "x": 500,
+            "y": 420
+          }
+        },
+        {
+          "id": "rearWing_length",
+          "type": "Expression",
+          "data": {
+            "formula": "trackWidth*1.2"
+          },
+          "position": {
+            "x": 40,
+            "y": 2510
+          }
+        },
+        {
+          "id": "rearWing_center_x",
+          "type": "Expression",
+          "data": {
+            "formula": "-wheelbase/2 - rearWingThickness/2"
+          },
+          "position": {
+            "x": 40,
+            "y": 2130
+          }
+        },
+        {
+          "id": "rearWing_center_z",
+          "type": "Expression",
+          "data": {
+            "formula": "height + rearWingHeight/2"
+          },
+          "position": {
+            "x": 40,
+            "y": 2320
+          }
+        },
+        {
+          "id": "rearWing_center",
+          "type": "Point",
+          "data": {
+            "y": 0
+          },
+          "position": {
+            "x": 270,
+            "y": 420
+          }
+        },
+        {
+          "id": "rearWing",
+          "type": "Box",
+          "data": {
+            "height": "rearWingHeight",
+            "color": "#fbbf24"
+          },
+          "position": {
+            "x": 500,
+            "y": 610
+          }
+        },
+        {
+          "id": "wheelShape_center",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "position": {
+            "x": 40,
+            "y": 4220
+          }
+        },
+        {
+          "id": "wheelShape_axis",
+          "type": "VectorXYZ",
+          "data": {
+            "x": 0,
+            "y": 1,
+            "z": 0
+          },
+          "position": {
+            "x": 40,
+            "y": 4030
+          }
+        },
+        {
+          "id": "wheelShape",
+          "type": "Cylinder",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 610
+          }
+        },
+        {
+          "id": "wheelPoints",
+          "type": "PointsFromLists",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 800
+          }
+        },
+        {
+          "id": "wheelInstances",
+          "type": "InstanceOnPoints",
+          "data": {
+            "scaleStart": 1,
+            "scaleEnd": 1,
+            "alignToTangent": false,
+            "color": "#6b7280"
+          },
+          "position": {
+            "x": 500,
+            "y": 230
+          }
+        },
+        {
+          "id": "baseXList",
+          "type": "ListConstant",
+          "data": {
+            "values": "wheelbase/2, -wheelbase/2"
+          },
+          "position": {
+            "x": 40,
+            "y": 40
+          }
+        },
+        {
+          "id": "xList",
+          "type": "RepeatEach",
+          "data": {
+            "count": 2
+          },
+          "position": {
+            "x": 40,
+            "y": 4790
+          }
+        },
+        {
+          "id": "baseYList",
+          "type": "ListConstant",
+          "data": {
+            "values": "trackWidth/2, -trackWidth/2"
+          },
+          "position": {
+            "x": 40,
+            "y": 230
+          }
+        },
+        {
+          "id": "yList",
+          "type": "Tile",
+          "data": {
+            "count": 2
+          },
+          "position": {
+            "x": 40,
+            "y": 4980
+          }
+        },
+        {
+          "id": "baseZList",
+          "type": "ListConstant",
+          "data": {
+            "values": "wheelRadius"
+          },
+          "position": {
+            "x": 40,
+            "y": 420
+          }
+        },
+        {
+          "id": "zList",
+          "type": "RepeatEach",
+          "data": {
+            "count": 4
+          },
+          "position": {
+            "x": 40,
+            "y": 5170
+          }
+        }
+      ],
+      "edges": [
+        {
+          "source": "chassis_center_z",
+          "sourceHandle": "value",
+          "target": "chassis_center",
+          "targetHandle": "z",
+          "id": "e_chassis_center_z_chassis_center_z"
+        },
+        {
+          "source": "chassis_center",
+          "sourceHandle": "point",
+          "target": "chassis",
+          "targetHandle": "center",
+          "id": "e_chassis_center_chassis_center"
+        },
+        {
+          "source": "nose_center_x",
+          "sourceHandle": "value",
+          "target": "nose_center",
+          "targetHandle": "x",
+          "id": "e_nose_center_x_nose_center_x"
+        },
+        {
+          "source": "nose_center_z",
+          "sourceHandle": "value",
+          "target": "nose_center",
+          "targetHandle": "z",
+          "id": "e_nose_center_z_nose_center_z"
+        },
+        {
+          "source": "nose_radius1",
+          "sourceHandle": "value",
+          "target": "nose",
+          "targetHandle": "param:radius1",
+          "id": "e_nose_radius1_nose_param:radius1"
+        },
+        {
+          "source": "nose_radius2",
+          "sourceHandle": "value",
+          "target": "nose",
+          "targetHandle": "param:radius2",
+          "id": "e_nose_radius2_nose_param:radius2"
+        },
+        {
+          "source": "nose_center",
+          "sourceHandle": "point",
+          "target": "nose",
+          "targetHandle": "center",
+          "id": "e_nose_center_nose_center"
+        },
+        {
+          "source": "nose_axis",
+          "sourceHandle": "vector",
+          "target": "nose",
+          "targetHandle": "axis",
+          "id": "e_nose_axis_nose_axis"
+        },
+        {
+          "source": "rearWing_center_x",
+          "sourceHandle": "value",
+          "target": "rearWing_center",
+          "targetHandle": "x",
+          "id": "e_rearWing_center_x_rearWing_center_x"
+        },
+        {
+          "source": "rearWing_center_z",
+          "sourceHandle": "value",
+          "target": "rearWing_center",
+          "targetHandle": "z",
+          "id": "e_rearWing_center_z_rearWing_center_z"
+        },
+        {
+          "source": "rearWingThickness",
+          "sourceHandle": "value",
+          "target": "rearWing",
+          "targetHandle": "param:width",
+          "id": "e_rearWingThickness_rearWing_param:width"
+        },
+        {
+          "source": "rearWing_length",
+          "sourceHandle": "value",
+          "target": "rearWing",
+          "targetHandle": "param:length",
+          "id": "e_rearWing_length_rearWing_param:length"
+        },
+        {
+          "source": "rearWing_center",
+          "sourceHandle": "point",
+          "target": "rearWing",
+          "targetHandle": "center",
+          "id": "e_rearWing_center_rearWing_center"
+        },
+        {
+          "source": "wheelRadius",
+          "sourceHandle": "value",
+          "target": "wheelShape",
+          "targetHandle": "param:radius",
+          "id": "e_wheelRadius_wheelShape_param:radius"
+        },
+        {
+          "source": "wheelThickness",
+          "sourceHandle": "value",
+          "target": "wheelShape",
+          "targetHandle": "param:height",
+          "id": "e_wheelThickness_wheelShape_param:height"
+        },
+        {
+          "source": "wheelShape_center",
+          "sourceHandle": "point",
+          "target": "wheelShape",
+          "targetHandle": "center",
+          "id": "e_wheelShape_center_wheelShape_center"
+        },
+        {
+          "source": "wheelShape_axis",
+          "sourceHandle": "vector",
+          "target": "wheelShape",
+          "targetHandle": "axis",
+          "id": "e_wheelShape_axis_wheelShape_axis"
+        },
+        {
+          "source": "wheelShape",
+          "sourceHandle": "solid",
+          "target": "wheelInstances",
+          "targetHandle": "shape",
+          "id": "e_wheelShape_wheelInstances_shape"
+        },
+        {
+          "source": "wheelPoints",
+          "sourceHandle": "points",
+          "target": "wheelInstances",
+          "targetHandle": "points",
+          "id": "e_wheelPoints_wheelInstances_points"
+        },
+        {
+          "id": "xList__to__wheelPoints__x",
+          "source": "xList",
+          "sourceHandle": "values",
+          "target": "wheelPoints",
+          "targetHandle": "x"
+        },
+        {
+          "id": "yList__to__wheelPoints__y",
+          "source": "yList",
+          "sourceHandle": "values",
+          "target": "wheelPoints",
+          "targetHandle": "y"
+        },
+        {
+          "id": "zList__to__wheelPoints__z",
+          "source": "zList",
+          "sourceHandle": "values",
+          "target": "wheelPoints",
+          "targetHandle": "z"
+        }
+      ]
+    },
+    {
+      "at": "2026-07-23T08:45:55.283Z",
+      "turn": 1,
+      "trigger": "ai-repair",
+      "label": "attempt 3: updated 1 node(s) (type changes: baseZList→ListConstant); added 3 edge(s)",
+      "nodeCount": 37,
+      "edgeCount": 22,
+      "isolatedCount": 11,
+      "diff": {
+        "addedNodes": [],
+        "removedNodes": [],
+        "changedNodes": [
+          "baseZList"
+        ],
+        "addedEdges": 0,
+        "removedEdges": 0
+      },
+      "details": [
+        "dropped edge: baseXList → xList.list (target node \"xList.list\" does not exist)",
+        "dropped edge: baseYList → yList.list (target node \"yList.list\" does not exist)",
+        "dropped edge: baseZList → zList.list (target node \"zList.list\" does not exist)",
+        "warning: Dead design parameters: sliders \"wheelDiameter\", \"wheelThicknessFactor\", \"rearWingThicknessFactor\" are not referenced by any formula or edge — moving them changes nothing. Wire dimensions to them or remove them.",
+        "warning: \"baseXList\" (ListConstant) computes a number/list wired to nothing — it renders no geometry and changes nothing. Wire its output into a consumer (PointsFromLists x/y/z, an Expression a/b/c/d input, or a param:) or remove it.",
+        "warning: \"baseYList\" (ListConstant) computes a number/list wired to nothing — it renders no geometry and changes nothing. Wire its output into a consumer (PointsFromLists x/y/z, an Expression a/b/c/d input, or a param:) or remove it.",
+        "warning: \"baseZList\" (ListConstant) computes a number/list wired to nothing — it renders no geometry and changes nothing. Wire its output into a consumer (PointsFromLists x/y/z, an Expression a/b/c/d input, or a param:) or remove it."
+      ],
+      "nodes": [
+        {
+          "id": "wheelbase",
+          "type": "NumberSlider",
+          "data": {
+            "value": 3000,
+            "label": "wheelbase",
+            "min": 2000,
+            "max": 4000,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 3460
+          }
+        },
+        {
+          "id": "trackWidth",
+          "type": "NumberSlider",
+          "data": {
+            "value": 1600,
+            "label": "trackWidth",
+            "min": 1200,
+            "max": 2000,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 3270
+          }
+        },
+        {
+          "id": "height",
+          "type": "NumberSlider",
+          "data": {
+            "value": 200,
+            "label": "height",
+            "min": 100,
+            "max": 400,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 800
+          }
+        },
+        {
+          "id": "noseLength",
+          "type": "NumberSlider",
+          "data": {
+            "value": 150,
+            "label": "noseLength",
+            "min": 50,
+            "max": 300,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 1940
+          }
+        },
+        {
+          "id": "rearWingHeight",
+          "type": "NumberSlider",
+          "data": {
+            "value": 200,
+            "label": "rearWingHeight",
+            "min": 50,
+            "max": 400,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 2700
+          }
+        },
+        {
+          "id": "wheelDiameter",
+          "type": "NumberSlider",
+          "data": {
+            "value": 660,
+            "label": "wheelDiameter",
+            "min": 500,
+            "max": 800,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 3650
+          }
+        },
+        {
+          "id": "wheelThicknessFactor",
+          "type": "NumberSlider",
+          "data": {
+            "value": 0.2,
+            "label": "wheelThicknessFactor",
+            "min": 0.1,
+            "max": 0.4,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 4600
+          }
+        },
+        {
+          "id": "rearWingThicknessFactor",
+          "type": "NumberSlider",
+          "data": {
+            "value": 0.1,
+            "label": "rearWingThicknessFactor",
+            "min": 0.05,
+            "max": 0.2,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 3080
+          }
+        },
+        {
+          "id": "wheelRadius",
+          "type": "Expression",
+          "data": {
+            "formula": "wheelDiameter/2"
+          },
+          "position": {
+            "x": 40,
+            "y": 3840
+          }
+        },
+        {
+          "id": "wheelThickness",
+          "type": "Expression",
+          "data": {
+            "formula": "wheelDiameter*wheelThicknessFactor"
+          },
+          "position": {
+            "x": 40,
+            "y": 4410
+          }
+        },
+        {
+          "id": "rearWingThickness",
+          "type": "Expression",
+          "data": {
+            "formula": "wheelDiameter*rearWingThicknessFactor"
+          },
+          "position": {
+            "x": 40,
+            "y": 2890
+          }
+        },
+        {
+          "id": "chassis_center_z",
+          "type": "Expression",
+          "data": {
+            "formula": "height/2"
+          },
+          "position": {
+            "x": 40,
+            "y": 610
+          }
+        },
+        {
+          "id": "chassis_center",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0
+          },
+          "position": {
+            "x": 270,
+            "y": 40
+          }
+        },
+        {
+          "id": "chassis",
+          "type": "Box",
+          "data": {
+            "width": "trackWidth",
+            "length": "wheelbase",
+            "height": "height",
+            "color": "#1e293b"
+          },
+          "position": {
+            "x": 500,
+            "y": 40
+          }
+        },
+        {
+          "id": "nose_radius1",
+          "type": "Expression",
+          "data": {
+            "formula": "trackWidth*0.4"
+          },
+          "position": {
+            "x": 40,
+            "y": 1560
+          }
+        },
+        {
+          "id": "nose_radius2",
+          "type": "Expression",
+          "data": {
+            "formula": "trackWidth*0.1"
+          },
+          "position": {
+            "x": 40,
+            "y": 1750
+          }
+        },
+        {
+          "id": "nose_center_x",
+          "type": "Expression",
+          "data": {
+            "formula": "wheelbase/2 + noseLength/2"
+          },
+          "position": {
+            "x": 40,
+            "y": 1180
+          }
+        },
+        {
+          "id": "nose_center_z",
+          "type": "Expression",
+          "data": {
+            "formula": "height/2"
+          },
+          "position": {
+            "x": 40,
+            "y": 1370
+          }
+        },
+        {
+          "id": "nose_center",
+          "type": "Point",
+          "data": {
+            "y": 0
+          },
+          "position": {
+            "x": 270,
+            "y": 230
+          }
+        },
+        {
+          "id": "nose_axis",
+          "type": "VectorXYZ",
+          "data": {
+            "x": 1,
+            "y": 0,
+            "z": 0
+          },
+          "position": {
+            "x": 40,
+            "y": 990
+          }
+        },
+        {
+          "id": "nose",
+          "type": "Cone",
+          "data": {
+            "height": "noseLength",
+            "color": "#ef4444"
+          },
+          "position": {
+            "x": 500,
+            "y": 420
+          }
+        },
+        {
+          "id": "rearWing_length",
+          "type": "Expression",
+          "data": {
+            "formula": "trackWidth*1.2"
+          },
+          "position": {
+            "x": 40,
+            "y": 2510
+          }
+        },
+        {
+          "id": "rearWing_center_x",
+          "type": "Expression",
+          "data": {
+            "formula": "-wheelbase/2 - rearWingThickness/2"
+          },
+          "position": {
+            "x": 40,
+            "y": 2130
+          }
+        },
+        {
+          "id": "rearWing_center_z",
+          "type": "Expression",
+          "data": {
+            "formula": "height + rearWingHeight/2"
+          },
+          "position": {
+            "x": 40,
+            "y": 2320
+          }
+        },
+        {
+          "id": "rearWing_center",
+          "type": "Point",
+          "data": {
+            "y": 0
+          },
+          "position": {
+            "x": 270,
+            "y": 420
+          }
+        },
+        {
+          "id": "rearWing",
+          "type": "Box",
+          "data": {
+            "height": "rearWingHeight",
+            "color": "#fbbf24"
+          },
+          "position": {
+            "x": 500,
+            "y": 610
+          }
+        },
+        {
+          "id": "wheelShape_center",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "position": {
+            "x": 40,
+            "y": 4220
+          }
+        },
+        {
+          "id": "wheelShape_axis",
+          "type": "VectorXYZ",
+          "data": {
+            "x": 0,
+            "y": 1,
+            "z": 0
+          },
+          "position": {
+            "x": 40,
+            "y": 4030
+          }
+        },
+        {
+          "id": "wheelShape",
+          "type": "Cylinder",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 610
+          }
+        },
+        {
+          "id": "wheelPoints",
+          "type": "PointsFromLists",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 800
+          }
+        },
+        {
+          "id": "wheelInstances",
+          "type": "InstanceOnPoints",
+          "data": {
+            "scaleStart": 1,
+            "scaleEnd": 1,
+            "alignToTangent": false,
+            "color": "#6b7280"
+          },
+          "position": {
+            "x": 500,
+            "y": 230
+          }
+        },
+        {
+          "id": "baseXList",
+          "type": "ListConstant",
+          "data": {
+            "values": "wheelbase/2, -wheelbase/2"
+          },
+          "position": {
+            "x": 40,
+            "y": 40
+          }
+        },
+        {
+          "id": "xList",
+          "type": "RepeatEach",
+          "data": {
+            "count": 2
+          },
+          "position": {
+            "x": 40,
+            "y": 4790
+          },
+          "measured": {
+            "width": 201,
+            "height": 194
+          }
+        },
+        {
+          "id": "baseYList",
+          "type": "ListConstant",
+          "data": {
+            "values": "trackWidth/2, -trackWidth/2"
+          },
+          "position": {
+            "x": 40,
+            "y": 230
+          }
+        },
+        {
+          "id": "yList",
+          "type": "Tile",
+          "data": {
+            "count": 2
+          },
+          "position": {
+            "x": 40,
+            "y": 4980
+          },
+          "measured": {
+            "width": 201,
+            "height": 194
+          }
+        },
+        {
+          "id": "baseZList",
+          "type": "ListConstant",
+          "data": {
+            "values": "wheelradius"
+          },
+          "position": {
+            "x": 40,
+            "y": 420
+          }
+        },
+        {
+          "id": "zList",
+          "type": "RepeatEach",
+          "data": {
+            "count": 4
+          },
+          "position": {
+            "x": 40,
+            "y": 5170
+          },
+          "measured": {
+            "width": 201,
+            "height": 194
+          }
+        }
+      ],
+      "edges": [
+        {
+          "source": "chassis_center_z",
+          "sourceHandle": "value",
+          "target": "chassis_center",
+          "targetHandle": "z",
+          "id": "e_chassis_center_z_chassis_center_z"
+        },
+        {
+          "source": "chassis_center",
+          "sourceHandle": "point",
+          "target": "chassis",
+          "targetHandle": "center",
+          "id": "e_chassis_center_chassis_center"
+        },
+        {
+          "source": "nose_center_x",
+          "sourceHandle": "value",
+          "target": "nose_center",
+          "targetHandle": "x",
+          "id": "e_nose_center_x_nose_center_x"
+        },
+        {
+          "source": "nose_center_z",
+          "sourceHandle": "value",
+          "target": "nose_center",
+          "targetHandle": "z",
+          "id": "e_nose_center_z_nose_center_z"
+        },
+        {
+          "source": "nose_radius1",
+          "sourceHandle": "value",
+          "target": "nose",
+          "targetHandle": "param:radius1",
+          "id": "e_nose_radius1_nose_param:radius1"
+        },
+        {
+          "source": "nose_radius2",
+          "sourceHandle": "value",
+          "target": "nose",
+          "targetHandle": "param:radius2",
+          "id": "e_nose_radius2_nose_param:radius2"
+        },
+        {
+          "source": "nose_center",
+          "sourceHandle": "point",
+          "target": "nose",
+          "targetHandle": "center",
+          "id": "e_nose_center_nose_center"
+        },
+        {
+          "source": "nose_axis",
+          "sourceHandle": "vector",
+          "target": "nose",
+          "targetHandle": "axis",
+          "id": "e_nose_axis_nose_axis"
+        },
+        {
+          "source": "rearWing_center_x",
+          "sourceHandle": "value",
+          "target": "rearWing_center",
+          "targetHandle": "x",
+          "id": "e_rearWing_center_x_rearWing_center_x"
+        },
+        {
+          "source": "rearWing_center_z",
+          "sourceHandle": "value",
+          "target": "rearWing_center",
+          "targetHandle": "z",
+          "id": "e_rearWing_center_z_rearWing_center_z"
+        },
+        {
+          "source": "rearWingThickness",
+          "sourceHandle": "value",
+          "target": "rearWing",
+          "targetHandle": "param:width",
+          "id": "e_rearWingThickness_rearWing_param:width"
+        },
+        {
+          "source": "rearWing_length",
+          "sourceHandle": "value",
+          "target": "rearWing",
+          "targetHandle": "param:length",
+          "id": "e_rearWing_length_rearWing_param:length"
+        },
+        {
+          "source": "rearWing_center",
+          "sourceHandle": "point",
+          "target": "rearWing",
+          "targetHandle": "center",
+          "id": "e_rearWing_center_rearWing_center"
+        },
+        {
+          "source": "wheelRadius",
+          "sourceHandle": "value",
+          "target": "wheelShape",
+          "targetHandle": "param:radius",
+          "id": "e_wheelRadius_wheelShape_param:radius"
+        },
+        {
+          "source": "wheelThickness",
+          "sourceHandle": "value",
+          "target": "wheelShape",
+          "targetHandle": "param:height",
+          "id": "e_wheelThickness_wheelShape_param:height"
+        },
+        {
+          "source": "wheelShape_center",
+          "sourceHandle": "point",
+          "target": "wheelShape",
+          "targetHandle": "center",
+          "id": "e_wheelShape_center_wheelShape_center"
+        },
+        {
+          "source": "wheelShape_axis",
+          "sourceHandle": "vector",
+          "target": "wheelShape",
+          "targetHandle": "axis",
+          "id": "e_wheelShape_axis_wheelShape_axis"
+        },
+        {
+          "source": "wheelShape",
+          "sourceHandle": "solid",
+          "target": "wheelInstances",
+          "targetHandle": "shape",
+          "id": "e_wheelShape_wheelInstances_shape"
+        },
+        {
+          "source": "wheelPoints",
+          "sourceHandle": "points",
+          "target": "wheelInstances",
+          "targetHandle": "points",
+          "id": "e_wheelPoints_wheelInstances_points"
+        },
+        {
+          "id": "xList__to__wheelPoints__x",
+          "source": "xList",
+          "sourceHandle": "values",
+          "target": "wheelPoints",
+          "targetHandle": "x"
+        },
+        {
+          "id": "yList__to__wheelPoints__y",
+          "source": "yList",
+          "sourceHandle": "values",
+          "target": "wheelPoints",
+          "targetHandle": "y"
+        },
+        {
+          "id": "zList__to__wheelPoints__z",
+          "source": "zList",
+          "sourceHandle": "values",
+          "target": "wheelPoints",
+          "targetHandle": "z"
+        }
+      ]
+    },
+    {
+      "at": "2026-07-23T08:56:49.802Z",
+      "turn": 2,
+      "trigger": "ai-ir",
+      "label": "attempt 3: rebuilt graph (36 nodes)",
+      "nodeCount": 36,
+      "edgeCount": 25,
+      "isolatedCount": 8,
+      "diff": {
+        "addedNodes": [
+          "chassisCenterZ",
+          "rearWingLength"
+        ],
+        "removedNodes": [
+          "chassis_center_z",
+          "nose_center_z",
+          "rearWing_length"
+        ],
+        "changedNodes": [
+          "wheelThickness",
+          "rearWingThickness",
+          "nose_radius1",
+          "nose_radius2",
+          "rearWing_center_z",
+          "baseXList",
+          "baseYList",
+          "baseZList"
+        ],
+        "addedEdges": 6,
+        "removedEdges": 3
+      },
+      "details": [
+        "warning: Dead design parameters: sliders \"wheelDiameter\", \"wheelThicknessFactor\", \"rearWingThicknessFactor\" are not referenced by any formula or edge — moving them changes nothing. Wire dimensions to them or remove them."
+      ],
+      "nodes": [
+        {
+          "id": "wheelbase",
+          "type": "NumberSlider",
+          "data": {
+            "value": 3000,
+            "label": "wheelbase",
+            "min": 2000,
+            "max": 4000,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 3270
+          }
+        },
+        {
+          "id": "trackWidth",
+          "type": "NumberSlider",
+          "data": {
+            "value": 1600,
+            "label": "trackWidth",
+            "min": 1200,
+            "max": 2000,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 3080
+          }
+        },
+        {
+          "id": "height",
+          "type": "NumberSlider",
+          "data": {
+            "value": 200,
+            "label": "height",
+            "min": 100,
+            "max": 400,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 800
+          }
+        },
+        {
+          "id": "noseLength",
+          "type": "NumberSlider",
+          "data": {
+            "value": 150,
+            "label": "noseLength",
+            "min": 50,
+            "max": 300,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 1750
+          }
+        },
+        {
+          "id": "rearWingHeight",
+          "type": "NumberSlider",
+          "data": {
+            "value": 200,
+            "label": "rearWingHeight",
+            "min": 50,
+            "max": 400,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 2320
+          }
+        },
+        {
+          "id": "wheelDiameter",
+          "type": "NumberSlider",
+          "data": {
+            "value": 660,
+            "label": "wheelDiameter",
+            "min": 500,
+            "max": 800,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 3460
+          }
+        },
+        {
+          "id": "wheelThicknessFactor",
+          "type": "NumberSlider",
+          "data": {
+            "value": 0.2,
+            "label": "wheelThicknessFactor",
+            "min": 0.1,
+            "max": 0.4,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 4410
+          }
+        },
+        {
+          "id": "rearWingThicknessFactor",
+          "type": "NumberSlider",
+          "data": {
+            "value": 0.1,
+            "label": "rearWingThicknessFactor",
+            "min": 0.05,
+            "max": 0.2,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 2890
+          }
+        },
+        {
+          "id": "wheelRadius",
+          "type": "Expression",
+          "data": {
+            "formula": "wheelDiameter/2"
+          },
+          "position": {
+            "x": 40,
+            "y": 3650
+          }
+        },
+        {
+          "id": "wheelThickness",
+          "type": "Expression",
+          "data": {
+            "formula": "wheelDiameter * wheelThicknessFactor"
+          },
+          "position": {
+            "x": 40,
+            "y": 4220
+          }
+        },
+        {
+          "id": "rearWingThickness",
+          "type": "Expression",
+          "data": {
+            "formula": "wheelDiameter * rearWingThicknessFactor"
+          },
+          "position": {
+            "x": 40,
+            "y": 2700
+          }
+        },
+        {
+          "id": "chassisCenterZ",
+          "type": "Expression",
+          "data": {
+            "formula": "height/2"
+          },
+          "position": {
+            "x": 40,
+            "y": 610
+          }
+        },
+        {
+          "id": "rearWingLength",
+          "type": "Expression",
+          "data": {
+            "formula": "trackWidth * 1.2"
+          },
+          "position": {
+            "x": 40,
+            "y": 2510
+          }
+        },
+        {
+          "id": "chassis_center",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0
+          },
+          "position": {
+            "x": 270,
+            "y": 610
+          }
+        },
+        {
+          "id": "chassis",
+          "type": "Box",
+          "data": {
+            "width": "trackWidth",
+            "length": "wheelbase",
+            "height": "height",
+            "color": "#1e293b"
+          },
+          "position": {
+            "x": 500,
+            "y": 230
+          }
+        },
+        {
+          "id": "nose_radius1",
+          "type": "Expression",
+          "data": {
+            "formula": "trackWidth * 0.4"
+          },
+          "position": {
+            "x": 40,
+            "y": 1370
+          }
+        },
+        {
+          "id": "nose_radius2",
+          "type": "Expression",
+          "data": {
+            "formula": "trackWidth * 0.1"
+          },
+          "position": {
+            "x": 40,
+            "y": 1560
+          }
+        },
+        {
+          "id": "nose_center_x",
+          "type": "Expression",
+          "data": {
+            "formula": "wheelbase/2 + noseLength/2"
+          },
+          "position": {
+            "x": 40,
+            "y": 1180
+          }
+        },
+        {
+          "id": "nose_center",
+          "type": "Point",
+          "data": {
+            "y": 0
+          },
+          "position": {
+            "x": 270,
+            "y": 800
+          }
+        },
+        {
+          "id": "nose_axis",
+          "type": "VectorXYZ",
+          "data": {
+            "x": 1,
+            "y": 0,
+            "z": 0
+          },
+          "position": {
+            "x": 40,
+            "y": 990
+          }
+        },
+        {
+          "id": "nose",
+          "type": "Cone",
+          "data": {
+            "height": "noseLength",
+            "color": "#ef4444"
+          },
+          "position": {
+            "x": 500,
+            "y": 420
+          }
+        },
+        {
+          "id": "rearWing_center_x",
+          "type": "Expression",
+          "data": {
+            "formula": "-wheelbase/2 - rearWingThickness/2"
+          },
+          "position": {
+            "x": 40,
+            "y": 1940
+          }
+        },
+        {
+          "id": "rearWing_center_z",
+          "type": "Expression",
+          "data": {
+            "formula": "chassisCenterZ + rearWingHeight/2"
+          },
+          "position": {
+            "x": 40,
+            "y": 2130
+          }
+        },
+        {
+          "id": "rearWing_center",
+          "type": "Point",
+          "data": {
+            "y": 0
+          },
+          "position": {
+            "x": 270,
+            "y": 990
+          }
+        },
+        {
+          "id": "rearWing",
+          "type": "Box",
+          "data": {
+            "height": "rearWingHeight",
+            "color": "#fbbf24"
+          },
+          "position": {
+            "x": 500,
+            "y": 610
+          }
+        },
+        {
+          "id": "wheelShape_center",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "position": {
+            "x": 40,
+            "y": 4030
+          }
+        },
+        {
+          "id": "wheelShape_axis",
+          "type": "VectorXYZ",
+          "data": {
+            "x": 0,
+            "y": 1,
+            "z": 0
+          },
+          "position": {
+            "x": 40,
+            "y": 3840
+          }
+        },
+        {
+          "id": "wheelShape",
+          "type": "Cylinder",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 1180
+          }
+        },
+        {
+          "id": "baseXList",
+          "type": "ListConstant",
+          "data": {
+            "values": "[object Object], [object Object]"
+          },
+          "position": {
+            "x": 40,
+            "y": 40
+          }
+        },
+        {
+          "id": "baseYList",
+          "type": "ListConstant",
+          "data": {
+            "values": "[object Object], [object Object]"
+          },
+          "position": {
+            "x": 40,
+            "y": 230
+          }
+        },
+        {
+          "id": "baseZList",
+          "type": "ListConstant",
+          "data": {
+            "values": "[object Object]"
+          },
+          "position": {
+            "x": 40,
+            "y": 420
+          }
+        },
+        {
+          "id": "xList",
+          "type": "RepeatEach",
+          "data": {
+            "count": 2
+          },
+          "position": {
+            "x": 270,
+            "y": 40
+          }
+        },
+        {
+          "id": "yList",
+          "type": "Tile",
+          "data": {
+            "count": 2
+          },
+          "position": {
+            "x": 270,
+            "y": 230
+          }
+        },
+        {
+          "id": "zList",
+          "type": "RepeatEach",
+          "data": {
+            "count": 4
+          },
+          "position": {
+            "x": 270,
+            "y": 420
+          }
+        },
+        {
+          "id": "wheelPoints",
+          "type": "PointsFromLists",
+          "data": {},
+          "position": {
+            "x": 500,
+            "y": 40
+          }
+        },
+        {
+          "id": "wheelInstances",
+          "type": "InstanceOnPoints",
+          "data": {
+            "scaleStart": 1,
+            "scaleEnd": 1,
+            "alignToTangent": false,
+            "color": "#6b7280"
+          },
+          "position": {
+            "x": 730,
+            "y": 40
+          }
+        }
+      ],
+      "edges": [
+        {
+          "source": "chassisCenterZ",
+          "sourceHandle": "value",
+          "target": "chassis_center",
+          "targetHandle": "z",
+          "id": "e_chassisCenterZ_chassis_center_z"
+        },
+        {
+          "source": "chassis_center",
+          "sourceHandle": "point",
+          "target": "chassis",
+          "targetHandle": "center",
+          "id": "e_chassis_center_chassis_center"
+        },
+        {
+          "source": "nose_center_x",
+          "sourceHandle": "value",
+          "target": "nose_center",
+          "targetHandle": "x",
+          "id": "e_nose_center_x_nose_center_x"
+        },
+        {
+          "source": "chassisCenterZ",
+          "sourceHandle": "value",
+          "target": "nose_center",
+          "targetHandle": "z",
+          "id": "e_chassisCenterZ_nose_center_z"
+        },
+        {
+          "source": "nose_radius1",
+          "sourceHandle": "value",
+          "target": "nose",
+          "targetHandle": "param:radius1",
+          "id": "e_nose_radius1_nose_param:radius1"
+        },
+        {
+          "source": "nose_radius2",
+          "sourceHandle": "value",
+          "target": "nose",
+          "targetHandle": "param:radius2",
+          "id": "e_nose_radius2_nose_param:radius2"
+        },
+        {
+          "source": "nose_center",
+          "sourceHandle": "point",
+          "target": "nose",
+          "targetHandle": "center",
+          "id": "e_nose_center_nose_center"
+        },
+        {
+          "source": "nose_axis",
+          "sourceHandle": "vector",
+          "target": "nose",
+          "targetHandle": "axis",
+          "id": "e_nose_axis_nose_axis"
+        },
+        {
+          "source": "rearWing_center_x",
+          "sourceHandle": "value",
+          "target": "rearWing_center",
+          "targetHandle": "x",
+          "id": "e_rearWing_center_x_rearWing_center_x"
+        },
+        {
+          "source": "rearWing_center_z",
+          "sourceHandle": "value",
+          "target": "rearWing_center",
+          "targetHandle": "z",
+          "id": "e_rearWing_center_z_rearWing_center_z"
+        },
+        {
+          "source": "rearWingThickness",
+          "sourceHandle": "value",
+          "target": "rearWing",
+          "targetHandle": "param:width",
+          "id": "e_rearWingThickness_rearWing_param:width"
+        },
+        {
+          "source": "rearWingLength",
+          "sourceHandle": "value",
+          "target": "rearWing",
+          "targetHandle": "param:length",
+          "id": "e_rearWingLength_rearWing_param:length"
+        },
+        {
+          "source": "rearWing_center",
+          "sourceHandle": "point",
+          "target": "rearWing",
+          "targetHandle": "center",
+          "id": "e_rearWing_center_rearWing_center"
+        },
+        {
+          "source": "wheelRadius",
+          "sourceHandle": "value",
+          "target": "wheelShape",
+          "targetHandle": "param:radius",
+          "id": "e_wheelRadius_wheelShape_param:radius"
+        },
+        {
+          "source": "wheelThickness",
+          "sourceHandle": "value",
+          "target": "wheelShape",
+          "targetHandle": "param:height",
+          "id": "e_wheelThickness_wheelShape_param:height"
+        },
+        {
+          "source": "wheelShape_center",
+          "sourceHandle": "point",
+          "target": "wheelShape",
+          "targetHandle": "center",
+          "id": "e_wheelShape_center_wheelShape_center"
+        },
+        {
+          "source": "wheelShape_axis",
+          "sourceHandle": "vector",
+          "target": "wheelShape",
+          "targetHandle": "axis",
+          "id": "e_wheelShape_axis_wheelShape_axis"
+        },
+        {
+          "source": "baseXList",
+          "sourceHandle": "values",
+          "target": "xList",
+          "targetHandle": "list",
+          "id": "e_baseXList_xList_list"
+        },
+        {
+          "source": "baseYList",
+          "sourceHandle": "values",
+          "target": "yList",
+          "targetHandle": "list",
+          "id": "e_baseYList_yList_list"
+        },
+        {
+          "source": "baseZList",
+          "sourceHandle": "values",
+          "target": "zList",
+          "targetHandle": "list",
+          "id": "e_baseZList_zList_list"
+        },
+        {
+          "source": "xList",
+          "sourceHandle": "values",
+          "target": "wheelPoints",
+          "targetHandle": "x",
+          "id": "e_xList_wheelPoints_x"
+        },
+        {
+          "source": "yList",
+          "sourceHandle": "values",
+          "target": "wheelPoints",
+          "targetHandle": "y",
+          "id": "e_yList_wheelPoints_y"
+        },
+        {
+          "source": "zList",
+          "sourceHandle": "values",
+          "target": "wheelPoints",
+          "targetHandle": "z",
+          "id": "e_zList_wheelPoints_z"
+        },
+        {
+          "source": "wheelShape",
+          "sourceHandle": "solid",
+          "target": "wheelInstances",
+          "targetHandle": "shape",
+          "id": "e_wheelShape_wheelInstances_shape"
+        },
+        {
+          "source": "wheelPoints",
+          "sourceHandle": "points",
+          "target": "wheelInstances",
+          "targetHandle": "points",
+          "id": "e_wheelPoints_wheelInstances_points"
+        }
+      ]
+    }
+  ]
+}

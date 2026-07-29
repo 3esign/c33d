@@ -1,0 +1,6498 @@
+{
+  "c33dExport": 2,
+  "exportedAt": "2026-07-23T19:13:05.184Z",
+  "comment": "interesting",
+  "agent": {
+    "name": "Ollama (Local)",
+    "provider": "ollama",
+    "model": "qwen3.5:cloud"
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "totalHeight",
+        "type": "NumberSlider",
+        "data": {
+          "value": 180,
+          "label": "totalHeight",
+          "min": 100,
+          "max": 250,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 5170
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "neckLength",
+        "type": "NumberSlider",
+        "data": {
+          "value": 15,
+          "label": "neckLength",
+          "min": 5,
+          "max": 40,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 4030
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "spineLength",
+        "type": "NumberSlider",
+        "data": {
+          "value": 60,
+          "label": "spineLength",
+          "min": 30,
+          "max": 100,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 4980
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "shoulderWidth",
+        "type": "NumberSlider",
+        "data": {
+          "value": 45,
+          "label": "shoulderWidth",
+          "min": 20,
+          "max": 80,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 4600
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "hipWidth",
+        "type": "NumberSlider",
+        "data": {
+          "value": 30,
+          "label": "hipWidth",
+          "min": 15,
+          "max": 60,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 2510
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "armSegLength",
+        "type": "NumberSlider",
+        "data": {
+          "value": 25,
+          "label": "armSegLength",
+          "min": 10,
+          "max": 50,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 1370
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "legSegLength",
+        "type": "NumberSlider",
+        "data": {
+          "value": 35,
+          "label": "legSegLength",
+          "min": 15,
+          "max": 60,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 3840
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "headRadius",
+        "type": "NumberSlider",
+        "data": {
+          "value": 12,
+          "label": "headRadius",
+          "min": 5,
+          "max": 25,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 1940
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "boneRadius",
+        "type": "NumberSlider",
+        "data": {
+          "value": 2,
+          "label": "boneRadius",
+          "min": 0.5,
+          "max": 8,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 1560
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "anchor",
+        "type": "Point",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": "totalHeight*0.55"
+        },
+        "position": {
+          "x": 40,
+          "y": 40
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "headCenter",
+        "type": "Point",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": "totalHeight*0.55 + neckLength"
+        },
+        "position": {
+          "x": 40,
+          "y": 1750
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "spineBottom",
+        "type": "Point",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": "totalHeight*0.55 - spineLength"
+        },
+        "position": {
+          "x": 40,
+          "y": 4790
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "shoulderLeft",
+        "type": "Point",
+        "data": {
+          "x": "-shoulderWidth/2",
+          "y": 0,
+          "z": "totalHeight*0.55"
+        },
+        "position": {
+          "x": 40,
+          "y": 4220
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "shoulderRight",
+        "type": "Point",
+        "data": {
+          "x": "shoulderWidth/2",
+          "y": 0,
+          "z": "totalHeight*0.55"
+        },
+        "position": {
+          "x": 40,
+          "y": 4410
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "hipLeft",
+        "type": "Point",
+        "data": {
+          "x": "-hipWidth/2",
+          "y": 0,
+          "z": "totalHeight*0.55 - spineLength"
+        },
+        "position": {
+          "x": 40,
+          "y": 2130
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "hipRight",
+        "type": "Point",
+        "data": {
+          "x": "hipWidth/2",
+          "y": 0,
+          "z": "totalHeight*0.55 - spineLength"
+        },
+        "position": {
+          "x": 40,
+          "y": 2320
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "arm1L_end",
+        "type": "Point",
+        "data": {
+          "x": "-shoulderWidth/2 - armSegLength",
+          "y": 0,
+          "z": "totalHeight*0.55 - armSegLength*0.3"
+        },
+        "position": {
+          "x": 40,
+          "y": 230
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "arm2L_end",
+        "type": "Point",
+        "data": {
+          "x": "-shoulderWidth/2 - armSegLength*1.5",
+          "y": 0,
+          "z": "totalHeight*0.55 - armSegLength*0.8"
+        },
+        "position": {
+          "x": 40,
+          "y": 610
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "arm3L_end",
+        "type": "Point",
+        "data": {
+          "x": "-shoulderWidth/2 - armSegLength*1.8",
+          "y": 0,
+          "z": "totalHeight*0.55 - armSegLength*1.2"
+        },
+        "position": {
+          "x": 40,
+          "y": 990
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "arm1R_end",
+        "type": "Point",
+        "data": {
+          "x": "shoulderWidth/2 + armSegLength",
+          "y": 0,
+          "z": "totalHeight*0.55 - armSegLength*0.3"
+        },
+        "position": {
+          "x": 40,
+          "y": 420
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "arm2R_end",
+        "type": "Point",
+        "data": {
+          "x": "shoulderWidth/2 + armSegLength*1.5",
+          "y": 0,
+          "z": "totalHeight*0.55 - armSegLength*0.8"
+        },
+        "position": {
+          "x": 40,
+          "y": 800
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "arm3R_end",
+        "type": "Point",
+        "data": {
+          "x": "shoulderWidth/2 + armSegLength*1.8",
+          "y": 0,
+          "z": "totalHeight*0.55 - armSegLength*1.2"
+        },
+        "position": {
+          "x": 40,
+          "y": 1180
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "leg1L_end",
+        "type": "Point",
+        "data": {
+          "x": "-hipWidth/2 - legSegLength*0.2",
+          "y": 0,
+          "z": "totalHeight*0.55 - spineLength - legSegLength"
+        },
+        "position": {
+          "x": 40,
+          "y": 2700
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "leg2L_end",
+        "type": "Point",
+        "data": {
+          "x": "-hipWidth/2 - legSegLength*0.3",
+          "y": 0,
+          "z": "totalHeight*0.55 - spineLength - legSegLength*2"
+        },
+        "position": {
+          "x": 40,
+          "y": 3080
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "leg3L_end",
+        "type": "Point",
+        "data": {
+          "x": "-hipWidth/2 - legSegLength*0.4",
+          "y": 0,
+          "z": "totalHeight*0.55 - spineLength - legSegLength*2.8"
+        },
+        "position": {
+          "x": 40,
+          "y": 3460
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "leg1R_end",
+        "type": "Point",
+        "data": {
+          "x": "hipWidth/2 + legSegLength*0.2",
+          "y": 0,
+          "z": "totalHeight*0.55 - spineLength - legSegLength"
+        },
+        "position": {
+          "x": 40,
+          "y": 2890
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "leg2R_end",
+        "type": "Point",
+        "data": {
+          "x": "hipWidth/2 + legSegLength*0.3",
+          "y": 0,
+          "z": "totalHeight*0.55 - spineLength - legSegLength*2"
+        },
+        "position": {
+          "x": 40,
+          "y": 3270
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "leg3R_end",
+        "type": "Point",
+        "data": {
+          "x": "hipWidth/2 + legSegLength*0.4",
+          "y": 0,
+          "z": "totalHeight*0.55 - spineLength - legSegLength*2.8"
+        },
+        "position": {
+          "x": 40,
+          "y": 3650
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "skull",
+        "type": "Sphere",
+        "data": {
+          "radius": "headRadius",
+          "color": "#f5f5dc"
+        },
+        "position": {
+          "x": 270,
+          "y": 1180
+        },
+        "measured": {
+          "width": 201,
+          "height": 216
+        }
+      },
+      {
+        "id": "shoulderLCurve",
+        "type": "Line",
+        "data": {},
+        "position": {
+          "x": 270,
+          "y": 1370
+        },
+        "measured": {
+          "width": 177,
+          "height": 200
+        }
+      },
+      {
+        "id": "shoulderLBone",
+        "type": "Pipe",
+        "data": {
+          "radius": "boneRadius",
+          "color": "#e8e4c9"
+        },
+        "position": {
+          "x": 500,
+          "y": 990
+        },
+        "measured": {
+          "width": 201,
+          "height": 270
+        }
+      },
+      {
+        "id": "shoulderRCurve",
+        "type": "Line",
+        "data": {},
+        "position": {
+          "x": 270,
+          "y": 1750
+        },
+        "measured": {
+          "width": 177,
+          "height": 200
+        }
+      },
+      {
+        "id": "shoulderRBone",
+        "type": "Pipe",
+        "data": {
+          "radius": "boneRadius",
+          "color": "#e8e4c9"
+        },
+        "position": {
+          "x": 500,
+          "y": 1370
+        },
+        "measured": {
+          "width": 201,
+          "height": 270
+        }
+      },
+      {
+        "id": "hipLCurve",
+        "type": "Line",
+        "data": {},
+        "position": {
+          "x": 270,
+          "y": 3460
+        },
+        "measured": {
+          "width": 177,
+          "height": 200
+        }
+      },
+      {
+        "id": "hipLBone",
+        "type": "Pipe",
+        "data": {
+          "radius": "boneRadius",
+          "color": "#e8e4c9"
+        },
+        "position": {
+          "x": 500,
+          "y": 2890
+        },
+        "measured": {
+          "width": 201,
+          "height": 270
+        }
+      },
+      {
+        "id": "hipRCurve",
+        "type": "Line",
+        "data": {},
+        "position": {
+          "x": 270,
+          "y": 3840
+        },
+        "measured": {
+          "width": 177,
+          "height": 200
+        }
+      },
+      {
+        "id": "hipRBone",
+        "type": "Pipe",
+        "data": {
+          "radius": "boneRadius",
+          "color": "#e8e4c9"
+        },
+        "position": {
+          "x": 500,
+          "y": 3270
+        },
+        "measured": {
+          "width": 201,
+          "height": 270
+        }
+      },
+      {
+        "id": "arm1LCurve",
+        "type": "Line",
+        "data": {},
+        "position": {
+          "x": 270,
+          "y": 1560
+        },
+        "measured": {
+          "width": 177,
+          "height": 200
+        }
+      },
+      {
+        "id": "arm1LBone",
+        "type": "Pipe",
+        "data": {
+          "radius": "boneRadius*0.9",
+          "color": "#e8e4c9"
+        },
+        "position": {
+          "x": 500,
+          "y": 1180
+        },
+        "measured": {
+          "width": 201,
+          "height": 270
+        }
+      },
+      {
+        "id": "arm2LCurve",
+        "type": "Line",
+        "data": {},
+        "position": {
+          "x": 270,
+          "y": 40
+        },
+        "measured": {
+          "width": 177,
+          "height": 200
+        }
+      },
+      {
+        "id": "arm2LBone",
+        "type": "Pipe",
+        "data": {
+          "radius": "boneRadius*0.85",
+          "color": "#e8e4c9"
+        },
+        "position": {
+          "x": 500,
+          "y": 40
+        },
+        "measured": {
+          "width": 201,
+          "height": 270
+        }
+      },
+      {
+        "id": "arm3LCurve",
+        "type": "Line",
+        "data": {},
+        "position": {
+          "x": 270,
+          "y": 420
+        },
+        "measured": {
+          "width": 177,
+          "height": 200
+        }
+      },
+      {
+        "id": "arm3LBone",
+        "type": "Pipe",
+        "data": {
+          "radius": "boneRadius*0.7",
+          "color": "#e8e4c9"
+        },
+        "position": {
+          "x": 500,
+          "y": 420
+        },
+        "measured": {
+          "width": 201,
+          "height": 270
+        }
+      },
+      {
+        "id": "arm1RCurve",
+        "type": "Line",
+        "data": {},
+        "position": {
+          "x": 270,
+          "y": 1940
+        },
+        "measured": {
+          "width": 177,
+          "height": 200
+        }
+      },
+      {
+        "id": "arm1RBone",
+        "type": "Pipe",
+        "data": {
+          "radius": "boneRadius*0.9",
+          "color": "#e8e4c9"
+        },
+        "position": {
+          "x": 500,
+          "y": 1560
+        },
+        "measured": {
+          "width": 201,
+          "height": 270
+        }
+      },
+      {
+        "id": "arm2RCurve",
+        "type": "Line",
+        "data": {},
+        "position": {
+          "x": 270,
+          "y": 230
+        },
+        "measured": {
+          "width": 177,
+          "height": 200
+        }
+      },
+      {
+        "id": "arm2RBone",
+        "type": "Pipe",
+        "data": {
+          "radius": "boneRadius*0.85",
+          "color": "#e8e4c9"
+        },
+        "position": {
+          "x": 500,
+          "y": 230
+        },
+        "measured": {
+          "width": 201,
+          "height": 270
+        }
+      },
+      {
+        "id": "arm3RCurve",
+        "type": "Line",
+        "data": {},
+        "position": {
+          "x": 270,
+          "y": 990
+        },
+        "measured": {
+          "width": 177,
+          "height": 200
+        }
+      },
+      {
+        "id": "arm3RBone",
+        "type": "Pipe",
+        "data": {
+          "radius": "boneRadius*0.7",
+          "color": "#e8e4c9"
+        },
+        "position": {
+          "x": 500,
+          "y": 800
+        },
+        "measured": {
+          "width": 201,
+          "height": 270
+        }
+      },
+      {
+        "id": "leg1LCurve",
+        "type": "Line",
+        "data": {},
+        "position": {
+          "x": 270,
+          "y": 2130
+        },
+        "measured": {
+          "width": 177,
+          "height": 200
+        }
+      },
+      {
+        "id": "leg1LBone",
+        "type": "Pipe",
+        "data": {
+          "radius": "boneRadius*1.1",
+          "color": "#e8e4c9"
+        },
+        "position": {
+          "x": 500,
+          "y": 1750
+        },
+        "measured": {
+          "width": 201,
+          "height": 270
+        }
+      },
+      {
+        "id": "leg2LCurve",
+        "type": "Line",
+        "data": {},
+        "position": {
+          "x": 270,
+          "y": 2890
+        },
+        "measured": {
+          "width": 177,
+          "height": 200
+        }
+      },
+      {
+        "id": "leg2LBone",
+        "type": "Pipe",
+        "data": {
+          "radius": "boneRadius*1.0",
+          "color": "#e8e4c9"
+        },
+        "position": {
+          "x": 500,
+          "y": 2320
+        },
+        "measured": {
+          "width": 201,
+          "height": 270
+        }
+      },
+      {
+        "id": "leg3LCurve",
+        "type": "Line",
+        "data": {},
+        "position": {
+          "x": 270,
+          "y": 3270
+        },
+        "measured": {
+          "width": 177,
+          "height": 200
+        }
+      },
+      {
+        "id": "leg3LBone",
+        "type": "Pipe",
+        "data": {
+          "radius": "boneRadius*0.8",
+          "color": "#e8e4c9"
+        },
+        "position": {
+          "x": 500,
+          "y": 2700
+        },
+        "measured": {
+          "width": 201,
+          "height": 270
+        }
+      },
+      {
+        "id": "leg1RCurve",
+        "type": "Line",
+        "data": {},
+        "position": {
+          "x": 270,
+          "y": 2700
+        },
+        "measured": {
+          "width": 177,
+          "height": 200
+        }
+      },
+      {
+        "id": "leg1RBone",
+        "type": "Pipe",
+        "data": {
+          "radius": "boneRadius*1.1",
+          "color": "#e8e4c9"
+        },
+        "position": {
+          "x": 500,
+          "y": 2130
+        },
+        "measured": {
+          "width": 201,
+          "height": 270
+        }
+      },
+      {
+        "id": "leg2RCurve",
+        "type": "Line",
+        "data": {},
+        "position": {
+          "x": 270,
+          "y": 3080
+        },
+        "measured": {
+          "width": 177,
+          "height": 200
+        }
+      },
+      {
+        "id": "leg2RBone",
+        "type": "Pipe",
+        "data": {
+          "radius": "boneRadius*1.0",
+          "color": "#e8e4c9"
+        },
+        "position": {
+          "x": 500,
+          "y": 2510
+        },
+        "measured": {
+          "width": 201,
+          "height": 270
+        }
+      },
+      {
+        "id": "leg3RCurve",
+        "type": "Line",
+        "data": {},
+        "position": {
+          "x": 270,
+          "y": 3650
+        },
+        "measured": {
+          "width": 177,
+          "height": 200
+        }
+      },
+      {
+        "id": "leg3RBone",
+        "type": "Pipe",
+        "data": {
+          "radius": "boneRadius*0.8",
+          "color": "#e8e4c9"
+        },
+        "position": {
+          "x": 500,
+          "y": 3080
+        },
+        "measured": {
+          "width": 201,
+          "height": 270
+        }
+      },
+      {
+        "id": "neckMid",
+        "type": "Midpoint",
+        "data": {},
+        "position": {
+          "x": 270,
+          "y": 800
+        },
+        "measured": {
+          "width": 150,
+          "height": 138
+        }
+      },
+      {
+        "id": "neckAxis",
+        "type": "Vector2Pt",
+        "data": {
+          "normalize": true
+        },
+        "position": {
+          "x": 270,
+          "y": 610
+        },
+        "measured": {
+          "width": 150,
+          "height": 190
+        }
+      },
+      {
+        "id": "neckCylinder",
+        "type": "Cylinder",
+        "data": {
+          "radius": "boneRadius*0.7",
+          "color": "#e8e4c9"
+        },
+        "position": {
+          "x": 500,
+          "y": 610
+        },
+        "measured": {
+          "width": 201,
+          "height": 296
+        }
+      },
+      {
+        "id": "spineMid",
+        "type": "Midpoint",
+        "data": {},
+        "position": {
+          "x": 270,
+          "y": 2510
+        },
+        "measured": {
+          "width": 150,
+          "height": 138
+        }
+      },
+      {
+        "id": "spineAxis",
+        "type": "Vector2Pt",
+        "data": {
+          "normalize": true
+        },
+        "position": {
+          "x": 270,
+          "y": 2320
+        },
+        "measured": {
+          "width": 150,
+          "height": 190
+        }
+      },
+      {
+        "id": "spineCylinder",
+        "type": "Cylinder",
+        "data": {
+          "radius": "boneRadius*1.2",
+          "color": "#e8e4c9"
+        },
+        "position": {
+          "x": 500,
+          "y": 1940
+        },
+        "measured": {
+          "width": 201,
+          "height": 296
+        }
+      }
+    ],
+    "edges": [
+      {
+        "source": "headCenter",
+        "sourceHandle": "point",
+        "target": "skull",
+        "targetHandle": "center",
+        "id": "e_headCenter_skull_center"
+      },
+      {
+        "source": "anchor",
+        "sourceHandle": "point",
+        "target": "shoulderLCurve",
+        "targetHandle": "a",
+        "id": "e_anchor_shoulderLCurve_a"
+      },
+      {
+        "source": "shoulderLeft",
+        "sourceHandle": "point",
+        "target": "shoulderLCurve",
+        "targetHandle": "b",
+        "id": "e_shoulderLeft_shoulderLCurve_b"
+      },
+      {
+        "source": "shoulderLCurve",
+        "sourceHandle": "curve",
+        "target": "shoulderLBone",
+        "targetHandle": "path",
+        "id": "e_shoulderLCurve_shoulderLBone_path"
+      },
+      {
+        "source": "anchor",
+        "sourceHandle": "point",
+        "target": "shoulderRCurve",
+        "targetHandle": "a",
+        "id": "e_anchor_shoulderRCurve_a"
+      },
+      {
+        "source": "shoulderRight",
+        "sourceHandle": "point",
+        "target": "shoulderRCurve",
+        "targetHandle": "b",
+        "id": "e_shoulderRight_shoulderRCurve_b"
+      },
+      {
+        "source": "shoulderRCurve",
+        "sourceHandle": "curve",
+        "target": "shoulderRBone",
+        "targetHandle": "path",
+        "id": "e_shoulderRCurve_shoulderRBone_path"
+      },
+      {
+        "source": "spineBottom",
+        "sourceHandle": "point",
+        "target": "hipLCurve",
+        "targetHandle": "a",
+        "id": "e_spineBottom_hipLCurve_a"
+      },
+      {
+        "source": "hipLeft",
+        "sourceHandle": "point",
+        "target": "hipLCurve",
+        "targetHandle": "b",
+        "id": "e_hipLeft_hipLCurve_b"
+      },
+      {
+        "source": "hipLCurve",
+        "sourceHandle": "curve",
+        "target": "hipLBone",
+        "targetHandle": "path",
+        "id": "e_hipLCurve_hipLBone_path"
+      },
+      {
+        "source": "spineBottom",
+        "sourceHandle": "point",
+        "target": "hipRCurve",
+        "targetHandle": "a",
+        "id": "e_spineBottom_hipRCurve_a"
+      },
+      {
+        "source": "hipRight",
+        "sourceHandle": "point",
+        "target": "hipRCurve",
+        "targetHandle": "b",
+        "id": "e_hipRight_hipRCurve_b"
+      },
+      {
+        "source": "hipRCurve",
+        "sourceHandle": "curve",
+        "target": "hipRBone",
+        "targetHandle": "path",
+        "id": "e_hipRCurve_hipRBone_path"
+      },
+      {
+        "source": "shoulderLeft",
+        "sourceHandle": "point",
+        "target": "arm1LCurve",
+        "targetHandle": "a",
+        "id": "e_shoulderLeft_arm1LCurve_a"
+      },
+      {
+        "source": "arm1L_end",
+        "sourceHandle": "point",
+        "target": "arm1LCurve",
+        "targetHandle": "b",
+        "id": "e_arm1L_end_arm1LCurve_b"
+      },
+      {
+        "source": "arm1LCurve",
+        "sourceHandle": "curve",
+        "target": "arm1LBone",
+        "targetHandle": "path",
+        "id": "e_arm1LCurve_arm1LBone_path"
+      },
+      {
+        "source": "arm1L_end",
+        "sourceHandle": "point",
+        "target": "arm2LCurve",
+        "targetHandle": "a",
+        "id": "e_arm1L_end_arm2LCurve_a"
+      },
+      {
+        "source": "arm2L_end",
+        "sourceHandle": "point",
+        "target": "arm2LCurve",
+        "targetHandle": "b",
+        "id": "e_arm2L_end_arm2LCurve_b"
+      },
+      {
+        "source": "arm2LCurve",
+        "sourceHandle": "curve",
+        "target": "arm2LBone",
+        "targetHandle": "path",
+        "id": "e_arm2LCurve_arm2LBone_path"
+      },
+      {
+        "source": "arm2L_end",
+        "sourceHandle": "point",
+        "target": "arm3LCurve",
+        "targetHandle": "a",
+        "id": "e_arm2L_end_arm3LCurve_a"
+      },
+      {
+        "source": "arm3L_end",
+        "sourceHandle": "point",
+        "target": "arm3LCurve",
+        "targetHandle": "b",
+        "id": "e_arm3L_end_arm3LCurve_b"
+      },
+      {
+        "source": "arm3LCurve",
+        "sourceHandle": "curve",
+        "target": "arm3LBone",
+        "targetHandle": "path",
+        "id": "e_arm3LCurve_arm3LBone_path"
+      },
+      {
+        "source": "shoulderRight",
+        "sourceHandle": "point",
+        "target": "arm1RCurve",
+        "targetHandle": "a",
+        "id": "e_shoulderRight_arm1RCurve_a"
+      },
+      {
+        "source": "arm1R_end",
+        "sourceHandle": "point",
+        "target": "arm1RCurve",
+        "targetHandle": "b",
+        "id": "e_arm1R_end_arm1RCurve_b"
+      },
+      {
+        "source": "arm1RCurve",
+        "sourceHandle": "curve",
+        "target": "arm1RBone",
+        "targetHandle": "path",
+        "id": "e_arm1RCurve_arm1RBone_path"
+      },
+      {
+        "source": "arm1R_end",
+        "sourceHandle": "point",
+        "target": "arm2RCurve",
+        "targetHandle": "a",
+        "id": "e_arm1R_end_arm2RCurve_a"
+      },
+      {
+        "source": "arm2R_end",
+        "sourceHandle": "point",
+        "target": "arm2RCurve",
+        "targetHandle": "b",
+        "id": "e_arm2R_end_arm2RCurve_b"
+      },
+      {
+        "source": "arm2RCurve",
+        "sourceHandle": "curve",
+        "target": "arm2RBone",
+        "targetHandle": "path",
+        "id": "e_arm2RCurve_arm2RBone_path"
+      },
+      {
+        "source": "arm2R_end",
+        "sourceHandle": "point",
+        "target": "arm3RCurve",
+        "targetHandle": "a",
+        "id": "e_arm2R_end_arm3RCurve_a"
+      },
+      {
+        "source": "arm3R_end",
+        "sourceHandle": "point",
+        "target": "arm3RCurve",
+        "targetHandle": "b",
+        "id": "e_arm3R_end_arm3RCurve_b"
+      },
+      {
+        "source": "arm3RCurve",
+        "sourceHandle": "curve",
+        "target": "arm3RBone",
+        "targetHandle": "path",
+        "id": "e_arm3RCurve_arm3RBone_path"
+      },
+      {
+        "source": "hipLeft",
+        "sourceHandle": "point",
+        "target": "leg1LCurve",
+        "targetHandle": "a",
+        "id": "e_hipLeft_leg1LCurve_a"
+      },
+      {
+        "source": "leg1L_end",
+        "sourceHandle": "point",
+        "target": "leg1LCurve",
+        "targetHandle": "b",
+        "id": "e_leg1L_end_leg1LCurve_b"
+      },
+      {
+        "source": "leg1LCurve",
+        "sourceHandle": "curve",
+        "target": "leg1LBone",
+        "targetHandle": "path",
+        "id": "e_leg1LCurve_leg1LBone_path"
+      },
+      {
+        "source": "leg1L_end",
+        "sourceHandle": "point",
+        "target": "leg2LCurve",
+        "targetHandle": "a",
+        "id": "e_leg1L_end_leg2LCurve_a"
+      },
+      {
+        "source": "leg2L_end",
+        "sourceHandle": "point",
+        "target": "leg2LCurve",
+        "targetHandle": "b",
+        "id": "e_leg2L_end_leg2LCurve_b"
+      },
+      {
+        "source": "leg2LCurve",
+        "sourceHandle": "curve",
+        "target": "leg2LBone",
+        "targetHandle": "path",
+        "id": "e_leg2LCurve_leg2LBone_path"
+      },
+      {
+        "source": "leg2L_end",
+        "sourceHandle": "point",
+        "target": "leg3LCurve",
+        "targetHandle": "a",
+        "id": "e_leg2L_end_leg3LCurve_a"
+      },
+      {
+        "source": "leg3L_end",
+        "sourceHandle": "point",
+        "target": "leg3LCurve",
+        "targetHandle": "b",
+        "id": "e_leg3L_end_leg3LCurve_b"
+      },
+      {
+        "source": "leg3LCurve",
+        "sourceHandle": "curve",
+        "target": "leg3LBone",
+        "targetHandle": "path",
+        "id": "e_leg3LCurve_leg3LBone_path"
+      },
+      {
+        "source": "hipRight",
+        "sourceHandle": "point",
+        "target": "leg1RCurve",
+        "targetHandle": "a",
+        "id": "e_hipRight_leg1RCurve_a"
+      },
+      {
+        "source": "leg1R_end",
+        "sourceHandle": "point",
+        "target": "leg1RCurve",
+        "targetHandle": "b",
+        "id": "e_leg1R_end_leg1RCurve_b"
+      },
+      {
+        "source": "leg1RCurve",
+        "sourceHandle": "curve",
+        "target": "leg1RBone",
+        "targetHandle": "path",
+        "id": "e_leg1RCurve_leg1RBone_path"
+      },
+      {
+        "source": "leg1R_end",
+        "sourceHandle": "point",
+        "target": "leg2RCurve",
+        "targetHandle": "a",
+        "id": "e_leg1R_end_leg2RCurve_a"
+      },
+      {
+        "source": "leg2R_end",
+        "sourceHandle": "point",
+        "target": "leg2RCurve",
+        "targetHandle": "b",
+        "id": "e_leg2R_end_leg2RCurve_b"
+      },
+      {
+        "source": "leg2RCurve",
+        "sourceHandle": "curve",
+        "target": "leg2RBone",
+        "targetHandle": "path",
+        "id": "e_leg2RCurve_leg2RBone_path"
+      },
+      {
+        "source": "leg2R_end",
+        "sourceHandle": "point",
+        "target": "leg3RCurve",
+        "targetHandle": "a",
+        "id": "e_leg2R_end_leg3RCurve_a"
+      },
+      {
+        "source": "leg3R_end",
+        "sourceHandle": "point",
+        "target": "leg3RCurve",
+        "targetHandle": "b",
+        "id": "e_leg3R_end_leg3RCurve_b"
+      },
+      {
+        "source": "leg3RCurve",
+        "sourceHandle": "curve",
+        "target": "leg3RBone",
+        "targetHandle": "path",
+        "id": "e_leg3RCurve_leg3RBone_path"
+      },
+      {
+        "source": "anchor",
+        "target": "neckMid",
+        "sourceHandle": "point",
+        "targetHandle": "a",
+        "id": "e_anchor_neckMid_a"
+      },
+      {
+        "source": "headCenter",
+        "target": "neckMid",
+        "sourceHandle": "point",
+        "targetHandle": "b",
+        "id": "e_headCenter_neckMid_b"
+      },
+      {
+        "source": "anchor",
+        "target": "neckAxis",
+        "sourceHandle": "point",
+        "targetHandle": "a",
+        "id": "e_anchor_neckAxis_a"
+      },
+      {
+        "source": "headCenter",
+        "target": "neckAxis",
+        "sourceHandle": "point",
+        "targetHandle": "b",
+        "id": "e_headCenter_neckAxis_b"
+      },
+      {
+        "source": "neckMid",
+        "target": "neckCylinder",
+        "sourceHandle": "midpoint",
+        "targetHandle": "center",
+        "id": "e_neckMid_neckCylinder_center"
+      },
+      {
+        "source": "neckAxis",
+        "target": "neckCylinder",
+        "sourceHandle": "vector",
+        "targetHandle": "axis",
+        "id": "e_neckAxis_neckCylinder_axis"
+      },
+      {
+        "source": "anchor",
+        "target": "spineMid",
+        "sourceHandle": "point",
+        "targetHandle": "a",
+        "id": "e_anchor_spineMid_a"
+      },
+      {
+        "source": "spineBottom",
+        "target": "spineMid",
+        "sourceHandle": "point",
+        "targetHandle": "b",
+        "id": "e_spineBottom_spineMid_b"
+      },
+      {
+        "source": "anchor",
+        "target": "spineAxis",
+        "sourceHandle": "point",
+        "targetHandle": "a",
+        "id": "e_anchor_spineAxis_a"
+      },
+      {
+        "source": "spineBottom",
+        "target": "spineAxis",
+        "sourceHandle": "point",
+        "targetHandle": "b",
+        "id": "e_spineBottom_spineAxis_b"
+      },
+      {
+        "source": "spineMid",
+        "target": "spineCylinder",
+        "sourceHandle": "midpoint",
+        "targetHandle": "center",
+        "id": "e_spineMid_spineCylinder_center"
+      },
+      {
+        "source": "spineAxis",
+        "target": "spineCylinder",
+        "sourceHandle": "vector",
+        "targetHandle": "axis",
+        "id": "e_spineAxis_spineCylinder_axis"
+      }
+    ]
+  },
+  "conversation": [
+    {
+      "role": "system",
+      "content": "Workspace cleared."
+    },
+    {
+      "role": "user",
+      "content": "lets make a skelleton real one, i would start from the point and from that point up will go the neck and end of that neck line is head center and from first point bellow will go spine and left and right would go sholders and from the end of sholder lines we would have three segmets on both sides for hands and from the bottom spine point we would also like with shoulders but much shorter go left and right and then go three segment of legs down and would place a wire frame ball like shape for skull this is basic sceleton and you can place details based on it"
+    },
+    {
+      "role": "system",
+      "content": "IR program had compile errors (attempt 1/3) — asking the model to fix."
+    },
+    {
+      "role": "assistant",
+      "content": "Parametric human skeleton with spine, neck, head, shoulders, arms (3 segments each), hips, and legs (3 segments each) built from relational points"
+    },
+    {
+      "role": "system",
+      "content": "Issues detected (auto-repair 2/2): Leaf \"neckBone\" has non-positive volume (0) — likely inverted or degenerate solid.; Leaf \"spineBone\" has non-positive volume (0) — likely inverted or degenerate solid."
+    },
+    {
+      "role": "assistant",
+      "content": "Fix zero-volume bones by replacing Pipe nodes (degenerate on straight lines) with Cylinder nodes. Add Midpoint and Vector2Pt nodes to derive cylinder centers and axes from the existing point skeleton. This keeps all geometry anchored to the parametric point framework."
+    },
+    {
+      "role": "system",
+      "content": "[Patch] 6 removedEdgeIds entries matched NO edge (already gone or never existed) — nothing was removed for: anchor->neckBone; headCenter->neckBone; neckCurve->neckBone; anchor->spineBone; spineBottom->spineBone; spineCurve->spineBone. This usually means those edges were already dropped or renamed — do NOT keep retrying them. Use the edge ids shown in the graph state, {\"source\",\"target\"} objects, or \"source->target\" strings. Edges that DO exist on those nodes: headCenter->skull.center, anchor->neckCurve.a, headCenter->neckCurve.b, anchor->spineCurve.a, spineBottom->spineCurve.b, anchor->shoulderLCurve.a, anchor->shoulderRCurve.a, spineBottom->hipLCurve.a"
+    },
+    {
+      "role": "system",
+      "content": "Engine fault (does not count against repair budget, 1/3) — retrying."
+    },
+    {
+      "role": "assistant",
+      "content": "Wire DistanceMeasure outputs to Cylinder height parameters so cylinders get proper dimensions. Remove orphaned Curve nodes (neckCurve, spineCurve) since we're using Cylinders now. The neck being partially inside skull is anatomically correct (neck connects into skull base)."
+    },
+    {
+      "role": "system",
+      "content": "[Patch] 8 removedEdgeIds entries matched NO edge (already gone or never existed) — nothing was removed for: anchor->neckCurve; headCenter->neckCurve; anchor->spineCurve; spineBottom->spineCurve; anchor->neckHeight; headCenter->neckHeight; anchor->spineHeight; spineBottom->spineHeight. This usually means those edges were already dropped or renamed — do NOT keep retrying them. Use the edge ids shown in the graph state, {\"source\",\"target\"} objects, or \"source->target\" strings. Edges that DO exist on those nodes: headCenter->skull.center, anchor->shoulderLCurve.a, anchor->shoulderRCurve.a, spineBottom->hipLCurve.a, spineBottom->hipRCurve.a, anchor->neckMid.a, headCenter->neckMid.b, anchor->neckAxis.a"
+    }
+  ],
+  "plan": "Wire DistanceMeasure outputs to Cylinder height parameters so cylinders get proper dimensions. Remove orphaned Curve nodes (neckCurve, spineCurve) since we're using Cylinders now. The neck being partially inside skull is anatomically correct (neck connects into skull base).",
+  "genome": null,
+  "geometryReport": {
+    "leaves": [
+      {
+        "id": "skull",
+        "bbox": {
+          "min": [
+            -12.072740665642414,
+            -12.06065746413819,
+            101.9272593343576
+          ],
+          "max": [
+            12.072740665642414,
+            12.060657464138188,
+            126.07274066564243
+          ],
+          "center": [
+            0,
+            -1.7763568394002505e-15,
+            114.00000000000001
+          ],
+          "size": [
+            24.145481331284827,
+            24.121314928276377,
+            24.145481331284827
+          ]
+        },
+        "volume": 7238.2294738708815,
+        "meshOk": true,
+        "vertexCount": 625,
+        "error": null
+      },
+      {
+        "id": "neckCylinder",
+        "bbox": {
+          "min": [
+            -1.4477039431953045,
+            -1.4477039431953045,
+            101.45229605680471
+          ],
+          "max": [
+            1.4477039431953045,
+            1.4477039431953045,
+            111.54770394319532
+          ],
+          "center": [
+            0,
+            0,
+            106.50000000000001
+          ],
+          "size": [
+            2.895407886390609,
+            2.895407886390609,
+            10.095407886390603
+          ]
+        },
+        "volume": 61.57521601035994,
+        "meshOk": true,
+        "vertexCount": 50,
+        "error": null
+      },
+      {
+        "id": "spineCylinder",
+        "bbox": {
+          "min": [
+            -2.446115427032247,
+            -2.4461154270322476,
+            63.953884572967766
+          ],
+          "max": [
+            2.446115427032247,
+            2.4461154270322476,
+            74.04611542703226
+          ],
+          "center": [
+            0,
+            0,
+            69.00000000000001
+          ],
+          "size": [
+            4.892230854064494,
+            4.892230854064495,
+            10.092230854064496
+          ]
+        },
+        "volume": 180.95573684677208,
+        "meshOk": true,
+        "vertexCount": 66,
+        "error": null
+      },
+      {
+        "id": "shoulderLBone",
+        "bbox": {
+          "min": [
+            -22.538429539193547,
+            -2.038429539193546,
+            96.96157046080647
+          ],
+          "max": [
+            0.03842953919354613,
+            2.038429539193546,
+            101.03842953919356
+          ],
+          "center": [
+            -11.25,
+            0,
+            99.00000000000001
+          ],
+          "size": [
+            22.576859078387095,
+            4.076859078387092,
+            4.076859078387088
+          ]
+        },
+        "volume": 282.7433388230813,
+        "meshOk": true,
+        "vertexCount": 68,
+        "error": null
+      },
+      {
+        "id": "shoulderRBone",
+        "bbox": {
+          "min": [
+            -0.038429539193546254,
+            -2.038429539193546,
+            96.96157046080647
+          ],
+          "max": [
+            22.538429539193547,
+            2.038429539193546,
+            101.03842953919356
+          ],
+          "center": [
+            11.250000000000002,
+            0,
+            99.00000000000001
+          ],
+          "size": [
+            22.576859078387095,
+            4.076859078387092,
+            4.076859078387088
+          ]
+        },
+        "volume": 282.7433388230813,
+        "meshOk": true,
+        "vertexCount": 68,
+        "error": null
+      },
+      {
+        "id": "hipLBone",
+        "bbox": {
+          "min": [
+            -15.038429539193544,
+            -2.0384295391935434,
+            36.96157046080647
+          ],
+          "max": [
+            0.03842953919354322,
+            2.0384295391935434,
+            41.03842953919356
+          ],
+          "center": [
+            -7.5,
+            0,
+            39.000000000000014
+          ],
+          "size": [
+            15.076859078387088,
+            4.076859078387087,
+            4.076859078387088
+          ]
+        },
+        "volume": 188.49555921538757,
+        "meshOk": true,
+        "vertexCount": 68,
+        "error": null
+      },
+      {
+        "id": "hipRBone",
+        "bbox": {
+          "min": [
+            -0.03842953919354322,
+            -2.0384295391935434,
+            36.96157046080647
+          ],
+          "max": [
+            15.038429539193544,
+            2.0384295391935434,
+            41.03842953919356
+          ],
+          "center": [
+            7.500000000000001,
+            0,
+            39.000000000000014
+          ],
+          "size": [
+            15.076859078387088,
+            4.076859078387087,
+            4.076859078387088
+          ]
+        },
+        "volume": 188.4955592153876,
+        "meshOk": true,
+        "vertexCount": 68,
+        "error": null
+      },
+      {
+        "id": "arm1LBone",
+        "bbox": {
+          "min": [
+            -47.545129858072706,
+            -1.8451298580727211,
+            89.69999989999995
+          ],
+          "max": [
+            -22.45487014192728,
+            1.8451298580727211,
+            100.80000010000002
+          ],
+          "center": [
+            -34.99999999999999,
+            0,
+            95.24999999999999
+          ],
+          "size": [
+            25.090259716145425,
+            3.6902597161454422,
+            11.100000200000068
+          ]
+        },
+        "volume": 254.4690049407731,
+        "meshOk": true,
+        "vertexCount": 60,
+        "error": null
+      },
+      {
+        "id": "arm2LBone",
+        "bbox": {
+          "min": [
+            -60.04262264929085,
+            -1.7426226492909112,
+            77.29999989999993
+          ],
+          "max": [
+            -47.45737735070909,
+            1.7426226492909112,
+            93.20000010000003
+          ],
+          "center": [
+            -53.74999999999997,
+            0,
+            85.24999999999997
+          ],
+          "size": [
+            12.58524529858176,
+            3.4852452985818223,
+            15.900000200000093
+          ]
+        },
+        "volume": 113.49003461093092,
+        "meshOk": true,
+        "vertexCount": 60,
+        "error": null
+      },
+      {
+        "id": "arm3LBone",
+        "bbox": {
+          "min": [
+            -67.54770394319534,
+            -1.4477039431953138,
+            67.5522960568047
+          ],
+          "max": [
+            -59.952296056804684,
+            1.4477039431953138,
+            80.44770394319534
+          ],
+          "center": [
+            -63.750000000000014,
+            0,
+            74.00000000000003
+          ],
+          "size": [
+            7.59540788639066,
+            2.8954078863906276,
+            12.895407886390629
+          ]
+        },
+        "volume": 46.181412007770035,
+        "meshOk": true,
+        "vertexCount": 52,
+        "error": null
+      },
+      {
+        "id": "arm1RBone",
+        "bbox": {
+          "min": [
+            22.45487014192728,
+            -1.8451298580727211,
+            89.69999989999995
+          ],
+          "max": [
+            47.545129858072706,
+            1.8451298580727211,
+            100.80000010000002
+          ],
+          "center": [
+            34.99999999999999,
+            0,
+            95.24999999999999
+          ],
+          "size": [
+            25.090259716145425,
+            3.6902597161454422,
+            11.100000200000068
+          ]
+        },
+        "volume": 254.4690049407731,
+        "meshOk": true,
+        "vertexCount": 60,
+        "error": null
+      },
+      {
+        "id": "arm2RBone",
+        "bbox": {
+          "min": [
+            47.45737735070909,
+            -1.7426226492909112,
+            77.29999989999993
+          ],
+          "max": [
+            60.04262264929085,
+            1.7426226492909112,
+            93.20000010000003
+          ],
+          "center": [
+            53.74999999999997,
+            0,
+            85.24999999999997
+          ],
+          "size": [
+            12.58524529858176,
+            3.4852452985818223,
+            15.900000200000093
+          ]
+        },
+        "volume": 113.49003461093092,
+        "meshOk": true,
+        "vertexCount": 60,
+        "error": null
+      },
+      {
+        "id": "arm3RBone",
+        "bbox": {
+          "min": [
+            59.952296056804684,
+            -1.4477039431953138,
+            67.5522960568047
+          ],
+          "max": [
+            67.54770394319534,
+            1.4477039431953138,
+            80.44770394319534
+          ],
+          "center": [
+            63.750000000000014,
+            0,
+            74.00000000000003
+          ],
+          "size": [
+            7.59540788639066,
+            2.8954078863906276,
+            12.895407886390629
+          ]
+        },
+        "volume": 46.181412007770035,
+        "meshOk": true,
+        "vertexCount": 52,
+        "error": null
+      },
+      {
+        "id": "leg1LBone",
+        "bbox": {
+          "min": [
+            -22.042272483112846,
+            -2.2422724831128953,
+            1.7577275168871047
+          ],
+          "max": [
+            -14.957727516887104,
+            2.2422724831128953,
+            41.24227248311291
+          ],
+          "center": [
+            -18.499999999999975,
+            0,
+            21.50000000000001
+          ],
+          "size": [
+            7.084544966225742,
+            4.484544966225791,
+            39.48454496622581
+          ]
+        },
+        "volume": 106.43715910362172,
+        "meshOk": true,
+        "vertexCount": 68,
+        "error": null
+      },
+      {
+        "id": "leg2LBone",
+        "bbox": {
+          "min": [
+            -25.5384295391935,
+            -2.03842953919354,
+            -33.03842953919352
+          ],
+          "max": [
+            -21.96157046080646,
+            2.03842953919354,
+            6.038429539193554
+          ],
+          "center": [
+            -23.74999999999998,
+            0,
+            -13.499999999999986
+          ],
+          "size": [
+            3.5768590783870415,
+            4.07685907838708,
+            39.07685907838707
+          ]
+        },
+        "volume": 43.98229715025677,
+        "meshOk": true,
+        "vertexCount": 68,
+        "error": null
+      },
+      {
+        "id": "leg3LBone",
+        "bbox": {
+          "min": [
+            -29.040115440509098,
+            -1.6401154405090848,
+            -60.60000009999999
+          ],
+          "max": [
+            -25.459884559490916,
+            1.6401154405090848,
+            -29.399999899999983
+          ],
+          "center": [
+            -27.250000000000007,
+            0,
+            -44.999999999999986
+          ],
+          "size": [
+            3.5802308810181813,
+            3.2802308810181695,
+            31.200000200000005
+          ]
+        },
+        "volume": 28.148670176164632,
+        "meshOk": true,
+        "vertexCount": 60,
+        "error": null
+      },
+      {
+        "id": "leg1RBone",
+        "bbox": {
+          "min": [
+            14.957727516887104,
+            -2.2422724831128953,
+            1.7577275168871047
+          ],
+          "max": [
+            22.042272483112846,
+            2.2422724831128953,
+            41.24227248311291
+          ],
+          "center": [
+            18.499999999999975,
+            0,
+            21.50000000000001
+          ],
+          "size": [
+            7.084544966225742,
+            4.484544966225791,
+            39.48454496622581
+          ]
+        },
+        "volume": 106.43715910362172,
+        "meshOk": true,
+        "vertexCount": 68,
+        "error": null
+      },
+      {
+        "id": "leg2RBone",
+        "bbox": {
+          "min": [
+            21.96157046080646,
+            -2.03842953919354,
+            -33.03842953919352
+          ],
+          "max": [
+            25.5384295391935,
+            2.03842953919354,
+            6.038429539193554
+          ],
+          "center": [
+            23.74999999999998,
+            0,
+            -13.499999999999986
+          ],
+          "size": [
+            3.5768590783870415,
+            4.07685907838708,
+            39.07685907838707
+          ]
+        },
+        "volume": 43.98229715025677,
+        "meshOk": true,
+        "vertexCount": 68,
+        "error": null
+      },
+      {
+        "id": "leg3RBone",
+        "bbox": {
+          "min": [
+            25.459884559490916,
+            -1.6401154405090848,
+            -60.60000009999999
+          ],
+          "max": [
+            29.040115440509098,
+            1.6401154405090848,
+            -29.399999899999983
+          ],
+          "center": [
+            27.250000000000007,
+            0,
+            -44.999999999999986
+          ],
+          "size": [
+            3.5802308810181813,
+            3.2802308810181695,
+            31.200000200000005
+          ]
+        },
+        "volume": 28.148670176164632,
+        "meshOk": true,
+        "vertexCount": 60,
+        "error": null
+      }
+    ],
+    "nodeErrors": [],
+    "numbers": {
+      "totalHeight": 180,
+      "neckLength": 15,
+      "spineLength": 60,
+      "shoulderWidth": 45,
+      "hipWidth": 30,
+      "armSegLength": 25,
+      "legSegLength": 35,
+      "headRadius": 12,
+      "boneRadius": 2
+    },
+    "sliders": {
+      "totalHeight": 180,
+      "neckLength": 15,
+      "spineLength": 60,
+      "shoulderWidth": 45,
+      "hipWidth": 30,
+      "armSegLength": 25,
+      "legSegLength": 35,
+      "headRadius": 12,
+      "boneRadius": 2
+    },
+    "selections": {},
+    "helpers": {
+      "anchor": {
+        "type": "Point",
+        "x": 0,
+        "y": 0,
+        "z": 99.00000000000001,
+        "sourceNodeId": "anchor",
+        "ancestorNodeIds": []
+      },
+      "headCenter": {
+        "type": "Point",
+        "x": 0,
+        "y": 0,
+        "z": 114.00000000000001,
+        "sourceNodeId": "headCenter",
+        "ancestorNodeIds": []
+      },
+      "spineBottom": {
+        "type": "Point",
+        "x": 0,
+        "y": 0,
+        "z": 39.000000000000014,
+        "sourceNodeId": "spineBottom",
+        "ancestorNodeIds": []
+      },
+      "shoulderLeft": {
+        "type": "Point",
+        "x": -22.5,
+        "y": 0,
+        "z": 99.00000000000001,
+        "sourceNodeId": "shoulderLeft",
+        "ancestorNodeIds": []
+      },
+      "shoulderRight": {
+        "type": "Point",
+        "x": 22.5,
+        "y": 0,
+        "z": 99.00000000000001,
+        "sourceNodeId": "shoulderRight",
+        "ancestorNodeIds": []
+      },
+      "hipLeft": {
+        "type": "Point",
+        "x": -15,
+        "y": 0,
+        "z": 39.000000000000014,
+        "sourceNodeId": "hipLeft",
+        "ancestorNodeIds": []
+      },
+      "hipRight": {
+        "type": "Point",
+        "x": 15,
+        "y": 0,
+        "z": 39.000000000000014,
+        "sourceNodeId": "hipRight",
+        "ancestorNodeIds": []
+      },
+      "arm1L_end": {
+        "type": "Point",
+        "x": -47.5,
+        "y": 0,
+        "z": 91.50000000000001,
+        "sourceNodeId": "arm1L_end",
+        "ancestorNodeIds": []
+      },
+      "arm2L_end": {
+        "type": "Point",
+        "x": -60,
+        "y": 0,
+        "z": 79.00000000000001,
+        "sourceNodeId": "arm2L_end",
+        "ancestorNodeIds": []
+      },
+      "arm3L_end": {
+        "type": "Point",
+        "x": -67.5,
+        "y": 0,
+        "z": 69.00000000000001,
+        "sourceNodeId": "arm3L_end",
+        "ancestorNodeIds": []
+      },
+      "arm1R_end": {
+        "type": "Point",
+        "x": 47.5,
+        "y": 0,
+        "z": 91.50000000000001,
+        "sourceNodeId": "arm1R_end",
+        "ancestorNodeIds": []
+      },
+      "arm2R_end": {
+        "type": "Point",
+        "x": 60,
+        "y": 0,
+        "z": 79.00000000000001,
+        "sourceNodeId": "arm2R_end",
+        "ancestorNodeIds": []
+      },
+      "arm3R_end": {
+        "type": "Point",
+        "x": 67.5,
+        "y": 0,
+        "z": 69.00000000000001,
+        "sourceNodeId": "arm3R_end",
+        "ancestorNodeIds": []
+      },
+      "leg1L_end": {
+        "type": "Point",
+        "x": -22,
+        "y": 0,
+        "z": 4.000000000000014,
+        "sourceNodeId": "leg1L_end",
+        "ancestorNodeIds": []
+      },
+      "leg2L_end": {
+        "type": "Point",
+        "x": -25.5,
+        "y": 0,
+        "z": -30.999999999999986,
+        "sourceNodeId": "leg2L_end",
+        "ancestorNodeIds": []
+      },
+      "leg3L_end": {
+        "type": "Point",
+        "x": -29,
+        "y": 0,
+        "z": -58.999999999999986,
+        "sourceNodeId": "leg3L_end",
+        "ancestorNodeIds": []
+      },
+      "leg1R_end": {
+        "type": "Point",
+        "x": 22,
+        "y": 0,
+        "z": 4.000000000000014,
+        "sourceNodeId": "leg1R_end",
+        "ancestorNodeIds": []
+      },
+      "leg2R_end": {
+        "type": "Point",
+        "x": 25.5,
+        "y": 0,
+        "z": -30.999999999999986,
+        "sourceNodeId": "leg2R_end",
+        "ancestorNodeIds": []
+      },
+      "leg3R_end": {
+        "type": "Point",
+        "x": 29,
+        "y": 0,
+        "z": -58.999999999999986,
+        "sourceNodeId": "leg3R_end",
+        "ancestorNodeIds": []
+      },
+      "neckMid": {
+        "type": "Point",
+        "x": 0,
+        "y": 0,
+        "z": 106.50000000000001,
+        "sourceNodeId": "neckMid",
+        "ancestorNodeIds": [
+          "anchor",
+          "headCenter"
+        ]
+      },
+      "neckAxis": {
+        "type": "Vector",
+        "x": 0,
+        "y": 0,
+        "z": 15,
+        "sourceNodeId": "neckAxis",
+        "ancestorNodeIds": [
+          "anchor",
+          "headCenter"
+        ]
+      },
+      "spineMid": {
+        "type": "Point",
+        "x": 0,
+        "y": 0,
+        "z": 69.00000000000001,
+        "sourceNodeId": "spineMid",
+        "ancestorNodeIds": [
+          "anchor",
+          "spineBottom"
+        ]
+      },
+      "spineAxis": {
+        "type": "Vector",
+        "x": 0,
+        "y": 0,
+        "z": -60,
+        "sourceNodeId": "spineAxis",
+        "ancestorNodeIds": [
+          "anchor",
+          "spineBottom"
+        ]
+      }
+    },
+    "nodeCount": 67,
+    "edgeCount": 61,
+    "transformCount": 0,
+    "nodesPerLeafRatio": 3.526315789473684,
+    "nodeEconomyWarning": false,
+    "placement": {
+      "anchored": [
+        "skull",
+        "neckCylinder",
+        "spineCylinder",
+        "shoulderLBone",
+        "shoulderRBone",
+        "hipLBone",
+        "hipRBone",
+        "arm1LBone",
+        "arm2LBone",
+        "arm3LBone",
+        "arm1RBone",
+        "arm2RBone",
+        "arm3RBone",
+        "leg1LBone",
+        "leg2LBone",
+        "leg3LBone",
+        "leg1RBone",
+        "leg2RBone",
+        "leg3RBone"
+      ],
+      "literal": [],
+      "origin": [],
+      "literalNodeIds": [],
+      "ratio": 1
+    },
+    "scene": {
+      "min": [
+        -67.54770394319534,
+        -12.06065746413819,
+        -60.60000009999999
+      ],
+      "max": [
+        67.54770394319534,
+        12.060657464138188,
+        126.07274066564243
+      ],
+      "size": [
+        135.0954078863907,
+        24.121314928276377,
+        186.6727407656424
+      ]
+    },
+    "meshedLeafCount": 19,
+    "kernelFaultCount": 0,
+    "kernelSuspect": false,
+    "kernelHealth": "ok",
+    "evalCount": 2,
+    "recycleRecommended": false,
+    "perturbationIssues": [
+      "At headRadius increase (1.5x), \"neckCylinder\" becomes fully buried inside \"skull\"."
+    ],
+    "proportionalIntegrity": 0.8333333333333334
+  },
+  "timeline": [
+    {
+      "at": "2026-07-23T19:08:51.629Z",
+      "turn": 1,
+      "trigger": "ai-ir",
+      "label": "attempt 2: rebuilt graph (65 nodes)",
+      "nodeCount": 65,
+      "edgeCount": 55,
+      "isolatedCount": 9,
+      "diff": {
+        "addedNodes": [
+          "totalHeight",
+          "neckLength",
+          "spineLength",
+          "shoulderWidth",
+          "hipWidth",
+          "armSegLength",
+          "legSegLength",
+          "headRadius",
+          "boneRadius",
+          "anchor",
+          "headCenter",
+          "spineBottom",
+          "shoulderLeft",
+          "shoulderRight",
+          "hipLeft",
+          "hipRight",
+          "arm1L_end",
+          "arm2L_end",
+          "arm3L_end",
+          "arm1R_end",
+          "arm2R_end",
+          "arm3R_end",
+          "leg1L_end",
+          "leg2L_end",
+          "leg3L_end",
+          "leg1R_end",
+          "leg2R_end",
+          "leg3R_end",
+          "skull",
+          "neckCurve",
+          "neckBone",
+          "spineCurve",
+          "spineBone",
+          "shoulderLCurve",
+          "shoulderLBone",
+          "shoulderRCurve",
+          "shoulderRBone",
+          "hipLCurve",
+          "hipLBone",
+          "hipRCurve",
+          "hipRBone",
+          "arm1LCurve",
+          "arm1LBone",
+          "arm2LCurve",
+          "arm2LBone",
+          "arm3LCurve",
+          "arm3LBone",
+          "arm1RCurve",
+          "arm1RBone",
+          "arm2RCurve",
+          "arm2RBone",
+          "arm3RCurve",
+          "arm3RBone",
+          "leg1LCurve",
+          "leg1LBone",
+          "leg2LCurve",
+          "leg2LBone",
+          "leg3LCurve",
+          "leg3LBone",
+          "leg1RCurve",
+          "leg1RBone",
+          "leg2RCurve",
+          "leg2RBone",
+          "leg3RCurve",
+          "leg3RBone"
+        ],
+        "removedNodes": [],
+        "changedNodes": [],
+        "addedEdges": 55,
+        "removedEdges": 0
+      },
+      "details": [
+        "warning: Dead design parameters: sliders \"totalHeight\", \"neckLength\", \"spineLength\", \"shoulderWidth\", \"hipWidth\", \"armSegLength\", \"legSegLength\" are not referenced by any formula or edge — moving them changes nothing. Wire dimensions to them or remove them."
+      ],
+      "nodes": [
+        {
+          "id": "totalHeight",
+          "type": "NumberSlider",
+          "data": {
+            "value": 180,
+            "label": "totalHeight",
+            "min": 100,
+            "max": 250,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 5170
+          }
+        },
+        {
+          "id": "neckLength",
+          "type": "NumberSlider",
+          "data": {
+            "value": 15,
+            "label": "neckLength",
+            "min": 5,
+            "max": 40,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 4030
+          }
+        },
+        {
+          "id": "spineLength",
+          "type": "NumberSlider",
+          "data": {
+            "value": 60,
+            "label": "spineLength",
+            "min": 30,
+            "max": 100,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 4980
+          }
+        },
+        {
+          "id": "shoulderWidth",
+          "type": "NumberSlider",
+          "data": {
+            "value": 45,
+            "label": "shoulderWidth",
+            "min": 20,
+            "max": 80,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 4600
+          }
+        },
+        {
+          "id": "hipWidth",
+          "type": "NumberSlider",
+          "data": {
+            "value": 30,
+            "label": "hipWidth",
+            "min": 15,
+            "max": 60,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 2510
+          }
+        },
+        {
+          "id": "armSegLength",
+          "type": "NumberSlider",
+          "data": {
+            "value": 25,
+            "label": "armSegLength",
+            "min": 10,
+            "max": 50,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 1370
+          }
+        },
+        {
+          "id": "legSegLength",
+          "type": "NumberSlider",
+          "data": {
+            "value": 35,
+            "label": "legSegLength",
+            "min": 15,
+            "max": 60,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 3840
+          }
+        },
+        {
+          "id": "headRadius",
+          "type": "NumberSlider",
+          "data": {
+            "value": 12,
+            "label": "headRadius",
+            "min": 5,
+            "max": 25,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 1940
+          }
+        },
+        {
+          "id": "boneRadius",
+          "type": "NumberSlider",
+          "data": {
+            "value": 2,
+            "label": "boneRadius",
+            "min": 0.5,
+            "max": 8,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 1560
+          }
+        },
+        {
+          "id": "anchor",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "totalHeight*0.55"
+          },
+          "position": {
+            "x": 40,
+            "y": 40
+          }
+        },
+        {
+          "id": "headCenter",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "totalHeight*0.55 + neckLength"
+          },
+          "position": {
+            "x": 40,
+            "y": 1750
+          }
+        },
+        {
+          "id": "spineBottom",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "totalHeight*0.55 - spineLength"
+          },
+          "position": {
+            "x": 40,
+            "y": 4790
+          }
+        },
+        {
+          "id": "shoulderLeft",
+          "type": "Point",
+          "data": {
+            "x": "-shoulderWidth/2",
+            "y": 0,
+            "z": "totalHeight*0.55"
+          },
+          "position": {
+            "x": 40,
+            "y": 4220
+          }
+        },
+        {
+          "id": "shoulderRight",
+          "type": "Point",
+          "data": {
+            "x": "shoulderWidth/2",
+            "y": 0,
+            "z": "totalHeight*0.55"
+          },
+          "position": {
+            "x": 40,
+            "y": 4410
+          }
+        },
+        {
+          "id": "hipLeft",
+          "type": "Point",
+          "data": {
+            "x": "-hipWidth/2",
+            "y": 0,
+            "z": "totalHeight*0.55 - spineLength"
+          },
+          "position": {
+            "x": 40,
+            "y": 2130
+          }
+        },
+        {
+          "id": "hipRight",
+          "type": "Point",
+          "data": {
+            "x": "hipWidth/2",
+            "y": 0,
+            "z": "totalHeight*0.55 - spineLength"
+          },
+          "position": {
+            "x": 40,
+            "y": 2320
+          }
+        },
+        {
+          "id": "arm1L_end",
+          "type": "Point",
+          "data": {
+            "x": "-shoulderWidth/2 - armSegLength",
+            "y": 0,
+            "z": "totalHeight*0.55 - armSegLength*0.3"
+          },
+          "position": {
+            "x": 40,
+            "y": 230
+          }
+        },
+        {
+          "id": "arm2L_end",
+          "type": "Point",
+          "data": {
+            "x": "-shoulderWidth/2 - armSegLength*1.5",
+            "y": 0,
+            "z": "totalHeight*0.55 - armSegLength*0.8"
+          },
+          "position": {
+            "x": 40,
+            "y": 610
+          }
+        },
+        {
+          "id": "arm3L_end",
+          "type": "Point",
+          "data": {
+            "x": "-shoulderWidth/2 - armSegLength*1.8",
+            "y": 0,
+            "z": "totalHeight*0.55 - armSegLength*1.2"
+          },
+          "position": {
+            "x": 40,
+            "y": 990
+          }
+        },
+        {
+          "id": "arm1R_end",
+          "type": "Point",
+          "data": {
+            "x": "shoulderWidth/2 + armSegLength",
+            "y": 0,
+            "z": "totalHeight*0.55 - armSegLength*0.3"
+          },
+          "position": {
+            "x": 40,
+            "y": 420
+          }
+        },
+        {
+          "id": "arm2R_end",
+          "type": "Point",
+          "data": {
+            "x": "shoulderWidth/2 + armSegLength*1.5",
+            "y": 0,
+            "z": "totalHeight*0.55 - armSegLength*0.8"
+          },
+          "position": {
+            "x": 40,
+            "y": 800
+          }
+        },
+        {
+          "id": "arm3R_end",
+          "type": "Point",
+          "data": {
+            "x": "shoulderWidth/2 + armSegLength*1.8",
+            "y": 0,
+            "z": "totalHeight*0.55 - armSegLength*1.2"
+          },
+          "position": {
+            "x": 40,
+            "y": 1180
+          }
+        },
+        {
+          "id": "leg1L_end",
+          "type": "Point",
+          "data": {
+            "x": "-hipWidth/2 - legSegLength*0.2",
+            "y": 0,
+            "z": "totalHeight*0.55 - spineLength - legSegLength"
+          },
+          "position": {
+            "x": 40,
+            "y": 2700
+          }
+        },
+        {
+          "id": "leg2L_end",
+          "type": "Point",
+          "data": {
+            "x": "-hipWidth/2 - legSegLength*0.3",
+            "y": 0,
+            "z": "totalHeight*0.55 - spineLength - legSegLength*2"
+          },
+          "position": {
+            "x": 40,
+            "y": 3080
+          }
+        },
+        {
+          "id": "leg3L_end",
+          "type": "Point",
+          "data": {
+            "x": "-hipWidth/2 - legSegLength*0.4",
+            "y": 0,
+            "z": "totalHeight*0.55 - spineLength - legSegLength*2.8"
+          },
+          "position": {
+            "x": 40,
+            "y": 3460
+          }
+        },
+        {
+          "id": "leg1R_end",
+          "type": "Point",
+          "data": {
+            "x": "hipWidth/2 + legSegLength*0.2",
+            "y": 0,
+            "z": "totalHeight*0.55 - spineLength - legSegLength"
+          },
+          "position": {
+            "x": 40,
+            "y": 2890
+          }
+        },
+        {
+          "id": "leg2R_end",
+          "type": "Point",
+          "data": {
+            "x": "hipWidth/2 + legSegLength*0.3",
+            "y": 0,
+            "z": "totalHeight*0.55 - spineLength - legSegLength*2"
+          },
+          "position": {
+            "x": 40,
+            "y": 3270
+          }
+        },
+        {
+          "id": "leg3R_end",
+          "type": "Point",
+          "data": {
+            "x": "hipWidth/2 + legSegLength*0.4",
+            "y": 0,
+            "z": "totalHeight*0.55 - spineLength - legSegLength*2.8"
+          },
+          "position": {
+            "x": 40,
+            "y": 3650
+          }
+        },
+        {
+          "id": "skull",
+          "type": "Sphere",
+          "data": {
+            "radius": "headRadius",
+            "color": "#f5f5dc"
+          },
+          "position": {
+            "x": 270,
+            "y": 990
+          }
+        },
+        {
+          "id": "neckCurve",
+          "type": "Line",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 610
+          }
+        },
+        {
+          "id": "neckBone",
+          "type": "Pipe",
+          "data": {
+            "radius": "boneRadius*0.7",
+            "color": "#e8e4c9"
+          },
+          "position": {
+            "x": 500,
+            "y": 610
+          }
+        },
+        {
+          "id": "spineCurve",
+          "type": "Line",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 2130
+          }
+        },
+        {
+          "id": "spineBone",
+          "type": "Pipe",
+          "data": {
+            "radius": "boneRadius*1.2",
+            "color": "#e8e4c9"
+          },
+          "position": {
+            "x": 500,
+            "y": 1940
+          }
+        },
+        {
+          "id": "shoulderLCurve",
+          "type": "Line",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 1180
+          }
+        },
+        {
+          "id": "shoulderLBone",
+          "type": "Pipe",
+          "data": {
+            "radius": "boneRadius",
+            "color": "#e8e4c9"
+          },
+          "position": {
+            "x": 500,
+            "y": 990
+          }
+        },
+        {
+          "id": "shoulderRCurve",
+          "type": "Line",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 1560
+          }
+        },
+        {
+          "id": "shoulderRBone",
+          "type": "Pipe",
+          "data": {
+            "radius": "boneRadius",
+            "color": "#e8e4c9"
+          },
+          "position": {
+            "x": 500,
+            "y": 1370
+          }
+        },
+        {
+          "id": "hipLCurve",
+          "type": "Line",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 3080
+          }
+        },
+        {
+          "id": "hipLBone",
+          "type": "Pipe",
+          "data": {
+            "radius": "boneRadius",
+            "color": "#e8e4c9"
+          },
+          "position": {
+            "x": 500,
+            "y": 2890
+          }
+        },
+        {
+          "id": "hipRCurve",
+          "type": "Line",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 3460
+          }
+        },
+        {
+          "id": "hipRBone",
+          "type": "Pipe",
+          "data": {
+            "radius": "boneRadius",
+            "color": "#e8e4c9"
+          },
+          "position": {
+            "x": 500,
+            "y": 3270
+          }
+        },
+        {
+          "id": "arm1LCurve",
+          "type": "Line",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 1370
+          }
+        },
+        {
+          "id": "arm1LBone",
+          "type": "Pipe",
+          "data": {
+            "radius": "boneRadius*0.9",
+            "color": "#e8e4c9"
+          },
+          "position": {
+            "x": 500,
+            "y": 1180
+          }
+        },
+        {
+          "id": "arm2LCurve",
+          "type": "Line",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 40
+          }
+        },
+        {
+          "id": "arm2LBone",
+          "type": "Pipe",
+          "data": {
+            "radius": "boneRadius*0.85",
+            "color": "#e8e4c9"
+          },
+          "position": {
+            "x": 500,
+            "y": 40
+          }
+        },
+        {
+          "id": "arm3LCurve",
+          "type": "Line",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 420
+          }
+        },
+        {
+          "id": "arm3LBone",
+          "type": "Pipe",
+          "data": {
+            "radius": "boneRadius*0.7",
+            "color": "#e8e4c9"
+          },
+          "position": {
+            "x": 500,
+            "y": 420
+          }
+        },
+        {
+          "id": "arm1RCurve",
+          "type": "Line",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 1750
+          }
+        },
+        {
+          "id": "arm1RBone",
+          "type": "Pipe",
+          "data": {
+            "radius": "boneRadius*0.9",
+            "color": "#e8e4c9"
+          },
+          "position": {
+            "x": 500,
+            "y": 1560
+          }
+        },
+        {
+          "id": "arm2RCurve",
+          "type": "Line",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 230
+          }
+        },
+        {
+          "id": "arm2RBone",
+          "type": "Pipe",
+          "data": {
+            "radius": "boneRadius*0.85",
+            "color": "#e8e4c9"
+          },
+          "position": {
+            "x": 500,
+            "y": 230
+          }
+        },
+        {
+          "id": "arm3RCurve",
+          "type": "Line",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 800
+          }
+        },
+        {
+          "id": "arm3RBone",
+          "type": "Pipe",
+          "data": {
+            "radius": "boneRadius*0.7",
+            "color": "#e8e4c9"
+          },
+          "position": {
+            "x": 500,
+            "y": 800
+          }
+        },
+        {
+          "id": "leg1LCurve",
+          "type": "Line",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 1940
+          }
+        },
+        {
+          "id": "leg1LBone",
+          "type": "Pipe",
+          "data": {
+            "radius": "boneRadius*1.1",
+            "color": "#e8e4c9"
+          },
+          "position": {
+            "x": 500,
+            "y": 1750
+          }
+        },
+        {
+          "id": "leg2LCurve",
+          "type": "Line",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 2510
+          }
+        },
+        {
+          "id": "leg2LBone",
+          "type": "Pipe",
+          "data": {
+            "radius": "boneRadius*1.0",
+            "color": "#e8e4c9"
+          },
+          "position": {
+            "x": 500,
+            "y": 2320
+          }
+        },
+        {
+          "id": "leg3LCurve",
+          "type": "Line",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 2890
+          }
+        },
+        {
+          "id": "leg3LBone",
+          "type": "Pipe",
+          "data": {
+            "radius": "boneRadius*0.8",
+            "color": "#e8e4c9"
+          },
+          "position": {
+            "x": 500,
+            "y": 2700
+          }
+        },
+        {
+          "id": "leg1RCurve",
+          "type": "Line",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 2320
+          }
+        },
+        {
+          "id": "leg1RBone",
+          "type": "Pipe",
+          "data": {
+            "radius": "boneRadius*1.1",
+            "color": "#e8e4c9"
+          },
+          "position": {
+            "x": 500,
+            "y": 2130
+          }
+        },
+        {
+          "id": "leg2RCurve",
+          "type": "Line",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 2700
+          }
+        },
+        {
+          "id": "leg2RBone",
+          "type": "Pipe",
+          "data": {
+            "radius": "boneRadius*1.0",
+            "color": "#e8e4c9"
+          },
+          "position": {
+            "x": 500,
+            "y": 2510
+          }
+        },
+        {
+          "id": "leg3RCurve",
+          "type": "Line",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 3270
+          }
+        },
+        {
+          "id": "leg3RBone",
+          "type": "Pipe",
+          "data": {
+            "radius": "boneRadius*0.8",
+            "color": "#e8e4c9"
+          },
+          "position": {
+            "x": 500,
+            "y": 3080
+          }
+        }
+      ],
+      "edges": [
+        {
+          "source": "headCenter",
+          "sourceHandle": "point",
+          "target": "skull",
+          "targetHandle": "center",
+          "id": "e_headCenter_skull_center"
+        },
+        {
+          "source": "anchor",
+          "sourceHandle": "point",
+          "target": "neckCurve",
+          "targetHandle": "a",
+          "id": "e_anchor_neckCurve_a"
+        },
+        {
+          "source": "headCenter",
+          "sourceHandle": "point",
+          "target": "neckCurve",
+          "targetHandle": "b",
+          "id": "e_headCenter_neckCurve_b"
+        },
+        {
+          "source": "neckCurve",
+          "sourceHandle": "curve",
+          "target": "neckBone",
+          "targetHandle": "path",
+          "id": "e_neckCurve_neckBone_path"
+        },
+        {
+          "source": "anchor",
+          "sourceHandle": "point",
+          "target": "spineCurve",
+          "targetHandle": "a",
+          "id": "e_anchor_spineCurve_a"
+        },
+        {
+          "source": "spineBottom",
+          "sourceHandle": "point",
+          "target": "spineCurve",
+          "targetHandle": "b",
+          "id": "e_spineBottom_spineCurve_b"
+        },
+        {
+          "source": "spineCurve",
+          "sourceHandle": "curve",
+          "target": "spineBone",
+          "targetHandle": "path",
+          "id": "e_spineCurve_spineBone_path"
+        },
+        {
+          "source": "anchor",
+          "sourceHandle": "point",
+          "target": "shoulderLCurve",
+          "targetHandle": "a",
+          "id": "e_anchor_shoulderLCurve_a"
+        },
+        {
+          "source": "shoulderLeft",
+          "sourceHandle": "point",
+          "target": "shoulderLCurve",
+          "targetHandle": "b",
+          "id": "e_shoulderLeft_shoulderLCurve_b"
+        },
+        {
+          "source": "shoulderLCurve",
+          "sourceHandle": "curve",
+          "target": "shoulderLBone",
+          "targetHandle": "path",
+          "id": "e_shoulderLCurve_shoulderLBone_path"
+        },
+        {
+          "source": "anchor",
+          "sourceHandle": "point",
+          "target": "shoulderRCurve",
+          "targetHandle": "a",
+          "id": "e_anchor_shoulderRCurve_a"
+        },
+        {
+          "source": "shoulderRight",
+          "sourceHandle": "point",
+          "target": "shoulderRCurve",
+          "targetHandle": "b",
+          "id": "e_shoulderRight_shoulderRCurve_b"
+        },
+        {
+          "source": "shoulderRCurve",
+          "sourceHandle": "curve",
+          "target": "shoulderRBone",
+          "targetHandle": "path",
+          "id": "e_shoulderRCurve_shoulderRBone_path"
+        },
+        {
+          "source": "spineBottom",
+          "sourceHandle": "point",
+          "target": "hipLCurve",
+          "targetHandle": "a",
+          "id": "e_spineBottom_hipLCurve_a"
+        },
+        {
+          "source": "hipLeft",
+          "sourceHandle": "point",
+          "target": "hipLCurve",
+          "targetHandle": "b",
+          "id": "e_hipLeft_hipLCurve_b"
+        },
+        {
+          "source": "hipLCurve",
+          "sourceHandle": "curve",
+          "target": "hipLBone",
+          "targetHandle": "path",
+          "id": "e_hipLCurve_hipLBone_path"
+        },
+        {
+          "source": "spineBottom",
+          "sourceHandle": "point",
+          "target": "hipRCurve",
+          "targetHandle": "a",
+          "id": "e_spineBottom_hipRCurve_a"
+        },
+        {
+          "source": "hipRight",
+          "sourceHandle": "point",
+          "target": "hipRCurve",
+          "targetHandle": "b",
+          "id": "e_hipRight_hipRCurve_b"
+        },
+        {
+          "source": "hipRCurve",
+          "sourceHandle": "curve",
+          "target": "hipRBone",
+          "targetHandle": "path",
+          "id": "e_hipRCurve_hipRBone_path"
+        },
+        {
+          "source": "shoulderLeft",
+          "sourceHandle": "point",
+          "target": "arm1LCurve",
+          "targetHandle": "a",
+          "id": "e_shoulderLeft_arm1LCurve_a"
+        },
+        {
+          "source": "arm1L_end",
+          "sourceHandle": "point",
+          "target": "arm1LCurve",
+          "targetHandle": "b",
+          "id": "e_arm1L_end_arm1LCurve_b"
+        },
+        {
+          "source": "arm1LCurve",
+          "sourceHandle": "curve",
+          "target": "arm1LBone",
+          "targetHandle": "path",
+          "id": "e_arm1LCurve_arm1LBone_path"
+        },
+        {
+          "source": "arm1L_end",
+          "sourceHandle": "point",
+          "target": "arm2LCurve",
+          "targetHandle": "a",
+          "id": "e_arm1L_end_arm2LCurve_a"
+        },
+        {
+          "source": "arm2L_end",
+          "sourceHandle": "point",
+          "target": "arm2LCurve",
+          "targetHandle": "b",
+          "id": "e_arm2L_end_arm2LCurve_b"
+        },
+        {
+          "source": "arm2LCurve",
+          "sourceHandle": "curve",
+          "target": "arm2LBone",
+          "targetHandle": "path",
+          "id": "e_arm2LCurve_arm2LBone_path"
+        },
+        {
+          "source": "arm2L_end",
+          "sourceHandle": "point",
+          "target": "arm3LCurve",
+          "targetHandle": "a",
+          "id": "e_arm2L_end_arm3LCurve_a"
+        },
+        {
+          "source": "arm3L_end",
+          "sourceHandle": "point",
+          "target": "arm3LCurve",
+          "targetHandle": "b",
+          "id": "e_arm3L_end_arm3LCurve_b"
+        },
+        {
+          "source": "arm3LCurve",
+          "sourceHandle": "curve",
+          "target": "arm3LBone",
+          "targetHandle": "path",
+          "id": "e_arm3LCurve_arm3LBone_path"
+        },
+        {
+          "source": "shoulderRight",
+          "sourceHandle": "point",
+          "target": "arm1RCurve",
+          "targetHandle": "a",
+          "id": "e_shoulderRight_arm1RCurve_a"
+        },
+        {
+          "source": "arm1R_end",
+          "sourceHandle": "point",
+          "target": "arm1RCurve",
+          "targetHandle": "b",
+          "id": "e_arm1R_end_arm1RCurve_b"
+        },
+        {
+          "source": "arm1RCurve",
+          "sourceHandle": "curve",
+          "target": "arm1RBone",
+          "targetHandle": "path",
+          "id": "e_arm1RCurve_arm1RBone_path"
+        },
+        {
+          "source": "arm1R_end",
+          "sourceHandle": "point",
+          "target": "arm2RCurve",
+          "targetHandle": "a",
+          "id": "e_arm1R_end_arm2RCurve_a"
+        },
+        {
+          "source": "arm2R_end",
+          "sourceHandle": "point",
+          "target": "arm2RCurve",
+          "targetHandle": "b",
+          "id": "e_arm2R_end_arm2RCurve_b"
+        },
+        {
+          "source": "arm2RCurve",
+          "sourceHandle": "curve",
+          "target": "arm2RBone",
+          "targetHandle": "path",
+          "id": "e_arm2RCurve_arm2RBone_path"
+        },
+        {
+          "source": "arm2R_end",
+          "sourceHandle": "point",
+          "target": "arm3RCurve",
+          "targetHandle": "a",
+          "id": "e_arm2R_end_arm3RCurve_a"
+        },
+        {
+          "source": "arm3R_end",
+          "sourceHandle": "point",
+          "target": "arm3RCurve",
+          "targetHandle": "b",
+          "id": "e_arm3R_end_arm3RCurve_b"
+        },
+        {
+          "source": "arm3RCurve",
+          "sourceHandle": "curve",
+          "target": "arm3RBone",
+          "targetHandle": "path",
+          "id": "e_arm3RCurve_arm3RBone_path"
+        },
+        {
+          "source": "hipLeft",
+          "sourceHandle": "point",
+          "target": "leg1LCurve",
+          "targetHandle": "a",
+          "id": "e_hipLeft_leg1LCurve_a"
+        },
+        {
+          "source": "leg1L_end",
+          "sourceHandle": "point",
+          "target": "leg1LCurve",
+          "targetHandle": "b",
+          "id": "e_leg1L_end_leg1LCurve_b"
+        },
+        {
+          "source": "leg1LCurve",
+          "sourceHandle": "curve",
+          "target": "leg1LBone",
+          "targetHandle": "path",
+          "id": "e_leg1LCurve_leg1LBone_path"
+        },
+        {
+          "source": "leg1L_end",
+          "sourceHandle": "point",
+          "target": "leg2LCurve",
+          "targetHandle": "a",
+          "id": "e_leg1L_end_leg2LCurve_a"
+        },
+        {
+          "source": "leg2L_end",
+          "sourceHandle": "point",
+          "target": "leg2LCurve",
+          "targetHandle": "b",
+          "id": "e_leg2L_end_leg2LCurve_b"
+        },
+        {
+          "source": "leg2LCurve",
+          "sourceHandle": "curve",
+          "target": "leg2LBone",
+          "targetHandle": "path",
+          "id": "e_leg2LCurve_leg2LBone_path"
+        },
+        {
+          "source": "leg2L_end",
+          "sourceHandle": "point",
+          "target": "leg3LCurve",
+          "targetHandle": "a",
+          "id": "e_leg2L_end_leg3LCurve_a"
+        },
+        {
+          "source": "leg3L_end",
+          "sourceHandle": "point",
+          "target": "leg3LCurve",
+          "targetHandle": "b",
+          "id": "e_leg3L_end_leg3LCurve_b"
+        },
+        {
+          "source": "leg3LCurve",
+          "sourceHandle": "curve",
+          "target": "leg3LBone",
+          "targetHandle": "path",
+          "id": "e_leg3LCurve_leg3LBone_path"
+        },
+        {
+          "source": "hipRight",
+          "sourceHandle": "point",
+          "target": "leg1RCurve",
+          "targetHandle": "a",
+          "id": "e_hipRight_leg1RCurve_a"
+        },
+        {
+          "source": "leg1R_end",
+          "sourceHandle": "point",
+          "target": "leg1RCurve",
+          "targetHandle": "b",
+          "id": "e_leg1R_end_leg1RCurve_b"
+        },
+        {
+          "source": "leg1RCurve",
+          "sourceHandle": "curve",
+          "target": "leg1RBone",
+          "targetHandle": "path",
+          "id": "e_leg1RCurve_leg1RBone_path"
+        },
+        {
+          "source": "leg1R_end",
+          "sourceHandle": "point",
+          "target": "leg2RCurve",
+          "targetHandle": "a",
+          "id": "e_leg1R_end_leg2RCurve_a"
+        },
+        {
+          "source": "leg2R_end",
+          "sourceHandle": "point",
+          "target": "leg2RCurve",
+          "targetHandle": "b",
+          "id": "e_leg2R_end_leg2RCurve_b"
+        },
+        {
+          "source": "leg2RCurve",
+          "sourceHandle": "curve",
+          "target": "leg2RBone",
+          "targetHandle": "path",
+          "id": "e_leg2RCurve_leg2RBone_path"
+        },
+        {
+          "source": "leg2R_end",
+          "sourceHandle": "point",
+          "target": "leg3RCurve",
+          "targetHandle": "a",
+          "id": "e_leg2R_end_leg3RCurve_a"
+        },
+        {
+          "source": "leg3R_end",
+          "sourceHandle": "point",
+          "target": "leg3RCurve",
+          "targetHandle": "b",
+          "id": "e_leg3R_end_leg3RCurve_b"
+        },
+        {
+          "source": "leg3RCurve",
+          "sourceHandle": "curve",
+          "target": "leg3RBone",
+          "targetHandle": "path",
+          "id": "e_leg3RCurve_leg3RBone_path"
+        }
+      ]
+    },
+    {
+      "at": "2026-07-23T19:10:31.554Z",
+      "turn": 1,
+      "trigger": "ai-repair",
+      "label": "attempt 3: added 8 node(s) [Midpoint, Vector2Pt, DistanceMeasure, Cylinder]; removed 2 node(s); added 16 edge(s); removed 6 edge(s)",
+      "nodeCount": 71,
+      "edgeCount": 69,
+      "isolatedCount": 9,
+      "diff": {
+        "addedNodes": [
+          "neckMid",
+          "neckAxis",
+          "neckHeight",
+          "neckCylinder",
+          "spineMid",
+          "spineAxis",
+          "spineHeight",
+          "spineCylinder"
+        ],
+        "removedNodes": [
+          "neckBone",
+          "spineBone"
+        ],
+        "changedNodes": [],
+        "addedEdges": 16,
+        "removedEdges": 2
+      },
+      "details": [
+        "warning: Dead design parameters: sliders \"totalHeight\", \"neckLength\", \"spineLength\", \"shoulderWidth\", \"hipWidth\", \"armSegLength\", \"legSegLength\" are not referenced by any formula or edge — moving them changes nothing. Wire dimensions to them or remove them."
+      ],
+      "nodes": [
+        {
+          "id": "totalHeight",
+          "type": "NumberSlider",
+          "data": {
+            "value": 180,
+            "label": "totalHeight",
+            "min": 100,
+            "max": 250,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 5170
+          }
+        },
+        {
+          "id": "neckLength",
+          "type": "NumberSlider",
+          "data": {
+            "value": 15,
+            "label": "neckLength",
+            "min": 5,
+            "max": 40,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 4030
+          }
+        },
+        {
+          "id": "spineLength",
+          "type": "NumberSlider",
+          "data": {
+            "value": 60,
+            "label": "spineLength",
+            "min": 30,
+            "max": 100,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 4980
+          }
+        },
+        {
+          "id": "shoulderWidth",
+          "type": "NumberSlider",
+          "data": {
+            "value": 45,
+            "label": "shoulderWidth",
+            "min": 20,
+            "max": 80,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 4600
+          }
+        },
+        {
+          "id": "hipWidth",
+          "type": "NumberSlider",
+          "data": {
+            "value": 30,
+            "label": "hipWidth",
+            "min": 15,
+            "max": 60,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 2510
+          }
+        },
+        {
+          "id": "armSegLength",
+          "type": "NumberSlider",
+          "data": {
+            "value": 25,
+            "label": "armSegLength",
+            "min": 10,
+            "max": 50,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 1370
+          }
+        },
+        {
+          "id": "legSegLength",
+          "type": "NumberSlider",
+          "data": {
+            "value": 35,
+            "label": "legSegLength",
+            "min": 15,
+            "max": 60,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 3840
+          }
+        },
+        {
+          "id": "headRadius",
+          "type": "NumberSlider",
+          "data": {
+            "value": 12,
+            "label": "headRadius",
+            "min": 5,
+            "max": 25,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 1940
+          }
+        },
+        {
+          "id": "boneRadius",
+          "type": "NumberSlider",
+          "data": {
+            "value": 2,
+            "label": "boneRadius",
+            "min": 0.5,
+            "max": 8,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 1560
+          }
+        },
+        {
+          "id": "anchor",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "totalHeight*0.55"
+          },
+          "position": {
+            "x": 40,
+            "y": 40
+          }
+        },
+        {
+          "id": "headCenter",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "totalHeight*0.55 + neckLength"
+          },
+          "position": {
+            "x": 40,
+            "y": 1750
+          }
+        },
+        {
+          "id": "spineBottom",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "totalHeight*0.55 - spineLength"
+          },
+          "position": {
+            "x": 40,
+            "y": 4790
+          }
+        },
+        {
+          "id": "shoulderLeft",
+          "type": "Point",
+          "data": {
+            "x": "-shoulderWidth/2",
+            "y": 0,
+            "z": "totalHeight*0.55"
+          },
+          "position": {
+            "x": 40,
+            "y": 4220
+          }
+        },
+        {
+          "id": "shoulderRight",
+          "type": "Point",
+          "data": {
+            "x": "shoulderWidth/2",
+            "y": 0,
+            "z": "totalHeight*0.55"
+          },
+          "position": {
+            "x": 40,
+            "y": 4410
+          }
+        },
+        {
+          "id": "hipLeft",
+          "type": "Point",
+          "data": {
+            "x": "-hipWidth/2",
+            "y": 0,
+            "z": "totalHeight*0.55 - spineLength"
+          },
+          "position": {
+            "x": 40,
+            "y": 2130
+          }
+        },
+        {
+          "id": "hipRight",
+          "type": "Point",
+          "data": {
+            "x": "hipWidth/2",
+            "y": 0,
+            "z": "totalHeight*0.55 - spineLength"
+          },
+          "position": {
+            "x": 40,
+            "y": 2320
+          }
+        },
+        {
+          "id": "arm1L_end",
+          "type": "Point",
+          "data": {
+            "x": "-shoulderWidth/2 - armSegLength",
+            "y": 0,
+            "z": "totalHeight*0.55 - armSegLength*0.3"
+          },
+          "position": {
+            "x": 40,
+            "y": 230
+          }
+        },
+        {
+          "id": "arm2L_end",
+          "type": "Point",
+          "data": {
+            "x": "-shoulderWidth/2 - armSegLength*1.5",
+            "y": 0,
+            "z": "totalHeight*0.55 - armSegLength*0.8"
+          },
+          "position": {
+            "x": 40,
+            "y": 610
+          }
+        },
+        {
+          "id": "arm3L_end",
+          "type": "Point",
+          "data": {
+            "x": "-shoulderWidth/2 - armSegLength*1.8",
+            "y": 0,
+            "z": "totalHeight*0.55 - armSegLength*1.2"
+          },
+          "position": {
+            "x": 40,
+            "y": 990
+          }
+        },
+        {
+          "id": "arm1R_end",
+          "type": "Point",
+          "data": {
+            "x": "shoulderWidth/2 + armSegLength",
+            "y": 0,
+            "z": "totalHeight*0.55 - armSegLength*0.3"
+          },
+          "position": {
+            "x": 40,
+            "y": 420
+          }
+        },
+        {
+          "id": "arm2R_end",
+          "type": "Point",
+          "data": {
+            "x": "shoulderWidth/2 + armSegLength*1.5",
+            "y": 0,
+            "z": "totalHeight*0.55 - armSegLength*0.8"
+          },
+          "position": {
+            "x": 40,
+            "y": 800
+          }
+        },
+        {
+          "id": "arm3R_end",
+          "type": "Point",
+          "data": {
+            "x": "shoulderWidth/2 + armSegLength*1.8",
+            "y": 0,
+            "z": "totalHeight*0.55 - armSegLength*1.2"
+          },
+          "position": {
+            "x": 40,
+            "y": 1180
+          }
+        },
+        {
+          "id": "leg1L_end",
+          "type": "Point",
+          "data": {
+            "x": "-hipWidth/2 - legSegLength*0.2",
+            "y": 0,
+            "z": "totalHeight*0.55 - spineLength - legSegLength"
+          },
+          "position": {
+            "x": 40,
+            "y": 2700
+          }
+        },
+        {
+          "id": "leg2L_end",
+          "type": "Point",
+          "data": {
+            "x": "-hipWidth/2 - legSegLength*0.3",
+            "y": 0,
+            "z": "totalHeight*0.55 - spineLength - legSegLength*2"
+          },
+          "position": {
+            "x": 40,
+            "y": 3080
+          }
+        },
+        {
+          "id": "leg3L_end",
+          "type": "Point",
+          "data": {
+            "x": "-hipWidth/2 - legSegLength*0.4",
+            "y": 0,
+            "z": "totalHeight*0.55 - spineLength - legSegLength*2.8"
+          },
+          "position": {
+            "x": 40,
+            "y": 3460
+          }
+        },
+        {
+          "id": "leg1R_end",
+          "type": "Point",
+          "data": {
+            "x": "hipWidth/2 + legSegLength*0.2",
+            "y": 0,
+            "z": "totalHeight*0.55 - spineLength - legSegLength"
+          },
+          "position": {
+            "x": 40,
+            "y": 2890
+          }
+        },
+        {
+          "id": "leg2R_end",
+          "type": "Point",
+          "data": {
+            "x": "hipWidth/2 + legSegLength*0.3",
+            "y": 0,
+            "z": "totalHeight*0.55 - spineLength - legSegLength*2"
+          },
+          "position": {
+            "x": 40,
+            "y": 3270
+          }
+        },
+        {
+          "id": "leg3R_end",
+          "type": "Point",
+          "data": {
+            "x": "hipWidth/2 + legSegLength*0.4",
+            "y": 0,
+            "z": "totalHeight*0.55 - spineLength - legSegLength*2.8"
+          },
+          "position": {
+            "x": 40,
+            "y": 3650
+          }
+        },
+        {
+          "id": "skull",
+          "type": "Sphere",
+          "data": {
+            "radius": "headRadius",
+            "color": "#f5f5dc"
+          },
+          "position": {
+            "x": 270,
+            "y": 1560
+          }
+        },
+        {
+          "id": "neckCurve",
+          "type": "Line",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 800
+          }
+        },
+        {
+          "id": "spineCurve",
+          "type": "Line",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 2890
+          }
+        },
+        {
+          "id": "shoulderLCurve",
+          "type": "Line",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 1750
+          }
+        },
+        {
+          "id": "shoulderLBone",
+          "type": "Pipe",
+          "data": {
+            "radius": "boneRadius",
+            "color": "#e8e4c9"
+          },
+          "position": {
+            "x": 500,
+            "y": 990
+          }
+        },
+        {
+          "id": "shoulderRCurve",
+          "type": "Line",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 2130
+          }
+        },
+        {
+          "id": "shoulderRBone",
+          "type": "Pipe",
+          "data": {
+            "radius": "boneRadius",
+            "color": "#e8e4c9"
+          },
+          "position": {
+            "x": 500,
+            "y": 1370
+          }
+        },
+        {
+          "id": "hipLCurve",
+          "type": "Line",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 4220
+          }
+        },
+        {
+          "id": "hipLBone",
+          "type": "Pipe",
+          "data": {
+            "radius": "boneRadius",
+            "color": "#e8e4c9"
+          },
+          "position": {
+            "x": 500,
+            "y": 2890
+          }
+        },
+        {
+          "id": "hipRCurve",
+          "type": "Line",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 4600
+          }
+        },
+        {
+          "id": "hipRBone",
+          "type": "Pipe",
+          "data": {
+            "radius": "boneRadius",
+            "color": "#e8e4c9"
+          },
+          "position": {
+            "x": 500,
+            "y": 3270
+          }
+        },
+        {
+          "id": "arm1LCurve",
+          "type": "Line",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 1940
+          }
+        },
+        {
+          "id": "arm1LBone",
+          "type": "Pipe",
+          "data": {
+            "radius": "boneRadius*0.9",
+            "color": "#e8e4c9"
+          },
+          "position": {
+            "x": 500,
+            "y": 1180
+          }
+        },
+        {
+          "id": "arm2LCurve",
+          "type": "Line",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 40
+          }
+        },
+        {
+          "id": "arm2LBone",
+          "type": "Pipe",
+          "data": {
+            "radius": "boneRadius*0.85",
+            "color": "#e8e4c9"
+          },
+          "position": {
+            "x": 500,
+            "y": 40
+          }
+        },
+        {
+          "id": "arm3LCurve",
+          "type": "Line",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 420
+          }
+        },
+        {
+          "id": "arm3LBone",
+          "type": "Pipe",
+          "data": {
+            "radius": "boneRadius*0.7",
+            "color": "#e8e4c9"
+          },
+          "position": {
+            "x": 500,
+            "y": 420
+          }
+        },
+        {
+          "id": "arm1RCurve",
+          "type": "Line",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 2320
+          }
+        },
+        {
+          "id": "arm1RBone",
+          "type": "Pipe",
+          "data": {
+            "radius": "boneRadius*0.9",
+            "color": "#e8e4c9"
+          },
+          "position": {
+            "x": 500,
+            "y": 1560
+          }
+        },
+        {
+          "id": "arm2RCurve",
+          "type": "Line",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 230
+          }
+        },
+        {
+          "id": "arm2RBone",
+          "type": "Pipe",
+          "data": {
+            "radius": "boneRadius*0.85",
+            "color": "#e8e4c9"
+          },
+          "position": {
+            "x": 500,
+            "y": 230
+          }
+        },
+        {
+          "id": "arm3RCurve",
+          "type": "Line",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 1370
+          }
+        },
+        {
+          "id": "arm3RBone",
+          "type": "Pipe",
+          "data": {
+            "radius": "boneRadius*0.7",
+            "color": "#e8e4c9"
+          },
+          "position": {
+            "x": 500,
+            "y": 800
+          }
+        },
+        {
+          "id": "leg1LCurve",
+          "type": "Line",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 2510
+          }
+        },
+        {
+          "id": "leg1LBone",
+          "type": "Pipe",
+          "data": {
+            "radius": "boneRadius*1.1",
+            "color": "#e8e4c9"
+          },
+          "position": {
+            "x": 500,
+            "y": 1750
+          }
+        },
+        {
+          "id": "leg2LCurve",
+          "type": "Line",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 3650
+          }
+        },
+        {
+          "id": "leg2LBone",
+          "type": "Pipe",
+          "data": {
+            "radius": "boneRadius*1.0",
+            "color": "#e8e4c9"
+          },
+          "position": {
+            "x": 500,
+            "y": 2320
+          }
+        },
+        {
+          "id": "leg3LCurve",
+          "type": "Line",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 4030
+          }
+        },
+        {
+          "id": "leg3LBone",
+          "type": "Pipe",
+          "data": {
+            "radius": "boneRadius*0.8",
+            "color": "#e8e4c9"
+          },
+          "position": {
+            "x": 500,
+            "y": 2700
+          }
+        },
+        {
+          "id": "leg1RCurve",
+          "type": "Line",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 3460
+          }
+        },
+        {
+          "id": "leg1RBone",
+          "type": "Pipe",
+          "data": {
+            "radius": "boneRadius*1.1",
+            "color": "#e8e4c9"
+          },
+          "position": {
+            "x": 500,
+            "y": 2130
+          }
+        },
+        {
+          "id": "leg2RCurve",
+          "type": "Line",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 3840
+          }
+        },
+        {
+          "id": "leg2RBone",
+          "type": "Pipe",
+          "data": {
+            "radius": "boneRadius*1.0",
+            "color": "#e8e4c9"
+          },
+          "position": {
+            "x": 500,
+            "y": 2510
+          }
+        },
+        {
+          "id": "leg3RCurve",
+          "type": "Line",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 4410
+          }
+        },
+        {
+          "id": "leg3RBone",
+          "type": "Pipe",
+          "data": {
+            "radius": "boneRadius*0.8",
+            "color": "#e8e4c9"
+          },
+          "position": {
+            "x": 500,
+            "y": 3080
+          }
+        },
+        {
+          "id": "neckMid",
+          "type": "Midpoint",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 1180
+          }
+        },
+        {
+          "id": "neckAxis",
+          "type": "Vector2Pt",
+          "data": {
+            "normalize": true
+          },
+          "position": {
+            "x": 270,
+            "y": 610
+          }
+        },
+        {
+          "id": "neckHeight",
+          "type": "DistanceMeasure",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 990
+          }
+        },
+        {
+          "id": "neckCylinder",
+          "type": "Cylinder",
+          "data": {
+            "radius": "boneRadius*0.7",
+            "color": "#e8e4c9"
+          },
+          "position": {
+            "x": 500,
+            "y": 610
+          }
+        },
+        {
+          "id": "spineMid",
+          "type": "Midpoint",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 3270
+          }
+        },
+        {
+          "id": "spineAxis",
+          "type": "Vector2Pt",
+          "data": {
+            "normalize": true
+          },
+          "position": {
+            "x": 270,
+            "y": 2700
+          }
+        },
+        {
+          "id": "spineHeight",
+          "type": "DistanceMeasure",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 3080
+          }
+        },
+        {
+          "id": "spineCylinder",
+          "type": "Cylinder",
+          "data": {
+            "radius": "boneRadius*1.2",
+            "color": "#e8e4c9"
+          },
+          "position": {
+            "x": 500,
+            "y": 1940
+          }
+        }
+      ],
+      "edges": [
+        {
+          "source": "headCenter",
+          "sourceHandle": "point",
+          "target": "skull",
+          "targetHandle": "center",
+          "id": "e_headCenter_skull_center"
+        },
+        {
+          "source": "anchor",
+          "sourceHandle": "point",
+          "target": "neckCurve",
+          "targetHandle": "a",
+          "id": "e_anchor_neckCurve_a"
+        },
+        {
+          "source": "headCenter",
+          "sourceHandle": "point",
+          "target": "neckCurve",
+          "targetHandle": "b",
+          "id": "e_headCenter_neckCurve_b"
+        },
+        {
+          "source": "anchor",
+          "sourceHandle": "point",
+          "target": "spineCurve",
+          "targetHandle": "a",
+          "id": "e_anchor_spineCurve_a"
+        },
+        {
+          "source": "spineBottom",
+          "sourceHandle": "point",
+          "target": "spineCurve",
+          "targetHandle": "b",
+          "id": "e_spineBottom_spineCurve_b"
+        },
+        {
+          "source": "anchor",
+          "sourceHandle": "point",
+          "target": "shoulderLCurve",
+          "targetHandle": "a",
+          "id": "e_anchor_shoulderLCurve_a"
+        },
+        {
+          "source": "shoulderLeft",
+          "sourceHandle": "point",
+          "target": "shoulderLCurve",
+          "targetHandle": "b",
+          "id": "e_shoulderLeft_shoulderLCurve_b"
+        },
+        {
+          "source": "shoulderLCurve",
+          "sourceHandle": "curve",
+          "target": "shoulderLBone",
+          "targetHandle": "path",
+          "id": "e_shoulderLCurve_shoulderLBone_path"
+        },
+        {
+          "source": "anchor",
+          "sourceHandle": "point",
+          "target": "shoulderRCurve",
+          "targetHandle": "a",
+          "id": "e_anchor_shoulderRCurve_a"
+        },
+        {
+          "source": "shoulderRight",
+          "sourceHandle": "point",
+          "target": "shoulderRCurve",
+          "targetHandle": "b",
+          "id": "e_shoulderRight_shoulderRCurve_b"
+        },
+        {
+          "source": "shoulderRCurve",
+          "sourceHandle": "curve",
+          "target": "shoulderRBone",
+          "targetHandle": "path",
+          "id": "e_shoulderRCurve_shoulderRBone_path"
+        },
+        {
+          "source": "spineBottom",
+          "sourceHandle": "point",
+          "target": "hipLCurve",
+          "targetHandle": "a",
+          "id": "e_spineBottom_hipLCurve_a"
+        },
+        {
+          "source": "hipLeft",
+          "sourceHandle": "point",
+          "target": "hipLCurve",
+          "targetHandle": "b",
+          "id": "e_hipLeft_hipLCurve_b"
+        },
+        {
+          "source": "hipLCurve",
+          "sourceHandle": "curve",
+          "target": "hipLBone",
+          "targetHandle": "path",
+          "id": "e_hipLCurve_hipLBone_path"
+        },
+        {
+          "source": "spineBottom",
+          "sourceHandle": "point",
+          "target": "hipRCurve",
+          "targetHandle": "a",
+          "id": "e_spineBottom_hipRCurve_a"
+        },
+        {
+          "source": "hipRight",
+          "sourceHandle": "point",
+          "target": "hipRCurve",
+          "targetHandle": "b",
+          "id": "e_hipRight_hipRCurve_b"
+        },
+        {
+          "source": "hipRCurve",
+          "sourceHandle": "curve",
+          "target": "hipRBone",
+          "targetHandle": "path",
+          "id": "e_hipRCurve_hipRBone_path"
+        },
+        {
+          "source": "shoulderLeft",
+          "sourceHandle": "point",
+          "target": "arm1LCurve",
+          "targetHandle": "a",
+          "id": "e_shoulderLeft_arm1LCurve_a"
+        },
+        {
+          "source": "arm1L_end",
+          "sourceHandle": "point",
+          "target": "arm1LCurve",
+          "targetHandle": "b",
+          "id": "e_arm1L_end_arm1LCurve_b"
+        },
+        {
+          "source": "arm1LCurve",
+          "sourceHandle": "curve",
+          "target": "arm1LBone",
+          "targetHandle": "path",
+          "id": "e_arm1LCurve_arm1LBone_path"
+        },
+        {
+          "source": "arm1L_end",
+          "sourceHandle": "point",
+          "target": "arm2LCurve",
+          "targetHandle": "a",
+          "id": "e_arm1L_end_arm2LCurve_a"
+        },
+        {
+          "source": "arm2L_end",
+          "sourceHandle": "point",
+          "target": "arm2LCurve",
+          "targetHandle": "b",
+          "id": "e_arm2L_end_arm2LCurve_b"
+        },
+        {
+          "source": "arm2LCurve",
+          "sourceHandle": "curve",
+          "target": "arm2LBone",
+          "targetHandle": "path",
+          "id": "e_arm2LCurve_arm2LBone_path"
+        },
+        {
+          "source": "arm2L_end",
+          "sourceHandle": "point",
+          "target": "arm3LCurve",
+          "targetHandle": "a",
+          "id": "e_arm2L_end_arm3LCurve_a"
+        },
+        {
+          "source": "arm3L_end",
+          "sourceHandle": "point",
+          "target": "arm3LCurve",
+          "targetHandle": "b",
+          "id": "e_arm3L_end_arm3LCurve_b"
+        },
+        {
+          "source": "arm3LCurve",
+          "sourceHandle": "curve",
+          "target": "arm3LBone",
+          "targetHandle": "path",
+          "id": "e_arm3LCurve_arm3LBone_path"
+        },
+        {
+          "source": "shoulderRight",
+          "sourceHandle": "point",
+          "target": "arm1RCurve",
+          "targetHandle": "a",
+          "id": "e_shoulderRight_arm1RCurve_a"
+        },
+        {
+          "source": "arm1R_end",
+          "sourceHandle": "point",
+          "target": "arm1RCurve",
+          "targetHandle": "b",
+          "id": "e_arm1R_end_arm1RCurve_b"
+        },
+        {
+          "source": "arm1RCurve",
+          "sourceHandle": "curve",
+          "target": "arm1RBone",
+          "targetHandle": "path",
+          "id": "e_arm1RCurve_arm1RBone_path"
+        },
+        {
+          "source": "arm1R_end",
+          "sourceHandle": "point",
+          "target": "arm2RCurve",
+          "targetHandle": "a",
+          "id": "e_arm1R_end_arm2RCurve_a"
+        },
+        {
+          "source": "arm2R_end",
+          "sourceHandle": "point",
+          "target": "arm2RCurve",
+          "targetHandle": "b",
+          "id": "e_arm2R_end_arm2RCurve_b"
+        },
+        {
+          "source": "arm2RCurve",
+          "sourceHandle": "curve",
+          "target": "arm2RBone",
+          "targetHandle": "path",
+          "id": "e_arm2RCurve_arm2RBone_path"
+        },
+        {
+          "source": "arm2R_end",
+          "sourceHandle": "point",
+          "target": "arm3RCurve",
+          "targetHandle": "a",
+          "id": "e_arm2R_end_arm3RCurve_a"
+        },
+        {
+          "source": "arm3R_end",
+          "sourceHandle": "point",
+          "target": "arm3RCurve",
+          "targetHandle": "b",
+          "id": "e_arm3R_end_arm3RCurve_b"
+        },
+        {
+          "source": "arm3RCurve",
+          "sourceHandle": "curve",
+          "target": "arm3RBone",
+          "targetHandle": "path",
+          "id": "e_arm3RCurve_arm3RBone_path"
+        },
+        {
+          "source": "hipLeft",
+          "sourceHandle": "point",
+          "target": "leg1LCurve",
+          "targetHandle": "a",
+          "id": "e_hipLeft_leg1LCurve_a"
+        },
+        {
+          "source": "leg1L_end",
+          "sourceHandle": "point",
+          "target": "leg1LCurve",
+          "targetHandle": "b",
+          "id": "e_leg1L_end_leg1LCurve_b"
+        },
+        {
+          "source": "leg1LCurve",
+          "sourceHandle": "curve",
+          "target": "leg1LBone",
+          "targetHandle": "path",
+          "id": "e_leg1LCurve_leg1LBone_path"
+        },
+        {
+          "source": "leg1L_end",
+          "sourceHandle": "point",
+          "target": "leg2LCurve",
+          "targetHandle": "a",
+          "id": "e_leg1L_end_leg2LCurve_a"
+        },
+        {
+          "source": "leg2L_end",
+          "sourceHandle": "point",
+          "target": "leg2LCurve",
+          "targetHandle": "b",
+          "id": "e_leg2L_end_leg2LCurve_b"
+        },
+        {
+          "source": "leg2LCurve",
+          "sourceHandle": "curve",
+          "target": "leg2LBone",
+          "targetHandle": "path",
+          "id": "e_leg2LCurve_leg2LBone_path"
+        },
+        {
+          "source": "leg2L_end",
+          "sourceHandle": "point",
+          "target": "leg3LCurve",
+          "targetHandle": "a",
+          "id": "e_leg2L_end_leg3LCurve_a"
+        },
+        {
+          "source": "leg3L_end",
+          "sourceHandle": "point",
+          "target": "leg3LCurve",
+          "targetHandle": "b",
+          "id": "e_leg3L_end_leg3LCurve_b"
+        },
+        {
+          "source": "leg3LCurve",
+          "sourceHandle": "curve",
+          "target": "leg3LBone",
+          "targetHandle": "path",
+          "id": "e_leg3LCurve_leg3LBone_path"
+        },
+        {
+          "source": "hipRight",
+          "sourceHandle": "point",
+          "target": "leg1RCurve",
+          "targetHandle": "a",
+          "id": "e_hipRight_leg1RCurve_a"
+        },
+        {
+          "source": "leg1R_end",
+          "sourceHandle": "point",
+          "target": "leg1RCurve",
+          "targetHandle": "b",
+          "id": "e_leg1R_end_leg1RCurve_b"
+        },
+        {
+          "source": "leg1RCurve",
+          "sourceHandle": "curve",
+          "target": "leg1RBone",
+          "targetHandle": "path",
+          "id": "e_leg1RCurve_leg1RBone_path"
+        },
+        {
+          "source": "leg1R_end",
+          "sourceHandle": "point",
+          "target": "leg2RCurve",
+          "targetHandle": "a",
+          "id": "e_leg1R_end_leg2RCurve_a"
+        },
+        {
+          "source": "leg2R_end",
+          "sourceHandle": "point",
+          "target": "leg2RCurve",
+          "targetHandle": "b",
+          "id": "e_leg2R_end_leg2RCurve_b"
+        },
+        {
+          "source": "leg2RCurve",
+          "sourceHandle": "curve",
+          "target": "leg2RBone",
+          "targetHandle": "path",
+          "id": "e_leg2RCurve_leg2RBone_path"
+        },
+        {
+          "source": "leg2R_end",
+          "sourceHandle": "point",
+          "target": "leg3RCurve",
+          "targetHandle": "a",
+          "id": "e_leg2R_end_leg3RCurve_a"
+        },
+        {
+          "source": "leg3R_end",
+          "sourceHandle": "point",
+          "target": "leg3RCurve",
+          "targetHandle": "b",
+          "id": "e_leg3R_end_leg3RCurve_b"
+        },
+        {
+          "source": "leg3RCurve",
+          "sourceHandle": "curve",
+          "target": "leg3RBone",
+          "targetHandle": "path",
+          "id": "e_leg3RCurve_leg3RBone_path"
+        },
+        {
+          "source": "anchor",
+          "target": "neckMid",
+          "sourceHandle": "point",
+          "targetHandle": "a",
+          "id": "e_anchor_neckMid_a"
+        },
+        {
+          "source": "headCenter",
+          "target": "neckMid",
+          "sourceHandle": "point",
+          "targetHandle": "b",
+          "id": "e_headCenter_neckMid_b"
+        },
+        {
+          "source": "anchor",
+          "target": "neckAxis",
+          "sourceHandle": "point",
+          "targetHandle": "a",
+          "id": "e_anchor_neckAxis_a"
+        },
+        {
+          "source": "headCenter",
+          "target": "neckAxis",
+          "sourceHandle": "point",
+          "targetHandle": "b",
+          "id": "e_headCenter_neckAxis_b"
+        },
+        {
+          "source": "anchor",
+          "target": "neckHeight",
+          "sourceHandle": "point",
+          "targetHandle": "a",
+          "id": "e_anchor_neckHeight_a"
+        },
+        {
+          "source": "headCenter",
+          "target": "neckHeight",
+          "sourceHandle": "point",
+          "targetHandle": "b",
+          "id": "e_headCenter_neckHeight_b"
+        },
+        {
+          "source": "neckMid",
+          "target": "neckCylinder",
+          "sourceHandle": "midpoint",
+          "targetHandle": "center",
+          "id": "e_neckMid_neckCylinder_center"
+        },
+        {
+          "source": "neckAxis",
+          "target": "neckCylinder",
+          "sourceHandle": "vector",
+          "targetHandle": "axis",
+          "id": "e_neckAxis_neckCylinder_axis"
+        },
+        {
+          "source": "anchor",
+          "target": "spineMid",
+          "sourceHandle": "point",
+          "targetHandle": "a",
+          "id": "e_anchor_spineMid_a"
+        },
+        {
+          "source": "spineBottom",
+          "target": "spineMid",
+          "sourceHandle": "point",
+          "targetHandle": "b",
+          "id": "e_spineBottom_spineMid_b"
+        },
+        {
+          "source": "anchor",
+          "target": "spineAxis",
+          "sourceHandle": "point",
+          "targetHandle": "a",
+          "id": "e_anchor_spineAxis_a"
+        },
+        {
+          "source": "spineBottom",
+          "target": "spineAxis",
+          "sourceHandle": "point",
+          "targetHandle": "b",
+          "id": "e_spineBottom_spineAxis_b"
+        },
+        {
+          "source": "anchor",
+          "target": "spineHeight",
+          "sourceHandle": "point",
+          "targetHandle": "a",
+          "id": "e_anchor_spineHeight_a"
+        },
+        {
+          "source": "spineBottom",
+          "target": "spineHeight",
+          "sourceHandle": "point",
+          "targetHandle": "b",
+          "id": "e_spineBottom_spineHeight_b"
+        },
+        {
+          "source": "spineMid",
+          "target": "spineCylinder",
+          "sourceHandle": "midpoint",
+          "targetHandle": "center",
+          "id": "e_spineMid_spineCylinder_center"
+        },
+        {
+          "source": "spineAxis",
+          "target": "spineCylinder",
+          "sourceHandle": "vector",
+          "targetHandle": "axis",
+          "id": "e_spineAxis_spineCylinder_axis"
+        }
+      ]
+    },
+    {
+      "at": "2026-07-23T19:11:42.644Z",
+      "turn": 1,
+      "trigger": "ai-repair",
+      "label": "attempt 3: removed 4 node(s); removed 8 edge(s)",
+      "nodeCount": 67,
+      "edgeCount": 61,
+      "isolatedCount": 9,
+      "diff": {
+        "addedNodes": [],
+        "removedNodes": [
+          "neckCurve",
+          "spineCurve",
+          "neckHeight",
+          "spineHeight"
+        ],
+        "changedNodes": [],
+        "addedEdges": 0,
+        "removedEdges": 8
+      },
+      "details": [
+        "warning: Dead design parameters: sliders \"totalHeight\", \"neckLength\", \"spineLength\", \"shoulderWidth\", \"hipWidth\", \"armSegLength\", \"legSegLength\" are not referenced by any formula or edge — moving them changes nothing. Wire dimensions to them or remove them."
+      ],
+      "nodes": [
+        {
+          "id": "totalHeight",
+          "type": "NumberSlider",
+          "data": {
+            "value": 180,
+            "label": "totalHeight",
+            "min": 100,
+            "max": 250,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 5170
+          },
+          "measured": {
+            "width": 201,
+            "height": 328
+          }
+        },
+        {
+          "id": "neckLength",
+          "type": "NumberSlider",
+          "data": {
+            "value": 15,
+            "label": "neckLength",
+            "min": 5,
+            "max": 40,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 4030
+          },
+          "measured": {
+            "width": 201,
+            "height": 328
+          }
+        },
+        {
+          "id": "spineLength",
+          "type": "NumberSlider",
+          "data": {
+            "value": 60,
+            "label": "spineLength",
+            "min": 30,
+            "max": 100,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 4980
+          },
+          "measured": {
+            "width": 201,
+            "height": 328
+          }
+        },
+        {
+          "id": "shoulderWidth",
+          "type": "NumberSlider",
+          "data": {
+            "value": 45,
+            "label": "shoulderWidth",
+            "min": 20,
+            "max": 80,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 4600
+          },
+          "measured": {
+            "width": 201,
+            "height": 328
+          }
+        },
+        {
+          "id": "hipWidth",
+          "type": "NumberSlider",
+          "data": {
+            "value": 30,
+            "label": "hipWidth",
+            "min": 15,
+            "max": 60,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 2510
+          },
+          "measured": {
+            "width": 201,
+            "height": 328
+          }
+        },
+        {
+          "id": "armSegLength",
+          "type": "NumberSlider",
+          "data": {
+            "value": 25,
+            "label": "armSegLength",
+            "min": 10,
+            "max": 50,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 1370
+          },
+          "measured": {
+            "width": 201,
+            "height": 328
+          }
+        },
+        {
+          "id": "legSegLength",
+          "type": "NumberSlider",
+          "data": {
+            "value": 35,
+            "label": "legSegLength",
+            "min": 15,
+            "max": 60,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 3840
+          },
+          "measured": {
+            "width": 201,
+            "height": 328
+          }
+        },
+        {
+          "id": "headRadius",
+          "type": "NumberSlider",
+          "data": {
+            "value": 12,
+            "label": "headRadius",
+            "min": 5,
+            "max": 25,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 1940
+          },
+          "measured": {
+            "width": 201,
+            "height": 328
+          }
+        },
+        {
+          "id": "boneRadius",
+          "type": "NumberSlider",
+          "data": {
+            "value": 2,
+            "label": "boneRadius",
+            "min": 0.5,
+            "max": 8,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 1560
+          },
+          "measured": {
+            "width": 201,
+            "height": 328
+          }
+        },
+        {
+          "id": "anchor",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "totalHeight*0.55"
+          },
+          "position": {
+            "x": 40,
+            "y": 40
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "headCenter",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "totalHeight*0.55 + neckLength"
+          },
+          "position": {
+            "x": 40,
+            "y": 1750
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "spineBottom",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "totalHeight*0.55 - spineLength"
+          },
+          "position": {
+            "x": 40,
+            "y": 4790
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "shoulderLeft",
+          "type": "Point",
+          "data": {
+            "x": "-shoulderWidth/2",
+            "y": 0,
+            "z": "totalHeight*0.55"
+          },
+          "position": {
+            "x": 40,
+            "y": 4220
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "shoulderRight",
+          "type": "Point",
+          "data": {
+            "x": "shoulderWidth/2",
+            "y": 0,
+            "z": "totalHeight*0.55"
+          },
+          "position": {
+            "x": 40,
+            "y": 4410
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "hipLeft",
+          "type": "Point",
+          "data": {
+            "x": "-hipWidth/2",
+            "y": 0,
+            "z": "totalHeight*0.55 - spineLength"
+          },
+          "position": {
+            "x": 40,
+            "y": 2130
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "hipRight",
+          "type": "Point",
+          "data": {
+            "x": "hipWidth/2",
+            "y": 0,
+            "z": "totalHeight*0.55 - spineLength"
+          },
+          "position": {
+            "x": 40,
+            "y": 2320
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "arm1L_end",
+          "type": "Point",
+          "data": {
+            "x": "-shoulderWidth/2 - armSegLength",
+            "y": 0,
+            "z": "totalHeight*0.55 - armSegLength*0.3"
+          },
+          "position": {
+            "x": 40,
+            "y": 230
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "arm2L_end",
+          "type": "Point",
+          "data": {
+            "x": "-shoulderWidth/2 - armSegLength*1.5",
+            "y": 0,
+            "z": "totalHeight*0.55 - armSegLength*0.8"
+          },
+          "position": {
+            "x": 40,
+            "y": 610
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "arm3L_end",
+          "type": "Point",
+          "data": {
+            "x": "-shoulderWidth/2 - armSegLength*1.8",
+            "y": 0,
+            "z": "totalHeight*0.55 - armSegLength*1.2"
+          },
+          "position": {
+            "x": 40,
+            "y": 990
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "arm1R_end",
+          "type": "Point",
+          "data": {
+            "x": "shoulderWidth/2 + armSegLength",
+            "y": 0,
+            "z": "totalHeight*0.55 - armSegLength*0.3"
+          },
+          "position": {
+            "x": 40,
+            "y": 420
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "arm2R_end",
+          "type": "Point",
+          "data": {
+            "x": "shoulderWidth/2 + armSegLength*1.5",
+            "y": 0,
+            "z": "totalHeight*0.55 - armSegLength*0.8"
+          },
+          "position": {
+            "x": 40,
+            "y": 800
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "arm3R_end",
+          "type": "Point",
+          "data": {
+            "x": "shoulderWidth/2 + armSegLength*1.8",
+            "y": 0,
+            "z": "totalHeight*0.55 - armSegLength*1.2"
+          },
+          "position": {
+            "x": 40,
+            "y": 1180
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "leg1L_end",
+          "type": "Point",
+          "data": {
+            "x": "-hipWidth/2 - legSegLength*0.2",
+            "y": 0,
+            "z": "totalHeight*0.55 - spineLength - legSegLength"
+          },
+          "position": {
+            "x": 40,
+            "y": 2700
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "leg2L_end",
+          "type": "Point",
+          "data": {
+            "x": "-hipWidth/2 - legSegLength*0.3",
+            "y": 0,
+            "z": "totalHeight*0.55 - spineLength - legSegLength*2"
+          },
+          "position": {
+            "x": 40,
+            "y": 3080
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "leg3L_end",
+          "type": "Point",
+          "data": {
+            "x": "-hipWidth/2 - legSegLength*0.4",
+            "y": 0,
+            "z": "totalHeight*0.55 - spineLength - legSegLength*2.8"
+          },
+          "position": {
+            "x": 40,
+            "y": 3460
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "leg1R_end",
+          "type": "Point",
+          "data": {
+            "x": "hipWidth/2 + legSegLength*0.2",
+            "y": 0,
+            "z": "totalHeight*0.55 - spineLength - legSegLength"
+          },
+          "position": {
+            "x": 40,
+            "y": 2890
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "leg2R_end",
+          "type": "Point",
+          "data": {
+            "x": "hipWidth/2 + legSegLength*0.3",
+            "y": 0,
+            "z": "totalHeight*0.55 - spineLength - legSegLength*2"
+          },
+          "position": {
+            "x": 40,
+            "y": 3270
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "leg3R_end",
+          "type": "Point",
+          "data": {
+            "x": "hipWidth/2 + legSegLength*0.4",
+            "y": 0,
+            "z": "totalHeight*0.55 - spineLength - legSegLength*2.8"
+          },
+          "position": {
+            "x": 40,
+            "y": 3650
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "skull",
+          "type": "Sphere",
+          "data": {
+            "radius": "headRadius",
+            "color": "#f5f5dc"
+          },
+          "position": {
+            "x": 270,
+            "y": 1180
+          },
+          "measured": {
+            "width": 201,
+            "height": 216
+          }
+        },
+        {
+          "id": "shoulderLCurve",
+          "type": "Line",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 1370
+          },
+          "measured": {
+            "width": 177,
+            "height": 200
+          }
+        },
+        {
+          "id": "shoulderLBone",
+          "type": "Pipe",
+          "data": {
+            "radius": "boneRadius",
+            "color": "#e8e4c9"
+          },
+          "position": {
+            "x": 500,
+            "y": 990
+          },
+          "measured": {
+            "width": 201,
+            "height": 270
+          }
+        },
+        {
+          "id": "shoulderRCurve",
+          "type": "Line",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 1750
+          },
+          "measured": {
+            "width": 177,
+            "height": 200
+          }
+        },
+        {
+          "id": "shoulderRBone",
+          "type": "Pipe",
+          "data": {
+            "radius": "boneRadius",
+            "color": "#e8e4c9"
+          },
+          "position": {
+            "x": 500,
+            "y": 1370
+          },
+          "measured": {
+            "width": 201,
+            "height": 270
+          }
+        },
+        {
+          "id": "hipLCurve",
+          "type": "Line",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 3460
+          },
+          "measured": {
+            "width": 177,
+            "height": 200
+          }
+        },
+        {
+          "id": "hipLBone",
+          "type": "Pipe",
+          "data": {
+            "radius": "boneRadius",
+            "color": "#e8e4c9"
+          },
+          "position": {
+            "x": 500,
+            "y": 2890
+          },
+          "measured": {
+            "width": 201,
+            "height": 270
+          }
+        },
+        {
+          "id": "hipRCurve",
+          "type": "Line",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 3840
+          },
+          "measured": {
+            "width": 177,
+            "height": 200
+          }
+        },
+        {
+          "id": "hipRBone",
+          "type": "Pipe",
+          "data": {
+            "radius": "boneRadius",
+            "color": "#e8e4c9"
+          },
+          "position": {
+            "x": 500,
+            "y": 3270
+          },
+          "measured": {
+            "width": 201,
+            "height": 270
+          }
+        },
+        {
+          "id": "arm1LCurve",
+          "type": "Line",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 1560
+          },
+          "measured": {
+            "width": 177,
+            "height": 200
+          }
+        },
+        {
+          "id": "arm1LBone",
+          "type": "Pipe",
+          "data": {
+            "radius": "boneRadius*0.9",
+            "color": "#e8e4c9"
+          },
+          "position": {
+            "x": 500,
+            "y": 1180
+          },
+          "measured": {
+            "width": 201,
+            "height": 270
+          }
+        },
+        {
+          "id": "arm2LCurve",
+          "type": "Line",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 40
+          },
+          "measured": {
+            "width": 177,
+            "height": 200
+          }
+        },
+        {
+          "id": "arm2LBone",
+          "type": "Pipe",
+          "data": {
+            "radius": "boneRadius*0.85",
+            "color": "#e8e4c9"
+          },
+          "position": {
+            "x": 500,
+            "y": 40
+          },
+          "measured": {
+            "width": 201,
+            "height": 270
+          }
+        },
+        {
+          "id": "arm3LCurve",
+          "type": "Line",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 420
+          },
+          "measured": {
+            "width": 177,
+            "height": 200
+          }
+        },
+        {
+          "id": "arm3LBone",
+          "type": "Pipe",
+          "data": {
+            "radius": "boneRadius*0.7",
+            "color": "#e8e4c9"
+          },
+          "position": {
+            "x": 500,
+            "y": 420
+          },
+          "measured": {
+            "width": 201,
+            "height": 270
+          }
+        },
+        {
+          "id": "arm1RCurve",
+          "type": "Line",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 1940
+          },
+          "measured": {
+            "width": 177,
+            "height": 200
+          }
+        },
+        {
+          "id": "arm1RBone",
+          "type": "Pipe",
+          "data": {
+            "radius": "boneRadius*0.9",
+            "color": "#e8e4c9"
+          },
+          "position": {
+            "x": 500,
+            "y": 1560
+          },
+          "measured": {
+            "width": 201,
+            "height": 270
+          }
+        },
+        {
+          "id": "arm2RCurve",
+          "type": "Line",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 230
+          },
+          "measured": {
+            "width": 177,
+            "height": 200
+          }
+        },
+        {
+          "id": "arm2RBone",
+          "type": "Pipe",
+          "data": {
+            "radius": "boneRadius*0.85",
+            "color": "#e8e4c9"
+          },
+          "position": {
+            "x": 500,
+            "y": 230
+          },
+          "measured": {
+            "width": 201,
+            "height": 270
+          }
+        },
+        {
+          "id": "arm3RCurve",
+          "type": "Line",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 990
+          },
+          "measured": {
+            "width": 177,
+            "height": 200
+          }
+        },
+        {
+          "id": "arm3RBone",
+          "type": "Pipe",
+          "data": {
+            "radius": "boneRadius*0.7",
+            "color": "#e8e4c9"
+          },
+          "position": {
+            "x": 500,
+            "y": 800
+          },
+          "measured": {
+            "width": 201,
+            "height": 270
+          }
+        },
+        {
+          "id": "leg1LCurve",
+          "type": "Line",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 2130
+          },
+          "measured": {
+            "width": 177,
+            "height": 200
+          }
+        },
+        {
+          "id": "leg1LBone",
+          "type": "Pipe",
+          "data": {
+            "radius": "boneRadius*1.1",
+            "color": "#e8e4c9"
+          },
+          "position": {
+            "x": 500,
+            "y": 1750
+          },
+          "measured": {
+            "width": 201,
+            "height": 270
+          }
+        },
+        {
+          "id": "leg2LCurve",
+          "type": "Line",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 2890
+          },
+          "measured": {
+            "width": 177,
+            "height": 200
+          }
+        },
+        {
+          "id": "leg2LBone",
+          "type": "Pipe",
+          "data": {
+            "radius": "boneRadius*1.0",
+            "color": "#e8e4c9"
+          },
+          "position": {
+            "x": 500,
+            "y": 2320
+          },
+          "measured": {
+            "width": 201,
+            "height": 270
+          }
+        },
+        {
+          "id": "leg3LCurve",
+          "type": "Line",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 3270
+          },
+          "measured": {
+            "width": 177,
+            "height": 200
+          }
+        },
+        {
+          "id": "leg3LBone",
+          "type": "Pipe",
+          "data": {
+            "radius": "boneRadius*0.8",
+            "color": "#e8e4c9"
+          },
+          "position": {
+            "x": 500,
+            "y": 2700
+          },
+          "measured": {
+            "width": 201,
+            "height": 270
+          }
+        },
+        {
+          "id": "leg1RCurve",
+          "type": "Line",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 2700
+          },
+          "measured": {
+            "width": 177,
+            "height": 200
+          }
+        },
+        {
+          "id": "leg1RBone",
+          "type": "Pipe",
+          "data": {
+            "radius": "boneRadius*1.1",
+            "color": "#e8e4c9"
+          },
+          "position": {
+            "x": 500,
+            "y": 2130
+          },
+          "measured": {
+            "width": 201,
+            "height": 270
+          }
+        },
+        {
+          "id": "leg2RCurve",
+          "type": "Line",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 3080
+          },
+          "measured": {
+            "width": 177,
+            "height": 200
+          }
+        },
+        {
+          "id": "leg2RBone",
+          "type": "Pipe",
+          "data": {
+            "radius": "boneRadius*1.0",
+            "color": "#e8e4c9"
+          },
+          "position": {
+            "x": 500,
+            "y": 2510
+          },
+          "measured": {
+            "width": 201,
+            "height": 270
+          }
+        },
+        {
+          "id": "leg3RCurve",
+          "type": "Line",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 3650
+          },
+          "measured": {
+            "width": 177,
+            "height": 200
+          }
+        },
+        {
+          "id": "leg3RBone",
+          "type": "Pipe",
+          "data": {
+            "radius": "boneRadius*0.8",
+            "color": "#e8e4c9"
+          },
+          "position": {
+            "x": 500,
+            "y": 3080
+          },
+          "measured": {
+            "width": 201,
+            "height": 270
+          }
+        },
+        {
+          "id": "neckMid",
+          "type": "Midpoint",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 800
+          },
+          "measured": {
+            "width": 150,
+            "height": 138
+          }
+        },
+        {
+          "id": "neckAxis",
+          "type": "Vector2Pt",
+          "data": {
+            "normalize": true
+          },
+          "position": {
+            "x": 270,
+            "y": 610
+          },
+          "measured": {
+            "width": 150,
+            "height": 190
+          }
+        },
+        {
+          "id": "neckCylinder",
+          "type": "Cylinder",
+          "data": {
+            "radius": "boneRadius*0.7",
+            "color": "#e8e4c9"
+          },
+          "position": {
+            "x": 500,
+            "y": 610
+          },
+          "measured": {
+            "width": 201,
+            "height": 296
+          }
+        },
+        {
+          "id": "spineMid",
+          "type": "Midpoint",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 2510
+          },
+          "measured": {
+            "width": 150,
+            "height": 138
+          }
+        },
+        {
+          "id": "spineAxis",
+          "type": "Vector2Pt",
+          "data": {
+            "normalize": true
+          },
+          "position": {
+            "x": 270,
+            "y": 2320
+          },
+          "measured": {
+            "width": 150,
+            "height": 190
+          }
+        },
+        {
+          "id": "spineCylinder",
+          "type": "Cylinder",
+          "data": {
+            "radius": "boneRadius*1.2",
+            "color": "#e8e4c9"
+          },
+          "position": {
+            "x": 500,
+            "y": 1940
+          },
+          "measured": {
+            "width": 201,
+            "height": 296
+          }
+        }
+      ],
+      "edges": [
+        {
+          "source": "headCenter",
+          "sourceHandle": "point",
+          "target": "skull",
+          "targetHandle": "center",
+          "id": "e_headCenter_skull_center"
+        },
+        {
+          "source": "anchor",
+          "sourceHandle": "point",
+          "target": "shoulderLCurve",
+          "targetHandle": "a",
+          "id": "e_anchor_shoulderLCurve_a"
+        },
+        {
+          "source": "shoulderLeft",
+          "sourceHandle": "point",
+          "target": "shoulderLCurve",
+          "targetHandle": "b",
+          "id": "e_shoulderLeft_shoulderLCurve_b"
+        },
+        {
+          "source": "shoulderLCurve",
+          "sourceHandle": "curve",
+          "target": "shoulderLBone",
+          "targetHandle": "path",
+          "id": "e_shoulderLCurve_shoulderLBone_path"
+        },
+        {
+          "source": "anchor",
+          "sourceHandle": "point",
+          "target": "shoulderRCurve",
+          "targetHandle": "a",
+          "id": "e_anchor_shoulderRCurve_a"
+        },
+        {
+          "source": "shoulderRight",
+          "sourceHandle": "point",
+          "target": "shoulderRCurve",
+          "targetHandle": "b",
+          "id": "e_shoulderRight_shoulderRCurve_b"
+        },
+        {
+          "source": "shoulderRCurve",
+          "sourceHandle": "curve",
+          "target": "shoulderRBone",
+          "targetHandle": "path",
+          "id": "e_shoulderRCurve_shoulderRBone_path"
+        },
+        {
+          "source": "spineBottom",
+          "sourceHandle": "point",
+          "target": "hipLCurve",
+          "targetHandle": "a",
+          "id": "e_spineBottom_hipLCurve_a"
+        },
+        {
+          "source": "hipLeft",
+          "sourceHandle": "point",
+          "target": "hipLCurve",
+          "targetHandle": "b",
+          "id": "e_hipLeft_hipLCurve_b"
+        },
+        {
+          "source": "hipLCurve",
+          "sourceHandle": "curve",
+          "target": "hipLBone",
+          "targetHandle": "path",
+          "id": "e_hipLCurve_hipLBone_path"
+        },
+        {
+          "source": "spineBottom",
+          "sourceHandle": "point",
+          "target": "hipRCurve",
+          "targetHandle": "a",
+          "id": "e_spineBottom_hipRCurve_a"
+        },
+        {
+          "source": "hipRight",
+          "sourceHandle": "point",
+          "target": "hipRCurve",
+          "targetHandle": "b",
+          "id": "e_hipRight_hipRCurve_b"
+        },
+        {
+          "source": "hipRCurve",
+          "sourceHandle": "curve",
+          "target": "hipRBone",
+          "targetHandle": "path",
+          "id": "e_hipRCurve_hipRBone_path"
+        },
+        {
+          "source": "shoulderLeft",
+          "sourceHandle": "point",
+          "target": "arm1LCurve",
+          "targetHandle": "a",
+          "id": "e_shoulderLeft_arm1LCurve_a"
+        },
+        {
+          "source": "arm1L_end",
+          "sourceHandle": "point",
+          "target": "arm1LCurve",
+          "targetHandle": "b",
+          "id": "e_arm1L_end_arm1LCurve_b"
+        },
+        {
+          "source": "arm1LCurve",
+          "sourceHandle": "curve",
+          "target": "arm1LBone",
+          "targetHandle": "path",
+          "id": "e_arm1LCurve_arm1LBone_path"
+        },
+        {
+          "source": "arm1L_end",
+          "sourceHandle": "point",
+          "target": "arm2LCurve",
+          "targetHandle": "a",
+          "id": "e_arm1L_end_arm2LCurve_a"
+        },
+        {
+          "source": "arm2L_end",
+          "sourceHandle": "point",
+          "target": "arm2LCurve",
+          "targetHandle": "b",
+          "id": "e_arm2L_end_arm2LCurve_b"
+        },
+        {
+          "source": "arm2LCurve",
+          "sourceHandle": "curve",
+          "target": "arm2LBone",
+          "targetHandle": "path",
+          "id": "e_arm2LCurve_arm2LBone_path"
+        },
+        {
+          "source": "arm2L_end",
+          "sourceHandle": "point",
+          "target": "arm3LCurve",
+          "targetHandle": "a",
+          "id": "e_arm2L_end_arm3LCurve_a"
+        },
+        {
+          "source": "arm3L_end",
+          "sourceHandle": "point",
+          "target": "arm3LCurve",
+          "targetHandle": "b",
+          "id": "e_arm3L_end_arm3LCurve_b"
+        },
+        {
+          "source": "arm3LCurve",
+          "sourceHandle": "curve",
+          "target": "arm3LBone",
+          "targetHandle": "path",
+          "id": "e_arm3LCurve_arm3LBone_path"
+        },
+        {
+          "source": "shoulderRight",
+          "sourceHandle": "point",
+          "target": "arm1RCurve",
+          "targetHandle": "a",
+          "id": "e_shoulderRight_arm1RCurve_a"
+        },
+        {
+          "source": "arm1R_end",
+          "sourceHandle": "point",
+          "target": "arm1RCurve",
+          "targetHandle": "b",
+          "id": "e_arm1R_end_arm1RCurve_b"
+        },
+        {
+          "source": "arm1RCurve",
+          "sourceHandle": "curve",
+          "target": "arm1RBone",
+          "targetHandle": "path",
+          "id": "e_arm1RCurve_arm1RBone_path"
+        },
+        {
+          "source": "arm1R_end",
+          "sourceHandle": "point",
+          "target": "arm2RCurve",
+          "targetHandle": "a",
+          "id": "e_arm1R_end_arm2RCurve_a"
+        },
+        {
+          "source": "arm2R_end",
+          "sourceHandle": "point",
+          "target": "arm2RCurve",
+          "targetHandle": "b",
+          "id": "e_arm2R_end_arm2RCurve_b"
+        },
+        {
+          "source": "arm2RCurve",
+          "sourceHandle": "curve",
+          "target": "arm2RBone",
+          "targetHandle": "path",
+          "id": "e_arm2RCurve_arm2RBone_path"
+        },
+        {
+          "source": "arm2R_end",
+          "sourceHandle": "point",
+          "target": "arm3RCurve",
+          "targetHandle": "a",
+          "id": "e_arm2R_end_arm3RCurve_a"
+        },
+        {
+          "source": "arm3R_end",
+          "sourceHandle": "point",
+          "target": "arm3RCurve",
+          "targetHandle": "b",
+          "id": "e_arm3R_end_arm3RCurve_b"
+        },
+        {
+          "source": "arm3RCurve",
+          "sourceHandle": "curve",
+          "target": "arm3RBone",
+          "targetHandle": "path",
+          "id": "e_arm3RCurve_arm3RBone_path"
+        },
+        {
+          "source": "hipLeft",
+          "sourceHandle": "point",
+          "target": "leg1LCurve",
+          "targetHandle": "a",
+          "id": "e_hipLeft_leg1LCurve_a"
+        },
+        {
+          "source": "leg1L_end",
+          "sourceHandle": "point",
+          "target": "leg1LCurve",
+          "targetHandle": "b",
+          "id": "e_leg1L_end_leg1LCurve_b"
+        },
+        {
+          "source": "leg1LCurve",
+          "sourceHandle": "curve",
+          "target": "leg1LBone",
+          "targetHandle": "path",
+          "id": "e_leg1LCurve_leg1LBone_path"
+        },
+        {
+          "source": "leg1L_end",
+          "sourceHandle": "point",
+          "target": "leg2LCurve",
+          "targetHandle": "a",
+          "id": "e_leg1L_end_leg2LCurve_a"
+        },
+        {
+          "source": "leg2L_end",
+          "sourceHandle": "point",
+          "target": "leg2LCurve",
+          "targetHandle": "b",
+          "id": "e_leg2L_end_leg2LCurve_b"
+        },
+        {
+          "source": "leg2LCurve",
+          "sourceHandle": "curve",
+          "target": "leg2LBone",
+          "targetHandle": "path",
+          "id": "e_leg2LCurve_leg2LBone_path"
+        },
+        {
+          "source": "leg2L_end",
+          "sourceHandle": "point",
+          "target": "leg3LCurve",
+          "targetHandle": "a",
+          "id": "e_leg2L_end_leg3LCurve_a"
+        },
+        {
+          "source": "leg3L_end",
+          "sourceHandle": "point",
+          "target": "leg3LCurve",
+          "targetHandle": "b",
+          "id": "e_leg3L_end_leg3LCurve_b"
+        },
+        {
+          "source": "leg3LCurve",
+          "sourceHandle": "curve",
+          "target": "leg3LBone",
+          "targetHandle": "path",
+          "id": "e_leg3LCurve_leg3LBone_path"
+        },
+        {
+          "source": "hipRight",
+          "sourceHandle": "point",
+          "target": "leg1RCurve",
+          "targetHandle": "a",
+          "id": "e_hipRight_leg1RCurve_a"
+        },
+        {
+          "source": "leg1R_end",
+          "sourceHandle": "point",
+          "target": "leg1RCurve",
+          "targetHandle": "b",
+          "id": "e_leg1R_end_leg1RCurve_b"
+        },
+        {
+          "source": "leg1RCurve",
+          "sourceHandle": "curve",
+          "target": "leg1RBone",
+          "targetHandle": "path",
+          "id": "e_leg1RCurve_leg1RBone_path"
+        },
+        {
+          "source": "leg1R_end",
+          "sourceHandle": "point",
+          "target": "leg2RCurve",
+          "targetHandle": "a",
+          "id": "e_leg1R_end_leg2RCurve_a"
+        },
+        {
+          "source": "leg2R_end",
+          "sourceHandle": "point",
+          "target": "leg2RCurve",
+          "targetHandle": "b",
+          "id": "e_leg2R_end_leg2RCurve_b"
+        },
+        {
+          "source": "leg2RCurve",
+          "sourceHandle": "curve",
+          "target": "leg2RBone",
+          "targetHandle": "path",
+          "id": "e_leg2RCurve_leg2RBone_path"
+        },
+        {
+          "source": "leg2R_end",
+          "sourceHandle": "point",
+          "target": "leg3RCurve",
+          "targetHandle": "a",
+          "id": "e_leg2R_end_leg3RCurve_a"
+        },
+        {
+          "source": "leg3R_end",
+          "sourceHandle": "point",
+          "target": "leg3RCurve",
+          "targetHandle": "b",
+          "id": "e_leg3R_end_leg3RCurve_b"
+        },
+        {
+          "source": "leg3RCurve",
+          "sourceHandle": "curve",
+          "target": "leg3RBone",
+          "targetHandle": "path",
+          "id": "e_leg3RCurve_leg3RBone_path"
+        },
+        {
+          "source": "anchor",
+          "target": "neckMid",
+          "sourceHandle": "point",
+          "targetHandle": "a",
+          "id": "e_anchor_neckMid_a"
+        },
+        {
+          "source": "headCenter",
+          "target": "neckMid",
+          "sourceHandle": "point",
+          "targetHandle": "b",
+          "id": "e_headCenter_neckMid_b"
+        },
+        {
+          "source": "anchor",
+          "target": "neckAxis",
+          "sourceHandle": "point",
+          "targetHandle": "a",
+          "id": "e_anchor_neckAxis_a"
+        },
+        {
+          "source": "headCenter",
+          "target": "neckAxis",
+          "sourceHandle": "point",
+          "targetHandle": "b",
+          "id": "e_headCenter_neckAxis_b"
+        },
+        {
+          "source": "neckMid",
+          "target": "neckCylinder",
+          "sourceHandle": "midpoint",
+          "targetHandle": "center",
+          "id": "e_neckMid_neckCylinder_center"
+        },
+        {
+          "source": "neckAxis",
+          "target": "neckCylinder",
+          "sourceHandle": "vector",
+          "targetHandle": "axis",
+          "id": "e_neckAxis_neckCylinder_axis"
+        },
+        {
+          "source": "anchor",
+          "target": "spineMid",
+          "sourceHandle": "point",
+          "targetHandle": "a",
+          "id": "e_anchor_spineMid_a"
+        },
+        {
+          "source": "spineBottom",
+          "target": "spineMid",
+          "sourceHandle": "point",
+          "targetHandle": "b",
+          "id": "e_spineBottom_spineMid_b"
+        },
+        {
+          "source": "anchor",
+          "target": "spineAxis",
+          "sourceHandle": "point",
+          "targetHandle": "a",
+          "id": "e_anchor_spineAxis_a"
+        },
+        {
+          "source": "spineBottom",
+          "target": "spineAxis",
+          "sourceHandle": "point",
+          "targetHandle": "b",
+          "id": "e_spineBottom_spineAxis_b"
+        },
+        {
+          "source": "spineMid",
+          "target": "spineCylinder",
+          "sourceHandle": "midpoint",
+          "targetHandle": "center",
+          "id": "e_spineMid_spineCylinder_center"
+        },
+        {
+          "source": "spineAxis",
+          "target": "spineCylinder",
+          "sourceHandle": "vector",
+          "targetHandle": "axis",
+          "id": "e_spineAxis_spineCylinder_axis"
+        }
+      ]
+    }
+  ]
+}

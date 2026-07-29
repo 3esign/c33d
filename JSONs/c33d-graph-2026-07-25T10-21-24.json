@@ -1,0 +1,1152 @@
+{
+  "c33dExport": 2,
+  "exportedAt": "2026-07-25T10:21:24.341Z",
+  "comment": "fail",
+  "agent": {
+    "name": "Ollama (Local)",
+    "provider": "ollama",
+    "model": "qwen3.5:cloud"
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "baseLength",
+        "type": "NumberSlider",
+        "data": {
+          "value": 120,
+          "label": "baseLength",
+          "min": 60,
+          "max": 200,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 230
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "baseWidth",
+        "type": "NumberSlider",
+        "data": {
+          "value": 80,
+          "label": "baseWidth",
+          "min": 40,
+          "max": 150,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 420
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "baseHeight",
+        "type": "NumberSlider",
+        "data": {
+          "value": 8,
+          "label": "baseHeight",
+          "min": 4,
+          "max": 20,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 40
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "shellRadius",
+        "type": "NumberSlider",
+        "data": {
+          "value": 75,
+          "label": "shellRadius",
+          "min": 40,
+          "max": 150,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 1560
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "shellCount",
+        "type": "NumberSlider",
+        "data": {
+          "value": 6,
+          "label": "shellCount",
+          "min": 4,
+          "max": 10,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 800
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "shellTilt",
+        "type": "NumberSlider",
+        "data": {
+          "value": 35,
+          "label": "shellTilt",
+          "min": 15,
+          "max": 60,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 1940
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "podium_center",
+        "type": "Point",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": "baseHeight/2"
+        },
+        "position": {
+          "x": 40,
+          "y": 610
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "podium",
+        "type": "Box",
+        "data": {
+          "width": "baseLength",
+          "length": "baseWidth",
+          "height": "baseHeight",
+          "color": "#e5e5e5"
+        },
+        "position": {
+          "x": 270,
+          "y": 40
+        },
+        "measured": {
+          "width": 201,
+          "height": 312
+        }
+      },
+      {
+        "id": "shellProfile_center",
+        "type": "Point",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "position": {
+          "x": 40,
+          "y": 1370
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "shellProfile",
+        "type": "VectorXYZ",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": 1
+        },
+        "position": {
+          "x": 40,
+          "y": 1180
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "shellProfile_x",
+        "type": "CircleCurve",
+        "data": {
+          "radius": "shellRadius"
+        },
+        "position": {
+          "x": 270,
+          "y": 420
+        },
+        "measured": {
+          "width": 201,
+          "height": 248
+        }
+      },
+      {
+        "id": "shellSection_center",
+        "type": "Point",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": "baseHeight+shellRadius*0.3"
+        },
+        "position": {
+          "x": 40,
+          "y": 1750
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "shellSection",
+        "type": "Sphere",
+        "data": {
+          "radius": "shellRadius"
+        },
+        "position": {
+          "x": 270,
+          "y": 610
+        },
+        "measured": {
+          "width": 201,
+          "height": 216
+        }
+      },
+      {
+        "id": "shellCut_center",
+        "type": "Point",
+        "data": {
+          "x": 0,
+          "y": "shellRadius*0.5",
+          "z": "baseHeight"
+        },
+        "position": {
+          "x": 40,
+          "y": 990
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "shellCut",
+        "type": "Box",
+        "data": {
+          "width": "shellRadius*2.5",
+          "length": "shellRadius*2",
+          "height": "shellRadius*1.5"
+        },
+        "position": {
+          "x": 270,
+          "y": 230
+        },
+        "measured": {
+          "width": 201,
+          "height": 312
+        }
+      },
+      {
+        "id": "shellBase",
+        "type": "Boolean",
+        "data": {
+          "operation": "difference"
+        },
+        "position": {
+          "x": 500,
+          "y": 40
+        },
+        "measured": {
+          "width": 177,
+          "height": 200
+        }
+      },
+      {
+        "id": "shellTilted_pivot",
+        "type": "Point",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": "baseHeight"
+        },
+        "position": {
+          "x": 40,
+          "y": 2130
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "shellTilted",
+        "type": "Rotate",
+        "data": {
+          "angle": "shellTilt",
+          "axisX": 1,
+          "axisY": 0,
+          "axisZ": 0
+        },
+        "position": {
+          "x": 730,
+          "y": 40
+        },
+        "measured": {
+          "width": 201,
+          "height": 414
+        }
+      },
+      {
+        "id": "mainShells",
+        "type": "LinearPattern",
+        "data": {
+          "count": 4,
+          "directionX": "baseLength/5",
+          "directionY": "baseWidth/6",
+          "directionZ": 0
+        },
+        "position": {
+          "x": 960,
+          "y": 40
+        },
+        "measured": {
+          "width": 201,
+          "height": 306
+        }
+      },
+      {
+        "id": "minorShell",
+        "type": "Scale",
+        "data": {
+          "factor": 0.7
+        },
+        "position": {
+          "x": 960,
+          "y": 230
+        },
+        "measured": {
+          "width": 201,
+          "height": 206
+        }
+      },
+      {
+        "id": "minorShells",
+        "type": "LinearPattern",
+        "data": {
+          "count": 2,
+          "directionX": "baseLength/6",
+          "directionY": "-baseWidth/8",
+          "directionZ": 0
+        },
+        "position": {
+          "x": 1190,
+          "y": 40
+        },
+        "measured": {
+          "width": 201,
+          "height": 306
+        }
+      },
+      {
+        "id": "roofGroup",
+        "type": "Compound",
+        "data": {
+          "color": "#f5f5f5"
+        },
+        "position": {
+          "x": 1420,
+          "y": 40
+        },
+        "measured": {
+          "width": 150,
+          "height": 330
+        }
+      }
+    ],
+    "edges": [
+      {
+        "source": "podium_center",
+        "sourceHandle": "point",
+        "target": "podium",
+        "targetHandle": "center",
+        "id": "e_podium_center_podium_center"
+      },
+      {
+        "source": "shellProfile_center",
+        "sourceHandle": "point",
+        "target": "shellProfile_x",
+        "targetHandle": "center",
+        "id": "e_shellProfile_center_shellProfile_x_center"
+      },
+      {
+        "source": "shellProfile",
+        "sourceHandle": "vector",
+        "target": "shellProfile_x",
+        "targetHandle": "normal",
+        "id": "e_shellProfile_shellProfile_x_normal"
+      },
+      {
+        "source": "shellSection_center",
+        "sourceHandle": "point",
+        "target": "shellSection",
+        "targetHandle": "center",
+        "id": "e_shellSection_center_shellSection_center"
+      },
+      {
+        "source": "shellCut_center",
+        "sourceHandle": "point",
+        "target": "shellCut",
+        "targetHandle": "center",
+        "id": "e_shellCut_center_shellCut_center"
+      },
+      {
+        "source": "shellSection",
+        "sourceHandle": "solid",
+        "target": "shellBase",
+        "targetHandle": "target",
+        "id": "e_shellSection_shellBase_target"
+      },
+      {
+        "source": "shellCut",
+        "sourceHandle": "solid",
+        "target": "shellBase",
+        "targetHandle": "tool",
+        "id": "e_shellCut_shellBase_tool"
+      },
+      {
+        "source": "shellBase",
+        "sourceHandle": "solid",
+        "target": "shellTilted",
+        "targetHandle": "solid",
+        "id": "e_shellBase_shellTilted_solid"
+      },
+      {
+        "source": "shellTilted_pivot",
+        "sourceHandle": "point",
+        "target": "shellTilted",
+        "targetHandle": "pivot",
+        "id": "e_shellTilted_pivot_shellTilted_pivot"
+      },
+      {
+        "source": "shellTilted",
+        "sourceHandle": "solid",
+        "target": "mainShells",
+        "targetHandle": "solid",
+        "id": "e_shellTilted_mainShells_solid"
+      },
+      {
+        "source": "shellTilted",
+        "sourceHandle": "solid",
+        "target": "minorShell",
+        "targetHandle": "solid",
+        "id": "e_shellTilted_minorShell_solid"
+      },
+      {
+        "source": "minorShell",
+        "sourceHandle": "solid",
+        "target": "minorShells",
+        "targetHandle": "solid",
+        "id": "e_minorShell_minorShells_solid"
+      },
+      {
+        "source": "mainShells",
+        "sourceHandle": "solid",
+        "target": "roofGroup",
+        "targetHandle": "solid1",
+        "id": "e_mainShells_roofGroup_solid1"
+      },
+      {
+        "source": "minorShells",
+        "sourceHandle": "solid",
+        "target": "roofGroup",
+        "targetHandle": "solid2",
+        "id": "e_minorShells_roofGroup_solid2"
+      }
+    ]
+  },
+  "conversation": [
+    {
+      "role": "system",
+      "content": "Workspace cleared."
+    },
+    {
+      "role": "user",
+      "content": "be architect engineer make a sidney opera house"
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline point() from \"podium.center\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"point\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline point() from \"shellProfile.center\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"point\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline point() from \"shellSection.center\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"point\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline point() from \"shellCut.center\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"point\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline point() from \"shellTilted.pivot\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"point\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "assistant",
+      "content": "Parametric Sydney Opera House with iconic shell roof structures on a waterfront podium base"
+    }
+  ],
+  "plan": "",
+  "genome": null,
+  "geometryReport": {
+    "leaves": [
+      {
+        "id": "shellProfile_x",
+        "bbox": null,
+        "meshOk": true,
+        "vertexCount": 51,
+        "error": null
+      },
+      {
+        "id": "podium",
+        "bbox": {
+          "min": [
+            -60.0000001,
+            -40.0000001,
+            -1.0000000177635683e-7
+          ],
+          "max": [
+            60.0000001,
+            40.0000001,
+            8.000000100000001
+          ],
+          "center": [
+            0,
+            0,
+            3.9999999999999996
+          ],
+          "size": [
+            120.0000002,
+            80.0000002,
+            8.000000200000002
+          ]
+        },
+        "volume": 76800,
+        "meshOk": true,
+        "vertexCount": 24,
+        "error": null
+      },
+      {
+        "id": "roofGroup",
+        "bbox": {
+          "min": [
+            -67.10707630136162,
+            -88.00001015353665,
+            -48.69309779860883
+          ],
+          "max": [
+            139.11530805337844,
+            62.713801451719476,
+            101.53967848164574
+          ],
+          "center": [
+            36.00411587600841,
+            -12.643104350908587,
+            26.423290341518452
+          ],
+          "size": [
+            206.22238435474006,
+            150.71381160525613,
+            150.23277628025457
+          ]
+        },
+        "volume": 2665875.910201153,
+        "meshOk": true,
+        "vertexCount": 11586,
+        "error": null
+      }
+    ],
+    "nodeErrors": [],
+    "numbers": {
+      "baseLength": 120,
+      "baseWidth": 80,
+      "baseHeight": 8,
+      "shellRadius": 75,
+      "shellCount": 6,
+      "shellTilt": 35
+    },
+    "sliders": {
+      "baseLength": 120,
+      "baseWidth": 80,
+      "baseHeight": 8,
+      "shellRadius": 75,
+      "shellCount": 6,
+      "shellTilt": 35
+    },
+    "selections": {},
+    "helpers": {
+      "shellProfile_center": {
+        "type": "Point",
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "sourceNodeId": "shellProfile_center",
+        "ancestorNodeIds": []
+      },
+      "shellProfile": {
+        "type": "Vector",
+        "x": 0,
+        "y": 0,
+        "z": 1,
+        "sourceNodeId": "shellProfile",
+        "ancestorNodeIds": []
+      },
+      "podium_center": {
+        "type": "Point",
+        "x": 0,
+        "y": 0,
+        "z": 4,
+        "sourceNodeId": "podium_center",
+        "ancestorNodeIds": []
+      },
+      "shellTilted_pivot": {
+        "type": "Point",
+        "x": 0,
+        "y": 0,
+        "z": 8,
+        "sourceNodeId": "shellTilted_pivot",
+        "ancestorNodeIds": []
+      },
+      "shellSection_center": {
+        "type": "Point",
+        "x": 0,
+        "y": 0,
+        "z": 30.5,
+        "sourceNodeId": "shellSection_center",
+        "ancestorNodeIds": []
+      },
+      "shellCut_center": {
+        "type": "Point",
+        "x": 0,
+        "y": 37.5,
+        "z": 8,
+        "sourceNodeId": "shellCut_center",
+        "ancestorNodeIds": []
+      }
+    },
+    "nodeCount": 22,
+    "edgeCount": 14,
+    "transformCount": 4,
+    "nodesPerLeafRatio": 7.333333333333333,
+    "nodeEconomyWarning": false,
+    "placement": {
+      "anchored": [
+        "shellProfile_x",
+        "podium",
+        "roofGroup"
+      ],
+      "literal": [],
+      "origin": [],
+      "literalNodeIds": [],
+      "ratio": 1
+    },
+    "scene": {
+      "min": [
+        -67.10707630136162,
+        -88.00001015353665,
+        -48.69309779860883
+      ],
+      "max": [
+        139.11530805337844,
+        62.713801451719476,
+        101.53967848164574
+      ],
+      "size": [
+        206.22238435474006,
+        150.71381160525613,
+        150.23277628025457
+      ]
+    },
+    "meshedLeafCount": 3,
+    "kernelFaultCount": 0,
+    "kernelSuspect": false,
+    "kernelHealth": "ok",
+    "evalCount": 1,
+    "recycleRecommended": false,
+    "perturbationIssues": [
+      "At shellRadius decrease (0.6x), \"podium\" shifts non-proportionally relative to the assembly center (deviation 18%). Derive its position from the driver sliders or use Align.",
+      "At shellRadius increase (1.5x), \"podium\" shifts non-proportionally relative to the assembly center (deviation 10%). Derive its position from the driver sliders or use Align.",
+      "At baseLength decrease (0.6x), \"podium\" shifts non-proportionally relative to the assembly center (deviation 14%). Derive its position from the driver sliders or use Align.",
+      "At baseLength increase (1.5x), \"podium\" shifts non-proportionally relative to the assembly center (deviation 12%). Derive its position from the driver sliders or use Align.",
+      "At baseWidth increase (1.5x), \"podium\" shifts non-proportionally relative to the assembly center (deviation 17%). Derive its position from the driver sliders or use Align."
+    ],
+    "proportionalIntegrity": 0.16666666666666666
+  },
+  "timeline": [
+    {
+      "at": "2026-07-25T02:50:34.364Z",
+      "turn": 1,
+      "trigger": "ai-ir",
+      "label": "attempt 1: rebuilt graph (22 nodes)",
+      "nodeCount": 22,
+      "edgeCount": 14,
+      "isolatedCount": 6,
+      "diff": {
+        "addedNodes": [
+          "baseLength",
+          "baseWidth",
+          "baseHeight",
+          "shellRadius",
+          "shellCount",
+          "shellTilt",
+          "podium_center",
+          "podium",
+          "shellProfile_center",
+          "shellProfile",
+          "shellProfile_x",
+          "shellSection_center",
+          "shellSection",
+          "shellCut_center",
+          "shellCut",
+          "shellBase",
+          "shellTilted_pivot",
+          "shellTilted",
+          "mainShells",
+          "minorShell",
+          "minorShells",
+          "roofGroup"
+        ],
+        "removedNodes": [],
+        "changedNodes": [],
+        "addedEdges": 14,
+        "removedEdges": 0
+      },
+      "details": [
+        "warning: Dead design parameter: slider \"shellCount\" is not referenced by any formula or edge — moving it changes nothing. Wire dimensions to it or remove it."
+      ],
+      "nodes": [
+        {
+          "id": "baseLength",
+          "type": "NumberSlider",
+          "data": {
+            "value": 120,
+            "label": "baseLength",
+            "min": 60,
+            "max": 200,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 230
+          }
+        },
+        {
+          "id": "baseWidth",
+          "type": "NumberSlider",
+          "data": {
+            "value": 80,
+            "label": "baseWidth",
+            "min": 40,
+            "max": 150,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 420
+          }
+        },
+        {
+          "id": "baseHeight",
+          "type": "NumberSlider",
+          "data": {
+            "value": 8,
+            "label": "baseHeight",
+            "min": 4,
+            "max": 20,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 40
+          }
+        },
+        {
+          "id": "shellRadius",
+          "type": "NumberSlider",
+          "data": {
+            "value": 75,
+            "label": "shellRadius",
+            "min": 40,
+            "max": 150,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 1560
+          }
+        },
+        {
+          "id": "shellCount",
+          "type": "NumberSlider",
+          "data": {
+            "value": 6,
+            "label": "shellCount",
+            "min": 4,
+            "max": 10,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 800
+          }
+        },
+        {
+          "id": "shellTilt",
+          "type": "NumberSlider",
+          "data": {
+            "value": 35,
+            "label": "shellTilt",
+            "min": 15,
+            "max": 60,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 1940
+          }
+        },
+        {
+          "id": "podium_center",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "baseHeight/2"
+          },
+          "position": {
+            "x": 40,
+            "y": 610
+          }
+        },
+        {
+          "id": "podium",
+          "type": "Box",
+          "data": {
+            "width": "baseLength",
+            "length": "baseWidth",
+            "height": "baseHeight",
+            "color": "#e5e5e5"
+          },
+          "position": {
+            "x": 270,
+            "y": 40
+          }
+        },
+        {
+          "id": "shellProfile_center",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "position": {
+            "x": 40,
+            "y": 1370
+          }
+        },
+        {
+          "id": "shellProfile",
+          "type": "VectorXYZ",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": 1
+          },
+          "position": {
+            "x": 40,
+            "y": 1180
+          }
+        },
+        {
+          "id": "shellProfile_x",
+          "type": "CircleCurve",
+          "data": {
+            "radius": "shellRadius"
+          },
+          "position": {
+            "x": 270,
+            "y": 420
+          }
+        },
+        {
+          "id": "shellSection_center",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "baseHeight+shellRadius*0.3"
+          },
+          "position": {
+            "x": 40,
+            "y": 1750
+          }
+        },
+        {
+          "id": "shellSection",
+          "type": "Sphere",
+          "data": {
+            "radius": "shellRadius"
+          },
+          "position": {
+            "x": 270,
+            "y": 610
+          }
+        },
+        {
+          "id": "shellCut_center",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": "shellRadius*0.5",
+            "z": "baseHeight"
+          },
+          "position": {
+            "x": 40,
+            "y": 990
+          }
+        },
+        {
+          "id": "shellCut",
+          "type": "Box",
+          "data": {
+            "width": "shellRadius*2.5",
+            "length": "shellRadius*2",
+            "height": "shellRadius*1.5"
+          },
+          "position": {
+            "x": 270,
+            "y": 230
+          }
+        },
+        {
+          "id": "shellBase",
+          "type": "Boolean",
+          "data": {
+            "operation": "difference"
+          },
+          "position": {
+            "x": 500,
+            "y": 40
+          }
+        },
+        {
+          "id": "shellTilted_pivot",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "baseHeight"
+          },
+          "position": {
+            "x": 40,
+            "y": 2130
+          }
+        },
+        {
+          "id": "shellTilted",
+          "type": "Rotate",
+          "data": {
+            "angle": "shellTilt",
+            "axisX": 1,
+            "axisY": 0,
+            "axisZ": 0
+          },
+          "position": {
+            "x": 730,
+            "y": 40
+          }
+        },
+        {
+          "id": "mainShells",
+          "type": "LinearPattern",
+          "data": {
+            "count": 4,
+            "directionX": "baseLength/5",
+            "directionY": "baseWidth/6",
+            "directionZ": 0
+          },
+          "position": {
+            "x": 960,
+            "y": 40
+          }
+        },
+        {
+          "id": "minorShell",
+          "type": "Scale",
+          "data": {
+            "factor": 0.7
+          },
+          "position": {
+            "x": 960,
+            "y": 230
+          }
+        },
+        {
+          "id": "minorShells",
+          "type": "LinearPattern",
+          "data": {
+            "count": 2,
+            "directionX": "baseLength/6",
+            "directionY": "-baseWidth/8",
+            "directionZ": 0
+          },
+          "position": {
+            "x": 1190,
+            "y": 40
+          }
+        },
+        {
+          "id": "roofGroup",
+          "type": "Compound",
+          "data": {
+            "color": "#f5f5f5"
+          },
+          "position": {
+            "x": 1420,
+            "y": 40
+          }
+        }
+      ],
+      "edges": [
+        {
+          "source": "podium_center",
+          "sourceHandle": "point",
+          "target": "podium",
+          "targetHandle": "center",
+          "id": "e_podium_center_podium_center"
+        },
+        {
+          "source": "shellProfile_center",
+          "sourceHandle": "point",
+          "target": "shellProfile_x",
+          "targetHandle": "center",
+          "id": "e_shellProfile_center_shellProfile_x_center"
+        },
+        {
+          "source": "shellProfile",
+          "sourceHandle": "vector",
+          "target": "shellProfile_x",
+          "targetHandle": "normal",
+          "id": "e_shellProfile_shellProfile_x_normal"
+        },
+        {
+          "source": "shellSection_center",
+          "sourceHandle": "point",
+          "target": "shellSection",
+          "targetHandle": "center",
+          "id": "e_shellSection_center_shellSection_center"
+        },
+        {
+          "source": "shellCut_center",
+          "sourceHandle": "point",
+          "target": "shellCut",
+          "targetHandle": "center",
+          "id": "e_shellCut_center_shellCut_center"
+        },
+        {
+          "source": "shellSection",
+          "sourceHandle": "solid",
+          "target": "shellBase",
+          "targetHandle": "target",
+          "id": "e_shellSection_shellBase_target"
+        },
+        {
+          "source": "shellCut",
+          "sourceHandle": "solid",
+          "target": "shellBase",
+          "targetHandle": "tool",
+          "id": "e_shellCut_shellBase_tool"
+        },
+        {
+          "source": "shellBase",
+          "sourceHandle": "solid",
+          "target": "shellTilted",
+          "targetHandle": "solid",
+          "id": "e_shellBase_shellTilted_solid"
+        },
+        {
+          "source": "shellTilted_pivot",
+          "sourceHandle": "point",
+          "target": "shellTilted",
+          "targetHandle": "pivot",
+          "id": "e_shellTilted_pivot_shellTilted_pivot"
+        },
+        {
+          "source": "shellTilted",
+          "sourceHandle": "solid",
+          "target": "mainShells",
+          "targetHandle": "solid",
+          "id": "e_shellTilted_mainShells_solid"
+        },
+        {
+          "source": "shellTilted",
+          "sourceHandle": "solid",
+          "target": "minorShell",
+          "targetHandle": "solid",
+          "id": "e_shellTilted_minorShell_solid"
+        },
+        {
+          "source": "minorShell",
+          "sourceHandle": "solid",
+          "target": "minorShells",
+          "targetHandle": "solid",
+          "id": "e_minorShell_minorShells_solid"
+        },
+        {
+          "source": "mainShells",
+          "sourceHandle": "solid",
+          "target": "roofGroup",
+          "targetHandle": "solid1",
+          "id": "e_mainShells_roofGroup_solid1"
+        },
+        {
+          "source": "minorShells",
+          "sourceHandle": "solid",
+          "target": "roofGroup",
+          "targetHandle": "solid2",
+          "id": "e_minorShells_roofGroup_solid2"
+        }
+      ]
+    }
+  ]
+}

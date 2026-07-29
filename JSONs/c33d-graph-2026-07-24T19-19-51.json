@@ -1,0 +1,2080 @@
+{
+  "c33dExport": 2,
+  "exportedAt": "2026-07-24T19:19:51.073Z",
+  "comment": "one column in 3d",
+  "agent": {
+    "name": "Ollama (Local)",
+    "provider": "ollama",
+    "model": "gemma4:31b-cloud"
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "lineLength",
+        "type": "NumberSlider",
+        "data": {
+          "value": 30,
+          "label": "lineLength",
+          "min": 10,
+          "max": 100,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 610
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "lineSpacing",
+        "type": "NumberSlider",
+        "data": {
+          "value": 10,
+          "label": "lineSpacing",
+          "min": 2,
+          "max": 50,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 800
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "colRadius",
+        "type": "NumberSlider",
+        "data": {
+          "value": 0.8,
+          "label": "colRadius",
+          "min": 0.1,
+          "max": 5,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 420
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "p1_start",
+        "type": "Point",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "position": {
+          "x": 40,
+          "y": 1180
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "p1_end",
+        "type": "Point",
+        "data": {
+          "x": "lineLength",
+          "y": 0,
+          "z": 0
+        },
+        "position": {
+          "x": 40,
+          "y": 990
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "p2_start",
+        "type": "Point",
+        "data": {
+          "x": 0,
+          "y": "lineSpacing",
+          "z": 0
+        },
+        "position": {
+          "x": 40,
+          "y": 1560
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "p2_end",
+        "type": "Point",
+        "data": {
+          "x": "lineLength",
+          "y": "lineSpacing",
+          "z": 0
+        },
+        "position": {
+          "x": 40,
+          "y": 1370
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "line1",
+        "type": "Line",
+        "data": {},
+        "position": {
+          "x": 270,
+          "y": 40
+        },
+        "measured": {
+          "width": 177,
+          "height": 200
+        }
+      },
+      {
+        "id": "line2",
+        "type": "Line",
+        "data": {},
+        "position": {
+          "x": 270,
+          "y": 420
+        },
+        "measured": {
+          "width": 177,
+          "height": 200
+        }
+      },
+      {
+        "id": "pts1",
+        "type": "DivideCurve",
+        "data": {
+          "count": 10
+        },
+        "position": {
+          "x": 500,
+          "y": 40
+        },
+        "measured": {
+          "width": 201,
+          "height": 162
+        }
+      },
+      {
+        "id": "pts2",
+        "type": "DivideCurve",
+        "data": {
+          "count": 10
+        },
+        "position": {
+          "x": 500,
+          "y": 420
+        },
+        "measured": {
+          "width": 201,
+          "height": 162
+        }
+      },
+      {
+        "id": "col_height",
+        "type": "Expression",
+        "data": {
+          "formula": "lineLength / 3"
+        },
+        "position": {
+          "x": 40,
+          "y": 40
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "cols1",
+        "type": "InstanceOnPoints",
+        "data": {
+          "scaleStart": 1,
+          "scaleEnd": 1,
+          "alignToTangent": false
+        },
+        "position": {
+          "x": 730,
+          "y": 40
+        },
+        "measured": {
+          "width": 201,
+          "height": 436
+        }
+      },
+      {
+        "id": "cols2",
+        "type": "InstanceOnPoints",
+        "data": {
+          "scaleStart": 1,
+          "scaleEnd": 1,
+          "alignToTangent": false
+        },
+        "position": {
+          "x": 730,
+          "y": 420
+        },
+        "measured": {
+          "width": 201,
+          "height": 436
+        }
+      },
+      {
+        "id": "columns",
+        "type": "Boolean",
+        "data": {
+          "operation": "union",
+          "color": "#94a3b8"
+        },
+        "position": {
+          "x": 960,
+          "y": 230
+        },
+        "measured": {
+          "width": 177,
+          "height": 200
+        }
+      },
+      {
+        "id": "poly_pts",
+        "type": "ListConstant",
+        "data": {
+          "values": "0, lineLength * 0.25, lineLength * 0.5, lineLength * 0.75, lineLength"
+        },
+        "position": {
+          "x": 40,
+          "y": 1750
+        },
+        "measured": {
+          "width": 177,
+          "height": 136
+        }
+      },
+      {
+        "id": "poly_pts_x",
+        "type": "ListConstant",
+        "data": {
+          "values": "0, lineSpacing * 0.5, lineSpacing, lineSpacing * 0.5, 0"
+        },
+        "position": {
+          "x": 40,
+          "y": 1940
+        },
+        "measured": {
+          "width": 177,
+          "height": 136
+        }
+      },
+      {
+        "id": "poly_pts_x_2",
+        "type": "PointsFromLists",
+        "data": {},
+        "position": {
+          "x": 270,
+          "y": 230
+        },
+        "measured": {
+          "width": 150,
+          "height": 234
+        }
+      },
+      {
+        "id": "final_roof",
+        "type": "Translate",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "color": "#f87171",
+          "z": "col_height"
+        },
+        "position": {
+          "x": 960,
+          "y": 40
+        },
+        "measured": {
+          "width": 201,
+          "height": 334
+        }
+      },
+      {
+        "id": "col_primitive",
+        "type": "Cylinder",
+        "data": {
+          "radius": "colRadius",
+          "height": "col_height",
+          "color": "#94a3b8"
+        },
+        "position": {
+          "x": 40,
+          "y": 230
+        },
+        "measured": {
+          "width": 201,
+          "height": 296
+        }
+      },
+      {
+        "id": "roof_poly_curve",
+        "type": "PolylineCurve",
+        "data": {
+          "closed": true,
+          "color": "#f87171"
+        },
+        "position": {
+          "x": 500,
+          "y": 230
+        },
+        "measured": {
+          "width": 177,
+          "height": 266
+        }
+      },
+      {
+        "id": "roof_extruded_curve",
+        "type": "ExtrudeCurve",
+        "data": {
+          "height": "lineLength * 0.1",
+          "color": "#f87171"
+        },
+        "position": {
+          "x": 730,
+          "y": 230
+        },
+        "measured": {
+          "width": 222,
+          "height": 216
+        }
+      }
+    ],
+    "edges": [
+      {
+        "source": "p1_start",
+        "sourceHandle": "point",
+        "target": "line1",
+        "targetHandle": "a",
+        "id": "e_p1_start_line1_a"
+      },
+      {
+        "source": "p1_end",
+        "sourceHandle": "point",
+        "target": "line1",
+        "targetHandle": "b",
+        "id": "e_p1_end_line1_b"
+      },
+      {
+        "source": "p2_start",
+        "sourceHandle": "point",
+        "target": "line2",
+        "targetHandle": "a",
+        "id": "e_p2_start_line2_a"
+      },
+      {
+        "source": "p2_end",
+        "sourceHandle": "point",
+        "target": "line2",
+        "targetHandle": "b",
+        "id": "e_p2_end_line2_b"
+      },
+      {
+        "source": "line1",
+        "sourceHandle": "curve",
+        "target": "pts1",
+        "targetHandle": "curve",
+        "id": "e_line1_pts1_curve"
+      },
+      {
+        "source": "line2",
+        "sourceHandle": "curve",
+        "target": "pts2",
+        "targetHandle": "curve",
+        "id": "e_line2_pts2_curve"
+      },
+      {
+        "source": "pts1",
+        "sourceHandle": "points",
+        "target": "cols1",
+        "targetHandle": "points",
+        "id": "e_pts1_cols1_points"
+      },
+      {
+        "source": "pts2",
+        "sourceHandle": "points",
+        "target": "cols2",
+        "targetHandle": "points",
+        "id": "e_pts2_cols2_points"
+      },
+      {
+        "source": "cols1",
+        "sourceHandle": "solid",
+        "target": "columns",
+        "targetHandle": "target",
+        "id": "e_cols1_columns_target"
+      },
+      {
+        "source": "cols2",
+        "sourceHandle": "solid",
+        "target": "columns",
+        "targetHandle": "tool",
+        "id": "e_cols2_columns_tool"
+      },
+      {
+        "source": "poly_pts",
+        "sourceHandle": "values",
+        "target": "poly_pts_x_2",
+        "targetHandle": "x",
+        "id": "e_poly_pts_poly_pts_x_2_x"
+      },
+      {
+        "source": "poly_pts_x",
+        "sourceHandle": "values",
+        "target": "poly_pts_x_2",
+        "targetHandle": "y",
+        "id": "e_poly_pts_x_poly_pts_x_2_y"
+      },
+      {
+        "source": "col_height",
+        "sourceHandle": "value",
+        "target": "poly_pts_x_2",
+        "targetHandle": "z",
+        "id": "e_col_height_poly_pts_x_2_z"
+      },
+      {
+        "source": "col_height",
+        "sourceHandle": "value",
+        "target": "final_roof",
+        "targetHandle": "param:z",
+        "id": "e_col_height_final_roof_param:z"
+      },
+      {
+        "source": "col_primitive",
+        "target": "cols1",
+        "id": "e_col_primitive_cols1_shape",
+        "sourceHandle": "solid",
+        "targetHandle": "shape"
+      },
+      {
+        "source": "col_primitive",
+        "target": "cols2",
+        "id": "e_col_primitive_cols2_shape",
+        "sourceHandle": "solid",
+        "targetHandle": "shape"
+      },
+      {
+        "source": "poly_pts_x_2",
+        "target": "roof_poly_curve",
+        "id": "e_poly_pts_x_2_roof_poly_curve_points",
+        "sourceHandle": "points",
+        "targetHandle": "points"
+      },
+      {
+        "source": "roof_poly_curve",
+        "target": "roof_extruded_curve",
+        "id": "e_roof_poly_curve_roof_extruded_curve_curve",
+        "sourceHandle": "curve",
+        "targetHandle": "curve"
+      },
+      {
+        "source": "roof_extruded_curve",
+        "target": "final_roof",
+        "id": "e_roof_extruded_curve_final_roof_solid",
+        "sourceHandle": "solid",
+        "targetHandle": "solid"
+      }
+    ]
+  },
+  "conversation": [
+    {
+      "role": "system",
+      "content": "Workspace cleared."
+    },
+    {
+      "role": "user",
+      "content": "make two paralel lines and divide them on 10 points  and use each point as a base for circle which will be extrued into column with height of third of line length and connect the tops of the centers of the columns and find middle lines between the top and move them up and also translate column top points so u get a polygon with 5 points and fill it and extrude it "
+    },
+    {
+      "role": "system",
+      "content": "IR program had compile errors (attempt 1/3) — asking the model to fix."
+    },
+    {
+      "role": "assistant",
+      "content": "Create a parametric structural assembly with a dual-line column grid and a top-level 5-point polygon roof extrusion."
+    },
+    {
+      "role": "system",
+      "content": "Issues detected (auto-repair 2/2): Evaluation error: The graph evaluated successfully but produced no visible 3D shapes. Please verify that at least one geometry shape node (Primitive, Boolean, Compound, or Pattern) is a leaf node (has no outgoing edges) and evaluates successfully with correct inputs.; No leaf node produced meshable geometry — the viewport is empty.; Node \"col_solid\" failed: ExtrudeCurve failed: Cannot read properties of undefined (reading '$$')"
+    },
+    {
+      "role": "assistant",
+      "content": "The previous IR failed because 'extrude' was used on curves instead of solids, and 'InstanceOnPoints' requires a solid. I will replace 'ExtrudeCurve' with 'Cylinder' for columns and 'Box' (scaled/translated) for the roof base, or more accurately, use 'Extrude' on a 'Sketch' for the roof since the user wants a polygon. Actually, for columns, Cylinder is most robust. For the roof, I will use a Sketch for the polyline and Extrude it as a solid."
+    },
+    {
+      "role": "system",
+      "content": "[Patch] 7 removedEdgeIds entries matched NO edge (already gone or never existed) — nothing was removed for: col_base.point->col_base_x_2.center; col_base_x.vector->col_base_x_2.normal; col_base_x_2.curve->col_solid.curve; col_solid->cols1; col_solid->cols2; roof_profile.curve->roof_solid.curve; roof_solid->final_roof. This usually means those edges were already dropped or renamed — do NOT keep retrying them. Use the edge ids shown in the graph state, {\"source\",\"target\"} objects, or \"source->target\" strings. Edges that DO exist on those nodes: pts1->cols1.points, pts2->cols2.points, cols1->columns.target, cols2->columns.tool, col_height->final_roof.param:z"
+    },
+    {
+      "role": "system",
+      "content": "Engine fault (does not count against repair budget, 1/3) — retrying."
+    },
+    {
+      "role": "assistant",
+      "content": "The 'Engine fault' suggests a transient issue, but I need to fix the 'Dead design parameter' warning for 'lineSpacing' and ensure the roof polygon actually uses the calculated points. The current roof is just a static Sketch; I will replace it with a PolylineCurve derived from the 'poly_pts_x_2' points, then use ExtrudeCurve to make it a solid. I'll also wire 'lineSpacing' into the 'poly_pts_x' constant using a formula string to remove the dead parameter warning."
+    },
+    {
+      "role": "system",
+      "content": "[Patch] 2 removedEdgeIds entries matched NO edge (already gone or never existed) — nothing was removed for: roof_sketch->roof_final_solid; roof_final_solid->final_roof. This usually means those edges were already dropped or renamed — do NOT keep retrying them. Use the edge ids shown in the graph state, {\"source\",\"target\"} objects, or \"source->target\" strings. Edges that DO exist on those nodes: col_height->final_roof.param:z"
+    },
+    {
+      "role": "system",
+      "content": "Auto-repair limit reached. Remaining issues: Node \"roof_extruded_curve\" failed: ExtrudeCurve failed: Cannot read properties of undefined (reading '$$') | Leaf \"roof_extruded_curve\" could not be meshed: Node \"roof_extruded_curve\" (ExtrudeCurve) produced no geometry despite connected inputs — likely invalid parameters (e.g. zero/negative size, s"
+    }
+  ],
+  "plan": "The 'Engine fault' suggests a transient issue, but I need to fix the 'Dead design parameter' warning for 'lineSpacing' and ensure the roof polygon actually uses the calculated points. The current roof is just a static Sketch; I will replace it with a PolylineCurve derived from the 'poly_pts_x_2' points, then use ExtrudeCurve to make it a solid. I'll also wire 'lineSpacing' into the 'poly_pts_x' constant using a formula string to remove the dead parameter warning.",
+  "genome": null,
+  "geometryReport": {
+    "leaves": [
+      {
+        "id": "roof_extruded_curve",
+        "bbox": null,
+        "meshOk": false,
+        "vertexCount": 0,
+        "error": "Node \"roof_extruded_curve\" (ExtrudeCurve) produced no geometry despite connected inputs — likely invalid parameters (e.g. zero/negative size, self-intersecting fillet)."
+      },
+      {
+        "id": "columns",
+        "bbox": {
+          "min": [
+            -0.8000001000000002,
+            -0.8360922057810399,
+            -5.048246003371274
+          ],
+          "max": [
+            0.8482460033712739,
+            0.8360922057810398,
+            5.048246003371274
+          ],
+          "center": [
+            0.02412295168563683,
+            -1.1102230246251565e-16,
+            0
+          ],
+          "size": [
+            1.648246103371274,
+            1.6721844115620796,
+            10.096492006742547
+          ]
+        },
+        "volume": 20.10619298297468,
+        "meshOk": true,
+        "vertexCount": 38,
+        "error": null
+      },
+      {
+        "id": "final_roof",
+        "bbox": null,
+        "meshOk": false,
+        "vertexCount": 0,
+        "error": "Node \"final_roof\" (Translate) is null because its input(s) came from failed upstream node(s): roof_extruded_curve. Fix the upstream node first."
+      }
+    ],
+    "nodeErrors": [
+      {
+        "id": "roof_extruded_curve",
+        "error": "ExtrudeCurve failed: Cannot read properties of undefined (reading '$$')"
+      }
+    ],
+    "numbers": {
+      "lineLength": 30,
+      "lineSpacing": 10,
+      "colRadius": 0.8,
+      "col_height": 10,
+      "poly_pts": [
+        0,
+        7.5,
+        15,
+        22.5,
+        30
+      ],
+      "poly_pts_x": [
+        0,
+        5,
+        10,
+        5,
+        0
+      ]
+    },
+    "sliders": {
+      "lineLength": 30,
+      "lineSpacing": 10,
+      "colRadius": 0.8
+    },
+    "selections": {},
+    "helpers": {
+      "p1_start": {
+        "type": "Point",
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "sourceNodeId": "p1_start",
+        "ancestorNodeIds": []
+      },
+      "p1_end": {
+        "type": "Point",
+        "x": 30,
+        "y": 0,
+        "z": 0,
+        "sourceNodeId": "p1_end",
+        "ancestorNodeIds": []
+      },
+      "p2_start": {
+        "type": "Point",
+        "x": 0,
+        "y": 10,
+        "z": 0,
+        "sourceNodeId": "p2_start",
+        "ancestorNodeIds": []
+      },
+      "p2_end": {
+        "type": "Point",
+        "x": 30,
+        "y": 10,
+        "z": 0,
+        "sourceNodeId": "p2_end",
+        "ancestorNodeIds": []
+      }
+    },
+    "nodeCount": 22,
+    "edgeCount": 19,
+    "transformCount": 4,
+    "nodesPerLeafRatio": 7.333333333333333,
+    "nodeEconomyWarning": false,
+    "placement": {
+      "anchored": [
+        "roof_extruded_curve",
+        "columns",
+        "final_roof"
+      ],
+      "literal": [],
+      "origin": [],
+      "literalNodeIds": [],
+      "ratio": 1
+    },
+    "scene": {
+      "min": [
+        -0.8000001000000002,
+        -0.8360922057810399,
+        -5.048246003371274
+      ],
+      "max": [
+        0.8482460033712739,
+        0.8360922057810398,
+        5.048246003371274
+      ],
+      "size": [
+        1.648246103371274,
+        1.6721844115620796,
+        10.096492006742547
+      ]
+    },
+    "meshedLeafCount": 1,
+    "kernelFaultCount": 0,
+    "kernelSuspect": false,
+    "kernelHealth": "ok",
+    "evalCount": 1,
+    "recycleRecommended": false
+  },
+  "timeline": [
+    {
+      "at": "2026-07-24T19:04:05.215Z",
+      "turn": 1,
+      "trigger": "ai-ir",
+      "label": "attempt 2: rebuilt graph (25 nodes)",
+      "nodeCount": 25,
+      "edgeCount": 24,
+      "isolatedCount": 2,
+      "diff": {
+        "addedNodes": [
+          "lineLength",
+          "lineSpacing",
+          "colRadius",
+          "p1_start",
+          "p1_end",
+          "p2_start",
+          "p2_end",
+          "line1",
+          "line2",
+          "pts1",
+          "pts2",
+          "col_height",
+          "col_base",
+          "col_base_x",
+          "col_base_x_2",
+          "col_solid",
+          "cols1",
+          "cols2",
+          "columns",
+          "poly_pts",
+          "poly_pts_x",
+          "poly_pts_x_2",
+          "roof_profile",
+          "roof_solid",
+          "final_roof"
+        ],
+        "removedNodes": [],
+        "changedNodes": [],
+        "addedEdges": 24,
+        "removedEdges": 0
+      },
+      "details": [
+        "warning: Dead design parameters: sliders \"lineLength\", \"lineSpacing\" are not referenced by any formula or edge — moving them changes nothing. Wire dimensions to them or remove them.",
+        "warning: PARAMETRIC COVERAGE IS LOW (0%): Only 0 of 1 dimensions are driven by slider-based formulas or edges. Hard-coded literals will break design scalability when sliders move. Please rewrite these bare literals as formulas of your sliders: roof_solid.height=2."
+      ],
+      "nodes": [
+        {
+          "id": "lineLength",
+          "type": "NumberSlider",
+          "data": {
+            "value": 30,
+            "label": "lineLength",
+            "min": 10,
+            "max": 100,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 800
+          }
+        },
+        {
+          "id": "lineSpacing",
+          "type": "NumberSlider",
+          "data": {
+            "value": 10,
+            "label": "lineSpacing",
+            "min": 2,
+            "max": 50,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 990
+          }
+        },
+        {
+          "id": "colRadius",
+          "type": "NumberSlider",
+          "data": {
+            "value": 0.8,
+            "label": "colRadius",
+            "min": 0.1,
+            "max": 5,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 610
+          }
+        },
+        {
+          "id": "p1_start",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "position": {
+            "x": 40,
+            "y": 1370
+          }
+        },
+        {
+          "id": "p1_end",
+          "type": "Point",
+          "data": {
+            "x": "lineLength",
+            "y": 0,
+            "z": 0
+          },
+          "position": {
+            "x": 40,
+            "y": 1180
+          }
+        },
+        {
+          "id": "p2_start",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": "lineSpacing",
+            "z": 0
+          },
+          "position": {
+            "x": 40,
+            "y": 1750
+          }
+        },
+        {
+          "id": "p2_end",
+          "type": "Point",
+          "data": {
+            "x": "lineLength",
+            "y": "lineSpacing",
+            "z": 0
+          },
+          "position": {
+            "x": 40,
+            "y": 1560
+          }
+        },
+        {
+          "id": "line1",
+          "type": "Line",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 230
+          }
+        },
+        {
+          "id": "line2",
+          "type": "Line",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 610
+          }
+        },
+        {
+          "id": "pts1",
+          "type": "DivideCurve",
+          "data": {
+            "count": 10
+          },
+          "position": {
+            "x": 500,
+            "y": 230
+          }
+        },
+        {
+          "id": "pts2",
+          "type": "DivideCurve",
+          "data": {
+            "count": 10
+          },
+          "position": {
+            "x": 500,
+            "y": 610
+          }
+        },
+        {
+          "id": "col_height",
+          "type": "Expression",
+          "data": {
+            "formula": "lineLength / 3"
+          },
+          "position": {
+            "x": 40,
+            "y": 420
+          }
+        },
+        {
+          "id": "col_base",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "position": {
+            "x": 40,
+            "y": 40
+          }
+        },
+        {
+          "id": "col_base_x",
+          "type": "VectorXYZ",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": 1
+          },
+          "position": {
+            "x": 40,
+            "y": 230
+          }
+        },
+        {
+          "id": "col_base_x_2",
+          "type": "CircleCurve",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 40
+          }
+        },
+        {
+          "id": "col_solid",
+          "type": "ExtrudeCurve",
+          "data": {},
+          "position": {
+            "x": 500,
+            "y": 40
+          }
+        },
+        {
+          "id": "cols1",
+          "type": "InstanceOnPoints",
+          "data": {
+            "scaleStart": 1,
+            "scaleEnd": 1,
+            "alignToTangent": false
+          },
+          "position": {
+            "x": 730,
+            "y": 40
+          }
+        },
+        {
+          "id": "cols2",
+          "type": "InstanceOnPoints",
+          "data": {
+            "scaleStart": 1,
+            "scaleEnd": 1,
+            "alignToTangent": false
+          },
+          "position": {
+            "x": 730,
+            "y": 230
+          }
+        },
+        {
+          "id": "columns",
+          "type": "Boolean",
+          "data": {
+            "operation": "union",
+            "color": "#94a3b8"
+          },
+          "position": {
+            "x": 960,
+            "y": 40
+          }
+        },
+        {
+          "id": "poly_pts",
+          "type": "ListConstant",
+          "data": {
+            "values": "0, lineLength * 0.25, lineLength * 0.5, lineLength * 0.75, lineLength"
+          },
+          "position": {
+            "x": 40,
+            "y": 1940
+          }
+        },
+        {
+          "id": "poly_pts_x",
+          "type": "ListConstant",
+          "data": {
+            "values": "0, lineSpacing * 0.5, lineSpacing, lineSpacing * 0.5, 0"
+          },
+          "position": {
+            "x": 40,
+            "y": 2130
+          }
+        },
+        {
+          "id": "poly_pts_x_2",
+          "type": "PointsFromLists",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 420
+          }
+        },
+        {
+          "id": "roof_profile",
+          "type": "PolylineCurve",
+          "data": {
+            "closed": true
+          },
+          "position": {
+            "x": 500,
+            "y": 420
+          }
+        },
+        {
+          "id": "roof_solid",
+          "type": "ExtrudeCurve",
+          "data": {
+            "height": 2
+          },
+          "position": {
+            "x": 730,
+            "y": 420
+          }
+        },
+        {
+          "id": "final_roof",
+          "type": "Translate",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "color": "#f87171"
+          },
+          "position": {
+            "x": 960,
+            "y": 230
+          }
+        }
+      ],
+      "edges": [
+        {
+          "source": "p1_start",
+          "sourceHandle": "point",
+          "target": "line1",
+          "targetHandle": "a",
+          "id": "e_p1_start_line1_a"
+        },
+        {
+          "source": "p1_end",
+          "sourceHandle": "point",
+          "target": "line1",
+          "targetHandle": "b",
+          "id": "e_p1_end_line1_b"
+        },
+        {
+          "source": "p2_start",
+          "sourceHandle": "point",
+          "target": "line2",
+          "targetHandle": "a",
+          "id": "e_p2_start_line2_a"
+        },
+        {
+          "source": "p2_end",
+          "sourceHandle": "point",
+          "target": "line2",
+          "targetHandle": "b",
+          "id": "e_p2_end_line2_b"
+        },
+        {
+          "source": "line1",
+          "sourceHandle": "curve",
+          "target": "pts1",
+          "targetHandle": "curve",
+          "id": "e_line1_pts1_curve"
+        },
+        {
+          "source": "line2",
+          "sourceHandle": "curve",
+          "target": "pts2",
+          "targetHandle": "curve",
+          "id": "e_line2_pts2_curve"
+        },
+        {
+          "source": "colRadius",
+          "sourceHandle": "value",
+          "target": "col_base_x_2",
+          "targetHandle": "param:radius",
+          "id": "e_colRadius_col_base_x_2_param:radius"
+        },
+        {
+          "source": "col_base",
+          "sourceHandle": "point",
+          "target": "col_base_x_2",
+          "targetHandle": "center",
+          "id": "e_col_base_col_base_x_2_center"
+        },
+        {
+          "source": "col_base_x",
+          "sourceHandle": "vector",
+          "target": "col_base_x_2",
+          "targetHandle": "normal",
+          "id": "e_col_base_x_col_base_x_2_normal"
+        },
+        {
+          "source": "col_height",
+          "sourceHandle": "value",
+          "target": "col_solid",
+          "targetHandle": "param:height",
+          "id": "e_col_height_col_solid_param:height"
+        },
+        {
+          "source": "col_base_x_2",
+          "sourceHandle": "curve",
+          "target": "col_solid",
+          "targetHandle": "curve",
+          "id": "e_col_base_x_2_col_solid_curve"
+        },
+        {
+          "source": "col_solid",
+          "sourceHandle": "solid",
+          "target": "cols1",
+          "targetHandle": "shape",
+          "id": "e_col_solid_cols1_shape"
+        },
+        {
+          "source": "pts1",
+          "sourceHandle": "points",
+          "target": "cols1",
+          "targetHandle": "points",
+          "id": "e_pts1_cols1_points"
+        },
+        {
+          "source": "col_solid",
+          "sourceHandle": "solid",
+          "target": "cols2",
+          "targetHandle": "shape",
+          "id": "e_col_solid_cols2_shape"
+        },
+        {
+          "source": "pts2",
+          "sourceHandle": "points",
+          "target": "cols2",
+          "targetHandle": "points",
+          "id": "e_pts2_cols2_points"
+        },
+        {
+          "source": "cols1",
+          "sourceHandle": "solid",
+          "target": "columns",
+          "targetHandle": "target",
+          "id": "e_cols1_columns_target"
+        },
+        {
+          "source": "cols2",
+          "sourceHandle": "solid",
+          "target": "columns",
+          "targetHandle": "tool",
+          "id": "e_cols2_columns_tool"
+        },
+        {
+          "source": "poly_pts",
+          "sourceHandle": "values",
+          "target": "poly_pts_x_2",
+          "targetHandle": "x",
+          "id": "e_poly_pts_poly_pts_x_2_x"
+        },
+        {
+          "source": "poly_pts_x",
+          "sourceHandle": "values",
+          "target": "poly_pts_x_2",
+          "targetHandle": "y",
+          "id": "e_poly_pts_x_poly_pts_x_2_y"
+        },
+        {
+          "source": "col_height",
+          "sourceHandle": "value",
+          "target": "poly_pts_x_2",
+          "targetHandle": "z",
+          "id": "e_col_height_poly_pts_x_2_z"
+        },
+        {
+          "source": "poly_pts_x_2",
+          "sourceHandle": "points",
+          "target": "roof_profile",
+          "targetHandle": "points",
+          "id": "e_poly_pts_x_2_roof_profile_points"
+        },
+        {
+          "source": "roof_profile",
+          "sourceHandle": "curve",
+          "target": "roof_solid",
+          "targetHandle": "curve",
+          "id": "e_roof_profile_roof_solid_curve"
+        },
+        {
+          "source": "col_height",
+          "sourceHandle": "value",
+          "target": "final_roof",
+          "targetHandle": "param:z",
+          "id": "e_col_height_final_roof_param:z"
+        },
+        {
+          "source": "roof_solid",
+          "sourceHandle": "solid",
+          "target": "final_roof",
+          "targetHandle": "solid",
+          "id": "e_roof_solid_final_roof_solid"
+        }
+      ]
+    },
+    {
+      "at": "2026-07-24T19:05:08.803Z",
+      "turn": 1,
+      "trigger": "ai-repair",
+      "label": "attempt 3: added 3 node(s) [Cylinder, Sketch, Extrude]; updated 1 node(s); removed 6 node(s); added 4 edge(s); removed 7 edge(s)",
+      "nodeCount": 22,
+      "edgeCount": 18,
+      "isolatedCount": 3,
+      "diff": {
+        "addedNodes": [
+          "col_primitive",
+          "roof_sketch",
+          "roof_final_solid"
+        ],
+        "removedNodes": [
+          "col_base",
+          "col_base_x",
+          "col_base_x_2",
+          "col_solid",
+          "roof_profile",
+          "roof_solid"
+        ],
+        "changedNodes": [
+          "final_roof"
+        ],
+        "addedEdges": 4,
+        "removedEdges": 10
+      },
+      "details": [
+        "warning: Dead design parameter: slider \"lineSpacing\" is not referenced by any formula or edge — moving it changes nothing. Wire dimensions to it or remove it."
+      ],
+      "nodes": [
+        {
+          "id": "lineLength",
+          "type": "NumberSlider",
+          "data": {
+            "value": 30,
+            "label": "lineLength",
+            "min": 10,
+            "max": 100,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 610
+          }
+        },
+        {
+          "id": "lineSpacing",
+          "type": "NumberSlider",
+          "data": {
+            "value": 10,
+            "label": "lineSpacing",
+            "min": 2,
+            "max": 50,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 800
+          }
+        },
+        {
+          "id": "colRadius",
+          "type": "NumberSlider",
+          "data": {
+            "value": 0.8,
+            "label": "colRadius",
+            "min": 0.1,
+            "max": 5,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 420
+          }
+        },
+        {
+          "id": "p1_start",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "position": {
+            "x": 40,
+            "y": 1180
+          }
+        },
+        {
+          "id": "p1_end",
+          "type": "Point",
+          "data": {
+            "x": "lineLength",
+            "y": 0,
+            "z": 0
+          },
+          "position": {
+            "x": 40,
+            "y": 990
+          }
+        },
+        {
+          "id": "p2_start",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": "lineSpacing",
+            "z": 0
+          },
+          "position": {
+            "x": 40,
+            "y": 1560
+          }
+        },
+        {
+          "id": "p2_end",
+          "type": "Point",
+          "data": {
+            "x": "lineLength",
+            "y": "lineSpacing",
+            "z": 0
+          },
+          "position": {
+            "x": 40,
+            "y": 1370
+          }
+        },
+        {
+          "id": "line1",
+          "type": "Line",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 40
+          }
+        },
+        {
+          "id": "line2",
+          "type": "Line",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 420
+          }
+        },
+        {
+          "id": "pts1",
+          "type": "DivideCurve",
+          "data": {
+            "count": 10
+          },
+          "position": {
+            "x": 500,
+            "y": 40
+          }
+        },
+        {
+          "id": "pts2",
+          "type": "DivideCurve",
+          "data": {
+            "count": 10
+          },
+          "position": {
+            "x": 500,
+            "y": 420
+          }
+        },
+        {
+          "id": "col_height",
+          "type": "Expression",
+          "data": {
+            "formula": "lineLength / 3"
+          },
+          "position": {
+            "x": 40,
+            "y": 40
+          }
+        },
+        {
+          "id": "cols1",
+          "type": "InstanceOnPoints",
+          "data": {
+            "scaleStart": 1,
+            "scaleEnd": 1,
+            "alignToTangent": false
+          },
+          "position": {
+            "x": 730,
+            "y": 40
+          }
+        },
+        {
+          "id": "cols2",
+          "type": "InstanceOnPoints",
+          "data": {
+            "scaleStart": 1,
+            "scaleEnd": 1,
+            "alignToTangent": false
+          },
+          "position": {
+            "x": 730,
+            "y": 230
+          }
+        },
+        {
+          "id": "columns",
+          "type": "Boolean",
+          "data": {
+            "operation": "union",
+            "color": "#94a3b8"
+          },
+          "position": {
+            "x": 960,
+            "y": 40
+          }
+        },
+        {
+          "id": "poly_pts",
+          "type": "ListConstant",
+          "data": {
+            "values": "0, lineLength * 0.25, lineLength * 0.5, lineLength * 0.75, lineLength"
+          },
+          "position": {
+            "x": 40,
+            "y": 1750
+          }
+        },
+        {
+          "id": "poly_pts_x",
+          "type": "ListConstant",
+          "data": {
+            "values": "0, lineSpacing * 0.5, lineSpacing, lineSpacing * 0.5, 0"
+          },
+          "position": {
+            "x": 40,
+            "y": 1940
+          }
+        },
+        {
+          "id": "poly_pts_x_2",
+          "type": "PointsFromLists",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 230
+          }
+        },
+        {
+          "id": "final_roof",
+          "type": "Translate",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "color": "#f87171",
+            "z": "col_height"
+          },
+          "position": {
+            "x": 500,
+            "y": 230
+          }
+        },
+        {
+          "id": "col_primitive",
+          "type": "Cylinder",
+          "data": {
+            "radius": "colRadius",
+            "height": "col_height",
+            "color": "#94a3b8"
+          },
+          "position": {
+            "x": 40,
+            "y": 230
+          }
+        },
+        {
+          "id": "roof_sketch",
+          "type": "Sketch",
+          "data": {
+            "svgPath": "M 0 0 L 10 0 L 10 10 L 0 10 Z",
+            "color": "#f87171"
+          },
+          "position": {
+            "x": 40,
+            "y": 2130
+          }
+        },
+        {
+          "id": "roof_final_solid",
+          "type": "Extrude",
+          "data": {
+            "height": "lineLength * 0.1"
+          },
+          "position": {
+            "x": 270,
+            "y": 610
+          }
+        }
+      ],
+      "edges": [
+        {
+          "source": "p1_start",
+          "sourceHandle": "point",
+          "target": "line1",
+          "targetHandle": "a",
+          "id": "e_p1_start_line1_a"
+        },
+        {
+          "source": "p1_end",
+          "sourceHandle": "point",
+          "target": "line1",
+          "targetHandle": "b",
+          "id": "e_p1_end_line1_b"
+        },
+        {
+          "source": "p2_start",
+          "sourceHandle": "point",
+          "target": "line2",
+          "targetHandle": "a",
+          "id": "e_p2_start_line2_a"
+        },
+        {
+          "source": "p2_end",
+          "sourceHandle": "point",
+          "target": "line2",
+          "targetHandle": "b",
+          "id": "e_p2_end_line2_b"
+        },
+        {
+          "source": "line1",
+          "sourceHandle": "curve",
+          "target": "pts1",
+          "targetHandle": "curve",
+          "id": "e_line1_pts1_curve"
+        },
+        {
+          "source": "line2",
+          "sourceHandle": "curve",
+          "target": "pts2",
+          "targetHandle": "curve",
+          "id": "e_line2_pts2_curve"
+        },
+        {
+          "source": "pts1",
+          "sourceHandle": "points",
+          "target": "cols1",
+          "targetHandle": "points",
+          "id": "e_pts1_cols1_points"
+        },
+        {
+          "source": "pts2",
+          "sourceHandle": "points",
+          "target": "cols2",
+          "targetHandle": "points",
+          "id": "e_pts2_cols2_points"
+        },
+        {
+          "source": "cols1",
+          "sourceHandle": "solid",
+          "target": "columns",
+          "targetHandle": "target",
+          "id": "e_cols1_columns_target"
+        },
+        {
+          "source": "cols2",
+          "sourceHandle": "solid",
+          "target": "columns",
+          "targetHandle": "tool",
+          "id": "e_cols2_columns_tool"
+        },
+        {
+          "source": "poly_pts",
+          "sourceHandle": "values",
+          "target": "poly_pts_x_2",
+          "targetHandle": "x",
+          "id": "e_poly_pts_poly_pts_x_2_x"
+        },
+        {
+          "source": "poly_pts_x",
+          "sourceHandle": "values",
+          "target": "poly_pts_x_2",
+          "targetHandle": "y",
+          "id": "e_poly_pts_x_poly_pts_x_2_y"
+        },
+        {
+          "source": "col_height",
+          "sourceHandle": "value",
+          "target": "poly_pts_x_2",
+          "targetHandle": "z",
+          "id": "e_col_height_poly_pts_x_2_z"
+        },
+        {
+          "source": "col_height",
+          "sourceHandle": "value",
+          "target": "final_roof",
+          "targetHandle": "param:z",
+          "id": "e_col_height_final_roof_param:z"
+        },
+        {
+          "source": "col_primitive",
+          "target": "cols1",
+          "id": "e_col_primitive_cols1_shape",
+          "sourceHandle": "solid",
+          "targetHandle": "shape"
+        },
+        {
+          "source": "col_primitive",
+          "target": "cols2",
+          "id": "e_col_primitive_cols2_shape",
+          "sourceHandle": "solid",
+          "targetHandle": "shape"
+        },
+        {
+          "source": "roof_sketch",
+          "target": "roof_final_solid",
+          "id": "e_roof_sketch_roof_final_solid_solid",
+          "sourceHandle": "solid",
+          "targetHandle": "solid"
+        },
+        {
+          "source": "roof_final_solid",
+          "target": "final_roof",
+          "id": "e_roof_final_solid_final_roof_solid",
+          "sourceHandle": "solid",
+          "targetHandle": "solid"
+        }
+      ]
+    },
+    {
+      "at": "2026-07-24T19:05:44.220Z",
+      "turn": 1,
+      "trigger": "ai-repair",
+      "label": "attempt 3: added 2 node(s) [PolylineCurve, ExtrudeCurve]; updated 1 node(s); removed 2 node(s); added 3 edge(s); removed 2 edge(s)",
+      "nodeCount": 22,
+      "edgeCount": 19,
+      "isolatedCount": 3,
+      "diff": {
+        "addedNodes": [
+          "roof_poly_curve",
+          "roof_extruded_curve"
+        ],
+        "removedNodes": [
+          "roof_sketch",
+          "roof_final_solid"
+        ],
+        "changedNodes": [],
+        "addedEdges": 3,
+        "removedEdges": 2
+      },
+      "details": [
+        "warning: Dead design parameter: slider \"lineSpacing\" is not referenced by any formula or edge — moving it changes nothing. Wire dimensions to it or remove it."
+      ],
+      "nodes": [
+        {
+          "id": "lineLength",
+          "type": "NumberSlider",
+          "data": {
+            "value": 30,
+            "label": "lineLength",
+            "min": 10,
+            "max": 100,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 610
+          }
+        },
+        {
+          "id": "lineSpacing",
+          "type": "NumberSlider",
+          "data": {
+            "value": 10,
+            "label": "lineSpacing",
+            "min": 2,
+            "max": 50,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 800
+          }
+        },
+        {
+          "id": "colRadius",
+          "type": "NumberSlider",
+          "data": {
+            "value": 0.8,
+            "label": "colRadius",
+            "min": 0.1,
+            "max": 5,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 420
+          }
+        },
+        {
+          "id": "p1_start",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "position": {
+            "x": 40,
+            "y": 1180
+          }
+        },
+        {
+          "id": "p1_end",
+          "type": "Point",
+          "data": {
+            "x": "lineLength",
+            "y": 0,
+            "z": 0
+          },
+          "position": {
+            "x": 40,
+            "y": 990
+          }
+        },
+        {
+          "id": "p2_start",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": "lineSpacing",
+            "z": 0
+          },
+          "position": {
+            "x": 40,
+            "y": 1560
+          }
+        },
+        {
+          "id": "p2_end",
+          "type": "Point",
+          "data": {
+            "x": "lineLength",
+            "y": "lineSpacing",
+            "z": 0
+          },
+          "position": {
+            "x": 40,
+            "y": 1370
+          }
+        },
+        {
+          "id": "line1",
+          "type": "Line",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 40
+          }
+        },
+        {
+          "id": "line2",
+          "type": "Line",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 420
+          }
+        },
+        {
+          "id": "pts1",
+          "type": "DivideCurve",
+          "data": {
+            "count": 10
+          },
+          "position": {
+            "x": 500,
+            "y": 40
+          }
+        },
+        {
+          "id": "pts2",
+          "type": "DivideCurve",
+          "data": {
+            "count": 10
+          },
+          "position": {
+            "x": 500,
+            "y": 420
+          }
+        },
+        {
+          "id": "col_height",
+          "type": "Expression",
+          "data": {
+            "formula": "lineLength / 3"
+          },
+          "position": {
+            "x": 40,
+            "y": 40
+          }
+        },
+        {
+          "id": "cols1",
+          "type": "InstanceOnPoints",
+          "data": {
+            "scaleStart": 1,
+            "scaleEnd": 1,
+            "alignToTangent": false
+          },
+          "position": {
+            "x": 730,
+            "y": 40
+          }
+        },
+        {
+          "id": "cols2",
+          "type": "InstanceOnPoints",
+          "data": {
+            "scaleStart": 1,
+            "scaleEnd": 1,
+            "alignToTangent": false
+          },
+          "position": {
+            "x": 730,
+            "y": 420
+          }
+        },
+        {
+          "id": "columns",
+          "type": "Boolean",
+          "data": {
+            "operation": "union",
+            "color": "#94a3b8"
+          },
+          "position": {
+            "x": 960,
+            "y": 230
+          }
+        },
+        {
+          "id": "poly_pts",
+          "type": "ListConstant",
+          "data": {
+            "values": "0, lineLength * 0.25, lineLength * 0.5, lineLength * 0.75, lineLength"
+          },
+          "position": {
+            "x": 40,
+            "y": 1750
+          }
+        },
+        {
+          "id": "poly_pts_x",
+          "type": "ListConstant",
+          "data": {
+            "values": "0, lineSpacing * 0.5, lineSpacing, lineSpacing * 0.5, 0"
+          },
+          "position": {
+            "x": 40,
+            "y": 1940
+          }
+        },
+        {
+          "id": "poly_pts_x_2",
+          "type": "PointsFromLists",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 230
+          }
+        },
+        {
+          "id": "final_roof",
+          "type": "Translate",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "color": "#f87171",
+            "z": "col_height"
+          },
+          "position": {
+            "x": 960,
+            "y": 40
+          }
+        },
+        {
+          "id": "col_primitive",
+          "type": "Cylinder",
+          "data": {
+            "radius": "colRadius",
+            "height": "col_height",
+            "color": "#94a3b8"
+          },
+          "position": {
+            "x": 40,
+            "y": 230
+          }
+        },
+        {
+          "id": "roof_poly_curve",
+          "type": "PolylineCurve",
+          "data": {
+            "closed": true,
+            "color": "#f87171"
+          },
+          "position": {
+            "x": 500,
+            "y": 230
+          }
+        },
+        {
+          "id": "roof_extruded_curve",
+          "type": "ExtrudeCurve",
+          "data": {
+            "height": "lineLength * 0.1",
+            "color": "#f87171"
+          },
+          "position": {
+            "x": 730,
+            "y": 230
+          }
+        }
+      ],
+      "edges": [
+        {
+          "source": "p1_start",
+          "sourceHandle": "point",
+          "target": "line1",
+          "targetHandle": "a",
+          "id": "e_p1_start_line1_a"
+        },
+        {
+          "source": "p1_end",
+          "sourceHandle": "point",
+          "target": "line1",
+          "targetHandle": "b",
+          "id": "e_p1_end_line1_b"
+        },
+        {
+          "source": "p2_start",
+          "sourceHandle": "point",
+          "target": "line2",
+          "targetHandle": "a",
+          "id": "e_p2_start_line2_a"
+        },
+        {
+          "source": "p2_end",
+          "sourceHandle": "point",
+          "target": "line2",
+          "targetHandle": "b",
+          "id": "e_p2_end_line2_b"
+        },
+        {
+          "source": "line1",
+          "sourceHandle": "curve",
+          "target": "pts1",
+          "targetHandle": "curve",
+          "id": "e_line1_pts1_curve"
+        },
+        {
+          "source": "line2",
+          "sourceHandle": "curve",
+          "target": "pts2",
+          "targetHandle": "curve",
+          "id": "e_line2_pts2_curve"
+        },
+        {
+          "source": "pts1",
+          "sourceHandle": "points",
+          "target": "cols1",
+          "targetHandle": "points",
+          "id": "e_pts1_cols1_points"
+        },
+        {
+          "source": "pts2",
+          "sourceHandle": "points",
+          "target": "cols2",
+          "targetHandle": "points",
+          "id": "e_pts2_cols2_points"
+        },
+        {
+          "source": "cols1",
+          "sourceHandle": "solid",
+          "target": "columns",
+          "targetHandle": "target",
+          "id": "e_cols1_columns_target"
+        },
+        {
+          "source": "cols2",
+          "sourceHandle": "solid",
+          "target": "columns",
+          "targetHandle": "tool",
+          "id": "e_cols2_columns_tool"
+        },
+        {
+          "source": "poly_pts",
+          "sourceHandle": "values",
+          "target": "poly_pts_x_2",
+          "targetHandle": "x",
+          "id": "e_poly_pts_poly_pts_x_2_x"
+        },
+        {
+          "source": "poly_pts_x",
+          "sourceHandle": "values",
+          "target": "poly_pts_x_2",
+          "targetHandle": "y",
+          "id": "e_poly_pts_x_poly_pts_x_2_y"
+        },
+        {
+          "source": "col_height",
+          "sourceHandle": "value",
+          "target": "poly_pts_x_2",
+          "targetHandle": "z",
+          "id": "e_col_height_poly_pts_x_2_z"
+        },
+        {
+          "source": "col_height",
+          "sourceHandle": "value",
+          "target": "final_roof",
+          "targetHandle": "param:z",
+          "id": "e_col_height_final_roof_param:z"
+        },
+        {
+          "source": "col_primitive",
+          "target": "cols1",
+          "id": "e_col_primitive_cols1_shape",
+          "sourceHandle": "solid",
+          "targetHandle": "shape"
+        },
+        {
+          "source": "col_primitive",
+          "target": "cols2",
+          "id": "e_col_primitive_cols2_shape",
+          "sourceHandle": "solid",
+          "targetHandle": "shape"
+        },
+        {
+          "source": "poly_pts_x_2",
+          "target": "roof_poly_curve",
+          "id": "e_poly_pts_x_2_roof_poly_curve_points",
+          "sourceHandle": "points",
+          "targetHandle": "points"
+        },
+        {
+          "source": "roof_poly_curve",
+          "target": "roof_extruded_curve",
+          "id": "e_roof_poly_curve_roof_extruded_curve_curve",
+          "sourceHandle": "curve",
+          "targetHandle": "curve"
+        },
+        {
+          "source": "roof_extruded_curve",
+          "target": "final_roof",
+          "id": "e_roof_extruded_curve_final_roof_solid",
+          "sourceHandle": "solid",
+          "targetHandle": "solid"
+        }
+      ]
+    }
+  ]
+}

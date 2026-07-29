@@ -1,0 +1,59 @@
+{
+  "c33dExport": 2,
+  "exportedAt": "2026-07-24T19:49:55.392Z",
+  "comment": "fail",
+  "agent": {
+    "name": "Ollama (Local)",
+    "provider": "ollama",
+    "model": "minimax-m3:cloud"
+  },
+  "graph": {
+    "nodes": [],
+    "edges": []
+  },
+  "conversation": [
+    {
+      "role": "system",
+      "content": "Workspace cleared."
+    },
+    {
+      "role": "user",
+      "content": "make a robinhood"
+    },
+    {
+      "role": "system",
+      "content": "Response was not valid JSON (attempt 1/3) — asking the model to resend."
+    },
+    {
+      "role": "system",
+      "content": "Response was not valid JSON (attempt 2/3) — asking the model to resend."
+    },
+    {
+      "role": "assistant",
+      "content": "empty"
+    }
+  ],
+  "plan": "empty",
+  "genome": null,
+  "geometryReport": null,
+  "timeline": [
+    {
+      "at": "2026-07-24T19:49:55.384Z",
+      "turn": 1,
+      "trigger": "export",
+      "label": "state at export (includes any unrecorded manual edits)",
+      "nodeCount": 0,
+      "edgeCount": 0,
+      "isolatedCount": 0,
+      "diff": {
+        "addedNodes": [],
+        "removedNodes": [],
+        "changedNodes": [],
+        "addedEdges": 0,
+        "removedEdges": 0
+      },
+      "nodes": [],
+      "edges": []
+    }
+  ]
+}

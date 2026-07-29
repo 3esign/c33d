@@ -27,7 +27,11 @@ export function buildIrJsonSchema(): any {
       { type: 'number' },
       { type: 'string' },
       { type: 'boolean' },
-      { type: 'array', items: { anyOf: [{ type: 'number' }, { type: 'string' }] } },
+      // Lists: numbers/strings for data literals, objects for lists of inline
+      // constructors or {x,y,z} literals (compile.ts merges them via
+      // MergePoints/Compound). Constrained decoding must be able to express
+      // what the compiler now accepts, or the grammar silently forbids it.
+      { type: 'array', items: { anyOf: [{ type: 'number' }, { type: 'string' }, { type: 'object' }] } },
       // Ergonomic object forms (Jul 22): inline {"op":...,"args":{...}}
       // constructors and bare {"x","y","z"} point/vector literals — the
       // compiler auto-lifts both (compile.ts). Kept permissive here: per-op

@@ -653,13 +653,32 @@ export const SKILLS: Record<string, SkillDef> = {
   // ---------------- booleans / combine ----------------
   union: {
     name: 'union',
-    doc: 'fuse two solids',
-    args: { a: { kind: 'solid', required: true }, b: { kind: 'solid', required: true } },
+    doc: 'fuse solids into one watertight solid — two (a, b) or any number (parts: [...])',
+    args: {
+      a: { kind: 'solid' }, b: { kind: 'solid' },
+      parts: { kind: 'solid', doc: 'list of solids to fuse — any length' },
+    },
     returns: 'solid',
-    expand: (ctx) => solid(ctx, ctx.node('Boolean', {
-      params: { operation: 'union' },
-      inputs: { target: ctx.ref('a', 'solid'), tool: ctx.ref('b', 'solid') },
-    })),
+    expand: (ctx) => {
+      // N-ary fuse folds left through the binary Boolean node. Unlike compound
+      // this must stay a CHAIN (each fuse feeds the next), so it cannot use the
+      // 8-socket tree — fusing is a real kernel operation, not a grouping.
+      const listed = ctx.refList('parts', 'solid') ?? [];
+      const named = [ctx.refOpt('a', 'solid'), ctx.refOpt('b', 'solid')]
+        .filter((r): r is NonNullable<typeof r> => !!r);
+      const all = [...listed, ...named];
+      if (all.length >= 2) {
+        let acc = all[0];
+        for (let i = 1; i < all.length; i++) {
+          acc = ctx.out(ctx.node('Boolean', {
+            params: { operation: 'union' },
+            inputs: { target: acc, tool: all[i] },
+          }), 'solid', 'solid');
+        }
+        return acc;
+      }
+      return ctx.fail('union() needs at least two solids to fuse — pass a and b, or parts: ["$x","$y","$z"].');
+    },
   },
   difference: {
     name: 'difference',
@@ -683,18 +702,29 @@ export const SKILLS: Record<string, SkillDef> = {
   },
   compound: {
     name: 'compound',
-    doc: 'group up to 4 solids into one (no fusing)',
+    doc: 'group ANY number of solids into one (no fusing) — parts: ["$a","$b","$c", ...]',
     args: {
-      a: { kind: 'solid', required: true }, b: { kind: 'solid', required: true },
-      c: { kind: 'solid' }, d: { kind: 'solid' },
+      parts: { kind: 'solid', doc: 'list of solids to group — any length' },
+      a: { kind: 'solid' }, b: { kind: 'solid' }, c: { kind: 'solid' }, d: { kind: 'solid' },
+      e: { kind: 'solid' }, f: { kind: 'solid' }, g: { kind: 'solid' }, h: { kind: 'solid' },
     },
     returns: 'solid',
-    expand: (ctx) => solid(ctx, ctx.node('Compound', {
-      inputs: {
-        solid1: ctx.ref('a', 'solid'), solid2: ctx.ref('b', 'solid'),
-        solid3: ctx.refOpt('c', 'solid'), solid4: ctx.refOpt('d', 'solid'),
-      },
-    })),
+    expand: (ctx) => {
+      // Jul-25: assembly used to cap at 4 (a…d). Every object with more than
+      // four components died on its LAST line — one audit transcript shows a
+      // complete 73-step skeleton failing at `compound has no argument "e"`.
+      // `parts` takes any length; a…h remain as sugar. The underlying Compound
+      // node has always had 8 sockets, and combine() chains them beyond that.
+      const listed = ctx.refList('parts', 'solid') ?? [];
+      const named = (['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'] as const)
+        .map(k => ctx.refOpt(k, 'solid'))
+        .filter((r): r is NonNullable<typeof r> => !!r);
+      const all = [...listed, ...named];
+      if (all.length === 0) {
+        ctx.fail('compound() needs solids to group — pass parts: ["$roof", "$walls", "$floor"] (any length), or a/b/c/… for a few.');
+      }
+      return ctx.combine(all, 'solid');
+    },
   },
 };
 

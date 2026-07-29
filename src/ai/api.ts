@@ -1,4 +1,5 @@
 import { useStore } from '../store/useStore';
+import { currentSignal } from './abort';
 import type { AgentSlot } from '../store/useStore';
 
 // ---------- Shared message / tool types ----------
@@ -35,6 +36,12 @@ export interface ModelTurn {
 // charge — providers bill actual usage — and the one provider that checks
 // max_tokens against remaining credit upfront (OpenRouter, HTTP 402) is handled
 // by the affordability retry below, which recomputes a cap it can afford.
+// Every provider request carries the current run's abort signal, so pressing
+// Stop rejects in-flight HTTP instead of waiting out a 250-second completion.
+async function abortableFetch(input: RequestInfo | URL, init: RequestInit = {}): Promise<Response> {
+  return fetch(input, { ...init, signal: init.signal ?? currentSignal() });
+}
+
 const MAX_OUTPUT_TOKENS = 12000;
 const MIN_OUTPUT_TOKENS = 2000;
 
@@ -67,7 +74,7 @@ export async function listProviderModels(
 ): Promise<ProviderModelList> {
   if (provider === 'ollama') {
     const url = (apiKey || 'http://localhost:11434').trim().replace(/\/$/, '');
-    const r = await fetch(`${url}/api/tags`);
+    const r = await abortableFetch(`${url}/api/tags`);
     if (!r.ok) throw new Error(`Ollama ${r.status} ${r.statusText} — is Ollama running at ${url}?`);
     const d = await r.json();
     const models = (Array.isArray(d.models) ? d.models.map((m: any) => String(m.name)) : []).sort();
@@ -76,7 +83,7 @@ export async function listProviderModels(
 
   if (provider === 'gemini') {
     if (!apiKey) throw new Error('Enter your Gemini API key first, then load models.');
-    const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?pageSize=1000&key=${encodeURIComponent(apiKey)}`);
+    const r = await abortableFetch(`https://generativelanguage.googleapis.com/v1beta/models?pageSize=1000&key=${encodeURIComponent(apiKey)}`);
     if (!r.ok) throw new Error(`Gemini ${r.status} ${r.statusText}`);
     const d = await r.json();
     const models = ((d.models || []) as any[])
@@ -89,7 +96,7 @@ export async function listProviderModels(
 
   if (provider === 'openai') {
     if (!apiKey) throw new Error('Enter your OpenAI API key first, then load models.');
-    const r = await fetch('https://api.openai.com/v1/models', {
+    const r = await abortableFetch('https://api.openai.com/v1/models', {
       headers: { Authorization: `Bearer ${apiKey}` },
     });
     if (!r.ok) throw new Error(`OpenAI ${r.status} ${r.statusText}`);
@@ -106,7 +113,7 @@ export async function listProviderModels(
   }
 
   // OpenRouter: the models endpoint is public (a key is optional).
-  const r = await fetch(
+  const r = await abortableFetch(
     'https://openrouter.ai/api/v1/models',
     apiKey ? { headers: { Authorization: `Bearer ${apiKey}` } } : undefined,
   );
@@ -158,7 +165,7 @@ export async function chatCompletion(
       generationConfig: { responseMimeType: 'application/json', maxOutputTokens: MAX_OUTPUT_TOKENS }
     };
 
-    const response = await fetch(endpoint, {
+    const response = await abortableFetch(endpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
@@ -191,7 +198,7 @@ export async function chatCompletion(
       payload.format = opts?.responseSchema ?? 'json';
     }
 
-    let response = await fetch(endpoint, {
+    let response = await abortableFetch(endpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
@@ -199,7 +206,7 @@ export async function chatCompletion(
 
     if (!response.ok && opts?.responseSchema && payload.format !== 'json') {
       payload.format = 'json';
-      response = await fetch(endpoint, {
+      response = await abortableFetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
@@ -237,15 +244,15 @@ export async function chatCompletion(
     max_tokens: MAX_OUTPUT_TOKENS
   };
 
-  let response = await fetch(endpoint, { method: 'POST', headers, body: JSON.stringify(payload) });
+  let response = await abortableFetch(endpoint, { method: 'POST', headers, body: JSON.stringify(payload) });
   if (!response.ok) {
     if (payload.response_format?.type === 'json_schema') {
       payload.response_format = { type: 'json_object' };
-      response = await fetch(endpoint, { method: 'POST', headers, body: JSON.stringify(payload) });
+      response = await abortableFetch(endpoint, { method: 'POST', headers, body: JSON.stringify(payload) });
     }
     if (!response.ok) {
       delete payload.response_format;
-      response = await fetch(endpoint, { method: 'POST', headers, body: JSON.stringify(payload) });
+      response = await abortableFetch(endpoint, { method: 'POST', headers, body: JSON.stringify(payload) });
     }
   }
   if (!response.ok) throw new Error(`API Error: ${response.status} ${response.statusText}`);
@@ -372,7 +379,7 @@ async function openAIStyleToolCompletion(
     payload.max_tokens = MAX_OUTPUT_TOKENS;
   }
 
-  let response = await fetch(endpoint, {
+  let response = await abortableFetch(endpoint, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...extraHeaders },
     body: JSON.stringify(payload),
@@ -384,7 +391,7 @@ async function openAIStyleToolCompletion(
     const afford = errText.match(/afford (\d+)/);
     const cap = afford ? Math.max(MIN_OUTPUT_TOKENS, parseInt(afford[1], 10) - 200) : MIN_OUTPUT_TOKENS;
     payload.max_tokens = cap;
-    response = await fetch(endpoint, {
+    response = await abortableFetch(endpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', ...extraHeaders },
       body: JSON.stringify(payload),
@@ -466,7 +473,7 @@ async function geminiToolCompletion(
     }],
   };
 
-  const response = await fetch(endpoint, {
+  const response = await abortableFetch(endpoint, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
@@ -512,7 +519,7 @@ export async function chatCompletionVision(prompt: string, imageDataUrls: string
       contents: [{ role: 'user', parts }],
       generationConfig: { responseMimeType: 'application/json' },
     };
-    const response = await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+    const response = await abortableFetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
     if (!response.ok) throw new Error(`Gemini Vision Error: ${response.status}`);
     const data = await response.json();
     return data.candidates?.[0]?.content?.parts?.[0]?.text || '';
@@ -531,7 +538,7 @@ export async function chatCompletionVision(prompt: string, imageDataUrls: string
     if (!model.toLowerCase().includes('cloud')) {
       payload.format = 'json';
     }
-    const response = await fetch(`${url}/api/chat`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+    const response = await abortableFetch(`${url}/api/chat`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
     if (!response.ok) throw new Error(`Ollama Vision Error: ${response.status}`);
     const data = await response.json();
     return data.message?.content || '';
@@ -550,7 +557,7 @@ export async function chatCompletionVision(prompt: string, imageDataUrls: string
     ],
     response_format: { type: 'json_object' },
   };
-  const response = await fetch(endpoint, {
+  const response = await abortableFetch(endpoint, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${apiKey}` },
     body: JSON.stringify(payload),
@@ -568,7 +575,7 @@ export async function tryEmbed(text: string): Promise<number[] | null> {
     const { provider, apiKey } = activeAgent;
 
     if (provider === 'openai') {
-      const response = await fetch('https://api.openai.com/v1/embeddings', {
+      const response = await abortableFetch('https://api.openai.com/v1/embeddings', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${apiKey}` },
         body: JSON.stringify({ model: 'text-embedding-3-small', input: text.slice(0, 8000) }),
@@ -580,7 +587,7 @@ export async function tryEmbed(text: string): Promise<number[] | null> {
 
     if (provider === 'gemini') {
       const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/text-embedding-004:embedContent?key=${apiKey}`;
-      const response = await fetch(endpoint, {
+      const response = await abortableFetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ content: { parts: [{ text: text.slice(0, 8000) }] } }),
@@ -592,7 +599,7 @@ export async function tryEmbed(text: string): Promise<number[] | null> {
 
     if (provider === 'ollama') {
       const url = (apiKey || 'http://localhost:11434').replace(/\/$/, '');
-      const response = await fetch(`${url}/api/embeddings`, {
+      const response = await abortableFetch(`${url}/api/embeddings`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ model: 'nomic-embed-text', prompt: text.slice(0, 8000) }),

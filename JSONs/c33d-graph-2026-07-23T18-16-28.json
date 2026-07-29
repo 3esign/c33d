@@ -1,0 +1,4332 @@
+{
+  "c33dExport": 2,
+  "exportedAt": "2026-07-23T18:16:28.122Z",
+  "comment": "interesting shape but very primitive",
+  "agent": {
+    "name": "Ollama (Local)",
+    "provider": "ollama",
+    "model": "deepseek-v4-flash:cloud"
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "balloonRadius",
+        "type": "NumberSlider",
+        "data": {
+          "value": 10,
+          "label": "balloonRadius",
+          "min": 5,
+          "max": 20,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 40
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "envelopeHeight",
+        "type": "NumberSlider",
+        "data": {
+          "value": 12,
+          "label": "envelopeHeight",
+          "min": 6,
+          "max": 24,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 2130
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "basketWidth",
+        "type": "NumberSlider",
+        "data": {
+          "value": 4,
+          "label": "basketWidth",
+          "min": 2,
+          "max": 8,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 990
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "basketLength",
+        "type": "NumberSlider",
+        "data": {
+          "value": 4,
+          "label": "basketLength",
+          "min": 2,
+          "max": 8,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 610
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "basketHeight",
+        "type": "NumberSlider",
+        "data": {
+          "value": 2,
+          "label": "basketHeight",
+          "min": 1,
+          "max": 4,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 420
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "ropeCount",
+        "type": "NumberSlider",
+        "data": {
+          "value": 4,
+          "label": "ropeCount",
+          "min": 3,
+          "max": 8,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 3080
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "ropeThickness",
+        "type": "NumberSlider",
+        "data": {
+          "value": 0.3,
+          "label": "ropeThickness",
+          "min": 0.1,
+          "max": 1,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 3270
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "gap",
+        "type": "NumberSlider",
+        "data": {
+          "value": 1,
+          "label": "gap",
+          "min": 0.5,
+          "max": 3,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 2510
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "basketCenter",
+        "type": "Point",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": "basketHeight/2"
+        },
+        "position": {
+          "x": 40,
+          "y": 230
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "basket",
+        "type": "Box",
+        "data": {
+          "width": "basketWidth",
+          "length": "basketLength",
+          "height": "basketHeight",
+          "color": "#8B4513"
+        },
+        "position": {
+          "x": 270,
+          "y": 40
+        },
+        "measured": {
+          "width": 201,
+          "height": 312
+        }
+      },
+      {
+        "id": "bottomCenter",
+        "type": "Point",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": "basketHeight+gap"
+        },
+        "position": {
+          "x": 40,
+          "y": 1180
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "middleCenter",
+        "type": "Point",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": "basketHeight+gap+envelopeHeight*0.3"
+        },
+        "position": {
+          "x": 40,
+          "y": 2700
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "topCenter",
+        "type": "Point",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": "basketHeight+gap+envelopeHeight"
+        },
+        "position": {
+          "x": 40,
+          "y": 3460
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "bottomCircle",
+        "type": "VectorXYZ",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": 1
+        },
+        "position": {
+          "x": 40,
+          "y": 1370
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "bottomCircle_x",
+        "type": "CircleCurve",
+        "data": {
+          "radius": "balloonRadius*0.8"
+        },
+        "position": {
+          "x": 270,
+          "y": 420
+        },
+        "measured": {
+          "width": 201,
+          "height": 248
+        }
+      },
+      {
+        "id": "middleCircle",
+        "type": "VectorXYZ",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": 1
+        },
+        "position": {
+          "x": 40,
+          "y": 2890
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "middleCircle_x",
+        "type": "CircleCurve",
+        "data": {
+          "radius": "balloonRadius"
+        },
+        "position": {
+          "x": 270,
+          "y": 1180
+        },
+        "measured": {
+          "width": 201,
+          "height": 248
+        }
+      },
+      {
+        "id": "topCircle",
+        "type": "VectorXYZ",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": 1
+        },
+        "position": {
+          "x": 40,
+          "y": 3650
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "topCircle_x",
+        "type": "CircleCurve",
+        "data": {
+          "radius": 0.1
+        },
+        "position": {
+          "x": 270,
+          "y": 1370
+        },
+        "measured": {
+          "width": 201,
+          "height": 248
+        }
+      },
+      {
+        "id": "envelope",
+        "type": "LoftCurves",
+        "data": {
+          "ruled": false,
+          "closed": true,
+          "color": "#e74c3c"
+        },
+        "position": {
+          "x": 500,
+          "y": 230
+        },
+        "measured": {
+          "width": 192,
+          "height": 416
+        }
+      },
+      {
+        "id": "basketRimRadius",
+        "type": "Expression",
+        "data": {
+          "formula": "sqrt((basketWidth/2)^2 + (basketLength/2)^2)"
+        },
+        "position": {
+          "x": 40,
+          "y": 800
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "basketRimPoint",
+        "type": "Point",
+        "data": {
+          "y": 0,
+          "z": "basketHeight"
+        },
+        "position": {
+          "x": 270,
+          "y": 230
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "envelopeAttachRadius",
+        "type": "Expression",
+        "data": {
+          "formula": "balloonRadius*0.8"
+        },
+        "position": {
+          "x": 40,
+          "y": 1750
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "envelopeAttachZ",
+        "type": "Expression",
+        "data": {
+          "formula": "basketHeight+gap+envelopeHeight*0.2"
+        },
+        "position": {
+          "x": 40,
+          "y": 1940
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "envelopeAttachPoint",
+        "type": "Point",
+        "data": {
+          "y": 0
+        },
+        "position": {
+          "x": 270,
+          "y": 800
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "ropeLine",
+        "type": "Line",
+        "data": {},
+        "position": {
+          "x": 500,
+          "y": 40
+        },
+        "measured": {
+          "width": 177,
+          "height": 200
+        }
+      },
+      {
+        "id": "ropePipe",
+        "type": "Pipe",
+        "data": {
+          "radius": "ropeThickness"
+        },
+        "position": {
+          "x": 730,
+          "y": 40
+        },
+        "measured": {
+          "width": 201,
+          "height": 270
+        }
+      },
+      {
+        "id": "ropes",
+        "type": "CircularPattern",
+        "data": {
+          "count": "ropeCount",
+          "radius": 0,
+          "angle": 360,
+          "color": "#808080"
+        },
+        "position": {
+          "x": 960,
+          "y": 40
+        },
+        "measured": {
+          "width": 201,
+          "height": 450
+        }
+      },
+      {
+        "id": "burnerCenter",
+        "type": "Point",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": "basketHeight+0.5"
+        },
+        "position": {
+          "x": 40,
+          "y": 1560
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "burner",
+        "type": "Cone",
+        "data": {
+          "radius1": "basketWidth*0.125",
+          "radius2": "basketWidth*0.025",
+          "height": 1,
+          "color": "#FFA500"
+        },
+        "position": {
+          "x": 270,
+          "y": 610
+        },
+        "measured": {
+          "width": 201,
+          "height": 344
+        }
+      },
+      {
+        "id": "flameCenter",
+        "type": "Point",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": "basketHeight+1.5"
+        },
+        "position": {
+          "x": 40,
+          "y": 2320
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "flame",
+        "type": "Cone",
+        "data": {
+          "radius1": "basketWidth*0.075",
+          "radius2": 0,
+          "height": "basketHeight*0.25",
+          "color": "#FFFF00"
+        },
+        "position": {
+          "x": 270,
+          "y": 990
+        },
+        "measured": {
+          "width": 201,
+          "height": 344
+        }
+      }
+    ],
+    "edges": [
+      {
+        "source": "basketCenter",
+        "sourceHandle": "point",
+        "target": "basket",
+        "targetHandle": "center",
+        "id": "e_basketCenter_basket_center"
+      },
+      {
+        "source": "bottomCenter",
+        "sourceHandle": "point",
+        "target": "bottomCircle_x",
+        "targetHandle": "center",
+        "id": "e_bottomCenter_bottomCircle_x_center"
+      },
+      {
+        "source": "bottomCircle",
+        "sourceHandle": "vector",
+        "target": "bottomCircle_x",
+        "targetHandle": "normal",
+        "id": "e_bottomCircle_bottomCircle_x_normal"
+      },
+      {
+        "source": "middleCenter",
+        "sourceHandle": "point",
+        "target": "middleCircle_x",
+        "targetHandle": "center",
+        "id": "e_middleCenter_middleCircle_x_center"
+      },
+      {
+        "source": "middleCircle",
+        "sourceHandle": "vector",
+        "target": "middleCircle_x",
+        "targetHandle": "normal",
+        "id": "e_middleCircle_middleCircle_x_normal"
+      },
+      {
+        "source": "topCenter",
+        "sourceHandle": "point",
+        "target": "topCircle_x",
+        "targetHandle": "center",
+        "id": "e_topCenter_topCircle_x_center"
+      },
+      {
+        "source": "topCircle",
+        "sourceHandle": "vector",
+        "target": "topCircle_x",
+        "targetHandle": "normal",
+        "id": "e_topCircle_topCircle_x_normal"
+      },
+      {
+        "source": "bottomCircle_x",
+        "sourceHandle": "curve",
+        "target": "envelope",
+        "targetHandle": "curve1",
+        "id": "e_bottomCircle_x_envelope_curve1"
+      },
+      {
+        "source": "middleCircle_x",
+        "sourceHandle": "curve",
+        "target": "envelope",
+        "targetHandle": "curve2",
+        "id": "e_middleCircle_x_envelope_curve2"
+      },
+      {
+        "source": "topCircle_x",
+        "sourceHandle": "curve",
+        "target": "envelope",
+        "targetHandle": "curve3",
+        "id": "e_topCircle_x_envelope_curve3"
+      },
+      {
+        "source": "basketRimRadius",
+        "sourceHandle": "value",
+        "target": "basketRimPoint",
+        "targetHandle": "x",
+        "id": "e_basketRimRadius_basketRimPoint_x"
+      },
+      {
+        "source": "envelopeAttachRadius",
+        "sourceHandle": "value",
+        "target": "envelopeAttachPoint",
+        "targetHandle": "x",
+        "id": "e_envelopeAttachRadius_envelopeAttachPoint_x"
+      },
+      {
+        "source": "envelopeAttachZ",
+        "sourceHandle": "value",
+        "target": "envelopeAttachPoint",
+        "targetHandle": "z",
+        "id": "e_envelopeAttachZ_envelopeAttachPoint_z"
+      },
+      {
+        "source": "basketRimPoint",
+        "sourceHandle": "point",
+        "target": "ropeLine",
+        "targetHandle": "a",
+        "id": "e_basketRimPoint_ropeLine_a"
+      },
+      {
+        "source": "envelopeAttachPoint",
+        "sourceHandle": "point",
+        "target": "ropeLine",
+        "targetHandle": "b",
+        "id": "e_envelopeAttachPoint_ropeLine_b"
+      },
+      {
+        "source": "ropeLine",
+        "sourceHandle": "curve",
+        "target": "ropePipe",
+        "targetHandle": "path",
+        "id": "e_ropeLine_ropePipe_path"
+      },
+      {
+        "source": "ropePipe",
+        "sourceHandle": "solid",
+        "target": "ropes",
+        "targetHandle": "solid",
+        "id": "e_ropePipe_ropes_solid"
+      },
+      {
+        "source": "burnerCenter",
+        "sourceHandle": "point",
+        "target": "burner",
+        "targetHandle": "center",
+        "id": "e_burnerCenter_burner_center"
+      },
+      {
+        "source": "flameCenter",
+        "sourceHandle": "point",
+        "target": "flame",
+        "targetHandle": "center",
+        "id": "e_flameCenter_flame_center"
+      }
+    ]
+  },
+  "conversation": [
+    {
+      "role": "system",
+      "content": "Workspace cleared."
+    },
+    {
+      "role": "user",
+      "content": "make a hot air balloon "
+    },
+    {
+      "role": "system",
+      "content": "IR program had compile errors (attempt 1/3) — asking the model to fix."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline vector() from \"ellipseCurve.normal\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"vector\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "assistant",
+      "content": "A parametric hot air balloon with envelope, basket, ropes, and burner."
+    },
+    {
+      "role": "system",
+      "content": "Issues detected (auto-repair 2/2): Node \"envelope\" failed: RevolveCurve failed: face.revolve is not a function. The profile must not cross the revolve axis.; Leaf \"envelope\" could not be meshed: Node \"envelope\" (RevolveCurve) produced no geometry despite connected inputs — likely invalid parameters (e.g. zero/negative size, self-intersecting fillet)..; Leaf \"envelopePlaced\" could not be meshed: Node \"envelopePlaced\" (Translate) is null because its input(s) came from failed upstream node(s): envelope. Fix the upstream node first.."
+    },
+    {
+      "role": "assistant",
+      "content": "The envelope revolve failed because the ellipse profile crossed the Z axis. Replaced with a spline profile (half-teardrop) that stays on one side. Also updated literal parameters to slider formulas to improve parametric coverage."
+    },
+    {
+      "role": "system",
+      "content": "Auto-repair limit reached. Remaining issues: Node \"newEnvelope\" failed: RevolveCurve failed: face.revolve is not a function. The profile must not cross the revolve axis. | Leaf \"newEnvelope\" could not be meshed: Node \"newEnvelope\" (RevolveCurve) produced no geometry despite connected inputs — likely invalid parameters (e.g. zero/negative size,"
+    },
+    {
+      "role": "user",
+      "content": "makes no sense this 3d model"
+    },
+    {
+      "role": "system",
+      "content": "IR program had compile errors (attempt 1/3) — asking the model to fix."
+    },
+    {
+      "role": "assistant",
+      "content": "A parametric hot air balloon with a teardrop envelope, rectangular basket, radial ropes, burner, and flame."
+    },
+    {
+      "role": "system",
+      "content": "Issues detected (auto-repair 2/2): Node \"envelope\" failed: RevolveCurve failed: face.revolve is not a function. The profile must not cross the revolve axis.; Leaf \"envelope\" could not be meshed: Node \"envelope\" (RevolveCurve) produced no geometry despite connected inputs — likely invalid parameters (e.g. zero/negative size, self-intersecting fillet).."
+    },
+    {
+      "role": "assistant",
+      "content": "The RevolveCurve failed because the profile curve crossed the revolve axis (spline overshoot) and the ListConstant nodes did not evaluate slider formulas. Replaced with LoftCurves using three circles at different heights, which creates a teardrop shape reliably. Updated envelopeAttachPoint to world coordinates. All sliders now drive dimensions."
+    },
+    {
+      "role": "system",
+      "content": "[Patch] 4 removedEdgeIds entries matched NO edge (already gone or never existed) — nothing was removed for: profileX->profilePoints; profileZ->profilePoints; profilePoints->profileCurve; profileCurve->envelope. This usually means those edges were already dropped or renamed — do NOT keep retrying them. Use the edge ids shown in the graph state, {\"source\",\"target\"} objects, or \"source->target\" strings."
+    },
+    {
+      "role": "system",
+      "content": "Structural validation error (does not count against repair budget, 1/3): \"envelope\" (LoftCurves) needs at least 2 connected inputs (has 0). Connect its curve1/curve2/curve3/curve4/curve5/curve6 handles. | Dropped invalid edge: bottomCircleCenter → bottomCircle.param:center (\"CircleCurve\" has no numeric param \"center\" (it accepts — geometry inputs: center, normal;"
+    },
+    {
+      "role": "assistant",
+      "content": "Fixed edge connections: CircleCurve accepts center as a geometry input (not param), and LoftCurves accepts curve1..curve6 as geometry inputs. Also connected envelopeAttachZ expression output to envelopeAttachPoint.z via an edge instead of an invalid formula reference. All sliders are now wired."
+    },
+    {
+      "role": "user",
+      "content": "go on try harder try better"
+    },
+    {
+      "role": "assistant",
+      "content": "A parametric hot air balloon with a teardrop envelope, rectangular basket, radial ropes, burner, and flame, all driven by sliders."
+    }
+  ],
+  "plan": "",
+  "genome": null,
+  "geometryReport": {
+    "leaves": [
+      {
+        "id": "basket",
+        "bbox": {
+          "min": [
+            -2.0000001000000003,
+            -2.0000001000000003,
+            -1.0000000015700924e-7
+          ],
+          "max": [
+            2.0000001000000003,
+            2.0000001000000003,
+            2.0000001000000003
+          ],
+          "center": [
+            0,
+            0,
+            1.0000000000000002
+          ],
+          "size": [
+            4.000000200000001,
+            4.000000200000001,
+            2.0000002000000006
+          ]
+        },
+        "volume": 31.999999999999993,
+        "meshOk": true,
+        "vertexCount": 24,
+        "error": null
+      },
+      {
+        "id": "burner",
+        "bbox": {
+          "min": [
+            -0.573293147344067,
+            -0.573293147344067,
+            1.926706852655933
+          ],
+          "max": [
+            0.573293147344067,
+            0.573293147344067,
+            3.0732931473440672
+          ],
+          "center": [
+            0,
+            0,
+            2.5
+          ],
+          "size": [
+            1.146586294688134,
+            1.146586294688134,
+            1.1465862946881342
+          ]
+        },
+        "volume": 0.32463124087094536,
+        "meshOk": true,
+        "vertexCount": 36,
+        "error": null
+      },
+      {
+        "id": "flame",
+        "bbox": {
+          "min": [
+            -0.37742177781611963,
+            -0.3372293989514513,
+            3.1725782221838803
+          ],
+          "max": [
+            0.37742177781611963,
+            0.3372293989514513,
+            3.8274217778161197
+          ],
+          "center": [
+            0,
+            0,
+            3.5
+          ],
+          "size": [
+            0.7548435556322393,
+            0.6744587979029026,
+            0.6548435556322394
+          ]
+        },
+        "volume": 0.047281493035301984,
+        "meshOk": true,
+        "vertexCount": 28,
+        "error": null
+      },
+      {
+        "id": "envelope",
+        "bbox": {
+          "min": [
+            -10.1645435762141,
+            -10.171509691192552,
+            2.827901547382121
+          ],
+          "max": [
+            10.164543576214129,
+            10.171509691192554,
+            15.288439924053119
+          ],
+          "center": [
+            1.4210854715202004e-14,
+            1.7763568394002505e-15,
+            9.05817073571762
+          ],
+          "size": [
+            20.32908715242823,
+            20.34301938238511,
+            12.460538376670998
+          ]
+        },
+        "volume": 2006.8321592843843,
+        "meshOk": true,
+        "vertexCount": 1204,
+        "error": null
+      },
+      {
+        "id": "ropes",
+        "bbox": {
+          "min": [
+            -0.30000010000000044,
+            -0.30000010000000044,
+            -0.25980772113533207
+          ],
+          "max": [
+            0.30000010000000044,
+            0.30000010000000044,
+            2.259807721135332
+          ],
+          "center": [
+            0,
+            0,
+            1
+          ],
+          "size": [
+            0.6000002000000009,
+            0.6000002000000009,
+            2.519615442270664
+          ]
+        },
+        "volume": 6.018531076210112e-34,
+        "meshOk": true,
+        "vertexCount": 112,
+        "error": null
+      }
+    ],
+    "nodeErrors": [],
+    "numbers": {
+      "balloonRadius": 10,
+      "envelopeHeight": 12,
+      "basketWidth": 4,
+      "basketLength": 4,
+      "basketHeight": 2,
+      "ropeCount": 4,
+      "ropeThickness": 0.3,
+      "gap": 1,
+      "envelopeAttachRadius": 8,
+      "basketRimRadius": 2.8284271247461903,
+      "envelopeAttachZ": 5.4
+    },
+    "sliders": {
+      "balloonRadius": 10,
+      "envelopeHeight": 12,
+      "basketWidth": 4,
+      "basketLength": 4,
+      "basketHeight": 2,
+      "ropeCount": 4,
+      "ropeThickness": 0.3,
+      "gap": 1
+    },
+    "selections": {},
+    "helpers": {
+      "bottomCircle": {
+        "type": "Vector",
+        "x": 0,
+        "y": 0,
+        "z": 1,
+        "sourceNodeId": "bottomCircle",
+        "ancestorNodeIds": []
+      },
+      "middleCircle": {
+        "type": "Vector",
+        "x": 0,
+        "y": 0,
+        "z": 1,
+        "sourceNodeId": "middleCircle",
+        "ancestorNodeIds": []
+      },
+      "topCircle": {
+        "type": "Vector",
+        "x": 0,
+        "y": 0,
+        "z": 1,
+        "sourceNodeId": "topCircle",
+        "ancestorNodeIds": []
+      },
+      "basketCenter": {
+        "type": "Point",
+        "x": 0,
+        "y": 0,
+        "z": 1,
+        "sourceNodeId": "basketCenter",
+        "ancestorNodeIds": []
+      },
+      "burnerCenter": {
+        "type": "Point",
+        "x": 0,
+        "y": 0,
+        "z": 2.5,
+        "sourceNodeId": "burnerCenter",
+        "ancestorNodeIds": []
+      },
+      "flameCenter": {
+        "type": "Point",
+        "x": 0,
+        "y": 0,
+        "z": 3.5,
+        "sourceNodeId": "flameCenter",
+        "ancestorNodeIds": []
+      },
+      "bottomCenter": {
+        "type": "Point",
+        "x": 0,
+        "y": 0,
+        "z": 3,
+        "sourceNodeId": "bottomCenter",
+        "ancestorNodeIds": []
+      },
+      "middleCenter": {
+        "type": "Point",
+        "x": 0,
+        "y": 0,
+        "z": 6.6,
+        "sourceNodeId": "middleCenter",
+        "ancestorNodeIds": []
+      },
+      "topCenter": {
+        "type": "Point",
+        "x": 0,
+        "y": 0,
+        "z": 15,
+        "sourceNodeId": "topCenter",
+        "ancestorNodeIds": []
+      },
+      "basketRimPoint": {
+        "type": "Point",
+        "x": 0,
+        "y": 0,
+        "z": 2,
+        "sourceNodeId": "basketRimPoint",
+        "ancestorNodeIds": []
+      },
+      "envelopeAttachPoint": {
+        "type": "Point",
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "sourceNodeId": "envelopeAttachPoint",
+        "ancestorNodeIds": []
+      }
+    },
+    "nodeCount": 32,
+    "edgeCount": 19,
+    "transformCount": 2,
+    "nodesPerLeafRatio": 6.4,
+    "nodeEconomyWarning": false,
+    "placement": {
+      "anchored": [
+        "basket",
+        "burner",
+        "flame",
+        "envelope",
+        "ropes"
+      ],
+      "literal": [],
+      "origin": [],
+      "literalNodeIds": [],
+      "ratio": 1
+    },
+    "scene": {
+      "min": [
+        -10.1645435762141,
+        -10.171509691192552,
+        -0.25980772113533207
+      ],
+      "max": [
+        10.164543576214129,
+        10.171509691192554,
+        15.288439924053119
+      ],
+      "size": [
+        20.32908715242823,
+        20.34301938238511,
+        15.54824764518845
+      ]
+    },
+    "meshedLeafCount": 5,
+    "kernelFaultCount": 0,
+    "kernelSuspect": false,
+    "kernelHealth": "ok",
+    "evalCount": 6,
+    "recycleRecommended": false,
+    "perturbationIssues": [
+      "At basketWidth decrease (0.6x), \"burner\" detaches from \"flame\". Check that their positions are driven by formulas or Align rather than absolute coordinates.",
+      "At basketWidth increase (1.5x), \"burner\" detaches from \"flame\". Check that their positions are driven by formulas or Align rather than absolute coordinates.",
+      "At balloonRadius decrease (0.6x), \"flame\" shifts non-proportionally relative to the assembly center (deviation 10%). Derive its position from the driver sliders or use Align.",
+      "At balloonRadius increase (1.5x), \"flame\" shifts non-proportionally relative to the assembly center (deviation 9%). Derive its position from the driver sliders or use Align.",
+      "At basketHeight decrease (0.6x), \"burner\" detaches from \"flame\". Check that their positions are driven by formulas or Align rather than absolute coordinates.",
+      "At basketHeight decrease (0.6x), \"burner\" shifts non-proportionally relative to the assembly center (deviation 10%). Derive its position from the driver sliders or use Align.",
+      "At basketHeight decrease (0.6x), \"flame\" shifts non-proportionally relative to the assembly center (deviation 12%). Derive its position from the driver sliders or use Align.",
+      "At basketHeight increase (1.5x), \"burner\" detaches from \"flame\". Check that their positions are driven by formulas or Align rather than absolute coordinates."
+    ],
+    "proportionalIntegrity": 0
+  },
+  "timeline": [
+    {
+      "at": "2026-07-23T09:42:08.194Z",
+      "turn": 1,
+      "trigger": "ai-ir",
+      "label": "attempt 2: rebuilt graph (30 nodes)",
+      "nodeCount": 30,
+      "edgeCount": 17,
+      "isolatedCount": 8,
+      "diff": {
+        "addedNodes": [
+          "balloonRadius",
+          "envelopeHeight",
+          "basketWidth",
+          "basketLength",
+          "basketHeight",
+          "ropeCount",
+          "ropeThickness",
+          "gap",
+          "envelopeRadiusZ",
+          "envelopeCenterZ",
+          "basketCenterZ",
+          "basketRimRadius",
+          "envelopeAttachX",
+          "envelopeAttachZ",
+          "basketRimPoint",
+          "envelopeAttachPoint",
+          "ropeLine",
+          "rope",
+          "ropes",
+          "ellipseCurve",
+          "ellipseCurve_normal",
+          "ellipseCurve_x",
+          "envelope",
+          "envelopePlaced",
+          "basket",
+          "basketPlaced",
+          "burner",
+          "burnerPlaced",
+          "flame",
+          "flamePlaced"
+        ],
+        "removedNodes": [],
+        "changedNodes": [],
+        "addedEdges": 17,
+        "removedEdges": 0
+      },
+      "details": [
+        "warning: Dead design parameters: sliders \"envelopeHeight\", \"gap\" are not referenced by any formula or edge — moving them changes nothing. Wire dimensions to them or remove them.",
+        "warning: PARAMETRIC COVERAGE IS LOW (57%): Only 8 of 14 dimensions are driven by slider-based formulas or edges. Hard-coded literals will break design scalability when sliders move. Please rewrite these bare literals as formulas of your sliders: ropes.angle=360, envelope.angle=360, burner.radius1=0."
+      ],
+      "nodes": [
+        {
+          "id": "balloonRadius",
+          "type": "NumberSlider",
+          "data": {
+            "value": 10,
+            "label": "balloonRadius",
+            "min": 5,
+            "max": 20,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 40
+          }
+        },
+        {
+          "id": "envelopeHeight",
+          "type": "NumberSlider",
+          "data": {
+            "value": 12,
+            "label": "envelopeHeight",
+            "min": 6,
+            "max": 24,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 2510
+          }
+        },
+        {
+          "id": "basketWidth",
+          "type": "NumberSlider",
+          "data": {
+            "value": 4,
+            "label": "basketWidth",
+            "min": 2,
+            "max": 8,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 1180
+          }
+        },
+        {
+          "id": "basketLength",
+          "type": "NumberSlider",
+          "data": {
+            "value": 4,
+            "label": "basketLength",
+            "min": 2,
+            "max": 8,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 800
+          }
+        },
+        {
+          "id": "basketHeight",
+          "type": "NumberSlider",
+          "data": {
+            "value": 2,
+            "label": "basketHeight",
+            "min": 1,
+            "max": 4,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 610
+          }
+        },
+        {
+          "id": "ropeCount",
+          "type": "NumberSlider",
+          "data": {
+            "value": 4,
+            "label": "ropeCount",
+            "min": 3,
+            "max": 8,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 3270
+          }
+        },
+        {
+          "id": "ropeThickness",
+          "type": "NumberSlider",
+          "data": {
+            "value": 0.3,
+            "label": "ropeThickness",
+            "min": 0.1,
+            "max": 1,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 3460
+          }
+        },
+        {
+          "id": "gap",
+          "type": "NumberSlider",
+          "data": {
+            "value": 1,
+            "label": "gap",
+            "min": 0.5,
+            "max": 3,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 3080
+          }
+        },
+        {
+          "id": "envelopeRadiusZ",
+          "type": "Expression",
+          "data": {
+            "formula": "envelopeHeight/2"
+          },
+          "position": {
+            "x": 40,
+            "y": 2700
+          }
+        },
+        {
+          "id": "envelopeCenterZ",
+          "type": "Expression",
+          "data": {
+            "formula": "basketHeight + gap + envelopeRadiusZ"
+          },
+          "position": {
+            "x": 40,
+            "y": 2320
+          }
+        },
+        {
+          "id": "basketCenterZ",
+          "type": "Expression",
+          "data": {
+            "formula": "basketHeight/2"
+          },
+          "position": {
+            "x": 40,
+            "y": 420
+          }
+        },
+        {
+          "id": "basketRimRadius",
+          "type": "Expression",
+          "data": {
+            "formula": "sqrt((basketWidth/2)^2 + (basketLength/2)^2)"
+          },
+          "position": {
+            "x": 40,
+            "y": 990
+          }
+        },
+        {
+          "id": "envelopeAttachX",
+          "type": "Expression",
+          "data": {
+            "formula": "balloonRadius * 0.7"
+          },
+          "position": {
+            "x": 40,
+            "y": 1940
+          }
+        },
+        {
+          "id": "envelopeAttachZ",
+          "type": "Expression",
+          "data": {
+            "formula": "envelopeCenterZ - envelopeRadiusZ * 0.5"
+          },
+          "position": {
+            "x": 40,
+            "y": 2130
+          }
+        },
+        {
+          "id": "basketRimPoint",
+          "type": "Point",
+          "data": {
+            "y": 0,
+            "z": "basketHeight"
+          },
+          "position": {
+            "x": 270,
+            "y": 230
+          }
+        },
+        {
+          "id": "envelopeAttachPoint",
+          "type": "Point",
+          "data": {
+            "y": 0
+          },
+          "position": {
+            "x": 270,
+            "y": 800
+          }
+        },
+        {
+          "id": "ropeLine",
+          "type": "Line",
+          "data": {},
+          "position": {
+            "x": 500,
+            "y": 40
+          }
+        },
+        {
+          "id": "rope",
+          "type": "Pipe",
+          "data": {
+            "radius": "ropeThickness"
+          },
+          "position": {
+            "x": 730,
+            "y": 40
+          }
+        },
+        {
+          "id": "ropes",
+          "type": "CircularPattern",
+          "data": {
+            "count": "ropeCount",
+            "radius": 0,
+            "angle": 360,
+            "color": "#808080"
+          },
+          "position": {
+            "x": 960,
+            "y": 40
+          }
+        },
+        {
+          "id": "ellipseCurve",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "position": {
+            "x": 40,
+            "y": 1560
+          }
+        },
+        {
+          "id": "ellipseCurve_normal",
+          "type": "VectorXYZ",
+          "data": {
+            "x": 0,
+            "y": 1,
+            "z": 0
+          },
+          "position": {
+            "x": 40,
+            "y": 1750
+          }
+        },
+        {
+          "id": "ellipseCurve_x",
+          "type": "EllipseCurve",
+          "data": {
+            "radiusX": "balloonRadius"
+          },
+          "position": {
+            "x": 270,
+            "y": 610
+          }
+        },
+        {
+          "id": "envelope",
+          "type": "RevolveCurve",
+          "data": {
+            "angle": 360,
+            "axis": "Z"
+          },
+          "position": {
+            "x": 500,
+            "y": 230
+          }
+        },
+        {
+          "id": "envelopePlaced",
+          "type": "Translate",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "color": "#e74c3c"
+          },
+          "position": {
+            "x": 730,
+            "y": 230
+          }
+        },
+        {
+          "id": "basket",
+          "type": "Box",
+          "data": {
+            "width": "basketWidth",
+            "length": "basketLength",
+            "height": "basketHeight"
+          },
+          "position": {
+            "x": 40,
+            "y": 230
+          }
+        },
+        {
+          "id": "basketPlaced",
+          "type": "Translate",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "color": "#8B4513"
+          },
+          "position": {
+            "x": 270,
+            "y": 40
+          }
+        },
+        {
+          "id": "burner",
+          "type": "Cone",
+          "data": {
+            "radius1": 0.5,
+            "radius2": 0.1,
+            "height": 1
+          },
+          "position": {
+            "x": 40,
+            "y": 1370
+          }
+        },
+        {
+          "id": "burnerPlaced",
+          "type": "Translate",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "basketHeight",
+            "color": "#FFA500"
+          },
+          "position": {
+            "x": 270,
+            "y": 420
+          }
+        },
+        {
+          "id": "flame",
+          "type": "Cone",
+          "data": {
+            "radius1": 0.3,
+            "radius2": 0,
+            "height": 0.5
+          },
+          "position": {
+            "x": 40,
+            "y": 2890
+          }
+        },
+        {
+          "id": "flamePlaced",
+          "type": "Translate",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "basketHeight + 1",
+            "color": "#FFFF00"
+          },
+          "position": {
+            "x": 270,
+            "y": 990
+          }
+        }
+      ],
+      "edges": [
+        {
+          "source": "basketRimRadius",
+          "sourceHandle": "value",
+          "target": "basketRimPoint",
+          "targetHandle": "x",
+          "id": "e_basketRimRadius_basketRimPoint_x"
+        },
+        {
+          "source": "envelopeAttachX",
+          "sourceHandle": "value",
+          "target": "envelopeAttachPoint",
+          "targetHandle": "x",
+          "id": "e_envelopeAttachX_envelopeAttachPoint_x"
+        },
+        {
+          "source": "envelopeAttachZ",
+          "sourceHandle": "value",
+          "target": "envelopeAttachPoint",
+          "targetHandle": "z",
+          "id": "e_envelopeAttachZ_envelopeAttachPoint_z"
+        },
+        {
+          "source": "basketRimPoint",
+          "sourceHandle": "point",
+          "target": "ropeLine",
+          "targetHandle": "a",
+          "id": "e_basketRimPoint_ropeLine_a"
+        },
+        {
+          "source": "envelopeAttachPoint",
+          "sourceHandle": "point",
+          "target": "ropeLine",
+          "targetHandle": "b",
+          "id": "e_envelopeAttachPoint_ropeLine_b"
+        },
+        {
+          "source": "ropeLine",
+          "sourceHandle": "curve",
+          "target": "rope",
+          "targetHandle": "path",
+          "id": "e_ropeLine_rope_path"
+        },
+        {
+          "source": "rope",
+          "sourceHandle": "solid",
+          "target": "ropes",
+          "targetHandle": "solid",
+          "id": "e_rope_ropes_solid"
+        },
+        {
+          "source": "envelopeRadiusZ",
+          "sourceHandle": "value",
+          "target": "ellipseCurve_x",
+          "targetHandle": "param:radiusY",
+          "id": "e_envelopeRadiusZ_ellipseCurve_x_param:radiusY"
+        },
+        {
+          "source": "ellipseCurve",
+          "sourceHandle": "point",
+          "target": "ellipseCurve_x",
+          "targetHandle": "center",
+          "id": "e_ellipseCurve_ellipseCurve_x_center"
+        },
+        {
+          "source": "ellipseCurve_normal",
+          "sourceHandle": "vector",
+          "target": "ellipseCurve_x",
+          "targetHandle": "normal",
+          "id": "e_ellipseCurve_normal_ellipseCurve_x_normal"
+        },
+        {
+          "source": "ellipseCurve_x",
+          "sourceHandle": "curve",
+          "target": "envelope",
+          "targetHandle": "profile",
+          "id": "e_ellipseCurve_x_envelope_profile"
+        },
+        {
+          "source": "envelopeCenterZ",
+          "sourceHandle": "value",
+          "target": "envelopePlaced",
+          "targetHandle": "param:z",
+          "id": "e_envelopeCenterZ_envelopePlaced_param:z"
+        },
+        {
+          "source": "envelope",
+          "sourceHandle": "solid",
+          "target": "envelopePlaced",
+          "targetHandle": "solid",
+          "id": "e_envelope_envelopePlaced_solid"
+        },
+        {
+          "source": "basketCenterZ",
+          "sourceHandle": "value",
+          "target": "basketPlaced",
+          "targetHandle": "param:z",
+          "id": "e_basketCenterZ_basketPlaced_param:z"
+        },
+        {
+          "source": "basket",
+          "sourceHandle": "solid",
+          "target": "basketPlaced",
+          "targetHandle": "solid",
+          "id": "e_basket_basketPlaced_solid"
+        },
+        {
+          "source": "burner",
+          "sourceHandle": "solid",
+          "target": "burnerPlaced",
+          "targetHandle": "solid",
+          "id": "e_burner_burnerPlaced_solid"
+        },
+        {
+          "source": "flame",
+          "sourceHandle": "solid",
+          "target": "flamePlaced",
+          "targetHandle": "solid",
+          "id": "e_flame_flamePlaced_solid"
+        }
+      ]
+    },
+    {
+      "at": "2026-07-23T09:42:41.373Z",
+      "turn": 1,
+      "trigger": "ai-repair",
+      "label": "attempt 3: added 6 node(s) [ListConstant, PointsFromLists, SplineCurve, RevolveCurve]; updated 4 node(s); removed 4 node(s); added 6 edge(s)",
+      "nodeCount": 32,
+      "edgeCount": 18,
+      "isolatedCount": 9,
+      "diff": {
+        "addedNodes": [
+          "profileXList",
+          "profileYList",
+          "profileZList",
+          "profilePoints",
+          "profileSpline",
+          "newEnvelope"
+        ],
+        "removedNodes": [
+          "ellipseCurve",
+          "ellipseCurve_normal",
+          "ellipseCurve_x",
+          "envelope"
+        ],
+        "changedNodes": [
+          "envelopePlaced",
+          "burner",
+          "flame"
+        ],
+        "addedEdges": 6,
+        "removedEdges": 5
+      },
+      "details": [
+        "warning: Dead design parameter: slider \"balloonRadius\" is not referenced by any formula or edge — moving it changes nothing. Wire dimensions to it or remove it.",
+        "warning: \"envelopeRadiusZ\" (Expression) computes a number/list wired to nothing — it renders no geometry and changes nothing. Wire its output into a consumer (PointsFromLists x/y/z, an Expression a/b/c/d input, or a param:) or remove it."
+      ],
+      "nodes": [
+        {
+          "id": "balloonRadius",
+          "type": "NumberSlider",
+          "data": {
+            "value": 10,
+            "label": "balloonRadius",
+            "min": 5,
+            "max": 20,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 40
+          }
+        },
+        {
+          "id": "envelopeHeight",
+          "type": "NumberSlider",
+          "data": {
+            "value": 12,
+            "label": "envelopeHeight",
+            "min": 6,
+            "max": 24,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 2130
+          }
+        },
+        {
+          "id": "basketWidth",
+          "type": "NumberSlider",
+          "data": {
+            "value": 4,
+            "label": "basketWidth",
+            "min": 2,
+            "max": 8,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 1180
+          }
+        },
+        {
+          "id": "basketLength",
+          "type": "NumberSlider",
+          "data": {
+            "value": 4,
+            "label": "basketLength",
+            "min": 2,
+            "max": 8,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 800
+          }
+        },
+        {
+          "id": "basketHeight",
+          "type": "NumberSlider",
+          "data": {
+            "value": 2,
+            "label": "basketHeight",
+            "min": 1,
+            "max": 4,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 610
+          }
+        },
+        {
+          "id": "ropeCount",
+          "type": "NumberSlider",
+          "data": {
+            "value": 4,
+            "label": "ropeCount",
+            "min": 3,
+            "max": 8,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 3460
+          }
+        },
+        {
+          "id": "ropeThickness",
+          "type": "NumberSlider",
+          "data": {
+            "value": 0.3,
+            "label": "ropeThickness",
+            "min": 0.1,
+            "max": 1,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 3650
+          }
+        },
+        {
+          "id": "gap",
+          "type": "NumberSlider",
+          "data": {
+            "value": 1,
+            "label": "gap",
+            "min": 0.5,
+            "max": 3,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 2700
+          }
+        },
+        {
+          "id": "envelopeRadiusZ",
+          "type": "Expression",
+          "data": {
+            "formula": "envelopeHeight/2"
+          },
+          "position": {
+            "x": 40,
+            "y": 2320
+          }
+        },
+        {
+          "id": "envelopeCenterZ",
+          "type": "Expression",
+          "data": {
+            "formula": "basketHeight + gap + envelopeRadiusZ"
+          },
+          "position": {
+            "x": 40,
+            "y": 1940
+          }
+        },
+        {
+          "id": "basketCenterZ",
+          "type": "Expression",
+          "data": {
+            "formula": "basketHeight/2"
+          },
+          "position": {
+            "x": 40,
+            "y": 420
+          }
+        },
+        {
+          "id": "basketRimRadius",
+          "type": "Expression",
+          "data": {
+            "formula": "sqrt((basketWidth/2)^2 + (basketLength/2)^2)"
+          },
+          "position": {
+            "x": 40,
+            "y": 990
+          }
+        },
+        {
+          "id": "envelopeAttachX",
+          "type": "Expression",
+          "data": {
+            "formula": "balloonRadius * 0.7"
+          },
+          "position": {
+            "x": 40,
+            "y": 1560
+          }
+        },
+        {
+          "id": "envelopeAttachZ",
+          "type": "Expression",
+          "data": {
+            "formula": "envelopeCenterZ - envelopeRadiusZ * 0.5"
+          },
+          "position": {
+            "x": 40,
+            "y": 1750
+          }
+        },
+        {
+          "id": "basketRimPoint",
+          "type": "Point",
+          "data": {
+            "y": 0,
+            "z": "basketHeight"
+          },
+          "position": {
+            "x": 270,
+            "y": 230
+          }
+        },
+        {
+          "id": "envelopeAttachPoint",
+          "type": "Point",
+          "data": {
+            "y": 0
+          },
+          "position": {
+            "x": 270,
+            "y": 610
+          }
+        },
+        {
+          "id": "ropeLine",
+          "type": "Line",
+          "data": {},
+          "position": {
+            "x": 500,
+            "y": 40
+          }
+        },
+        {
+          "id": "rope",
+          "type": "Pipe",
+          "data": {
+            "radius": "ropeThickness"
+          },
+          "position": {
+            "x": 730,
+            "y": 40
+          }
+        },
+        {
+          "id": "ropes",
+          "type": "CircularPattern",
+          "data": {
+            "count": "ropeCount",
+            "radius": 0,
+            "angle": 360,
+            "color": "#808080"
+          },
+          "position": {
+            "x": 960,
+            "y": 40
+          }
+        },
+        {
+          "id": "envelopePlaced",
+          "type": "Translate",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "color": "#e74c3c",
+            "z": "basketHeight + gap + envelopeHeight/2"
+          },
+          "position": {
+            "x": 960,
+            "y": 230
+          }
+        },
+        {
+          "id": "basket",
+          "type": "Box",
+          "data": {
+            "width": "basketWidth",
+            "length": "basketLength",
+            "height": "basketHeight"
+          },
+          "position": {
+            "x": 40,
+            "y": 230
+          }
+        },
+        {
+          "id": "basketPlaced",
+          "type": "Translate",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "color": "#8B4513"
+          },
+          "position": {
+            "x": 270,
+            "y": 40
+          }
+        },
+        {
+          "id": "burner",
+          "type": "Cone",
+          "data": {
+            "radius1": "basketWidth*0.125",
+            "radius2": "basketWidth*0.025",
+            "height": 1
+          },
+          "position": {
+            "x": 40,
+            "y": 1370
+          }
+        },
+        {
+          "id": "burnerPlaced",
+          "type": "Translate",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "basketHeight",
+            "color": "#FFA500"
+          },
+          "position": {
+            "x": 270,
+            "y": 420
+          }
+        },
+        {
+          "id": "flame",
+          "type": "Cone",
+          "data": {
+            "radius1": "basketWidth*0.075",
+            "radius2": 0,
+            "height": "basketHeight*0.25"
+          },
+          "position": {
+            "x": 40,
+            "y": 2510
+          }
+        },
+        {
+          "id": "flamePlaced",
+          "type": "Translate",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "basketHeight + 1",
+            "color": "#FFFF00"
+          },
+          "position": {
+            "x": 270,
+            "y": 800
+          }
+        },
+        {
+          "id": "profileXList",
+          "type": "ListConstant",
+          "data": {
+            "values": "0, balloonRadius, 0"
+          },
+          "position": {
+            "x": 40,
+            "y": 2890
+          }
+        },
+        {
+          "id": "profileYList",
+          "type": "ListConstant",
+          "data": {
+            "values": "0, 0, 0"
+          },
+          "position": {
+            "x": 40,
+            "y": 3080
+          }
+        },
+        {
+          "id": "profileZList",
+          "type": "ListConstant",
+          "data": {
+            "values": "0, envelopeHeight/2, envelopeHeight"
+          },
+          "position": {
+            "x": 40,
+            "y": 3270
+          }
+        },
+        {
+          "id": "profilePoints",
+          "type": "PointsFromLists",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 990
+          }
+        },
+        {
+          "id": "profileSpline",
+          "type": "SplineCurve",
+          "data": {
+            "closed": false
+          },
+          "position": {
+            "x": 500,
+            "y": 230
+          }
+        },
+        {
+          "id": "newEnvelope",
+          "type": "RevolveCurve",
+          "data": {
+            "angle": 360,
+            "axis": "Z"
+          },
+          "position": {
+            "x": 730,
+            "y": 230
+          }
+        }
+      ],
+      "edges": [
+        {
+          "source": "basketRimRadius",
+          "sourceHandle": "value",
+          "target": "basketRimPoint",
+          "targetHandle": "x",
+          "id": "e_basketRimRadius_basketRimPoint_x"
+        },
+        {
+          "source": "envelopeAttachX",
+          "sourceHandle": "value",
+          "target": "envelopeAttachPoint",
+          "targetHandle": "x",
+          "id": "e_envelopeAttachX_envelopeAttachPoint_x"
+        },
+        {
+          "source": "envelopeAttachZ",
+          "sourceHandle": "value",
+          "target": "envelopeAttachPoint",
+          "targetHandle": "z",
+          "id": "e_envelopeAttachZ_envelopeAttachPoint_z"
+        },
+        {
+          "source": "basketRimPoint",
+          "sourceHandle": "point",
+          "target": "ropeLine",
+          "targetHandle": "a",
+          "id": "e_basketRimPoint_ropeLine_a"
+        },
+        {
+          "source": "envelopeAttachPoint",
+          "sourceHandle": "point",
+          "target": "ropeLine",
+          "targetHandle": "b",
+          "id": "e_envelopeAttachPoint_ropeLine_b"
+        },
+        {
+          "source": "ropeLine",
+          "sourceHandle": "curve",
+          "target": "rope",
+          "targetHandle": "path",
+          "id": "e_ropeLine_rope_path"
+        },
+        {
+          "source": "rope",
+          "sourceHandle": "solid",
+          "target": "ropes",
+          "targetHandle": "solid",
+          "id": "e_rope_ropes_solid"
+        },
+        {
+          "source": "envelopeCenterZ",
+          "sourceHandle": "value",
+          "target": "envelopePlaced",
+          "targetHandle": "param:z",
+          "id": "e_envelopeCenterZ_envelopePlaced_param:z"
+        },
+        {
+          "source": "basketCenterZ",
+          "sourceHandle": "value",
+          "target": "basketPlaced",
+          "targetHandle": "param:z",
+          "id": "e_basketCenterZ_basketPlaced_param:z"
+        },
+        {
+          "source": "basket",
+          "sourceHandle": "solid",
+          "target": "basketPlaced",
+          "targetHandle": "solid",
+          "id": "e_basket_basketPlaced_solid"
+        },
+        {
+          "source": "burner",
+          "sourceHandle": "solid",
+          "target": "burnerPlaced",
+          "targetHandle": "solid",
+          "id": "e_burner_burnerPlaced_solid"
+        },
+        {
+          "source": "flame",
+          "sourceHandle": "solid",
+          "target": "flamePlaced",
+          "targetHandle": "solid",
+          "id": "e_flame_flamePlaced_solid"
+        },
+        {
+          "source": "profileXList",
+          "target": "profilePoints",
+          "sourceHandle": "values",
+          "targetHandle": "x",
+          "id": "e_profileXList_profilePoints_x"
+        },
+        {
+          "source": "profileYList",
+          "target": "profilePoints",
+          "sourceHandle": "values",
+          "targetHandle": "y",
+          "id": "e_profileYList_profilePoints_y"
+        },
+        {
+          "source": "profileZList",
+          "target": "profilePoints",
+          "sourceHandle": "values",
+          "targetHandle": "z",
+          "id": "e_profileZList_profilePoints_z"
+        },
+        {
+          "source": "profilePoints",
+          "target": "profileSpline",
+          "sourceHandle": "points",
+          "targetHandle": "points",
+          "id": "e_profilePoints_profileSpline_points"
+        },
+        {
+          "source": "profileSpline",
+          "target": "newEnvelope",
+          "sourceHandle": "curve",
+          "targetHandle": "profile",
+          "id": "e_profileSpline_newEnvelope_profile"
+        },
+        {
+          "source": "newEnvelope",
+          "target": "envelopePlaced",
+          "sourceHandle": "solid",
+          "targetHandle": "solid",
+          "id": "e_newEnvelope_envelopePlaced_solid"
+        }
+      ]
+    },
+    {
+      "at": "2026-07-23T12:11:05.900Z",
+      "turn": 2,
+      "trigger": "ai-ir",
+      "label": "attempt 2: rebuilt graph (27 nodes)",
+      "nodeCount": 27,
+      "edgeCount": 14,
+      "isolatedCount": 8,
+      "diff": {
+        "addedNodes": [
+          "envelopeAttachRadius",
+          "profileX",
+          "profileZ",
+          "profileCurve",
+          "envelope",
+          "basketCenter",
+          "singleRopeCurve",
+          "singleRope",
+          "burnerCenter",
+          "flameCenter"
+        ],
+        "removedNodes": [
+          "envelopeRadiusZ",
+          "envelopeCenterZ",
+          "basketCenterZ",
+          "envelopeAttachX",
+          "ropeLine",
+          "rope",
+          "envelopePlaced",
+          "basketPlaced",
+          "burnerPlaced",
+          "flamePlaced",
+          "profileXList",
+          "profileYList",
+          "profileZList",
+          "profileSpline",
+          "newEnvelope"
+        ],
+        "changedNodes": [
+          "envelopeAttachZ",
+          "basket",
+          "burner",
+          "flame"
+        ],
+        "addedEdges": 12,
+        "removedEdges": 16
+      },
+      "details": [
+        "warning: Dead design parameters: sliders \"balloonRadius\", \"envelopeHeight\", \"gap\" are not referenced by any formula or edge — moving them changes nothing. Wire dimensions to them or remove them."
+      ],
+      "nodes": [
+        {
+          "id": "balloonRadius",
+          "type": "NumberSlider",
+          "data": {
+            "value": 10,
+            "label": "balloonRadius",
+            "min": 5,
+            "max": 20,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 40
+          }
+        },
+        {
+          "id": "envelopeHeight",
+          "type": "NumberSlider",
+          "data": {
+            "value": 12,
+            "label": "envelopeHeight",
+            "min": 6,
+            "max": 24,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 1750
+          }
+        },
+        {
+          "id": "basketWidth",
+          "type": "NumberSlider",
+          "data": {
+            "value": 4,
+            "label": "basketWidth",
+            "min": 2,
+            "max": 8,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 990
+          }
+        },
+        {
+          "id": "basketLength",
+          "type": "NumberSlider",
+          "data": {
+            "value": 4,
+            "label": "basketLength",
+            "min": 2,
+            "max": 8,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 610
+          }
+        },
+        {
+          "id": "basketHeight",
+          "type": "NumberSlider",
+          "data": {
+            "value": 2,
+            "label": "basketHeight",
+            "min": 1,
+            "max": 4,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 420
+          }
+        },
+        {
+          "id": "ropeCount",
+          "type": "NumberSlider",
+          "data": {
+            "value": 4,
+            "label": "ropeCount",
+            "min": 3,
+            "max": 8,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 2700
+          }
+        },
+        {
+          "id": "ropeThickness",
+          "type": "NumberSlider",
+          "data": {
+            "value": 0.3,
+            "label": "ropeThickness",
+            "min": 0.1,
+            "max": 1,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 2890
+          }
+        },
+        {
+          "id": "gap",
+          "type": "NumberSlider",
+          "data": {
+            "value": 1,
+            "label": "gap",
+            "min": 0.5,
+            "max": 3,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 2130
+          }
+        },
+        {
+          "id": "basketRimRadius",
+          "type": "Expression",
+          "data": {
+            "formula": "sqrt((basketWidth/2)^2 + (basketLength/2)^2)"
+          },
+          "position": {
+            "x": 40,
+            "y": 800
+          }
+        },
+        {
+          "id": "envelopeAttachRadius",
+          "type": "Expression",
+          "data": {
+            "formula": "balloonRadius * 0.8"
+          },
+          "position": {
+            "x": 40,
+            "y": 1370
+          }
+        },
+        {
+          "id": "envelopeAttachZ",
+          "type": "Expression",
+          "data": {
+            "formula": "envelopeHeight * 0.2"
+          },
+          "position": {
+            "x": 40,
+            "y": 1560
+          }
+        },
+        {
+          "id": "profileX",
+          "type": "ListConstant",
+          "data": {
+            "values": "0, balloonRadius, balloonRadius*0.7, 0"
+          },
+          "position": {
+            "x": 40,
+            "y": 2320
+          }
+        },
+        {
+          "id": "profileZ",
+          "type": "ListConstant",
+          "data": {
+            "values": "0, envelopeHeight*0.3, envelopeHeight*0.7, envelopeHeight"
+          },
+          "position": {
+            "x": 40,
+            "y": 2510
+          }
+        },
+        {
+          "id": "profilePoints",
+          "type": "PointsFromLists",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 990
+          }
+        },
+        {
+          "id": "profileCurve",
+          "type": "SplineCurve",
+          "data": {
+            "closed": false
+          },
+          "position": {
+            "x": 500,
+            "y": 230
+          }
+        },
+        {
+          "id": "envelope",
+          "type": "RevolveCurve",
+          "data": {
+            "angle": 360,
+            "axis": "Z",
+            "color": "#e74c3c"
+          },
+          "position": {
+            "x": 730,
+            "y": 230
+          }
+        },
+        {
+          "id": "basketCenter",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "basketHeight/2"
+          },
+          "position": {
+            "x": 40,
+            "y": 230
+          }
+        },
+        {
+          "id": "basket",
+          "type": "Box",
+          "data": {
+            "width": "basketWidth",
+            "length": "basketLength",
+            "height": "basketHeight",
+            "color": "#8B4513"
+          },
+          "position": {
+            "x": 270,
+            "y": 40
+          }
+        },
+        {
+          "id": "basketRimPoint",
+          "type": "Point",
+          "data": {
+            "y": 0,
+            "z": "basketHeight"
+          },
+          "position": {
+            "x": 270,
+            "y": 230
+          }
+        },
+        {
+          "id": "envelopeAttachPoint",
+          "type": "Point",
+          "data": {
+            "y": 0
+          },
+          "position": {
+            "x": 270,
+            "y": 610
+          }
+        },
+        {
+          "id": "singleRopeCurve",
+          "type": "Line",
+          "data": {},
+          "position": {
+            "x": 500,
+            "y": 40
+          }
+        },
+        {
+          "id": "singleRope",
+          "type": "Pipe",
+          "data": {
+            "radius": "ropeThickness"
+          },
+          "position": {
+            "x": 730,
+            "y": 40
+          }
+        },
+        {
+          "id": "ropes",
+          "type": "CircularPattern",
+          "data": {
+            "count": "ropeCount",
+            "radius": 0,
+            "angle": 360,
+            "color": "#808080"
+          },
+          "position": {
+            "x": 960,
+            "y": 40
+          }
+        },
+        {
+          "id": "burnerCenter",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "basketHeight + 0.5"
+          },
+          "position": {
+            "x": 40,
+            "y": 1180
+          }
+        },
+        {
+          "id": "burner",
+          "type": "Cone",
+          "data": {
+            "radius1": "basketWidth*0.125",
+            "radius2": "basketWidth*0.025",
+            "height": 1,
+            "color": "#FFA500"
+          },
+          "position": {
+            "x": 270,
+            "y": 420
+          }
+        },
+        {
+          "id": "flameCenter",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "basketHeight + 1.5"
+          },
+          "position": {
+            "x": 40,
+            "y": 1940
+          }
+        },
+        {
+          "id": "flame",
+          "type": "Cone",
+          "data": {
+            "radius1": "basketWidth*0.075",
+            "radius2": 0,
+            "height": "basketHeight*0.25",
+            "color": "#FFFF00"
+          },
+          "position": {
+            "x": 270,
+            "y": 800
+          }
+        }
+      ],
+      "edges": [
+        {
+          "source": "profileX",
+          "sourceHandle": "values",
+          "target": "profilePoints",
+          "targetHandle": "x",
+          "id": "e_profileX_profilePoints_x"
+        },
+        {
+          "source": "profileZ",
+          "sourceHandle": "values",
+          "target": "profilePoints",
+          "targetHandle": "z",
+          "id": "e_profileZ_profilePoints_z"
+        },
+        {
+          "source": "profilePoints",
+          "sourceHandle": "points",
+          "target": "profileCurve",
+          "targetHandle": "points",
+          "id": "e_profilePoints_profileCurve_points"
+        },
+        {
+          "source": "profileCurve",
+          "sourceHandle": "curve",
+          "target": "envelope",
+          "targetHandle": "profile",
+          "id": "e_profileCurve_envelope_profile"
+        },
+        {
+          "source": "basketCenter",
+          "sourceHandle": "point",
+          "target": "basket",
+          "targetHandle": "center",
+          "id": "e_basketCenter_basket_center"
+        },
+        {
+          "source": "basketRimRadius",
+          "sourceHandle": "value",
+          "target": "basketRimPoint",
+          "targetHandle": "x",
+          "id": "e_basketRimRadius_basketRimPoint_x"
+        },
+        {
+          "source": "envelopeAttachRadius",
+          "sourceHandle": "value",
+          "target": "envelopeAttachPoint",
+          "targetHandle": "x",
+          "id": "e_envelopeAttachRadius_envelopeAttachPoint_x"
+        },
+        {
+          "source": "envelopeAttachZ",
+          "sourceHandle": "value",
+          "target": "envelopeAttachPoint",
+          "targetHandle": "z",
+          "id": "e_envelopeAttachZ_envelopeAttachPoint_z"
+        },
+        {
+          "source": "basketRimPoint",
+          "sourceHandle": "point",
+          "target": "singleRopeCurve",
+          "targetHandle": "a",
+          "id": "e_basketRimPoint_singleRopeCurve_a"
+        },
+        {
+          "source": "envelopeAttachPoint",
+          "sourceHandle": "point",
+          "target": "singleRopeCurve",
+          "targetHandle": "b",
+          "id": "e_envelopeAttachPoint_singleRopeCurve_b"
+        },
+        {
+          "source": "singleRopeCurve",
+          "sourceHandle": "curve",
+          "target": "singleRope",
+          "targetHandle": "path",
+          "id": "e_singleRopeCurve_singleRope_path"
+        },
+        {
+          "source": "singleRope",
+          "sourceHandle": "solid",
+          "target": "ropes",
+          "targetHandle": "solid",
+          "id": "e_singleRope_ropes_solid"
+        },
+        {
+          "source": "burnerCenter",
+          "sourceHandle": "point",
+          "target": "burner",
+          "targetHandle": "center",
+          "id": "e_burnerCenter_burner_center"
+        },
+        {
+          "source": "flameCenter",
+          "sourceHandle": "point",
+          "target": "flame",
+          "targetHandle": "center",
+          "id": "e_flameCenter_flame_center"
+        }
+      ]
+    },
+    {
+      "at": "2026-07-23T12:11:46.726Z",
+      "turn": 2,
+      "trigger": "ai-repair",
+      "label": "attempt 3: added 7 node(s) [Point, CircleCurve, LoftCurves]; updated 1 node(s); removed 5 node(s); added 6 edge(s); removed 4 edge(s)",
+      "nodeCount": 29,
+      "edgeCount": 10,
+      "isolatedCount": 15,
+      "diff": {
+        "addedNodes": [
+          "bottomCircleCenter",
+          "middleCircleCenter",
+          "topCircleCenter",
+          "bottomCircle",
+          "middleCircle",
+          "topCircle"
+        ],
+        "removedNodes": [
+          "profileX",
+          "profileZ",
+          "profilePoints",
+          "profileCurve"
+        ],
+        "changedNodes": [
+          "envelopeAttachPoint",
+          "envelope"
+        ],
+        "addedEdges": 0,
+        "removedEdges": 4
+      },
+      "details": [
+        "dropped edge: bottomCircleCenter → bottomCircle.param:center (\"CircleCurve\" has no numeric param \"center\" (it accepts — geometry inputs: center, normal; numeric params (targetHandle \"param:<name>\"): radius))",
+        "dropped edge: middleCircleCenter → middleCircle.param:center (\"CircleCurve\" has no numeric param \"center\" (it accepts — geometry inputs: center, normal; numeric params (targetHandle \"param:<name>\"): radius))",
+        "dropped edge: topCircleCenter → topCircle.param:center (\"CircleCurve\" has no numeric param \"center\" (it accepts — geometry inputs: center, normal; numeric params (targetHandle \"param:<name>\"): radius))",
+        "dropped edge: bottomCircle → envelope.param:curve1 (\"LoftCurves\" has no numeric param \"curve1\" (it accepts — geometry inputs: curve1, curve2, curve3, curve4, curve5, curve6))",
+        "dropped edge: middleCircle → envelope.param:curve2 (\"LoftCurves\" has no numeric param \"curve2\" (it accepts — geometry inputs: curve1, curve2, curve3, curve4, curve5, curve6))",
+        "dropped edge: topCircle → envelope.param:curve3 (\"LoftCurves\" has no numeric param \"curve3\" (it accepts — geometry inputs: curve1, curve2, curve3, curve4, curve5, curve6))",
+        "structural: \"envelope\" (LoftCurves) needs at least 2 connected inputs (has 0). Connect its curve1/curve2/curve3/curve4/curve5/curve6 handles.",
+        "warning: Dead design parameters: sliders \"envelopeHeight\", \"gap\" are not referenced by any formula or edge — moving them changes nothing. Wire dimensions to them or remove them."
+      ],
+      "nodes": [
+        {
+          "id": "balloonRadius",
+          "type": "NumberSlider",
+          "data": {
+            "value": 10,
+            "label": "balloonRadius",
+            "min": 5,
+            "max": 20,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 40
+          }
+        },
+        {
+          "id": "envelopeHeight",
+          "type": "NumberSlider",
+          "data": {
+            "value": 12,
+            "label": "envelopeHeight",
+            "min": 6,
+            "max": 24,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 2320
+          }
+        },
+        {
+          "id": "basketWidth",
+          "type": "NumberSlider",
+          "data": {
+            "value": 4,
+            "label": "basketWidth",
+            "min": 2,
+            "max": 8,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 990
+          }
+        },
+        {
+          "id": "basketLength",
+          "type": "NumberSlider",
+          "data": {
+            "value": 4,
+            "label": "basketLength",
+            "min": 2,
+            "max": 8,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 610
+          }
+        },
+        {
+          "id": "basketHeight",
+          "type": "NumberSlider",
+          "data": {
+            "value": 2,
+            "label": "basketHeight",
+            "min": 1,
+            "max": 4,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 420
+          }
+        },
+        {
+          "id": "ropeCount",
+          "type": "NumberSlider",
+          "data": {
+            "value": 4,
+            "label": "ropeCount",
+            "min": 3,
+            "max": 8,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 3270
+          }
+        },
+        {
+          "id": "ropeThickness",
+          "type": "NumberSlider",
+          "data": {
+            "value": 0.3,
+            "label": "ropeThickness",
+            "min": 0.1,
+            "max": 1,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 3460
+          }
+        },
+        {
+          "id": "gap",
+          "type": "NumberSlider",
+          "data": {
+            "value": 1,
+            "label": "gap",
+            "min": 0.5,
+            "max": 3,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 2700
+          }
+        },
+        {
+          "id": "basketRimRadius",
+          "type": "Expression",
+          "data": {
+            "formula": "sqrt((basketWidth/2)^2 + (basketLength/2)^2)"
+          },
+          "position": {
+            "x": 40,
+            "y": 800
+          }
+        },
+        {
+          "id": "envelopeAttachRadius",
+          "type": "Expression",
+          "data": {
+            "formula": "balloonRadius * 0.8"
+          },
+          "position": {
+            "x": 40,
+            "y": 1940
+          }
+        },
+        {
+          "id": "envelopeAttachZ",
+          "type": "Expression",
+          "data": {
+            "formula": "envelopeHeight * 0.2"
+          },
+          "position": {
+            "x": 40,
+            "y": 2130
+          }
+        },
+        {
+          "id": "basketCenter",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "basketHeight/2"
+          },
+          "position": {
+            "x": 40,
+            "y": 230
+          }
+        },
+        {
+          "id": "basket",
+          "type": "Box",
+          "data": {
+            "width": "basketWidth",
+            "length": "basketLength",
+            "height": "basketHeight",
+            "color": "#8B4513"
+          },
+          "position": {
+            "x": 270,
+            "y": 40
+          }
+        },
+        {
+          "id": "basketRimPoint",
+          "type": "Point",
+          "data": {
+            "y": 0,
+            "z": "basketHeight"
+          },
+          "position": {
+            "x": 270,
+            "y": 230
+          }
+        },
+        {
+          "id": "envelopeAttachPoint",
+          "type": "Point",
+          "data": {
+            "y": 0,
+            "x": "envelopeAttachRadius",
+            "z": "basketHeight + gap + envelopeAttachZ"
+          },
+          "position": {
+            "x": 270,
+            "y": 610
+          }
+        },
+        {
+          "id": "singleRopeCurve",
+          "type": "Line",
+          "data": {},
+          "position": {
+            "x": 500,
+            "y": 40
+          }
+        },
+        {
+          "id": "singleRope",
+          "type": "Pipe",
+          "data": {
+            "radius": "ropeThickness"
+          },
+          "position": {
+            "x": 730,
+            "y": 40
+          }
+        },
+        {
+          "id": "ropes",
+          "type": "CircularPattern",
+          "data": {
+            "count": "ropeCount",
+            "radius": 0,
+            "angle": 360,
+            "color": "#808080"
+          },
+          "position": {
+            "x": 960,
+            "y": 40
+          }
+        },
+        {
+          "id": "burnerCenter",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "basketHeight + 0.5"
+          },
+          "position": {
+            "x": 40,
+            "y": 1560
+          }
+        },
+        {
+          "id": "burner",
+          "type": "Cone",
+          "data": {
+            "radius1": "basketWidth*0.125",
+            "radius2": "basketWidth*0.025",
+            "height": 1,
+            "color": "#FFA500"
+          },
+          "position": {
+            "x": 270,
+            "y": 420
+          }
+        },
+        {
+          "id": "flameCenter",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "basketHeight + 1.5"
+          },
+          "position": {
+            "x": 40,
+            "y": 2510
+          }
+        },
+        {
+          "id": "flame",
+          "type": "Cone",
+          "data": {
+            "radius1": "basketWidth*0.075",
+            "radius2": 0,
+            "height": "basketHeight*0.25",
+            "color": "#FFFF00"
+          },
+          "position": {
+            "x": 270,
+            "y": 800
+          }
+        },
+        {
+          "id": "bottomCircleCenter",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "basketHeight + gap"
+          },
+          "position": {
+            "x": 40,
+            "y": 1370
+          }
+        },
+        {
+          "id": "middleCircleCenter",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "basketHeight + gap + envelopeHeight*0.3"
+          },
+          "position": {
+            "x": 40,
+            "y": 3080
+          }
+        },
+        {
+          "id": "topCircleCenter",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "basketHeight + gap + envelopeHeight"
+          },
+          "position": {
+            "x": 40,
+            "y": 3840
+          }
+        },
+        {
+          "id": "bottomCircle",
+          "type": "CircleCurve",
+          "data": {
+            "radius": "balloonRadius*0.8",
+            "color": "#e74c3c"
+          },
+          "position": {
+            "x": 40,
+            "y": 1180
+          }
+        },
+        {
+          "id": "middleCircle",
+          "type": "CircleCurve",
+          "data": {
+            "radius": "balloonRadius",
+            "color": "#e74c3c"
+          },
+          "position": {
+            "x": 40,
+            "y": 2890
+          }
+        },
+        {
+          "id": "topCircle",
+          "type": "CircleCurve",
+          "data": {
+            "radius": 0.1,
+            "color": "#e74c3c"
+          },
+          "position": {
+            "x": 40,
+            "y": 3650
+          }
+        },
+        {
+          "id": "envelope",
+          "type": "LoftCurves",
+          "data": {
+            "ruled": false,
+            "closed": true,
+            "color": "#e74c3c"
+          },
+          "position": {
+            "x": 40,
+            "y": 1750
+          }
+        }
+      ],
+      "edges": [
+        {
+          "source": "basketCenter",
+          "sourceHandle": "point",
+          "target": "basket",
+          "targetHandle": "center",
+          "id": "e_basketCenter_basket_center"
+        },
+        {
+          "source": "basketRimRadius",
+          "sourceHandle": "value",
+          "target": "basketRimPoint",
+          "targetHandle": "x",
+          "id": "e_basketRimRadius_basketRimPoint_x"
+        },
+        {
+          "source": "envelopeAttachRadius",
+          "sourceHandle": "value",
+          "target": "envelopeAttachPoint",
+          "targetHandle": "x",
+          "id": "e_envelopeAttachRadius_envelopeAttachPoint_x"
+        },
+        {
+          "source": "envelopeAttachZ",
+          "sourceHandle": "value",
+          "target": "envelopeAttachPoint",
+          "targetHandle": "z",
+          "id": "e_envelopeAttachZ_envelopeAttachPoint_z"
+        },
+        {
+          "source": "basketRimPoint",
+          "sourceHandle": "point",
+          "target": "singleRopeCurve",
+          "targetHandle": "a",
+          "id": "e_basketRimPoint_singleRopeCurve_a"
+        },
+        {
+          "source": "envelopeAttachPoint",
+          "sourceHandle": "point",
+          "target": "singleRopeCurve",
+          "targetHandle": "b",
+          "id": "e_envelopeAttachPoint_singleRopeCurve_b"
+        },
+        {
+          "source": "singleRopeCurve",
+          "sourceHandle": "curve",
+          "target": "singleRope",
+          "targetHandle": "path",
+          "id": "e_singleRopeCurve_singleRope_path"
+        },
+        {
+          "source": "singleRope",
+          "sourceHandle": "solid",
+          "target": "ropes",
+          "targetHandle": "solid",
+          "id": "e_singleRope_ropes_solid"
+        },
+        {
+          "source": "burnerCenter",
+          "sourceHandle": "point",
+          "target": "burner",
+          "targetHandle": "center",
+          "id": "e_burnerCenter_burner_center"
+        },
+        {
+          "source": "flameCenter",
+          "sourceHandle": "point",
+          "target": "flame",
+          "targetHandle": "center",
+          "id": "e_flameCenter_flame_center"
+        }
+      ]
+    },
+    {
+      "at": "2026-07-23T12:11:56.429Z",
+      "turn": 2,
+      "trigger": "ai-repair",
+      "label": "attempt 3: updated 1 node(s); added 7 edge(s)",
+      "nodeCount": 29,
+      "edgeCount": 17,
+      "isolatedCount": 8,
+      "diff": {
+        "addedNodes": [],
+        "removedNodes": [],
+        "changedNodes": [
+          "envelopeAttachPoint"
+        ],
+        "addedEdges": 7,
+        "removedEdges": 0
+      },
+      "details": [
+        "warning: Dead design parameters: sliders \"envelopeHeight\", \"gap\" are not referenced by any formula or edge — moving them changes nothing. Wire dimensions to them or remove them."
+      ],
+      "nodes": [
+        {
+          "id": "balloonRadius",
+          "type": "NumberSlider",
+          "data": {
+            "value": 10,
+            "label": "balloonRadius",
+            "min": 5,
+            "max": 20,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 40
+          }
+        },
+        {
+          "id": "envelopeHeight",
+          "type": "NumberSlider",
+          "data": {
+            "value": 12,
+            "label": "envelopeHeight",
+            "min": 6,
+            "max": 24,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 1940
+          }
+        },
+        {
+          "id": "basketWidth",
+          "type": "NumberSlider",
+          "data": {
+            "value": 4,
+            "label": "basketWidth",
+            "min": 2,
+            "max": 8,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 990
+          }
+        },
+        {
+          "id": "basketLength",
+          "type": "NumberSlider",
+          "data": {
+            "value": 4,
+            "label": "basketLength",
+            "min": 2,
+            "max": 8,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 610
+          }
+        },
+        {
+          "id": "basketHeight",
+          "type": "NumberSlider",
+          "data": {
+            "value": 2,
+            "label": "basketHeight",
+            "min": 1,
+            "max": 4,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 420
+          }
+        },
+        {
+          "id": "ropeCount",
+          "type": "NumberSlider",
+          "data": {
+            "value": 4,
+            "label": "ropeCount",
+            "min": 3,
+            "max": 8,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 2700
+          }
+        },
+        {
+          "id": "ropeThickness",
+          "type": "NumberSlider",
+          "data": {
+            "value": 0.3,
+            "label": "ropeThickness",
+            "min": 0.1,
+            "max": 1,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 2890
+          }
+        },
+        {
+          "id": "gap",
+          "type": "NumberSlider",
+          "data": {
+            "value": 1,
+            "label": "gap",
+            "min": 0.5,
+            "max": 3,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 2320
+          }
+        },
+        {
+          "id": "basketRimRadius",
+          "type": "Expression",
+          "data": {
+            "formula": "sqrt((basketWidth/2)^2 + (basketLength/2)^2)"
+          },
+          "position": {
+            "x": 40,
+            "y": 800
+          }
+        },
+        {
+          "id": "envelopeAttachRadius",
+          "type": "Expression",
+          "data": {
+            "formula": "balloonRadius * 0.8"
+          },
+          "position": {
+            "x": 40,
+            "y": 1560
+          }
+        },
+        {
+          "id": "envelopeAttachZ",
+          "type": "Expression",
+          "data": {
+            "formula": "envelopeHeight * 0.2"
+          },
+          "position": {
+            "x": 40,
+            "y": 1750
+          }
+        },
+        {
+          "id": "basketCenter",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "basketHeight/2"
+          },
+          "position": {
+            "x": 40,
+            "y": 230
+          }
+        },
+        {
+          "id": "basket",
+          "type": "Box",
+          "data": {
+            "width": "basketWidth",
+            "length": "basketLength",
+            "height": "basketHeight",
+            "color": "#8B4513"
+          },
+          "position": {
+            "x": 270,
+            "y": 40
+          }
+        },
+        {
+          "id": "basketRimPoint",
+          "type": "Point",
+          "data": {
+            "y": 0,
+            "z": "basketHeight"
+          },
+          "position": {
+            "x": 270,
+            "y": 230
+          }
+        },
+        {
+          "id": "envelopeAttachPoint",
+          "type": "Point",
+          "data": {
+            "y": 0,
+            "x": "envelopeAttachRadius",
+            "z": 0
+          },
+          "position": {
+            "x": 270,
+            "y": 800
+          }
+        },
+        {
+          "id": "singleRopeCurve",
+          "type": "Line",
+          "data": {},
+          "position": {
+            "x": 500,
+            "y": 40
+          }
+        },
+        {
+          "id": "singleRope",
+          "type": "Pipe",
+          "data": {
+            "radius": "ropeThickness"
+          },
+          "position": {
+            "x": 730,
+            "y": 40
+          }
+        },
+        {
+          "id": "ropes",
+          "type": "CircularPattern",
+          "data": {
+            "count": "ropeCount",
+            "radius": 0,
+            "angle": 360,
+            "color": "#808080"
+          },
+          "position": {
+            "x": 960,
+            "y": 40
+          }
+        },
+        {
+          "id": "burnerCenter",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "basketHeight + 0.5"
+          },
+          "position": {
+            "x": 40,
+            "y": 1370
+          }
+        },
+        {
+          "id": "burner",
+          "type": "Cone",
+          "data": {
+            "radius1": "basketWidth*0.125",
+            "radius2": "basketWidth*0.025",
+            "height": 1,
+            "color": "#FFA500"
+          },
+          "position": {
+            "x": 270,
+            "y": 610
+          }
+        },
+        {
+          "id": "flameCenter",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "basketHeight + 1.5"
+          },
+          "position": {
+            "x": 40,
+            "y": 2130
+          }
+        },
+        {
+          "id": "flame",
+          "type": "Cone",
+          "data": {
+            "radius1": "basketWidth*0.075",
+            "radius2": 0,
+            "height": "basketHeight*0.25",
+            "color": "#FFFF00"
+          },
+          "position": {
+            "x": 270,
+            "y": 990
+          }
+        },
+        {
+          "id": "bottomCircleCenter",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "basketHeight + gap"
+          },
+          "position": {
+            "x": 40,
+            "y": 1180
+          }
+        },
+        {
+          "id": "middleCircleCenter",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "basketHeight + gap + envelopeHeight*0.3"
+          },
+          "position": {
+            "x": 40,
+            "y": 2510
+          }
+        },
+        {
+          "id": "topCircleCenter",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "basketHeight + gap + envelopeHeight"
+          },
+          "position": {
+            "x": 40,
+            "y": 3080
+          }
+        },
+        {
+          "id": "bottomCircle",
+          "type": "CircleCurve",
+          "data": {
+            "radius": "balloonRadius*0.8",
+            "color": "#e74c3c"
+          },
+          "position": {
+            "x": 270,
+            "y": 420
+          }
+        },
+        {
+          "id": "middleCircle",
+          "type": "CircleCurve",
+          "data": {
+            "radius": "balloonRadius",
+            "color": "#e74c3c"
+          },
+          "position": {
+            "x": 270,
+            "y": 1180
+          }
+        },
+        {
+          "id": "topCircle",
+          "type": "CircleCurve",
+          "data": {
+            "radius": 0.1,
+            "color": "#e74c3c"
+          },
+          "position": {
+            "x": 270,
+            "y": 1370
+          }
+        },
+        {
+          "id": "envelope",
+          "type": "LoftCurves",
+          "data": {
+            "ruled": false,
+            "closed": true,
+            "color": "#e74c3c"
+          },
+          "position": {
+            "x": 500,
+            "y": 230
+          },
+          "measured": {
+            "width": 192,
+            "height": 416
+          }
+        }
+      ],
+      "edges": [
+        {
+          "source": "basketCenter",
+          "sourceHandle": "point",
+          "target": "basket",
+          "targetHandle": "center",
+          "id": "e_basketCenter_basket_center"
+        },
+        {
+          "source": "basketRimRadius",
+          "sourceHandle": "value",
+          "target": "basketRimPoint",
+          "targetHandle": "x",
+          "id": "e_basketRimRadius_basketRimPoint_x"
+        },
+        {
+          "source": "envelopeAttachRadius",
+          "sourceHandle": "value",
+          "target": "envelopeAttachPoint",
+          "targetHandle": "x",
+          "id": "e_envelopeAttachRadius_envelopeAttachPoint_x"
+        },
+        {
+          "source": "envelopeAttachZ",
+          "sourceHandle": "value",
+          "target": "envelopeAttachPoint",
+          "targetHandle": "z",
+          "id": "e_envelopeAttachZ_envelopeAttachPoint_z"
+        },
+        {
+          "source": "basketRimPoint",
+          "sourceHandle": "point",
+          "target": "singleRopeCurve",
+          "targetHandle": "a",
+          "id": "e_basketRimPoint_singleRopeCurve_a"
+        },
+        {
+          "source": "envelopeAttachPoint",
+          "sourceHandle": "point",
+          "target": "singleRopeCurve",
+          "targetHandle": "b",
+          "id": "e_envelopeAttachPoint_singleRopeCurve_b"
+        },
+        {
+          "source": "singleRopeCurve",
+          "sourceHandle": "curve",
+          "target": "singleRope",
+          "targetHandle": "path",
+          "id": "e_singleRopeCurve_singleRope_path"
+        },
+        {
+          "source": "singleRope",
+          "sourceHandle": "solid",
+          "target": "ropes",
+          "targetHandle": "solid",
+          "id": "e_singleRope_ropes_solid"
+        },
+        {
+          "source": "burnerCenter",
+          "sourceHandle": "point",
+          "target": "burner",
+          "targetHandle": "center",
+          "id": "e_burnerCenter_burner_center"
+        },
+        {
+          "source": "flameCenter",
+          "sourceHandle": "point",
+          "target": "flame",
+          "targetHandle": "center",
+          "id": "e_flameCenter_flame_center"
+        },
+        {
+          "source": "bottomCircleCenter",
+          "target": "bottomCircle",
+          "targetHandle": "center",
+          "id": "e_bottomCircleCenter_bottomCircle_center",
+          "sourceHandle": "point"
+        },
+        {
+          "source": "middleCircleCenter",
+          "target": "middleCircle",
+          "targetHandle": "center",
+          "id": "e_middleCircleCenter_middleCircle_center",
+          "sourceHandle": "point"
+        },
+        {
+          "source": "topCircleCenter",
+          "target": "topCircle",
+          "targetHandle": "center",
+          "id": "e_topCircleCenter_topCircle_center",
+          "sourceHandle": "point"
+        },
+        {
+          "source": "bottomCircle",
+          "target": "envelope",
+          "targetHandle": "curve1",
+          "id": "e_bottomCircle_envelope_curve1",
+          "sourceHandle": "curve"
+        },
+        {
+          "source": "middleCircle",
+          "target": "envelope",
+          "targetHandle": "curve2",
+          "id": "e_middleCircle_envelope_curve2",
+          "sourceHandle": "curve"
+        },
+        {
+          "source": "topCircle",
+          "target": "envelope",
+          "targetHandle": "curve3",
+          "id": "e_topCircle_envelope_curve3",
+          "sourceHandle": "curve"
+        },
+        {
+          "source": "envelopeAttachZ",
+          "target": "envelopeAttachPoint",
+          "targetHandle": "param:z",
+          "id": "e_envelopeAttachZ_envelopeAttachPoint_param:z",
+          "sourceHandle": "value"
+        }
+      ]
+    },
+    {
+      "at": "2026-07-23T16:26:01.812Z",
+      "turn": 3,
+      "trigger": "ai-ir",
+      "label": "attempt 1: rebuilt graph (32 nodes)",
+      "nodeCount": 32,
+      "edgeCount": 19,
+      "isolatedCount": 8,
+      "diff": {
+        "addedNodes": [
+          "bottomCenter",
+          "middleCenter",
+          "topCenter",
+          "bottomCircle_x",
+          "middleCircle_x",
+          "topCircle_x",
+          "ropeLine",
+          "ropePipe"
+        ],
+        "removedNodes": [
+          "singleRopeCurve",
+          "singleRope",
+          "bottomCircleCenter",
+          "middleCircleCenter",
+          "topCircleCenter"
+        ],
+        "changedNodes": [
+          "bottomCircle",
+          "middleCircle",
+          "topCircle",
+          "envelopeAttachRadius",
+          "envelopeAttachZ",
+          "envelopeAttachPoint",
+          "burnerCenter",
+          "flameCenter"
+        ],
+        "addedEdges": 13,
+        "removedEdges": 11
+      },
+      "details": [
+        "warning: Dead design parameters: sliders \"envelopeHeight\", \"gap\" are not referenced by any formula or edge — moving them changes nothing. Wire dimensions to them or remove them."
+      ],
+      "nodes": [
+        {
+          "id": "balloonRadius",
+          "type": "NumberSlider",
+          "data": {
+            "value": 10,
+            "label": "balloonRadius",
+            "min": 5,
+            "max": 20,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 40
+          }
+        },
+        {
+          "id": "envelopeHeight",
+          "type": "NumberSlider",
+          "data": {
+            "value": 12,
+            "label": "envelopeHeight",
+            "min": 6,
+            "max": 24,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 2130
+          }
+        },
+        {
+          "id": "basketWidth",
+          "type": "NumberSlider",
+          "data": {
+            "value": 4,
+            "label": "basketWidth",
+            "min": 2,
+            "max": 8,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 990
+          }
+        },
+        {
+          "id": "basketLength",
+          "type": "NumberSlider",
+          "data": {
+            "value": 4,
+            "label": "basketLength",
+            "min": 2,
+            "max": 8,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 610
+          }
+        },
+        {
+          "id": "basketHeight",
+          "type": "NumberSlider",
+          "data": {
+            "value": 2,
+            "label": "basketHeight",
+            "min": 1,
+            "max": 4,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 420
+          }
+        },
+        {
+          "id": "ropeCount",
+          "type": "NumberSlider",
+          "data": {
+            "value": 4,
+            "label": "ropeCount",
+            "min": 3,
+            "max": 8,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 3080
+          }
+        },
+        {
+          "id": "ropeThickness",
+          "type": "NumberSlider",
+          "data": {
+            "value": 0.3,
+            "label": "ropeThickness",
+            "min": 0.1,
+            "max": 1,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 3270
+          }
+        },
+        {
+          "id": "gap",
+          "type": "NumberSlider",
+          "data": {
+            "value": 1,
+            "label": "gap",
+            "min": 0.5,
+            "max": 3,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 2510
+          }
+        },
+        {
+          "id": "basketCenter",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "basketHeight/2"
+          },
+          "position": {
+            "x": 40,
+            "y": 230
+          }
+        },
+        {
+          "id": "basket",
+          "type": "Box",
+          "data": {
+            "width": "basketWidth",
+            "length": "basketLength",
+            "height": "basketHeight",
+            "color": "#8B4513"
+          },
+          "position": {
+            "x": 270,
+            "y": 40
+          }
+        },
+        {
+          "id": "bottomCenter",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "basketHeight+gap"
+          },
+          "position": {
+            "x": 40,
+            "y": 1180
+          }
+        },
+        {
+          "id": "middleCenter",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "basketHeight+gap+envelopeHeight*0.3"
+          },
+          "position": {
+            "x": 40,
+            "y": 2700
+          }
+        },
+        {
+          "id": "topCenter",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "basketHeight+gap+envelopeHeight"
+          },
+          "position": {
+            "x": 40,
+            "y": 3460
+          }
+        },
+        {
+          "id": "bottomCircle",
+          "type": "VectorXYZ",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": 1
+          },
+          "position": {
+            "x": 40,
+            "y": 1370
+          }
+        },
+        {
+          "id": "bottomCircle_x",
+          "type": "CircleCurve",
+          "data": {
+            "radius": "balloonRadius*0.8"
+          },
+          "position": {
+            "x": 270,
+            "y": 420
+          }
+        },
+        {
+          "id": "middleCircle",
+          "type": "VectorXYZ",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": 1
+          },
+          "position": {
+            "x": 40,
+            "y": 2890
+          }
+        },
+        {
+          "id": "middleCircle_x",
+          "type": "CircleCurve",
+          "data": {
+            "radius": "balloonRadius"
+          },
+          "position": {
+            "x": 270,
+            "y": 1180
+          }
+        },
+        {
+          "id": "topCircle",
+          "type": "VectorXYZ",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": 1
+          },
+          "position": {
+            "x": 40,
+            "y": 3650
+          }
+        },
+        {
+          "id": "topCircle_x",
+          "type": "CircleCurve",
+          "data": {
+            "radius": 0.1
+          },
+          "position": {
+            "x": 270,
+            "y": 1370
+          }
+        },
+        {
+          "id": "envelope",
+          "type": "LoftCurves",
+          "data": {
+            "ruled": false,
+            "closed": true,
+            "color": "#e74c3c"
+          },
+          "position": {
+            "x": 500,
+            "y": 230
+          }
+        },
+        {
+          "id": "basketRimRadius",
+          "type": "Expression",
+          "data": {
+            "formula": "sqrt((basketWidth/2)^2 + (basketLength/2)^2)"
+          },
+          "position": {
+            "x": 40,
+            "y": 800
+          }
+        },
+        {
+          "id": "basketRimPoint",
+          "type": "Point",
+          "data": {
+            "y": 0,
+            "z": "basketHeight"
+          },
+          "position": {
+            "x": 270,
+            "y": 230
+          }
+        },
+        {
+          "id": "envelopeAttachRadius",
+          "type": "Expression",
+          "data": {
+            "formula": "balloonRadius*0.8"
+          },
+          "position": {
+            "x": 40,
+            "y": 1750
+          }
+        },
+        {
+          "id": "envelopeAttachZ",
+          "type": "Expression",
+          "data": {
+            "formula": "basketHeight+gap+envelopeHeight*0.2"
+          },
+          "position": {
+            "x": 40,
+            "y": 1940
+          }
+        },
+        {
+          "id": "envelopeAttachPoint",
+          "type": "Point",
+          "data": {
+            "y": 0
+          },
+          "position": {
+            "x": 270,
+            "y": 800
+          }
+        },
+        {
+          "id": "ropeLine",
+          "type": "Line",
+          "data": {},
+          "position": {
+            "x": 500,
+            "y": 40
+          }
+        },
+        {
+          "id": "ropePipe",
+          "type": "Pipe",
+          "data": {
+            "radius": "ropeThickness"
+          },
+          "position": {
+            "x": 730,
+            "y": 40
+          }
+        },
+        {
+          "id": "ropes",
+          "type": "CircularPattern",
+          "data": {
+            "count": "ropeCount",
+            "radius": 0,
+            "angle": 360,
+            "color": "#808080"
+          },
+          "position": {
+            "x": 960,
+            "y": 40
+          }
+        },
+        {
+          "id": "burnerCenter",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "basketHeight+0.5"
+          },
+          "position": {
+            "x": 40,
+            "y": 1560
+          }
+        },
+        {
+          "id": "burner",
+          "type": "Cone",
+          "data": {
+            "radius1": "basketWidth*0.125",
+            "radius2": "basketWidth*0.025",
+            "height": 1,
+            "color": "#FFA500"
+          },
+          "position": {
+            "x": 270,
+            "y": 610
+          }
+        },
+        {
+          "id": "flameCenter",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "basketHeight+1.5"
+          },
+          "position": {
+            "x": 40,
+            "y": 2320
+          }
+        },
+        {
+          "id": "flame",
+          "type": "Cone",
+          "data": {
+            "radius1": "basketWidth*0.075",
+            "radius2": 0,
+            "height": "basketHeight*0.25",
+            "color": "#FFFF00"
+          },
+          "position": {
+            "x": 270,
+            "y": 990
+          }
+        }
+      ],
+      "edges": [
+        {
+          "source": "basketCenter",
+          "sourceHandle": "point",
+          "target": "basket",
+          "targetHandle": "center",
+          "id": "e_basketCenter_basket_center"
+        },
+        {
+          "source": "bottomCenter",
+          "sourceHandle": "point",
+          "target": "bottomCircle_x",
+          "targetHandle": "center",
+          "id": "e_bottomCenter_bottomCircle_x_center"
+        },
+        {
+          "source": "bottomCircle",
+          "sourceHandle": "vector",
+          "target": "bottomCircle_x",
+          "targetHandle": "normal",
+          "id": "e_bottomCircle_bottomCircle_x_normal"
+        },
+        {
+          "source": "middleCenter",
+          "sourceHandle": "point",
+          "target": "middleCircle_x",
+          "targetHandle": "center",
+          "id": "e_middleCenter_middleCircle_x_center"
+        },
+        {
+          "source": "middleCircle",
+          "sourceHandle": "vector",
+          "target": "middleCircle_x",
+          "targetHandle": "normal",
+          "id": "e_middleCircle_middleCircle_x_normal"
+        },
+        {
+          "source": "topCenter",
+          "sourceHandle": "point",
+          "target": "topCircle_x",
+          "targetHandle": "center",
+          "id": "e_topCenter_topCircle_x_center"
+        },
+        {
+          "source": "topCircle",
+          "sourceHandle": "vector",
+          "target": "topCircle_x",
+          "targetHandle": "normal",
+          "id": "e_topCircle_topCircle_x_normal"
+        },
+        {
+          "source": "bottomCircle_x",
+          "sourceHandle": "curve",
+          "target": "envelope",
+          "targetHandle": "curve1",
+          "id": "e_bottomCircle_x_envelope_curve1"
+        },
+        {
+          "source": "middleCircle_x",
+          "sourceHandle": "curve",
+          "target": "envelope",
+          "targetHandle": "curve2",
+          "id": "e_middleCircle_x_envelope_curve2"
+        },
+        {
+          "source": "topCircle_x",
+          "sourceHandle": "curve",
+          "target": "envelope",
+          "targetHandle": "curve3",
+          "id": "e_topCircle_x_envelope_curve3"
+        },
+        {
+          "source": "basketRimRadius",
+          "sourceHandle": "value",
+          "target": "basketRimPoint",
+          "targetHandle": "x",
+          "id": "e_basketRimRadius_basketRimPoint_x"
+        },
+        {
+          "source": "envelopeAttachRadius",
+          "sourceHandle": "value",
+          "target": "envelopeAttachPoint",
+          "targetHandle": "x",
+          "id": "e_envelopeAttachRadius_envelopeAttachPoint_x"
+        },
+        {
+          "source": "envelopeAttachZ",
+          "sourceHandle": "value",
+          "target": "envelopeAttachPoint",
+          "targetHandle": "z",
+          "id": "e_envelopeAttachZ_envelopeAttachPoint_z"
+        },
+        {
+          "source": "basketRimPoint",
+          "sourceHandle": "point",
+          "target": "ropeLine",
+          "targetHandle": "a",
+          "id": "e_basketRimPoint_ropeLine_a"
+        },
+        {
+          "source": "envelopeAttachPoint",
+          "sourceHandle": "point",
+          "target": "ropeLine",
+          "targetHandle": "b",
+          "id": "e_envelopeAttachPoint_ropeLine_b"
+        },
+        {
+          "source": "ropeLine",
+          "sourceHandle": "curve",
+          "target": "ropePipe",
+          "targetHandle": "path",
+          "id": "e_ropeLine_ropePipe_path"
+        },
+        {
+          "source": "ropePipe",
+          "sourceHandle": "solid",
+          "target": "ropes",
+          "targetHandle": "solid",
+          "id": "e_ropePipe_ropes_solid"
+        },
+        {
+          "source": "burnerCenter",
+          "sourceHandle": "point",
+          "target": "burner",
+          "targetHandle": "center",
+          "id": "e_burnerCenter_burner_center"
+        },
+        {
+          "source": "flameCenter",
+          "sourceHandle": "point",
+          "target": "flame",
+          "targetHandle": "center",
+          "id": "e_flameCenter_flame_center"
+        }
+      ]
+    }
+  ]
+}

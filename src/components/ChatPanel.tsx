@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useStore, generateUUID } from '../store/useStore';
-import { Settings, Send, MessageSquare, BarChart2, BookOpen, Star, FlaskConical, Library, X, Brain, RefreshCw, ChevronDown, ChevronRight } from 'lucide-react';
+import { Settings, Send, Square, MessageSquare, BarChart2, BookOpen, Star, FlaskConical, Library, X, Brain, RefreshCw, ChevronDown, ChevronRight } from 'lucide-react';
 import { processUserIntent } from '../ai/agent';
+import { abortRun } from '../ai/abort';
 import { listProviderModels } from '../ai/api';
 import { LibraryPanel } from './LibraryPanel';
 import { EvalPanel } from './EvalPanel';
@@ -92,6 +93,7 @@ export const ChatPanel: React.FC = () => {
   const [showSettings, setShowSettings] = useState(false);
   const [activeTab, setActiveTab] = useState<'chat' | 'reasoning' | 'logs' | 'guidelines' | 'library' | 'evals'>('chat');
   const [isLoading, setIsLoading] = useState(false);
+  const [stopping, setStopping] = useState(false);
 
   // Provider model lists (Jul 22): every provider — not just Ollama — can load
   // its available models into a dropdown, so ids never need manual typing.
@@ -139,6 +141,7 @@ export const ChatPanel: React.FC = () => {
     if (!input.trim() || isLoading) return;
     
     setIsLoading(true);
+    setStopping(false);
     try {
       addMessage({
         id: generateUUID(),
@@ -159,6 +162,7 @@ export const ChatPanel: React.FC = () => {
       });
     } finally {
       setIsLoading(false);
+      setStopping(false);
     }
   };
 
@@ -724,17 +728,29 @@ export const ChatPanel: React.FC = () => {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-              placeholder={isLoading ? "AI is reasoning..." : "Type your design intent..."}
+              placeholder={stopping ? "Stopping…" : isLoading ? "AI is reasoning… (Stop to interrupt)" : "Type your design intent..."}
               disabled={isLoading}
               className="flex-1 bg-slate-900 border border-slate-600 rounded-lg px-4 py-2 text-sm text-slate-200 focus:outline-none focus:border-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
             />
-            <button 
-              onClick={handleSend}
-              disabled={isLoading}
-              className="bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-lg transition-colors flex items-center justify-center w-10 disabled:bg-slate-700 disabled:text-slate-400 disabled:cursor-not-allowed"
-            >
-              <Send size={18} />
-            </button>
+            {/* While a run is in flight the send button BECOMES the stop button —
+                one control, always in the same place, never a dead grey square
+                during the minutes a slow model is thinking. */}
+            {isLoading ? (
+              <button
+                onClick={() => { abortRun(); setStopping(true); }}
+                title="Stop the current run"
+                className="bg-red-600 hover:bg-red-500 text-white p-2 rounded-lg transition-colors flex items-center justify-center w-10"
+              >
+                <Square size={16} fill="currentColor" />
+              </button>
+            ) : (
+              <button
+                onClick={handleSend}
+                className="bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-lg transition-colors flex items-center justify-center w-10 disabled:bg-slate-700 disabled:text-slate-400 disabled:cursor-not-allowed"
+              >
+                <Send size={18} />
+              </button>
+            )}
           </div>
         </div>
       )}

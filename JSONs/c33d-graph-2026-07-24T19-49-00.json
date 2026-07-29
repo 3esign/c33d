@@ -1,0 +1,6788 @@
+{
+  "c33dExport": 2,
+  "exportedAt": "2026-07-24T19:49:00.929Z",
+  "comment": "very interesting results",
+  "agent": {
+    "name": "Ollama (Local)",
+    "provider": "ollama",
+    "model": "glm-5.2:cloud"
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "figureHeight",
+        "type": "NumberSlider",
+        "data": {
+          "value": 42,
+          "label": "figureHeight",
+          "min": 20,
+          "max": 80,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 3460
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "bowSize",
+        "type": "NumberSlider",
+        "data": {
+          "value": 16,
+          "label": "bowSize",
+          "min": 8,
+          "max": 30,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 2320
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "capSize",
+        "type": "NumberSlider",
+        "data": {
+          "value": 5,
+          "label": "capSize",
+          "min": 3,
+          "max": 10,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 3080
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "zUp",
+        "type": "VectorXYZ",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": 1
+        },
+        "position": {
+          "x": 40,
+          "y": 5550
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "legLPos",
+        "type": "Point",
+        "data": {
+          "x": "-figureHeight*0.04",
+          "y": 0,
+          "z": "figureHeight*0.21"
+        },
+        "position": {
+          "x": 40,
+          "y": 4410
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "legRPos",
+        "type": "Point",
+        "data": {
+          "x": "figureHeight*0.04",
+          "y": 0,
+          "z": "figureHeight*0.21"
+        },
+        "position": {
+          "x": 40,
+          "y": 4600
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "legL",
+        "type": "Cone",
+        "data": {
+          "radius1": "figureHeight*0.042",
+          "radius2": "figureHeight*0.025",
+          "height": "figureHeight*0.42",
+          "color": "#5C3317"
+        },
+        "position": {
+          "x": 270,
+          "y": 3270
+        },
+        "measured": {
+          "width": 201,
+          "height": 344
+        }
+      },
+      {
+        "id": "legR",
+        "type": "Cone",
+        "data": {
+          "radius1": "figureHeight*0.042",
+          "radius2": "figureHeight*0.025",
+          "height": "figureHeight*0.42",
+          "color": "#5C3317"
+        },
+        "position": {
+          "x": 270,
+          "y": 3460
+        },
+        "measured": {
+          "width": 201,
+          "height": 344
+        }
+      },
+      {
+        "id": "torsoPos",
+        "type": "Point",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": "figureHeight*0.42 + figureHeight*0.165"
+        },
+        "position": {
+          "x": 40,
+          "y": 5170
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "torso",
+        "type": "Box",
+        "data": {
+          "width": "figureHeight*0.14",
+          "length": "figureHeight*0.09",
+          "height": "figureHeight*0.33",
+          "color": "#2d5a27"
+        },
+        "position": {
+          "x": 270,
+          "y": 3840
+        },
+        "measured": {
+          "width": 201,
+          "height": 312
+        }
+      },
+      {
+        "id": "beltPos",
+        "type": "Point",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": "figureHeight*0.44"
+        },
+        "position": {
+          "x": 40,
+          "y": 1370
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "belt",
+        "type": "Torus",
+        "data": {
+          "majorRadius": "figureHeight*0.065",
+          "minorRadius": "figureHeight*0.012",
+          "color": "#4a3728"
+        },
+        "position": {
+          "x": 270,
+          "y": 2320
+        },
+        "measured": {
+          "width": 201,
+          "height": 296
+        }
+      },
+      {
+        "id": "headPos",
+        "type": "Point",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": "figureHeight*0.82"
+        },
+        "position": {
+          "x": 40,
+          "y": 4220
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "head",
+        "type": "Sphere",
+        "data": {
+          "radius": "figureHeight*0.07",
+          "color": "#e8c39e"
+        },
+        "position": {
+          "x": 270,
+          "y": 3080
+        },
+        "measured": {
+          "width": 201,
+          "height": 216
+        }
+      },
+      {
+        "id": "capPos",
+        "type": "Point",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": "figureHeight*0.82 + figureHeight*0.07 + capSize*0.9"
+        },
+        "position": {
+          "x": 40,
+          "y": 2890
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "cap",
+        "type": "Cone",
+        "data": {
+          "radius1": "capSize*0.75",
+          "radius2": "capSize*0.03",
+          "height": "capSize*1.8",
+          "color": "#1d4d12"
+        },
+        "position": {
+          "x": 270,
+          "y": 1750
+        },
+        "measured": {
+          "width": 201,
+          "height": 344
+        }
+      },
+      {
+        "id": "featherPos",
+        "type": "Point",
+        "data": {
+          "x": "capSize*0.35",
+          "y": 0,
+          "z": "figureHeight*0.82+figureHeight*0.06+capSize*0.2"
+        },
+        "position": {
+          "x": 40,
+          "y": 3270
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "featherShape",
+        "type": "Box",
+        "data": {
+          "width": 0.2,
+          "length": "capSize*0.55",
+          "height": "capSize*0.14"
+        },
+        "position": {
+          "x": 270,
+          "y": 2130
+        },
+        "measured": {
+          "width": 201,
+          "height": 312
+        }
+      },
+      {
+        "id": "featherRot1",
+        "type": "Rotate",
+        "data": {
+          "angle": 40,
+          "axisX": 0,
+          "axisY": 0,
+          "axisZ": 1
+        },
+        "position": {
+          "x": 500,
+          "y": 610
+        },
+        "measured": {
+          "width": 201,
+          "height": 414
+        }
+      },
+      {
+        "id": "feather",
+        "type": "Rotate",
+        "data": {
+          "angle": 30,
+          "axisX": 1,
+          "axisY": 0,
+          "axisZ": 0,
+          "color": "#dc143c"
+        },
+        "position": {
+          "x": 730,
+          "y": 40
+        },
+        "measured": {
+          "width": 201,
+          "height": 414
+        }
+      },
+      {
+        "id": "armRPos",
+        "type": "Point",
+        "data": {
+          "x": "figureHeight*0.055",
+          "y": 0,
+          "z": "figureHeight*0.42 + figureHeight*0.28"
+        },
+        "position": {
+          "x": 40,
+          "y": 610
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "armRAxis",
+        "type": "VectorXYZ",
+        "data": {
+          "x": 1,
+          "y": 0.2,
+          "z": -0.35
+        },
+        "position": {
+          "x": 40,
+          "y": 420
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "armR",
+        "type": "Cylinder",
+        "data": {
+          "radius": "figureHeight*0.022",
+          "height": "figureHeight*0.2",
+          "color": "#2d5a27"
+        },
+        "position": {
+          "x": 270,
+          "y": 230
+        },
+        "measured": {
+          "width": 201,
+          "height": 296
+        }
+      },
+      {
+        "id": "armLPos",
+        "type": "Point",
+        "data": {
+          "x": "-figureHeight*0.06",
+          "y": "-figureHeight*0.02",
+          "z": "figureHeight*0.72"
+        },
+        "position": {
+          "x": 40,
+          "y": 230
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "armLAxis",
+        "type": "VectorXYZ",
+        "data": {
+          "x": 0.3,
+          "y": -0.3,
+          "z": 0.9
+        },
+        "position": {
+          "x": 40,
+          "y": 40
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "armL",
+        "type": "Cylinder",
+        "data": {
+          "radius": "figureHeight*0.022",
+          "height": "figureHeight*0.18",
+          "color": "#2d5a27"
+        },
+        "position": {
+          "x": 270,
+          "y": 40
+        },
+        "measured": {
+          "width": 201,
+          "height": 296
+        }
+      },
+      {
+        "id": "bowStart",
+        "type": "Point",
+        "data": {
+          "x": "figureHeight*0.11",
+          "y": "bowSize*0.45",
+          "z": "figureHeight*0.42 + figureHeight*0.16"
+        },
+        "position": {
+          "x": 40,
+          "y": 2510
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "bowMid",
+        "type": "Point",
+        "data": {
+          "x": "figureHeight*0.11 + bowSize*0.35",
+          "y": 0,
+          "z": "figureHeight*0.42 + figureHeight*0.16"
+        },
+        "position": {
+          "x": 40,
+          "y": 2130
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "bowEnd",
+        "type": "Point",
+        "data": {
+          "x": "figureHeight*0.11",
+          "y": "-bowSize*0.45",
+          "z": "figureHeight*0.42 + figureHeight*0.16"
+        },
+        "position": {
+          "x": 40,
+          "y": 1940
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "bowArc",
+        "type": "Arc",
+        "data": {},
+        "position": {
+          "x": 270,
+          "y": 800
+        },
+        "measured": {
+          "width": 177,
+          "height": 232
+        }
+      },
+      {
+        "id": "bow",
+        "type": "Pipe",
+        "data": {
+          "radius": "figureHeight*0.012 + bowSize*0.001",
+          "color": "#6B4226"
+        },
+        "position": {
+          "x": 500,
+          "y": 40
+        },
+        "measured": {
+          "width": 201,
+          "height": 270
+        }
+      },
+      {
+        "id": "quiverPos",
+        "type": "Point",
+        "data": {
+          "x": "-figureHeight*0.01",
+          "y": "-figureHeight*0.07",
+          "z": "figureHeight*0.42 + figureHeight*0.11"
+        },
+        "position": {
+          "x": 40,
+          "y": 4980
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "quiverAxis",
+        "type": "VectorXYZ",
+        "data": {
+          "x": 0.12,
+          "y": -0.2,
+          "z": 1
+        },
+        "position": {
+          "x": 40,
+          "y": 4790
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "quiver",
+        "type": "Cylinder",
+        "data": {
+          "radius": "figureHeight*0.028",
+          "height": "figureHeight*0.2",
+          "color": "#5C3317"
+        },
+        "position": {
+          "x": 270,
+          "y": 3650
+        },
+        "measured": {
+          "width": 201,
+          "height": 296
+        }
+      },
+      {
+        "id": "arrow1Pos",
+        "type": "Point",
+        "data": {
+          "x": "-figureHeight*0.02",
+          "y": "-figureHeight*0.1",
+          "z": "figureHeight*0.42+figureHeight*0.22"
+        },
+        "position": {
+          "x": 40,
+          "y": 800
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "arrow1",
+        "type": "Cylinder",
+        "data": {
+          "radius": "figureHeight*0.004",
+          "height": "figureHeight*0.16",
+          "color": "#c9b896"
+        },
+        "position": {
+          "x": 270,
+          "y": 1370
+        },
+        "measured": {
+          "width": 201,
+          "height": 296
+        }
+      },
+      {
+        "id": "arrow2Pos",
+        "type": "Point",
+        "data": {
+          "x": "-figureHeight*0.035",
+          "y": "-figureHeight*0.075",
+          "z": "figureHeight*0.42+figureHeight*0.21"
+        },
+        "position": {
+          "x": 40,
+          "y": 990
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "arrow2",
+        "type": "Cylinder",
+        "data": {
+          "radius": "figureHeight*0.004",
+          "height": "figureHeight*0.15",
+          "color": "#c9b896"
+        },
+        "position": {
+          "x": 270,
+          "y": 1560
+        },
+        "measured": {
+          "width": 201,
+          "height": 296
+        }
+      },
+      {
+        "id": "arrow3Pos",
+        "type": "Point",
+        "data": {
+          "x": "figureHeight*0.01",
+          "y": "-figureHeight*0.09",
+          "z": "figureHeight*0.42+figureHeight*0.23"
+        },
+        "position": {
+          "x": 40,
+          "y": 1180
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "arrow3",
+        "type": "Cylinder",
+        "data": {
+          "radius": "figureHeight*0.004",
+          "height": "figureHeight*0.17",
+          "color": "#c9b896"
+        },
+        "position": {
+          "x": 270,
+          "y": 1940
+        },
+        "measured": {
+          "width": 201,
+          "height": 296
+        }
+      },
+      {
+        "id": "bootLPos",
+        "type": "Point",
+        "data": {
+          "x": "-figureHeight*0.04",
+          "y": "figureHeight*0.015",
+          "z": "figureHeight*0.012"
+        },
+        "position": {
+          "x": 40,
+          "y": 1560
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "bootRPos",
+        "type": "Point",
+        "data": {
+          "x": "figureHeight*0.04",
+          "y": "figureHeight*0.015",
+          "z": "figureHeight*0.012"
+        },
+        "position": {
+          "x": 40,
+          "y": 1750
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "bootL",
+        "type": "Cone",
+        "data": {
+          "radius1": "figureHeight*0.055",
+          "radius2": "figureHeight*0.045",
+          "height": "figureHeight*0.025",
+          "color": "#3a2614"
+        },
+        "position": {
+          "x": 270,
+          "y": 420
+        },
+        "measured": {
+          "width": 201,
+          "height": 344
+        }
+      },
+      {
+        "id": "bootR",
+        "type": "Cone",
+        "data": {
+          "radius1": "figureHeight*0.055",
+          "radius2": "figureHeight*0.045",
+          "height": "figureHeight*0.025",
+          "color": "#3a2614"
+        },
+        "position": {
+          "x": 270,
+          "y": 610
+        },
+        "measured": {
+          "width": 201,
+          "height": 344
+        }
+      },
+      {
+        "id": "handRPos",
+        "type": "Point",
+        "data": {
+          "x": "figureHeight*0.148",
+          "y": "figureHeight*0.019",
+          "z": "figureHeight*0.668"
+        },
+        "position": {
+          "x": 40,
+          "y": 4030
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "handLPos",
+        "type": "Point",
+        "data": {
+          "x": "-figureHeight*0.08",
+          "y": "-figureHeight*0.02",
+          "z": "figureHeight*0.8"
+        },
+        "position": {
+          "x": 40,
+          "y": 3840
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "handR",
+        "type": "Sphere",
+        "data": {
+          "radius": "figureHeight*0.025",
+          "color": "#e8c39e"
+        },
+        "position": {
+          "x": 270,
+          "y": 2890
+        },
+        "measured": {
+          "width": 201,
+          "height": 216
+        }
+      },
+      {
+        "id": "handL",
+        "type": "Sphere",
+        "data": {
+          "radius": "figureHeight*0.025",
+          "color": "#e8c39e"
+        },
+        "position": {
+          "x": 270,
+          "y": 2700
+        },
+        "measured": {
+          "width": 201,
+          "height": 216
+        }
+      },
+      {
+        "id": "tunicSkirtPos",
+        "type": "Point",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": "figureHeight*0.33"
+        },
+        "position": {
+          "x": 40,
+          "y": 5360
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "tunicSkirt",
+        "type": "Cone",
+        "data": {
+          "radius1": "figureHeight*0.075",
+          "radius2": "figureHeight*0.055",
+          "height": "figureHeight*0.12",
+          "color": "#2d5a27"
+        },
+        "position": {
+          "x": 270,
+          "y": 4030
+        },
+        "measured": {
+          "width": 201,
+          "height": 344
+        }
+      },
+      {
+        "id": "bowstringLine",
+        "type": "Line",
+        "data": {
+          "color": "#d4d4d4"
+        },
+        "position": {
+          "x": 270,
+          "y": 990
+        },
+        "measured": {
+          "width": 177,
+          "height": 200
+        }
+      },
+      {
+        "id": "bowstring",
+        "type": "Pipe",
+        "data": {
+          "radius": "figureHeight*0.006",
+          "color": "#d4d4d4"
+        },
+        "position": {
+          "x": 500,
+          "y": 230
+        },
+        "measured": {
+          "width": 201,
+          "height": 270
+        }
+      },
+      {
+        "id": "groundRockPos",
+        "type": "Point",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": "figureHeight*0.005"
+        },
+        "position": {
+          "x": 40,
+          "y": 3650
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "groundRock",
+        "type": "Cylinder",
+        "data": {
+          "radius": "figureHeight*0.18",
+          "height": "figureHeight*0.01",
+          "color": "#4a4a3a"
+        },
+        "position": {
+          "x": 270,
+          "y": 2510
+        },
+        "measured": {
+          "width": 201,
+          "height": 296
+        }
+      },
+      {
+        "id": "capePos",
+        "type": "Point",
+        "data": {
+          "x": 0,
+          "y": "-figureHeight*0.09",
+          "z": "figureHeight*0.5"
+        },
+        "position": {
+          "x": 40,
+          "y": 2700
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "capeShape",
+        "type": "Box",
+        "data": {
+          "width": "figureHeight*0.16",
+          "length": "figureHeight*0.03",
+          "height": "figureHeight*0.35",
+          "color": "#1d4d12"
+        },
+        "position": {
+          "x": 270,
+          "y": 1180
+        },
+        "measured": {
+          "width": 201,
+          "height": 312
+        }
+      },
+      {
+        "id": "cape",
+        "type": "Bend",
+        "data": {
+          "axis": "Y",
+          "angle": "12"
+        },
+        "position": {
+          "x": 500,
+          "y": 420
+        },
+        "measured": {
+          "width": 201,
+          "height": 216
+        }
+      }
+    ],
+    "edges": [
+      {
+        "source": "legLPos",
+        "sourceHandle": "point",
+        "target": "legL",
+        "targetHandle": "center",
+        "id": "e_legLPos_legL_center"
+      },
+      {
+        "source": "legRPos",
+        "sourceHandle": "point",
+        "target": "legR",
+        "targetHandle": "center",
+        "id": "e_legRPos_legR_center"
+      },
+      {
+        "source": "torsoPos",
+        "sourceHandle": "point",
+        "target": "torso",
+        "targetHandle": "center",
+        "id": "e_torsoPos_torso_center"
+      },
+      {
+        "source": "beltPos",
+        "sourceHandle": "point",
+        "target": "belt",
+        "targetHandle": "center",
+        "id": "e_beltPos_belt_center"
+      },
+      {
+        "source": "zUp",
+        "sourceHandle": "vector",
+        "target": "belt",
+        "targetHandle": "axis",
+        "id": "e_zUp_belt_axis"
+      },
+      {
+        "source": "headPos",
+        "sourceHandle": "point",
+        "target": "head",
+        "targetHandle": "center",
+        "id": "e_headPos_head_center"
+      },
+      {
+        "source": "capPos",
+        "sourceHandle": "point",
+        "target": "cap",
+        "targetHandle": "center",
+        "id": "e_capPos_cap_center"
+      },
+      {
+        "source": "featherPos",
+        "sourceHandle": "point",
+        "target": "featherShape",
+        "targetHandle": "center",
+        "id": "e_featherPos_featherShape_center"
+      },
+      {
+        "source": "featherShape",
+        "sourceHandle": "solid",
+        "target": "featherRot1",
+        "targetHandle": "solid",
+        "id": "e_featherShape_featherRot1_solid"
+      },
+      {
+        "source": "featherRot1",
+        "sourceHandle": "solid",
+        "target": "feather",
+        "targetHandle": "solid",
+        "id": "e_featherRot1_feather_solid"
+      },
+      {
+        "source": "armRPos",
+        "sourceHandle": "point",
+        "target": "armR",
+        "targetHandle": "center",
+        "id": "e_armRPos_armR_center"
+      },
+      {
+        "source": "armRAxis",
+        "sourceHandle": "vector",
+        "target": "armR",
+        "targetHandle": "axis",
+        "id": "e_armRAxis_armR_axis"
+      },
+      {
+        "source": "armLPos",
+        "sourceHandle": "point",
+        "target": "armL",
+        "targetHandle": "center",
+        "id": "e_armLPos_armL_center"
+      },
+      {
+        "source": "armLAxis",
+        "sourceHandle": "vector",
+        "target": "armL",
+        "targetHandle": "axis",
+        "id": "e_armLAxis_armL_axis"
+      },
+      {
+        "source": "bowStart",
+        "sourceHandle": "point",
+        "target": "bowArc",
+        "targetHandle": "start",
+        "id": "e_bowStart_bowArc_start"
+      },
+      {
+        "source": "bowMid",
+        "sourceHandle": "point",
+        "target": "bowArc",
+        "targetHandle": "middle",
+        "id": "e_bowMid_bowArc_middle"
+      },
+      {
+        "source": "bowEnd",
+        "sourceHandle": "point",
+        "target": "bowArc",
+        "targetHandle": "end",
+        "id": "e_bowEnd_bowArc_end"
+      },
+      {
+        "source": "bowArc",
+        "sourceHandle": "curve",
+        "target": "bow",
+        "targetHandle": "path",
+        "id": "e_bowArc_bow_path"
+      },
+      {
+        "source": "quiverPos",
+        "sourceHandle": "point",
+        "target": "quiver",
+        "targetHandle": "center",
+        "id": "e_quiverPos_quiver_center"
+      },
+      {
+        "source": "quiverAxis",
+        "sourceHandle": "vector",
+        "target": "quiver",
+        "targetHandle": "axis",
+        "id": "e_quiverAxis_quiver_axis"
+      },
+      {
+        "source": "arrow1Pos",
+        "sourceHandle": "point",
+        "target": "arrow1",
+        "targetHandle": "center",
+        "id": "e_arrow1Pos_arrow1_center"
+      },
+      {
+        "source": "quiverAxis",
+        "sourceHandle": "vector",
+        "target": "arrow1",
+        "targetHandle": "axis",
+        "id": "e_quiverAxis_arrow1_axis"
+      },
+      {
+        "source": "arrow2Pos",
+        "sourceHandle": "point",
+        "target": "arrow2",
+        "targetHandle": "center",
+        "id": "e_arrow2Pos_arrow2_center"
+      },
+      {
+        "source": "quiverAxis",
+        "sourceHandle": "vector",
+        "target": "arrow2",
+        "targetHandle": "axis",
+        "id": "e_quiverAxis_arrow2_axis"
+      },
+      {
+        "source": "arrow3Pos",
+        "sourceHandle": "point",
+        "target": "arrow3",
+        "targetHandle": "center",
+        "id": "e_arrow3Pos_arrow3_center"
+      },
+      {
+        "source": "quiverAxis",
+        "sourceHandle": "vector",
+        "target": "arrow3",
+        "targetHandle": "axis",
+        "id": "e_quiverAxis_arrow3_axis"
+      },
+      {
+        "source": "bootLPos",
+        "target": "bootL",
+        "id": "e_bootLPos_bootL_center",
+        "sourceHandle": "point",
+        "targetHandle": "center"
+      },
+      {
+        "source": "bootRPos",
+        "target": "bootR",
+        "id": "e_bootRPos_bootR_center",
+        "sourceHandle": "point",
+        "targetHandle": "center"
+      },
+      {
+        "source": "handRPos",
+        "target": "handR",
+        "id": "e_handRPos_handR_center",
+        "sourceHandle": "point",
+        "targetHandle": "center"
+      },
+      {
+        "source": "handLPos",
+        "target": "handL",
+        "id": "e_handLPos_handL_center",
+        "sourceHandle": "point",
+        "targetHandle": "center"
+      },
+      {
+        "source": "tunicSkirtPos",
+        "target": "tunicSkirt",
+        "id": "e_tunicSkirtPos_tunicSkirt_center",
+        "sourceHandle": "point",
+        "targetHandle": "center"
+      },
+      {
+        "source": "bowStart",
+        "target": "bowstringLine",
+        "id": "e_bowStart_bowstringLine_a",
+        "sourceHandle": "point",
+        "targetHandle": "a"
+      },
+      {
+        "source": "bowEnd",
+        "target": "bowstringLine",
+        "id": "e_bowEnd_bowstringLine_b",
+        "sourceHandle": "point",
+        "targetHandle": "b"
+      },
+      {
+        "source": "bowstringLine",
+        "target": "bowstring",
+        "id": "e_bowstringLine_bowstring_path",
+        "sourceHandle": "curve",
+        "targetHandle": "path"
+      },
+      {
+        "source": "groundRockPos",
+        "target": "groundRock",
+        "id": "e_groundRockPos_groundRock_center",
+        "sourceHandle": "point",
+        "targetHandle": "center"
+      },
+      {
+        "source": "capePos",
+        "target": "capeShape",
+        "id": "e_capePos_capeShape_center",
+        "sourceHandle": "point",
+        "targetHandle": "center"
+      },
+      {
+        "source": "capeShape",
+        "target": "cape",
+        "id": "e_capeShape_cape_solid",
+        "sourceHandle": "solid",
+        "targetHandle": "solid"
+      }
+    ]
+  },
+  "conversation": [
+    {
+      "role": "system",
+      "content": "Workspace cleared."
+    },
+    {
+      "role": "user",
+      "content": "make a robinhood"
+    },
+    {
+      "role": "assistant",
+      "content": "A stylized Robin Hood figure with feathered green cap, Lincoln green tunic, leather belt, drawn bow, and back quiver of arrows"
+    },
+    {
+      "role": "user",
+      "content": "good for the start go on"
+    },
+    {
+      "role": "assistant",
+      "content": "Adding boots at the feet, hands at the arm ends, a tunic skirt flaring from the waist, a bowstring connecting the bow tips, a forest-green cape behind the torso, and a rocky ground pedestal for the figure to stand on."
+    },
+    {
+      "role": "system",
+      "content": "Issues detected (auto-repair 1/2): Leaf \"bowstring\" has non-positive volume (0) — likely inverted or degenerate solid."
+    },
+    {
+      "role": "assistant",
+      "content": "Fixing five issues: (1) boots widened to protrude beyond legs and lowered; (2) arrows spread further apart and shifted away from cape; (3) cape moved further back so it stops swallowing arrows; (4) left arm re-routed upward toward the face instead of crossing through the torso, with hand placed above torso; (5) feather lowered onto the cap brim; (6) bowstring radius increased to avoid degenerate zero-volume pipe."
+    },
+    {
+      "role": "system",
+      "content": "Issues detected (auto-repair 2/2): Leaf \"bowstring\" has non-positive volume (0) — likely inverted or degenerate solid."
+    },
+    {
+      "role": "assistant",
+      "content": "Fixing remaining issues: boots moved forward in Y and made wider/shorter so they protrude like shoe tips; left hand moved to the side of the head instead of inside it; feather repositioned onto the cap brim; bowstring radius increased; ground rock made thinner to stop swallowing boots; bow radius tied to bowSize slider."
+    },
+    {
+      "role": "system",
+      "content": "Auto-repair limit reached. Remaining issues: Leaf \"bowstring\" has non-positive volume (0) — likely inverted or degenerate solid."
+    }
+  ],
+  "plan": "Fixing remaining issues: boots moved forward in Y and made wider/shorter so they protrude like shoe tips; left hand moved to the side of the head instead of inside it; feather repositioned onto the cap brim; bowstring radius increased; ground rock made thinner to stop swallowing boots; bow radius tied to bowSize slider.",
+  "genome": null,
+  "geometryReport": {
+    "leaves": [
+      {
+        "id": "legL",
+        "bbox": {
+          "min": [
+            -3.5373755971185967,
+            -1.8131484342073336,
+            -0.09337559711859669
+          ],
+          "max": [
+            0.17737559711859677,
+            1.8131484342073336,
+            17.7333755971186
+          ],
+          "center": [
+            -1.68,
+            0,
+            8.820000000000002
+          ],
+          "size": [
+            3.7147511942371936,
+            3.6262968684146673,
+            17.826751194237197
+          ]
+        },
+        "volume": 112.06189323131508,
+        "meshOk": true,
+        "vertexCount": 152,
+        "error": null
+      },
+      {
+        "id": "legR",
+        "bbox": {
+          "min": [
+            -0.17737559711859677,
+            -1.8131484342073336,
+            -0.09337559711859669
+          ],
+          "max": [
+            3.5373755971185967,
+            1.8131484342073336,
+            17.7333755971186
+          ],
+          "center": [
+            1.68,
+            0,
+            8.820000000000002
+          ],
+          "size": [
+            3.7147511942371936,
+            3.6262968684146673,
+            17.826751194237197
+          ]
+        },
+        "volume": 112.06189323131508,
+        "meshOk": true,
+        "vertexCount": 152,
+        "error": null
+      },
+      {
+        "id": "torso",
+        "bbox": {
+          "min": [
+            -2.940000100000004,
+            -1.8900001000000035,
+            17.639999899999996
+          ],
+          "max": [
+            2.940000100000004,
+            1.8900001000000035,
+            31.500000100000005
+          ],
+          "center": [
+            0,
+            0,
+            24.57
+          ],
+          "size": [
+            5.880000200000008,
+            3.780000200000007,
+            13.860000200000009
+          ]
+        },
+        "volume": 308.057904,
+        "meshOk": true,
+        "vertexCount": 24,
+        "error": null
+      },
+      {
+        "id": "belt",
+        "bbox": {
+          "min": [
+            -3.3305720906231495,
+            -3.281440363864631,
+            17.892064241637215
+          ],
+          "max": [
+            3.3305720906231495,
+            3.2814403638646303,
+            19.067935758362786
+          ],
+          "center": [
+            0,
+            0,
+            18.48
+          ],
+          "size": [
+            6.661144181246299,
+            6.562880727729262,
+            1.1758715167255716
+          ]
+        },
+        "volume": 13.688424376247246,
+        "meshOk": true,
+        "vertexCount": 152,
+        "error": null
+      },
+      {
+        "id": "head",
+        "bbox": {
+          "min": [
+            -2.964354814627324,
+            -2.9643548146273235,
+            31.430979979228564
+          ],
+          "max": [
+            2.964354814627325,
+            2.9643548146273235,
+            37.44902002077143
+          ],
+          "center": [
+            4.440892098500626e-16,
+            0,
+            34.44
+          ],
+          "size": [
+            5.928709629254649,
+            5.928709629254647,
+            6.018040041542864
+          ]
+        },
+        "volume": 106.44630742142948,
+        "meshOk": true,
+        "vertexCount": 160,
+        "error": null
+      },
+      {
+        "id": "armR",
+        "bbox": {
+          "min": [
+            -1.9735574489130294,
+            -1.7310452502948446,
+            27.134394288157036
+          ],
+          "max": [
+            6.593557448913029,
+            1.7310452502948446,
+            31.665605711842968
+          ],
+          "center": [
+            2.31,
+            0,
+            29.400000000000002
+          ],
+          "size": [
+            8.567114897826059,
+            3.462090500589689,
+            4.5312114236859315
+          ]
+        },
+        "volume": 22.53061783905476,
+        "meshOk": true,
+        "vertexCount": 42,
+        "error": null
+      },
+      {
+        "id": "armL",
+        "bbox": {
+          "min": [
+            -4.584831485032007,
+            -2.875395651920162,
+            26.38649328102909
+          ],
+          "max": [
+            -0.45516851496799327,
+            1.195395651920162,
+            34.09350671897091
+          ],
+          "center": [
+            -2.52,
+            -0.8399999999999999,
+            30.24
+          ],
+          "size": [
+            4.129662970064014,
+            4.070791303840324,
+            7.707013437941818
+          ]
+        },
+        "volume": 20.27755605514927,
+        "meshOk": true,
+        "vertexCount": 42,
+        "error": null
+      },
+      {
+        "id": "quiver",
+        "bbox": {
+          "min": [
+            -2.0828399352183853,
+            -4.949268330118291,
+            17.856700018720584
+          ],
+          "max": [
+            1.2863259884443694,
+            -0.9345915748977517,
+            26.66096021489026
+          ],
+          "center": [
+            -0.39825697338700783,
+            -2.9419299525080214,
+            22.25883011680542
+          ],
+          "size": [
+            3.369165923662755,
+            4.014676755220539,
+            8.804260196169675
+          ]
+        },
+        "volume": 36.49587683020438,
+        "meshOk": true,
+        "vertexCount": 46,
+        "error": null
+      },
+      {
+        "id": "arrow1",
+        "bbox": {
+          "min": [
+            -1.4487048278067243,
+            -5.068412401317133,
+            23.525896659027012
+          ],
+          "max": [
+            -0.2312951721932755,
+            -3.3315875986828685,
+            30.234103340972993
+          ],
+          "center": [
+            -0.8399999999999999,
+            -4.200000000000001,
+            26.880000000000003
+          ],
+          "size": [
+            1.2174096556134488,
+            1.7368248026342643,
+            6.708206681945981
+          ]
+        },
+        "volume": 0.5958510502890502,
+        "meshOk": true,
+        "vertexCount": 18,
+        "error": null
+      },
+      {
+        "id": "arrow2",
+        "bbox": {
+          "min": [
+            -2.054163512112079,
+            -3.977510208492722,
+            23.31040762314906
+          ],
+          "max": [
+            -0.8858364878879215,
+            -2.322489791507278,
+            29.60959237685094
+          ],
+          "center": [
+            -1.4700000000000002,
+            -3.15,
+            26.46
+          ],
+          "size": [
+            1.1683270242241575,
+            1.6550204169854439,
+            6.29918475370188
+          ]
+        },
+        "volume": 0.5586103596459844,
+        "meshOk": true,
+        "vertexCount": 18,
+        "error": null
+      },
+      {
+        "id": "arrow3",
+        "bbox": {
+          "min": [
+            -0.21324614350137122,
+            -4.689314594141543,
+            23.74138569490496
+          ],
+          "max": [
+            1.0532461435013711,
+            -2.870685405858457,
+            30.858614305095042
+          ],
+          "center": [
+            0.42,
+            -3.78,
+            27.3
+          ],
+          "size": [
+            1.2664922870027424,
+            1.8186291882830856,
+            7.117228610190082
+          ]
+        },
+        "volume": 0.6330917409321161,
+        "meshOk": true,
+        "vertexCount": 18,
+        "error": null
+      },
+      {
+        "id": "bootL",
+        "bbox": {
+          "min": [
+            -4.047503598493751,
+            -1.7375035984937515,
+            -0.0785035984937514
+          ],
+          "max": [
+            0.6875035984937515,
+            2.9975035984937515,
+            1.0865035984937512
+          ],
+          "center": [
+            -1.6799999999999997,
+            0.6300000000000001,
+            0.5039999999999999
+          ],
+          "size": [
+            4.735007196987503,
+            4.735007196987503,
+            1.1650071969875027
+          ]
+        },
+        "volume": 14.595635265055698,
+        "meshOk": true,
+        "vertexCount": 64,
+        "error": null
+      },
+      {
+        "id": "bootR",
+        "bbox": {
+          "min": [
+            -0.6875035984937515,
+            -1.7375035984937515,
+            -0.0785035984937514
+          ],
+          "max": [
+            4.047503598493751,
+            2.9975035984937515,
+            1.0865035984937512
+          ],
+          "center": [
+            1.6800000000000002,
+            0.6300000000000001,
+            0.5039999999999999
+          ],
+          "size": [
+            4.735007196987503,
+            4.735007196987503,
+            1.1650071969875027
+          ]
+        },
+        "volume": 14.595635265055698,
+        "meshOk": true,
+        "vertexCount": 64,
+        "error": null
+      },
+      {
+        "id": "handR",
+        "bbox": {
+          "min": [
+            5.106254307399136,
+            -0.30105820657584287,
+            26.946254307399137
+          ],
+          "max": [
+            7.325745692600862,
+            1.8970582065758426,
+            29.165745692600865
+          ],
+          "center": [
+            6.215999999999999,
+            0.7979999999999998,
+            28.056
+          ],
+          "size": [
+            2.219491385201726,
+            2.1981164131516855,
+            2.219491385201728
+          ]
+        },
+        "volume": 4.849048260815847,
+        "meshOk": true,
+        "vertexCount": 67,
+        "error": null
+      },
+      {
+        "id": "handL",
+        "bbox": {
+          "min": [
+            -4.469745692600863,
+            -1.9390582065758426,
+            32.49025430739914
+          ],
+          "max": [
+            -2.2502543073991363,
+            0.25905820657584233,
+            34.70974569260086
+          ],
+          "center": [
+            -3.36,
+            -0.8400000000000001,
+            33.6
+          ],
+          "size": [
+            2.219491385201727,
+            2.198116413151685,
+            2.219491385201721
+          ]
+        },
+        "volume": 4.849048260815844,
+        "meshOk": true,
+        "vertexCount": 67,
+        "error": null
+      },
+      {
+        "id": "tunicSkirt",
+        "bbox": {
+          "min": [
+            -3.2372760204695408,
+            -3.1894204424579957,
+            11.252723979530462
+          ],
+          "max": [
+            3.2372760204695408,
+            3.1894204424579957,
+            16.467276020469544
+          ],
+          "center": [
+            0,
+            0,
+            13.860000000000003
+          ],
+          "size": [
+            6.4745520409390815,
+            6.378840884915991,
+            5.214552040939083
+          ]
+        },
+        "volume": 118.93745574129106,
+        "meshOk": true,
+        "vertexCount": 108,
+        "error": null
+      },
+      {
+        "id": "groundRock",
+        "bbox": {
+          "min": [
+            -7.607535793207086,
+            -7.607535793207086,
+            -0.047535793207086965
+          ],
+          "max": [
+            7.607535793207086,
+            7.607535793207086,
+            0.46753579320708694
+          ],
+          "center": [
+            0,
+            0,
+            0.21000000000000002
+          ],
+          "size": [
+            15.215071586414172,
+            15.215071586414172,
+            0.5150715864141739
+          ]
+        },
+        "volume": 75.412398552208,
+        "meshOk": true,
+        "vertexCount": 114,
+        "error": null
+      },
+      {
+        "id": "cap",
+        "bbox": {
+          "min": [
+            -3.999472044571093,
+            -3.999472044571093,
+            37.1305279554289
+          ],
+          "max": [
+            3.999472044571093,
+            3.999472044571093,
+            46.62947204457109
+          ],
+          "center": [
+            0,
+            0,
+            41.879999999999995
+          ],
+          "size": [
+            7.998944089142186,
+            7.998944089142186,
+            9.498944089142185
+          ]
+        },
+        "volume": 138.04943518036947,
+        "meshOk": true,
+        "vertexCount": 104,
+        "error": null
+      },
+      {
+        "id": "cape",
+        "bbox": {
+          "min": [
+            -3.3600072427032437,
+            -5.177140503925489,
+            13.649992757296756
+          ],
+          "max": [
+            3.3600072427032437,
+            -2.3828594960745106,
+            28.350007242703246
+          ],
+          "center": [
+            0,
+            -3.7800000000000002,
+            21
+          ],
+          "size": [
+            6.720014485406487,
+            2.7942810078509788,
+            14.70001448540649
+          ]
+        },
+        "volume": 124.4435037835862,
+        "meshOk": true,
+        "vertexCount": 8970,
+        "error": null
+      },
+      {
+        "id": "bow",
+        "bbox": {
+          "min": [
+            4.285373039729079,
+            -7.743488498732466,
+            23.75349611665215
+          ],
+          "max": [
+            10.81050388334785,
+            7.806503883347852,
+            24.966503883347848
+          ],
+          "center": [
+            7.547938461538465,
+            0.03150769230769335,
+            24.36
+          ],
+          "size": [
+            6.525130843618772,
+            15.549992382080319,
+            1.2130077666956964
+          ]
+        },
+        "volume": 16.172563661173058,
+        "meshOk": true,
+        "vertexCount": 356,
+        "error": null
+      },
+      {
+        "id": "bowstring",
+        "bbox": {
+          "min": [
+            4.619999899999996,
+            -7.452000100000004,
+            24.141761498246318
+          ],
+          "max": [
+            4.620000100000004,
+            7.452000100000004,
+            24.57823850175368
+          ],
+          "center": [
+            4.62,
+            0,
+            24.36
+          ],
+          "size": [
+            2.0000000766629e-7,
+            14.904000200000008,
+            0.4364770035073633
+          ]
+        },
+        "volume": 0,
+        "meshOk": true,
+        "vertexCount": 28,
+        "error": null
+      },
+      {
+        "id": "feather",
+        "bbox": {
+          "min": [
+            0.38014026782731514,
+            -19.148688120008703,
+            32.57485955967982
+          ],
+          "max": [
+            2.3010152830891077,
+            -16.862965482698822,
+            34.2986674125862
+          ],
+          "center": [
+            1.3405777754582116,
+            -18.005826801353763,
+            33.43676348613301
+          ],
+          "size": [
+            1.9208750152617926,
+            2.285722637309881,
+            1.7238078529063756
+          ]
+        },
+        "volume": 0.38500000000000145,
+        "meshOk": true,
+        "vertexCount": 24,
+        "error": null
+      }
+    ],
+    "nodeErrors": [],
+    "numbers": {
+      "figureHeight": 42,
+      "bowSize": 16,
+      "capSize": 5
+    },
+    "sliders": {
+      "figureHeight": 42,
+      "bowSize": 16,
+      "capSize": 5
+    },
+    "selections": {},
+    "helpers": {
+      "zUp": {
+        "type": "Vector",
+        "x": 0,
+        "y": 0,
+        "z": 1,
+        "sourceNodeId": "zUp",
+        "ancestorNodeIds": []
+      },
+      "armRAxis": {
+        "type": "Vector",
+        "x": 1,
+        "y": 0.2,
+        "z": -0.35,
+        "sourceNodeId": "armRAxis",
+        "ancestorNodeIds": []
+      },
+      "armLAxis": {
+        "type": "Vector",
+        "x": 0.3,
+        "y": -0.3,
+        "z": 0.9,
+        "sourceNodeId": "armLAxis",
+        "ancestorNodeIds": []
+      },
+      "quiverAxis": {
+        "type": "Vector",
+        "x": 0.12,
+        "y": -0.2,
+        "z": 1,
+        "sourceNodeId": "quiverAxis",
+        "ancestorNodeIds": []
+      },
+      "legLPos": {
+        "type": "Point",
+        "x": -1.68,
+        "y": 0,
+        "z": 8.82,
+        "sourceNodeId": "legLPos",
+        "ancestorNodeIds": []
+      },
+      "legRPos": {
+        "type": "Point",
+        "x": 1.68,
+        "y": 0,
+        "z": 8.82,
+        "sourceNodeId": "legRPos",
+        "ancestorNodeIds": []
+      },
+      "torsoPos": {
+        "type": "Point",
+        "x": 0,
+        "y": 0,
+        "z": 24.57,
+        "sourceNodeId": "torsoPos",
+        "ancestorNodeIds": []
+      },
+      "beltPos": {
+        "type": "Point",
+        "x": 0,
+        "y": 0,
+        "z": 18.48,
+        "sourceNodeId": "beltPos",
+        "ancestorNodeIds": []
+      },
+      "headPos": {
+        "type": "Point",
+        "x": 0,
+        "y": 0,
+        "z": 34.44,
+        "sourceNodeId": "headPos",
+        "ancestorNodeIds": []
+      },
+      "armRPos": {
+        "type": "Point",
+        "x": 2.31,
+        "y": 0,
+        "z": 29.400000000000002,
+        "sourceNodeId": "armRPos",
+        "ancestorNodeIds": []
+      },
+      "armLPos": {
+        "type": "Point",
+        "x": -2.52,
+        "y": -0.84,
+        "z": 30.24,
+        "sourceNodeId": "armLPos",
+        "ancestorNodeIds": []
+      },
+      "quiverPos": {
+        "type": "Point",
+        "x": -0.42,
+        "y": -2.9400000000000004,
+        "z": 22.26,
+        "sourceNodeId": "quiverPos",
+        "ancestorNodeIds": []
+      },
+      "arrow1Pos": {
+        "type": "Point",
+        "x": -0.84,
+        "y": -4.2,
+        "z": 26.880000000000003,
+        "sourceNodeId": "arrow1Pos",
+        "ancestorNodeIds": []
+      },
+      "arrow2Pos": {
+        "type": "Point",
+        "x": -1.4700000000000002,
+        "y": -3.15,
+        "z": 26.46,
+        "sourceNodeId": "arrow2Pos",
+        "ancestorNodeIds": []
+      },
+      "arrow3Pos": {
+        "type": "Point",
+        "x": 0.42,
+        "y": -3.78,
+        "z": 27.3,
+        "sourceNodeId": "arrow3Pos",
+        "ancestorNodeIds": []
+      },
+      "bootLPos": {
+        "type": "Point",
+        "x": -1.68,
+        "y": 0.63,
+        "z": 0.504,
+        "sourceNodeId": "bootLPos",
+        "ancestorNodeIds": []
+      },
+      "bootRPos": {
+        "type": "Point",
+        "x": 1.68,
+        "y": 0.63,
+        "z": 0.504,
+        "sourceNodeId": "bootRPos",
+        "ancestorNodeIds": []
+      },
+      "handRPos": {
+        "type": "Point",
+        "x": 6.215999999999999,
+        "y": 0.7979999999999999,
+        "z": 28.056,
+        "sourceNodeId": "handRPos",
+        "ancestorNodeIds": []
+      },
+      "handLPos": {
+        "type": "Point",
+        "x": -3.36,
+        "y": -0.84,
+        "z": 33.6,
+        "sourceNodeId": "handLPos",
+        "ancestorNodeIds": []
+      },
+      "tunicSkirtPos": {
+        "type": "Point",
+        "x": 0,
+        "y": 0,
+        "z": 13.860000000000001,
+        "sourceNodeId": "tunicSkirtPos",
+        "ancestorNodeIds": []
+      },
+      "groundRockPos": {
+        "type": "Point",
+        "x": 0,
+        "y": 0,
+        "z": 0.21,
+        "sourceNodeId": "groundRockPos",
+        "ancestorNodeIds": []
+      },
+      "capePos": {
+        "type": "Point",
+        "x": 0,
+        "y": -3.78,
+        "z": 21,
+        "sourceNodeId": "capePos",
+        "ancestorNodeIds": []
+      },
+      "bowStart": {
+        "type": "Point",
+        "x": 4.62,
+        "y": 7.2,
+        "z": 24.36,
+        "sourceNodeId": "bowStart",
+        "ancestorNodeIds": []
+      },
+      "bowMid": {
+        "type": "Point",
+        "x": 10.219999999999999,
+        "y": 0,
+        "z": 24.36,
+        "sourceNodeId": "bowMid",
+        "ancestorNodeIds": []
+      },
+      "bowEnd": {
+        "type": "Point",
+        "x": 4.62,
+        "y": -7.2,
+        "z": 24.36,
+        "sourceNodeId": "bowEnd",
+        "ancestorNodeIds": []
+      },
+      "capPos": {
+        "type": "Point",
+        "x": 0,
+        "y": 0,
+        "z": 41.879999999999995,
+        "sourceNodeId": "capPos",
+        "ancestorNodeIds": []
+      },
+      "featherPos": {
+        "type": "Point",
+        "x": 1.75,
+        "y": 0,
+        "z": 37.96,
+        "sourceNodeId": "featherPos",
+        "ancestorNodeIds": []
+      }
+    },
+    "nodeCount": 57,
+    "edgeCount": 37,
+    "transformCount": 3,
+    "nodesPerLeafRatio": 2.590909090909091,
+    "nodeEconomyWarning": false,
+    "placement": {
+      "anchored": [
+        "legL",
+        "legR",
+        "torso",
+        "belt",
+        "head",
+        "armR",
+        "armL",
+        "quiver",
+        "arrow1",
+        "arrow2",
+        "arrow3",
+        "bootL",
+        "bootR",
+        "handR",
+        "handL",
+        "tunicSkirt",
+        "groundRock",
+        "cap",
+        "cape",
+        "bow",
+        "bowstring",
+        "feather"
+      ],
+      "literal": [],
+      "origin": [],
+      "literalNodeIds": [],
+      "ratio": 1
+    },
+    "scene": {
+      "min": [
+        -7.607535793207086,
+        -19.148688120008703,
+        -0.09337559711859669
+      ],
+      "max": [
+        10.81050388334785,
+        7.806503883347852,
+        46.62947204457109
+      ],
+      "size": [
+        18.418039676554937,
+        26.955192003356554,
+        46.72284764168968
+      ]
+    },
+    "meshedLeafCount": 22,
+    "kernelFaultCount": 0,
+    "kernelSuspect": false,
+    "kernelHealth": "ok",
+    "evalCount": 4,
+    "recycleRecommended": false,
+    "perturbationIssues": [
+      "At figureHeight decrease (0.6x), \"legL\" shifts non-proportionally relative to the assembly center (deviation 12%). Derive its position from the driver sliders or use Align.",
+      "At figureHeight decrease (0.6x), \"legR\" shifts non-proportionally relative to the assembly center (deviation 13%). Derive its position from the driver sliders or use Align.",
+      "At figureHeight decrease (0.6x), \"torso\" shifts non-proportionally relative to the assembly center (deviation 14%). Derive its position from the driver sliders or use Align.",
+      "At figureHeight decrease (0.6x), \"belt\" shifts non-proportionally relative to the assembly center (deviation 13%). Derive its position from the driver sliders or use Align.",
+      "At figureHeight decrease (0.6x), \"head\" shifts non-proportionally relative to the assembly center (deviation 15%). Derive its position from the driver sliders or use Align.",
+      "At figureHeight decrease (0.6x), \"armR\" shifts non-proportionally relative to the assembly center (deviation 15%). Derive its position from the driver sliders or use Align.",
+      "At figureHeight decrease (0.6x), \"armL\" shifts non-proportionally relative to the assembly center (deviation 13%). Derive its position from the driver sliders or use Align.",
+      "At figureHeight decrease (0.6x), \"quiver\" shifts non-proportionally relative to the assembly center (deviation 12%). Derive its position from the driver sliders or use Align.",
+      "At figureHeight decrease (0.6x), \"arrow1\" shifts non-proportionally relative to the assembly center (deviation 12%). Derive its position from the driver sliders or use Align.",
+      "At figureHeight decrease (0.6x), \"arrow2\" shifts non-proportionally relative to the assembly center (deviation 12%). Derive its position from the driver sliders or use Align.",
+      "At figureHeight decrease (0.6x), \"arrow3\" shifts non-proportionally relative to the assembly center (deviation 13%). Derive its position from the driver sliders or use Align.",
+      "At figureHeight decrease (0.6x), \"bootL\" shifts non-proportionally relative to the assembly center (deviation 12%). Derive its position from the driver sliders or use Align.",
+      "At figureHeight decrease (0.6x), \"bootR\" shifts non-proportionally relative to the assembly center (deviation 13%). Derive its position from the driver sliders or use Align.",
+      "At figureHeight decrease (0.6x), \"handR\" shifts non-proportionally relative to the assembly center (deviation 18%). Derive its position from the driver sliders or use Align.",
+      "At figureHeight decrease (0.6x), \"handL\" shifts non-proportionally relative to the assembly center (deviation 13%). Derive its position from the driver sliders or use Align.",
+      "At figureHeight decrease (0.6x), \"tunicSkirt\" shifts non-proportionally relative to the assembly center (deviation 13%). Derive its position from the driver sliders or use Align.",
+      "At figureHeight decrease (0.6x), \"groundRock\" shifts non-proportionally relative to the assembly center (deviation 12%). Derive its position from the driver sliders or use Align.",
+      "At figureHeight decrease (0.6x), \"cap\" shifts non-proportionally relative to the assembly center (deviation 13%). Derive its position from the driver sliders or use Align.",
+      "At figureHeight decrease (0.6x), \"cape\" shifts non-proportionally relative to the assembly center (deviation 12%). Derive its position from the driver sliders or use Align.",
+      "At figureHeight decrease (0.6x), \"bow\" shifts non-proportionally relative to the assembly center (deviation 13%). Derive its position from the driver sliders or use Align.",
+      "At figureHeight decrease (0.6x), \"bowstring\" shifts non-proportionally relative to the assembly center (deviation 16%). Derive its position from the driver sliders or use Align.",
+      "At figureHeight increase (1.5x), \"arrow1\" detaches from \"arrow3\". Check that their positions are driven by formulas or Align rather than absolute coordinates.",
+      "At figureHeight increase (1.5x), \"handR\" shifts non-proportionally relative to the assembly center (deviation 10%). Derive its position from the driver sliders or use Align.",
+      "At figureHeight increase (1.5x), \"bowstring\" shifts non-proportionally relative to the assembly center (deviation 9%). Derive its position from the driver sliders or use Align.",
+      "At bowSize decrease (0.6x), \"handR\" shifts non-proportionally relative to the assembly center (deviation 11%). Derive its position from the driver sliders or use Align.",
+      "At bowSize decrease (0.6x), \"bowstring\" shifts non-proportionally relative to the assembly center (deviation 10%). Derive its position from the driver sliders or use Align.",
+      "At bowSize increase (1.5x), \"legL\" shifts non-proportionally relative to the assembly center (deviation 9%). Derive its position from the driver sliders or use Align.",
+      "At bowSize increase (1.5x), \"legR\" shifts non-proportionally relative to the assembly center (deviation 10%). Derive its position from the driver sliders or use Align.",
+      "At bowSize increase (1.5x), \"torso\" shifts non-proportionally relative to the assembly center (deviation 10%). Derive its position from the driver sliders or use Align.",
+      "At bowSize increase (1.5x), \"belt\" shifts non-proportionally relative to the assembly center (deviation 10%). Derive its position from the driver sliders or use Align.",
+      "At bowSize increase (1.5x), \"head\" shifts non-proportionally relative to the assembly center (deviation 10%). Derive its position from the driver sliders or use Align.",
+      "At bowSize increase (1.5x), \"armR\" shifts non-proportionally relative to the assembly center (deviation 11%). Derive its position from the driver sliders or use Align.",
+      "At bowSize increase (1.5x), \"armL\" shifts non-proportionally relative to the assembly center (deviation 9%). Derive its position from the driver sliders or use Align.",
+      "At bowSize increase (1.5x), \"quiver\" shifts non-proportionally relative to the assembly center (deviation 9%). Derive its position from the driver sliders or use Align.",
+      "At bowSize increase (1.5x), \"arrow2\" shifts non-proportionally relative to the assembly center (deviation 8%). Derive its position from the driver sliders or use Align.",
+      "At bowSize increase (1.5x), \"arrow3\" shifts non-proportionally relative to the assembly center (deviation 9%). Derive its position from the driver sliders or use Align.",
+      "At bowSize increase (1.5x), \"bootL\" shifts non-proportionally relative to the assembly center (deviation 9%). Derive its position from the driver sliders or use Align.",
+      "At bowSize increase (1.5x), \"bootR\" shifts non-proportionally relative to the assembly center (deviation 11%). Derive its position from the driver sliders or use Align.",
+      "At bowSize increase (1.5x), \"handR\" shifts non-proportionally relative to the assembly center (deviation 13%). Derive its position from the driver sliders or use Align.",
+      "At bowSize increase (1.5x), \"handL\" shifts non-proportionally relative to the assembly center (deviation 8%). Derive its position from the driver sliders or use Align.",
+      "At bowSize increase (1.5x), \"tunicSkirt\" shifts non-proportionally relative to the assembly center (deviation 10%). Derive its position from the driver sliders or use Align.",
+      "At bowSize increase (1.5x), \"groundRock\" shifts non-proportionally relative to the assembly center (deviation 10%). Derive its position from the driver sliders or use Align.",
+      "At bowSize increase (1.5x), \"cap\" shifts non-proportionally relative to the assembly center (deviation 10%). Derive its position from the driver sliders or use Align.",
+      "At bowSize increase (1.5x), \"cape\" shifts non-proportionally relative to the assembly center (deviation 8%). Derive its position from the driver sliders or use Align.",
+      "At bowSize increase (1.5x), \"bow\" shifts non-proportionally relative to the assembly center (deviation 9%). Derive its position from the driver sliders or use Align.",
+      "At bowSize increase (1.5x), \"bowstring\" shifts non-proportionally relative to the assembly center (deviation 12%). Derive its position from the driver sliders or use Align."
+    ],
+    "proportionalIntegrity": 0.3333333333333333
+  },
+  "timeline": [
+    {
+      "at": "2026-07-24T19:41:44.694Z",
+      "turn": 1,
+      "trigger": "ai-ir",
+      "label": "attempt 1: rebuilt graph (40 nodes)",
+      "nodeCount": 40,
+      "edgeCount": 26,
+      "isolatedCount": 3,
+      "diff": {
+        "addedNodes": [
+          "figureHeight",
+          "bowSize",
+          "capSize",
+          "zUp",
+          "legLPos",
+          "legRPos",
+          "legL",
+          "legR",
+          "torsoPos",
+          "torso",
+          "beltPos",
+          "belt",
+          "headPos",
+          "head",
+          "capPos",
+          "cap",
+          "featherPos",
+          "featherShape",
+          "featherRot1",
+          "feather",
+          "armRPos",
+          "armRAxis",
+          "armR",
+          "armLPos",
+          "armLAxis",
+          "armL",
+          "bowStart",
+          "bowMid",
+          "bowEnd",
+          "bowArc",
+          "bow",
+          "quiverPos",
+          "quiverAxis",
+          "quiver",
+          "arrow1Pos",
+          "arrow1",
+          "arrow2Pos",
+          "arrow2",
+          "arrow3Pos",
+          "arrow3"
+        ],
+        "removedNodes": [],
+        "changedNodes": [],
+        "addedEdges": 26,
+        "removedEdges": 0
+      },
+      "details": [
+        "warning: Dead design parameter: slider \"bowSize\" is not referenced by any formula or edge — moving it changes nothing. Wire dimensions to it or remove it."
+      ],
+      "nodes": [
+        {
+          "id": "figureHeight",
+          "type": "NumberSlider",
+          "data": {
+            "value": 42,
+            "label": "figureHeight",
+            "min": 20,
+            "max": 80,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 2890
+          }
+        },
+        {
+          "id": "bowSize",
+          "type": "NumberSlider",
+          "data": {
+            "value": 16,
+            "label": "bowSize",
+            "min": 8,
+            "max": 30,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 1940
+          }
+        },
+        {
+          "id": "capSize",
+          "type": "NumberSlider",
+          "data": {
+            "value": 5,
+            "label": "capSize",
+            "min": 3,
+            "max": 10,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 2510
+          }
+        },
+        {
+          "id": "zUp",
+          "type": "VectorXYZ",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": 1
+          },
+          "position": {
+            "x": 40,
+            "y": 4220
+          }
+        },
+        {
+          "id": "legLPos",
+          "type": "Point",
+          "data": {
+            "x": "-figureHeight*0.04",
+            "y": 0,
+            "z": "figureHeight*0.21"
+          },
+          "position": {
+            "x": 40,
+            "y": 3270
+          }
+        },
+        {
+          "id": "legRPos",
+          "type": "Point",
+          "data": {
+            "x": "figureHeight*0.04",
+            "y": 0,
+            "z": "figureHeight*0.21"
+          },
+          "position": {
+            "x": 40,
+            "y": 3460
+          }
+        },
+        {
+          "id": "legL",
+          "type": "Cone",
+          "data": {
+            "radius1": "figureHeight*0.042",
+            "radius2": "figureHeight*0.025",
+            "height": "figureHeight*0.42",
+            "color": "#5C3317"
+          },
+          "position": {
+            "x": 270,
+            "y": 1940
+          }
+        },
+        {
+          "id": "legR",
+          "type": "Cone",
+          "data": {
+            "radius1": "figureHeight*0.042",
+            "radius2": "figureHeight*0.025",
+            "height": "figureHeight*0.42",
+            "color": "#5C3317"
+          },
+          "position": {
+            "x": 270,
+            "y": 2130
+          }
+        },
+        {
+          "id": "torsoPos",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "figureHeight*0.42 + figureHeight*0.165"
+          },
+          "position": {
+            "x": 40,
+            "y": 4030
+          }
+        },
+        {
+          "id": "torso",
+          "type": "Box",
+          "data": {
+            "width": "figureHeight*0.14",
+            "length": "figureHeight*0.09",
+            "height": "figureHeight*0.33",
+            "color": "#2d5a27"
+          },
+          "position": {
+            "x": 270,
+            "y": 2510
+          }
+        },
+        {
+          "id": "beltPos",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "figureHeight*0.44"
+          },
+          "position": {
+            "x": 40,
+            "y": 1370
+          }
+        },
+        {
+          "id": "belt",
+          "type": "Torus",
+          "data": {
+            "majorRadius": "figureHeight*0.065",
+            "minorRadius": "figureHeight*0.012",
+            "color": "#4a3728"
+          },
+          "position": {
+            "x": 270,
+            "y": 1560
+          }
+        },
+        {
+          "id": "headPos",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "figureHeight*0.82"
+          },
+          "position": {
+            "x": 40,
+            "y": 3080
+          }
+        },
+        {
+          "id": "head",
+          "type": "Sphere",
+          "data": {
+            "radius": "figureHeight*0.07",
+            "color": "#e8c39e"
+          },
+          "position": {
+            "x": 270,
+            "y": 1750
+          }
+        },
+        {
+          "id": "capPos",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "figureHeight*0.82 + figureHeight*0.07 + capSize*0.9"
+          },
+          "position": {
+            "x": 40,
+            "y": 2320
+          }
+        },
+        {
+          "id": "cap",
+          "type": "Cone",
+          "data": {
+            "radius1": "capSize*0.75",
+            "radius2": "capSize*0.03",
+            "height": "capSize*1.8",
+            "color": "#1d4d12"
+          },
+          "position": {
+            "x": 270,
+            "y": 990
+          }
+        },
+        {
+          "id": "featherPos",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "figureHeight*0.82 + figureHeight*0.07 + capSize*1.5"
+          },
+          "position": {
+            "x": 40,
+            "y": 2700
+          }
+        },
+        {
+          "id": "featherShape",
+          "type": "Box",
+          "data": {
+            "width": 0.2,
+            "length": "capSize*0.55",
+            "height": "capSize*0.14"
+          },
+          "position": {
+            "x": 270,
+            "y": 1370
+          }
+        },
+        {
+          "id": "featherRot1",
+          "type": "Rotate",
+          "data": {
+            "angle": 40,
+            "axisX": 0,
+            "axisY": 0,
+            "axisZ": 1
+          },
+          "position": {
+            "x": 500,
+            "y": 230
+          }
+        },
+        {
+          "id": "feather",
+          "type": "Rotate",
+          "data": {
+            "angle": 30,
+            "axisX": 1,
+            "axisY": 0,
+            "axisZ": 0,
+            "color": "#dc143c"
+          },
+          "position": {
+            "x": 730,
+            "y": 40
+          }
+        },
+        {
+          "id": "armRPos",
+          "type": "Point",
+          "data": {
+            "x": "figureHeight*0.055",
+            "y": 0,
+            "z": "figureHeight*0.42 + figureHeight*0.28"
+          },
+          "position": {
+            "x": 40,
+            "y": 610
+          }
+        },
+        {
+          "id": "armRAxis",
+          "type": "VectorXYZ",
+          "data": {
+            "x": 1,
+            "y": 0.2,
+            "z": -0.35
+          },
+          "position": {
+            "x": 40,
+            "y": 420
+          }
+        },
+        {
+          "id": "armR",
+          "type": "Cylinder",
+          "data": {
+            "radius": "figureHeight*0.022",
+            "height": "figureHeight*0.2",
+            "color": "#2d5a27"
+          },
+          "position": {
+            "x": 270,
+            "y": 230
+          }
+        },
+        {
+          "id": "armLPos",
+          "type": "Point",
+          "data": {
+            "x": "-figureHeight*0.055",
+            "y": 0,
+            "z": "figureHeight*0.42 + figureHeight*0.28"
+          },
+          "position": {
+            "x": 40,
+            "y": 230
+          }
+        },
+        {
+          "id": "armLAxis",
+          "type": "VectorXYZ",
+          "data": {
+            "x": 1,
+            "y": -0.2,
+            "z": -0.45
+          },
+          "position": {
+            "x": 40,
+            "y": 40
+          }
+        },
+        {
+          "id": "armL",
+          "type": "Cylinder",
+          "data": {
+            "radius": "figureHeight*0.022",
+            "height": "figureHeight*0.23",
+            "color": "#2d5a27"
+          },
+          "position": {
+            "x": 270,
+            "y": 40
+          }
+        },
+        {
+          "id": "bowStart",
+          "type": "Point",
+          "data": {
+            "x": "figureHeight*0.11",
+            "y": "bowSize*0.45",
+            "z": "figureHeight*0.42 + figureHeight*0.16"
+          },
+          "position": {
+            "x": 40,
+            "y": 2130
+          }
+        },
+        {
+          "id": "bowMid",
+          "type": "Point",
+          "data": {
+            "x": "figureHeight*0.11 + bowSize*0.35",
+            "y": 0,
+            "z": "figureHeight*0.42 + figureHeight*0.16"
+          },
+          "position": {
+            "x": 40,
+            "y": 1750
+          }
+        },
+        {
+          "id": "bowEnd",
+          "type": "Point",
+          "data": {
+            "x": "figureHeight*0.11",
+            "y": "-bowSize*0.45",
+            "z": "figureHeight*0.42 + figureHeight*0.16"
+          },
+          "position": {
+            "x": 40,
+            "y": 1560
+          }
+        },
+        {
+          "id": "bowArc",
+          "type": "Arc",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 420
+          }
+        },
+        {
+          "id": "bow",
+          "type": "Pipe",
+          "data": {
+            "radius": "figureHeight*0.012",
+            "color": "#6B4226"
+          },
+          "position": {
+            "x": 500,
+            "y": 40
+          }
+        },
+        {
+          "id": "quiverPos",
+          "type": "Point",
+          "data": {
+            "x": "-figureHeight*0.01",
+            "y": "-figureHeight*0.07",
+            "z": "figureHeight*0.42 + figureHeight*0.11"
+          },
+          "position": {
+            "x": 40,
+            "y": 3840
+          }
+        },
+        {
+          "id": "quiverAxis",
+          "type": "VectorXYZ",
+          "data": {
+            "x": 0.12,
+            "y": -0.2,
+            "z": 1
+          },
+          "position": {
+            "x": 40,
+            "y": 3650
+          }
+        },
+        {
+          "id": "quiver",
+          "type": "Cylinder",
+          "data": {
+            "radius": "figureHeight*0.028",
+            "height": "figureHeight*0.2",
+            "color": "#5C3317"
+          },
+          "position": {
+            "x": 270,
+            "y": 2320
+          }
+        },
+        {
+          "id": "arrow1Pos",
+          "type": "Point",
+          "data": {
+            "x": "-figureHeight*0.005",
+            "y": "-figureHeight*0.08",
+            "z": "figureHeight*0.42 + figureHeight*0.21"
+          },
+          "position": {
+            "x": 40,
+            "y": 800
+          }
+        },
+        {
+          "id": "arrow1",
+          "type": "Cylinder",
+          "data": {
+            "radius": "figureHeight*0.004",
+            "height": "figureHeight*0.16",
+            "color": "#c9b896"
+          },
+          "position": {
+            "x": 270,
+            "y": 610
+          }
+        },
+        {
+          "id": "arrow2Pos",
+          "type": "Point",
+          "data": {
+            "x": "-figureHeight*0.018",
+            "y": "-figureHeight*0.063",
+            "z": "figureHeight*0.42 + figureHeight*0.19"
+          },
+          "position": {
+            "x": 40,
+            "y": 990
+          }
+        },
+        {
+          "id": "arrow2",
+          "type": "Cylinder",
+          "data": {
+            "radius": "figureHeight*0.004",
+            "height": "figureHeight*0.15",
+            "color": "#c9b896"
+          },
+          "position": {
+            "x": 270,
+            "y": 800
+          }
+        },
+        {
+          "id": "arrow3Pos",
+          "type": "Point",
+          "data": {
+            "x": "figureHeight*0.004",
+            "y": "-figureHeight*0.075",
+            "z": "figureHeight*0.42 + figureHeight*0.2"
+          },
+          "position": {
+            "x": 40,
+            "y": 1180
+          }
+        },
+        {
+          "id": "arrow3",
+          "type": "Cylinder",
+          "data": {
+            "radius": "figureHeight*0.004",
+            "height": "figureHeight*0.17",
+            "color": "#c9b896"
+          },
+          "position": {
+            "x": 270,
+            "y": 1180
+          }
+        }
+      ],
+      "edges": [
+        {
+          "source": "legLPos",
+          "sourceHandle": "point",
+          "target": "legL",
+          "targetHandle": "center",
+          "id": "e_legLPos_legL_center"
+        },
+        {
+          "source": "legRPos",
+          "sourceHandle": "point",
+          "target": "legR",
+          "targetHandle": "center",
+          "id": "e_legRPos_legR_center"
+        },
+        {
+          "source": "torsoPos",
+          "sourceHandle": "point",
+          "target": "torso",
+          "targetHandle": "center",
+          "id": "e_torsoPos_torso_center"
+        },
+        {
+          "source": "beltPos",
+          "sourceHandle": "point",
+          "target": "belt",
+          "targetHandle": "center",
+          "id": "e_beltPos_belt_center"
+        },
+        {
+          "source": "zUp",
+          "sourceHandle": "vector",
+          "target": "belt",
+          "targetHandle": "axis",
+          "id": "e_zUp_belt_axis"
+        },
+        {
+          "source": "headPos",
+          "sourceHandle": "point",
+          "target": "head",
+          "targetHandle": "center",
+          "id": "e_headPos_head_center"
+        },
+        {
+          "source": "capPos",
+          "sourceHandle": "point",
+          "target": "cap",
+          "targetHandle": "center",
+          "id": "e_capPos_cap_center"
+        },
+        {
+          "source": "featherPos",
+          "sourceHandle": "point",
+          "target": "featherShape",
+          "targetHandle": "center",
+          "id": "e_featherPos_featherShape_center"
+        },
+        {
+          "source": "featherShape",
+          "sourceHandle": "solid",
+          "target": "featherRot1",
+          "targetHandle": "solid",
+          "id": "e_featherShape_featherRot1_solid"
+        },
+        {
+          "source": "featherRot1",
+          "sourceHandle": "solid",
+          "target": "feather",
+          "targetHandle": "solid",
+          "id": "e_featherRot1_feather_solid"
+        },
+        {
+          "source": "armRPos",
+          "sourceHandle": "point",
+          "target": "armR",
+          "targetHandle": "center",
+          "id": "e_armRPos_armR_center"
+        },
+        {
+          "source": "armRAxis",
+          "sourceHandle": "vector",
+          "target": "armR",
+          "targetHandle": "axis",
+          "id": "e_armRAxis_armR_axis"
+        },
+        {
+          "source": "armLPos",
+          "sourceHandle": "point",
+          "target": "armL",
+          "targetHandle": "center",
+          "id": "e_armLPos_armL_center"
+        },
+        {
+          "source": "armLAxis",
+          "sourceHandle": "vector",
+          "target": "armL",
+          "targetHandle": "axis",
+          "id": "e_armLAxis_armL_axis"
+        },
+        {
+          "source": "bowStart",
+          "sourceHandle": "point",
+          "target": "bowArc",
+          "targetHandle": "start",
+          "id": "e_bowStart_bowArc_start"
+        },
+        {
+          "source": "bowMid",
+          "sourceHandle": "point",
+          "target": "bowArc",
+          "targetHandle": "middle",
+          "id": "e_bowMid_bowArc_middle"
+        },
+        {
+          "source": "bowEnd",
+          "sourceHandle": "point",
+          "target": "bowArc",
+          "targetHandle": "end",
+          "id": "e_bowEnd_bowArc_end"
+        },
+        {
+          "source": "bowArc",
+          "sourceHandle": "curve",
+          "target": "bow",
+          "targetHandle": "path",
+          "id": "e_bowArc_bow_path"
+        },
+        {
+          "source": "quiverPos",
+          "sourceHandle": "point",
+          "target": "quiver",
+          "targetHandle": "center",
+          "id": "e_quiverPos_quiver_center"
+        },
+        {
+          "source": "quiverAxis",
+          "sourceHandle": "vector",
+          "target": "quiver",
+          "targetHandle": "axis",
+          "id": "e_quiverAxis_quiver_axis"
+        },
+        {
+          "source": "arrow1Pos",
+          "sourceHandle": "point",
+          "target": "arrow1",
+          "targetHandle": "center",
+          "id": "e_arrow1Pos_arrow1_center"
+        },
+        {
+          "source": "quiverAxis",
+          "sourceHandle": "vector",
+          "target": "arrow1",
+          "targetHandle": "axis",
+          "id": "e_quiverAxis_arrow1_axis"
+        },
+        {
+          "source": "arrow2Pos",
+          "sourceHandle": "point",
+          "target": "arrow2",
+          "targetHandle": "center",
+          "id": "e_arrow2Pos_arrow2_center"
+        },
+        {
+          "source": "quiverAxis",
+          "sourceHandle": "vector",
+          "target": "arrow2",
+          "targetHandle": "axis",
+          "id": "e_quiverAxis_arrow2_axis"
+        },
+        {
+          "source": "arrow3Pos",
+          "sourceHandle": "point",
+          "target": "arrow3",
+          "targetHandle": "center",
+          "id": "e_arrow3Pos_arrow3_center"
+        },
+        {
+          "source": "quiverAxis",
+          "sourceHandle": "vector",
+          "target": "arrow3",
+          "targetHandle": "axis",
+          "id": "e_quiverAxis_arrow3_axis"
+        }
+      ]
+    },
+    {
+      "at": "2026-07-24T19:45:11.587Z",
+      "turn": 2,
+      "trigger": "ai-json",
+      "label": "attempt 1: added 17 node(s) [Point, Cone, Sphere, Line]; added 11 edge(s)",
+      "nodeCount": 57,
+      "edgeCount": 37,
+      "isolatedCount": 3,
+      "diff": {
+        "addedNodes": [
+          "bootLPos",
+          "bootRPos",
+          "bootL",
+          "bootR",
+          "handRPos",
+          "handLPos",
+          "handR",
+          "handL",
+          "tunicSkirtPos",
+          "tunicSkirt",
+          "bowstringLine",
+          "bowstring",
+          "groundRockPos",
+          "groundRock",
+          "capePos",
+          "capeShape",
+          "cape"
+        ],
+        "removedNodes": [],
+        "changedNodes": [],
+        "addedEdges": 11,
+        "removedEdges": 0
+      },
+      "details": [
+        "warning: Dead design parameter: slider \"bowSize\" is not referenced by any formula or edge — moving it changes nothing. Wire dimensions to it or remove it."
+      ],
+      "nodes": [
+        {
+          "id": "figureHeight",
+          "type": "NumberSlider",
+          "data": {
+            "value": 42,
+            "label": "figureHeight",
+            "min": 20,
+            "max": 80,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 3460
+          },
+          "measured": {
+            "width": 201,
+            "height": 328
+          }
+        },
+        {
+          "id": "bowSize",
+          "type": "NumberSlider",
+          "data": {
+            "value": 16,
+            "label": "bowSize",
+            "min": 8,
+            "max": 30,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 2320
+          },
+          "measured": {
+            "width": 201,
+            "height": 328
+          }
+        },
+        {
+          "id": "capSize",
+          "type": "NumberSlider",
+          "data": {
+            "value": 5,
+            "label": "capSize",
+            "min": 3,
+            "max": 10,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 3080
+          },
+          "measured": {
+            "width": 201,
+            "height": 328
+          }
+        },
+        {
+          "id": "zUp",
+          "type": "VectorXYZ",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": 1
+          },
+          "position": {
+            "x": 40,
+            "y": 5550
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "legLPos",
+          "type": "Point",
+          "data": {
+            "x": "-figureHeight*0.04",
+            "y": 0,
+            "z": "figureHeight*0.21"
+          },
+          "position": {
+            "x": 40,
+            "y": 4410
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "legRPos",
+          "type": "Point",
+          "data": {
+            "x": "figureHeight*0.04",
+            "y": 0,
+            "z": "figureHeight*0.21"
+          },
+          "position": {
+            "x": 40,
+            "y": 4600
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "legL",
+          "type": "Cone",
+          "data": {
+            "radius1": "figureHeight*0.042",
+            "radius2": "figureHeight*0.025",
+            "height": "figureHeight*0.42",
+            "color": "#5C3317"
+          },
+          "position": {
+            "x": 270,
+            "y": 3270
+          },
+          "measured": {
+            "width": 201,
+            "height": 344
+          }
+        },
+        {
+          "id": "legR",
+          "type": "Cone",
+          "data": {
+            "radius1": "figureHeight*0.042",
+            "radius2": "figureHeight*0.025",
+            "height": "figureHeight*0.42",
+            "color": "#5C3317"
+          },
+          "position": {
+            "x": 270,
+            "y": 3460
+          },
+          "measured": {
+            "width": 201,
+            "height": 344
+          }
+        },
+        {
+          "id": "torsoPos",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "figureHeight*0.42 + figureHeight*0.165"
+          },
+          "position": {
+            "x": 40,
+            "y": 5170
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "torso",
+          "type": "Box",
+          "data": {
+            "width": "figureHeight*0.14",
+            "length": "figureHeight*0.09",
+            "height": "figureHeight*0.33",
+            "color": "#2d5a27"
+          },
+          "position": {
+            "x": 270,
+            "y": 3840
+          },
+          "measured": {
+            "width": 201,
+            "height": 312
+          }
+        },
+        {
+          "id": "beltPos",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "figureHeight*0.44"
+          },
+          "position": {
+            "x": 40,
+            "y": 1370
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "belt",
+          "type": "Torus",
+          "data": {
+            "majorRadius": "figureHeight*0.065",
+            "minorRadius": "figureHeight*0.012",
+            "color": "#4a3728"
+          },
+          "position": {
+            "x": 270,
+            "y": 2320
+          },
+          "measured": {
+            "width": 201,
+            "height": 296
+          }
+        },
+        {
+          "id": "headPos",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "figureHeight*0.82"
+          },
+          "position": {
+            "x": 40,
+            "y": 4220
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "head",
+          "type": "Sphere",
+          "data": {
+            "radius": "figureHeight*0.07",
+            "color": "#e8c39e"
+          },
+          "position": {
+            "x": 270,
+            "y": 3080
+          },
+          "measured": {
+            "width": 201,
+            "height": 216
+          }
+        },
+        {
+          "id": "capPos",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "figureHeight*0.82 + figureHeight*0.07 + capSize*0.9"
+          },
+          "position": {
+            "x": 40,
+            "y": 2890
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "cap",
+          "type": "Cone",
+          "data": {
+            "radius1": "capSize*0.75",
+            "radius2": "capSize*0.03",
+            "height": "capSize*1.8",
+            "color": "#1d4d12"
+          },
+          "position": {
+            "x": 270,
+            "y": 1750
+          },
+          "measured": {
+            "width": 201,
+            "height": 344
+          }
+        },
+        {
+          "id": "featherPos",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "figureHeight*0.82 + figureHeight*0.07 + capSize*1.5"
+          },
+          "position": {
+            "x": 40,
+            "y": 3270
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "featherShape",
+          "type": "Box",
+          "data": {
+            "width": 0.2,
+            "length": "capSize*0.55",
+            "height": "capSize*0.14"
+          },
+          "position": {
+            "x": 270,
+            "y": 2130
+          },
+          "measured": {
+            "width": 201,
+            "height": 312
+          }
+        },
+        {
+          "id": "featherRot1",
+          "type": "Rotate",
+          "data": {
+            "angle": 40,
+            "axisX": 0,
+            "axisY": 0,
+            "axisZ": 1
+          },
+          "position": {
+            "x": 500,
+            "y": 610
+          },
+          "measured": {
+            "width": 201,
+            "height": 414
+          }
+        },
+        {
+          "id": "feather",
+          "type": "Rotate",
+          "data": {
+            "angle": 30,
+            "axisX": 1,
+            "axisY": 0,
+            "axisZ": 0,
+            "color": "#dc143c"
+          },
+          "position": {
+            "x": 730,
+            "y": 40
+          },
+          "measured": {
+            "width": 201,
+            "height": 414
+          }
+        },
+        {
+          "id": "armRPos",
+          "type": "Point",
+          "data": {
+            "x": "figureHeight*0.055",
+            "y": 0,
+            "z": "figureHeight*0.42 + figureHeight*0.28"
+          },
+          "position": {
+            "x": 40,
+            "y": 610
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "armRAxis",
+          "type": "VectorXYZ",
+          "data": {
+            "x": 1,
+            "y": 0.2,
+            "z": -0.35
+          },
+          "position": {
+            "x": 40,
+            "y": 420
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "armR",
+          "type": "Cylinder",
+          "data": {
+            "radius": "figureHeight*0.022",
+            "height": "figureHeight*0.2",
+            "color": "#2d5a27"
+          },
+          "position": {
+            "x": 270,
+            "y": 230
+          },
+          "measured": {
+            "width": 201,
+            "height": 296
+          }
+        },
+        {
+          "id": "armLPos",
+          "type": "Point",
+          "data": {
+            "x": "-figureHeight*0.055",
+            "y": 0,
+            "z": "figureHeight*0.42 + figureHeight*0.28"
+          },
+          "position": {
+            "x": 40,
+            "y": 230
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "armLAxis",
+          "type": "VectorXYZ",
+          "data": {
+            "x": 1,
+            "y": -0.2,
+            "z": -0.45
+          },
+          "position": {
+            "x": 40,
+            "y": 40
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "armL",
+          "type": "Cylinder",
+          "data": {
+            "radius": "figureHeight*0.022",
+            "height": "figureHeight*0.23",
+            "color": "#2d5a27"
+          },
+          "position": {
+            "x": 270,
+            "y": 40
+          },
+          "measured": {
+            "width": 201,
+            "height": 296
+          }
+        },
+        {
+          "id": "bowStart",
+          "type": "Point",
+          "data": {
+            "x": "figureHeight*0.11",
+            "y": "bowSize*0.45",
+            "z": "figureHeight*0.42 + figureHeight*0.16"
+          },
+          "position": {
+            "x": 40,
+            "y": 2510
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "bowMid",
+          "type": "Point",
+          "data": {
+            "x": "figureHeight*0.11 + bowSize*0.35",
+            "y": 0,
+            "z": "figureHeight*0.42 + figureHeight*0.16"
+          },
+          "position": {
+            "x": 40,
+            "y": 2130
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "bowEnd",
+          "type": "Point",
+          "data": {
+            "x": "figureHeight*0.11",
+            "y": "-bowSize*0.45",
+            "z": "figureHeight*0.42 + figureHeight*0.16"
+          },
+          "position": {
+            "x": 40,
+            "y": 1940
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "bowArc",
+          "type": "Arc",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 800
+          },
+          "measured": {
+            "width": 177,
+            "height": 232
+          }
+        },
+        {
+          "id": "bow",
+          "type": "Pipe",
+          "data": {
+            "radius": "figureHeight*0.012",
+            "color": "#6B4226"
+          },
+          "position": {
+            "x": 500,
+            "y": 40
+          },
+          "measured": {
+            "width": 201,
+            "height": 270
+          }
+        },
+        {
+          "id": "quiverPos",
+          "type": "Point",
+          "data": {
+            "x": "-figureHeight*0.01",
+            "y": "-figureHeight*0.07",
+            "z": "figureHeight*0.42 + figureHeight*0.11"
+          },
+          "position": {
+            "x": 40,
+            "y": 4980
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "quiverAxis",
+          "type": "VectorXYZ",
+          "data": {
+            "x": 0.12,
+            "y": -0.2,
+            "z": 1
+          },
+          "position": {
+            "x": 40,
+            "y": 4790
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "quiver",
+          "type": "Cylinder",
+          "data": {
+            "radius": "figureHeight*0.028",
+            "height": "figureHeight*0.2",
+            "color": "#5C3317"
+          },
+          "position": {
+            "x": 270,
+            "y": 3650
+          },
+          "measured": {
+            "width": 201,
+            "height": 296
+          }
+        },
+        {
+          "id": "arrow1Pos",
+          "type": "Point",
+          "data": {
+            "x": "-figureHeight*0.005",
+            "y": "-figureHeight*0.08",
+            "z": "figureHeight*0.42 + figureHeight*0.21"
+          },
+          "position": {
+            "x": 40,
+            "y": 800
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "arrow1",
+          "type": "Cylinder",
+          "data": {
+            "radius": "figureHeight*0.004",
+            "height": "figureHeight*0.16",
+            "color": "#c9b896"
+          },
+          "position": {
+            "x": 270,
+            "y": 1370
+          },
+          "measured": {
+            "width": 201,
+            "height": 296
+          }
+        },
+        {
+          "id": "arrow2Pos",
+          "type": "Point",
+          "data": {
+            "x": "-figureHeight*0.018",
+            "y": "-figureHeight*0.063",
+            "z": "figureHeight*0.42 + figureHeight*0.19"
+          },
+          "position": {
+            "x": 40,
+            "y": 990
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "arrow2",
+          "type": "Cylinder",
+          "data": {
+            "radius": "figureHeight*0.004",
+            "height": "figureHeight*0.15",
+            "color": "#c9b896"
+          },
+          "position": {
+            "x": 270,
+            "y": 1560
+          },
+          "measured": {
+            "width": 201,
+            "height": 296
+          }
+        },
+        {
+          "id": "arrow3Pos",
+          "type": "Point",
+          "data": {
+            "x": "figureHeight*0.004",
+            "y": "-figureHeight*0.075",
+            "z": "figureHeight*0.42 + figureHeight*0.2"
+          },
+          "position": {
+            "x": 40,
+            "y": 1180
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "arrow3",
+          "type": "Cylinder",
+          "data": {
+            "radius": "figureHeight*0.004",
+            "height": "figureHeight*0.17",
+            "color": "#c9b896"
+          },
+          "position": {
+            "x": 270,
+            "y": 1940
+          },
+          "measured": {
+            "width": 201,
+            "height": 296
+          }
+        },
+        {
+          "id": "bootLPos",
+          "type": "Point",
+          "data": {
+            "x": "-figureHeight*0.04",
+            "y": 0,
+            "z": "figureHeight*0.035"
+          },
+          "position": {
+            "x": 40,
+            "y": 1560
+          }
+        },
+        {
+          "id": "bootRPos",
+          "type": "Point",
+          "data": {
+            "x": "figureHeight*0.04",
+            "y": 0,
+            "z": "figureHeight*0.035"
+          },
+          "position": {
+            "x": 40,
+            "y": 1750
+          }
+        },
+        {
+          "id": "bootL",
+          "type": "Cone",
+          "data": {
+            "radius1": "figureHeight*0.03",
+            "radius2": "figureHeight*0.04",
+            "height": "figureHeight*0.07",
+            "color": "#3a2614"
+          },
+          "position": {
+            "x": 270,
+            "y": 420
+          }
+        },
+        {
+          "id": "bootR",
+          "type": "Cone",
+          "data": {
+            "radius1": "figureHeight*0.03",
+            "radius2": "figureHeight*0.04",
+            "height": "figureHeight*0.07",
+            "color": "#3a2614"
+          },
+          "position": {
+            "x": 270,
+            "y": 610
+          }
+        },
+        {
+          "id": "handRPos",
+          "type": "Point",
+          "data": {
+            "x": "figureHeight*0.148",
+            "y": "figureHeight*0.019",
+            "z": "figureHeight*0.668"
+          },
+          "position": {
+            "x": 40,
+            "y": 4030
+          }
+        },
+        {
+          "id": "handLPos",
+          "type": "Point",
+          "data": {
+            "x": "figureHeight*0.048",
+            "y": "-figureHeight*0.021",
+            "z": "figureHeight*0.654"
+          },
+          "position": {
+            "x": 40,
+            "y": 3840
+          }
+        },
+        {
+          "id": "handR",
+          "type": "Sphere",
+          "data": {
+            "radius": "figureHeight*0.025",
+            "color": "#e8c39e"
+          },
+          "position": {
+            "x": 270,
+            "y": 2890
+          }
+        },
+        {
+          "id": "handL",
+          "type": "Sphere",
+          "data": {
+            "radius": "figureHeight*0.025",
+            "color": "#e8c39e"
+          },
+          "position": {
+            "x": 270,
+            "y": 2700
+          }
+        },
+        {
+          "id": "tunicSkirtPos",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "figureHeight*0.33"
+          },
+          "position": {
+            "x": 40,
+            "y": 5360
+          }
+        },
+        {
+          "id": "tunicSkirt",
+          "type": "Cone",
+          "data": {
+            "radius1": "figureHeight*0.075",
+            "radius2": "figureHeight*0.055",
+            "height": "figureHeight*0.12",
+            "color": "#2d5a27"
+          },
+          "position": {
+            "x": 270,
+            "y": 4030
+          }
+        },
+        {
+          "id": "bowstringLine",
+          "type": "Line",
+          "data": {
+            "color": "#d4d4d4"
+          },
+          "position": {
+            "x": 270,
+            "y": 990
+          }
+        },
+        {
+          "id": "bowstring",
+          "type": "Pipe",
+          "data": {
+            "radius": "figureHeight*0.003",
+            "color": "#d4d4d4"
+          },
+          "position": {
+            "x": 500,
+            "y": 230
+          }
+        },
+        {
+          "id": "groundRockPos",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "figureHeight*0.015"
+          },
+          "position": {
+            "x": 40,
+            "y": 3650
+          }
+        },
+        {
+          "id": "groundRock",
+          "type": "Cylinder",
+          "data": {
+            "radius": "figureHeight*0.18",
+            "height": "figureHeight*0.03",
+            "color": "#4a4a3a"
+          },
+          "position": {
+            "x": 270,
+            "y": 2510
+          }
+        },
+        {
+          "id": "capePos",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": "-figureHeight*0.05",
+            "z": "figureHeight*0.5"
+          },
+          "position": {
+            "x": 40,
+            "y": 2700
+          }
+        },
+        {
+          "id": "capeShape",
+          "type": "Box",
+          "data": {
+            "width": "figureHeight*0.16",
+            "length": "figureHeight*0.03",
+            "height": "figureHeight*0.35",
+            "color": "#1d4d12"
+          },
+          "position": {
+            "x": 270,
+            "y": 1180
+          }
+        },
+        {
+          "id": "cape",
+          "type": "Bend",
+          "data": {
+            "axis": "Y",
+            "angle": "12"
+          },
+          "position": {
+            "x": 500,
+            "y": 420
+          }
+        }
+      ],
+      "edges": [
+        {
+          "source": "legLPos",
+          "sourceHandle": "point",
+          "target": "legL",
+          "targetHandle": "center",
+          "id": "e_legLPos_legL_center"
+        },
+        {
+          "source": "legRPos",
+          "sourceHandle": "point",
+          "target": "legR",
+          "targetHandle": "center",
+          "id": "e_legRPos_legR_center"
+        },
+        {
+          "source": "torsoPos",
+          "sourceHandle": "point",
+          "target": "torso",
+          "targetHandle": "center",
+          "id": "e_torsoPos_torso_center"
+        },
+        {
+          "source": "beltPos",
+          "sourceHandle": "point",
+          "target": "belt",
+          "targetHandle": "center",
+          "id": "e_beltPos_belt_center"
+        },
+        {
+          "source": "zUp",
+          "sourceHandle": "vector",
+          "target": "belt",
+          "targetHandle": "axis",
+          "id": "e_zUp_belt_axis"
+        },
+        {
+          "source": "headPos",
+          "sourceHandle": "point",
+          "target": "head",
+          "targetHandle": "center",
+          "id": "e_headPos_head_center"
+        },
+        {
+          "source": "capPos",
+          "sourceHandle": "point",
+          "target": "cap",
+          "targetHandle": "center",
+          "id": "e_capPos_cap_center"
+        },
+        {
+          "source": "featherPos",
+          "sourceHandle": "point",
+          "target": "featherShape",
+          "targetHandle": "center",
+          "id": "e_featherPos_featherShape_center"
+        },
+        {
+          "source": "featherShape",
+          "sourceHandle": "solid",
+          "target": "featherRot1",
+          "targetHandle": "solid",
+          "id": "e_featherShape_featherRot1_solid"
+        },
+        {
+          "source": "featherRot1",
+          "sourceHandle": "solid",
+          "target": "feather",
+          "targetHandle": "solid",
+          "id": "e_featherRot1_feather_solid"
+        },
+        {
+          "source": "armRPos",
+          "sourceHandle": "point",
+          "target": "armR",
+          "targetHandle": "center",
+          "id": "e_armRPos_armR_center"
+        },
+        {
+          "source": "armRAxis",
+          "sourceHandle": "vector",
+          "target": "armR",
+          "targetHandle": "axis",
+          "id": "e_armRAxis_armR_axis"
+        },
+        {
+          "source": "armLPos",
+          "sourceHandle": "point",
+          "target": "armL",
+          "targetHandle": "center",
+          "id": "e_armLPos_armL_center"
+        },
+        {
+          "source": "armLAxis",
+          "sourceHandle": "vector",
+          "target": "armL",
+          "targetHandle": "axis",
+          "id": "e_armLAxis_armL_axis"
+        },
+        {
+          "source": "bowStart",
+          "sourceHandle": "point",
+          "target": "bowArc",
+          "targetHandle": "start",
+          "id": "e_bowStart_bowArc_start"
+        },
+        {
+          "source": "bowMid",
+          "sourceHandle": "point",
+          "target": "bowArc",
+          "targetHandle": "middle",
+          "id": "e_bowMid_bowArc_middle"
+        },
+        {
+          "source": "bowEnd",
+          "sourceHandle": "point",
+          "target": "bowArc",
+          "targetHandle": "end",
+          "id": "e_bowEnd_bowArc_end"
+        },
+        {
+          "source": "bowArc",
+          "sourceHandle": "curve",
+          "target": "bow",
+          "targetHandle": "path",
+          "id": "e_bowArc_bow_path"
+        },
+        {
+          "source": "quiverPos",
+          "sourceHandle": "point",
+          "target": "quiver",
+          "targetHandle": "center",
+          "id": "e_quiverPos_quiver_center"
+        },
+        {
+          "source": "quiverAxis",
+          "sourceHandle": "vector",
+          "target": "quiver",
+          "targetHandle": "axis",
+          "id": "e_quiverAxis_quiver_axis"
+        },
+        {
+          "source": "arrow1Pos",
+          "sourceHandle": "point",
+          "target": "arrow1",
+          "targetHandle": "center",
+          "id": "e_arrow1Pos_arrow1_center"
+        },
+        {
+          "source": "quiverAxis",
+          "sourceHandle": "vector",
+          "target": "arrow1",
+          "targetHandle": "axis",
+          "id": "e_quiverAxis_arrow1_axis"
+        },
+        {
+          "source": "arrow2Pos",
+          "sourceHandle": "point",
+          "target": "arrow2",
+          "targetHandle": "center",
+          "id": "e_arrow2Pos_arrow2_center"
+        },
+        {
+          "source": "quiverAxis",
+          "sourceHandle": "vector",
+          "target": "arrow2",
+          "targetHandle": "axis",
+          "id": "e_quiverAxis_arrow2_axis"
+        },
+        {
+          "source": "arrow3Pos",
+          "sourceHandle": "point",
+          "target": "arrow3",
+          "targetHandle": "center",
+          "id": "e_arrow3Pos_arrow3_center"
+        },
+        {
+          "source": "quiverAxis",
+          "sourceHandle": "vector",
+          "target": "arrow3",
+          "targetHandle": "axis",
+          "id": "e_quiverAxis_arrow3_axis"
+        },
+        {
+          "source": "bootLPos",
+          "target": "bootL",
+          "id": "e_bootLPos_bootL_center",
+          "sourceHandle": "point",
+          "targetHandle": "center"
+        },
+        {
+          "source": "bootRPos",
+          "target": "bootR",
+          "id": "e_bootRPos_bootR_center",
+          "sourceHandle": "point",
+          "targetHandle": "center"
+        },
+        {
+          "source": "handRPos",
+          "target": "handR",
+          "id": "e_handRPos_handR_center",
+          "sourceHandle": "point",
+          "targetHandle": "center"
+        },
+        {
+          "source": "handLPos",
+          "target": "handL",
+          "id": "e_handLPos_handL_center",
+          "sourceHandle": "point",
+          "targetHandle": "center"
+        },
+        {
+          "source": "tunicSkirtPos",
+          "target": "tunicSkirt",
+          "id": "e_tunicSkirtPos_tunicSkirt_center",
+          "sourceHandle": "point",
+          "targetHandle": "center"
+        },
+        {
+          "source": "bowStart",
+          "target": "bowstringLine",
+          "id": "e_bowStart_bowstringLine_a",
+          "sourceHandle": "point",
+          "targetHandle": "a"
+        },
+        {
+          "source": "bowEnd",
+          "target": "bowstringLine",
+          "id": "e_bowEnd_bowstringLine_b",
+          "sourceHandle": "point",
+          "targetHandle": "b"
+        },
+        {
+          "source": "bowstringLine",
+          "target": "bowstring",
+          "id": "e_bowstringLine_bowstring_path",
+          "sourceHandle": "curve",
+          "targetHandle": "path"
+        },
+        {
+          "source": "groundRockPos",
+          "target": "groundRock",
+          "id": "e_groundRockPos_groundRock_center",
+          "sourceHandle": "point",
+          "targetHandle": "center"
+        },
+        {
+          "source": "capePos",
+          "target": "capeShape",
+          "id": "e_capePos_capeShape_center",
+          "sourceHandle": "point",
+          "targetHandle": "center"
+        },
+        {
+          "source": "capeShape",
+          "target": "cape",
+          "id": "e_capeShape_cape_solid",
+          "sourceHandle": "solid",
+          "targetHandle": "solid"
+        }
+      ]
+    },
+    {
+      "at": "2026-07-24T19:46:13.347Z",
+      "turn": 2,
+      "trigger": "ai-repair",
+      "label": "attempt 2: updated 14 node(s)",
+      "nodeCount": 57,
+      "edgeCount": 37,
+      "isolatedCount": 3,
+      "diff": {
+        "addedNodes": [],
+        "removedNodes": [],
+        "changedNodes": [
+          "featherPos",
+          "armLPos",
+          "armLAxis",
+          "armL",
+          "arrow1Pos",
+          "arrow2Pos",
+          "arrow3Pos",
+          "bootLPos",
+          "bootRPos",
+          "bootL",
+          "bootR",
+          "handLPos",
+          "bowstring",
+          "capePos"
+        ],
+        "addedEdges": 0,
+        "removedEdges": 0
+      },
+      "details": [
+        "warning: Dead design parameter: slider \"bowSize\" is not referenced by any formula or edge — moving it changes nothing. Wire dimensions to it or remove it."
+      ],
+      "nodes": [
+        {
+          "id": "figureHeight",
+          "type": "NumberSlider",
+          "data": {
+            "value": 42,
+            "label": "figureHeight",
+            "min": 20,
+            "max": 80,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 3460
+          },
+          "measured": {
+            "width": 201,
+            "height": 328
+          }
+        },
+        {
+          "id": "bowSize",
+          "type": "NumberSlider",
+          "data": {
+            "value": 16,
+            "label": "bowSize",
+            "min": 8,
+            "max": 30,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 2320
+          },
+          "measured": {
+            "width": 201,
+            "height": 328
+          }
+        },
+        {
+          "id": "capSize",
+          "type": "NumberSlider",
+          "data": {
+            "value": 5,
+            "label": "capSize",
+            "min": 3,
+            "max": 10,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 3080
+          },
+          "measured": {
+            "width": 201,
+            "height": 328
+          }
+        },
+        {
+          "id": "zUp",
+          "type": "VectorXYZ",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": 1
+          },
+          "position": {
+            "x": 40,
+            "y": 5550
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "legLPos",
+          "type": "Point",
+          "data": {
+            "x": "-figureHeight*0.04",
+            "y": 0,
+            "z": "figureHeight*0.21"
+          },
+          "position": {
+            "x": 40,
+            "y": 4410
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "legRPos",
+          "type": "Point",
+          "data": {
+            "x": "figureHeight*0.04",
+            "y": 0,
+            "z": "figureHeight*0.21"
+          },
+          "position": {
+            "x": 40,
+            "y": 4600
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "legL",
+          "type": "Cone",
+          "data": {
+            "radius1": "figureHeight*0.042",
+            "radius2": "figureHeight*0.025",
+            "height": "figureHeight*0.42",
+            "color": "#5C3317"
+          },
+          "position": {
+            "x": 270,
+            "y": 3270
+          },
+          "measured": {
+            "width": 201,
+            "height": 344
+          }
+        },
+        {
+          "id": "legR",
+          "type": "Cone",
+          "data": {
+            "radius1": "figureHeight*0.042",
+            "radius2": "figureHeight*0.025",
+            "height": "figureHeight*0.42",
+            "color": "#5C3317"
+          },
+          "position": {
+            "x": 270,
+            "y": 3460
+          },
+          "measured": {
+            "width": 201,
+            "height": 344
+          }
+        },
+        {
+          "id": "torsoPos",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "figureHeight*0.42 + figureHeight*0.165"
+          },
+          "position": {
+            "x": 40,
+            "y": 5170
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "torso",
+          "type": "Box",
+          "data": {
+            "width": "figureHeight*0.14",
+            "length": "figureHeight*0.09",
+            "height": "figureHeight*0.33",
+            "color": "#2d5a27"
+          },
+          "position": {
+            "x": 270,
+            "y": 3840
+          },
+          "measured": {
+            "width": 201,
+            "height": 312
+          }
+        },
+        {
+          "id": "beltPos",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "figureHeight*0.44"
+          },
+          "position": {
+            "x": 40,
+            "y": 1370
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "belt",
+          "type": "Torus",
+          "data": {
+            "majorRadius": "figureHeight*0.065",
+            "minorRadius": "figureHeight*0.012",
+            "color": "#4a3728"
+          },
+          "position": {
+            "x": 270,
+            "y": 2320
+          },
+          "measured": {
+            "width": 201,
+            "height": 296
+          }
+        },
+        {
+          "id": "headPos",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "figureHeight*0.82"
+          },
+          "position": {
+            "x": 40,
+            "y": 4220
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "head",
+          "type": "Sphere",
+          "data": {
+            "radius": "figureHeight*0.07",
+            "color": "#e8c39e"
+          },
+          "position": {
+            "x": 270,
+            "y": 3080
+          },
+          "measured": {
+            "width": 201,
+            "height": 216
+          }
+        },
+        {
+          "id": "capPos",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "figureHeight*0.82 + figureHeight*0.07 + capSize*0.9"
+          },
+          "position": {
+            "x": 40,
+            "y": 2890
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "cap",
+          "type": "Cone",
+          "data": {
+            "radius1": "capSize*0.75",
+            "radius2": "capSize*0.03",
+            "height": "capSize*1.8",
+            "color": "#1d4d12"
+          },
+          "position": {
+            "x": 270,
+            "y": 1750
+          },
+          "measured": {
+            "width": 201,
+            "height": 344
+          }
+        },
+        {
+          "id": "featherPos",
+          "type": "Point",
+          "data": {
+            "x": "capSize*0.2",
+            "y": 0,
+            "z": "figureHeight*0.82+figureHeight*0.05+capSize*0.5"
+          },
+          "position": {
+            "x": 40,
+            "y": 3270
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "featherShape",
+          "type": "Box",
+          "data": {
+            "width": 0.2,
+            "length": "capSize*0.55",
+            "height": "capSize*0.14"
+          },
+          "position": {
+            "x": 270,
+            "y": 2130
+          },
+          "measured": {
+            "width": 201,
+            "height": 312
+          }
+        },
+        {
+          "id": "featherRot1",
+          "type": "Rotate",
+          "data": {
+            "angle": 40,
+            "axisX": 0,
+            "axisY": 0,
+            "axisZ": 1
+          },
+          "position": {
+            "x": 500,
+            "y": 610
+          },
+          "measured": {
+            "width": 201,
+            "height": 414
+          }
+        },
+        {
+          "id": "feather",
+          "type": "Rotate",
+          "data": {
+            "angle": 30,
+            "axisX": 1,
+            "axisY": 0,
+            "axisZ": 0,
+            "color": "#dc143c"
+          },
+          "position": {
+            "x": 730,
+            "y": 40
+          },
+          "measured": {
+            "width": 201,
+            "height": 414
+          }
+        },
+        {
+          "id": "armRPos",
+          "type": "Point",
+          "data": {
+            "x": "figureHeight*0.055",
+            "y": 0,
+            "z": "figureHeight*0.42 + figureHeight*0.28"
+          },
+          "position": {
+            "x": 40,
+            "y": 610
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "armRAxis",
+          "type": "VectorXYZ",
+          "data": {
+            "x": 1,
+            "y": 0.2,
+            "z": -0.35
+          },
+          "position": {
+            "x": 40,
+            "y": 420
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "armR",
+          "type": "Cylinder",
+          "data": {
+            "radius": "figureHeight*0.022",
+            "height": "figureHeight*0.2",
+            "color": "#2d5a27"
+          },
+          "position": {
+            "x": 270,
+            "y": 230
+          },
+          "measured": {
+            "width": 201,
+            "height": 296
+          }
+        },
+        {
+          "id": "armLPos",
+          "type": "Point",
+          "data": {
+            "x": "-figureHeight*0.06",
+            "y": "-figureHeight*0.02",
+            "z": "figureHeight*0.72"
+          },
+          "position": {
+            "x": 40,
+            "y": 230
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "armLAxis",
+          "type": "VectorXYZ",
+          "data": {
+            "x": 0.3,
+            "y": -0.3,
+            "z": 0.9
+          },
+          "position": {
+            "x": 40,
+            "y": 40
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "armL",
+          "type": "Cylinder",
+          "data": {
+            "radius": "figureHeight*0.022",
+            "height": "figureHeight*0.18",
+            "color": "#2d5a27"
+          },
+          "position": {
+            "x": 270,
+            "y": 40
+          },
+          "measured": {
+            "width": 201,
+            "height": 296
+          }
+        },
+        {
+          "id": "bowStart",
+          "type": "Point",
+          "data": {
+            "x": "figureHeight*0.11",
+            "y": "bowSize*0.45",
+            "z": "figureHeight*0.42 + figureHeight*0.16"
+          },
+          "position": {
+            "x": 40,
+            "y": 2510
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "bowMid",
+          "type": "Point",
+          "data": {
+            "x": "figureHeight*0.11 + bowSize*0.35",
+            "y": 0,
+            "z": "figureHeight*0.42 + figureHeight*0.16"
+          },
+          "position": {
+            "x": 40,
+            "y": 2130
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "bowEnd",
+          "type": "Point",
+          "data": {
+            "x": "figureHeight*0.11",
+            "y": "-bowSize*0.45",
+            "z": "figureHeight*0.42 + figureHeight*0.16"
+          },
+          "position": {
+            "x": 40,
+            "y": 1940
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "bowArc",
+          "type": "Arc",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 800
+          },
+          "measured": {
+            "width": 177,
+            "height": 232
+          }
+        },
+        {
+          "id": "bow",
+          "type": "Pipe",
+          "data": {
+            "radius": "figureHeight*0.012",
+            "color": "#6B4226"
+          },
+          "position": {
+            "x": 500,
+            "y": 40
+          },
+          "measured": {
+            "width": 201,
+            "height": 270
+          }
+        },
+        {
+          "id": "quiverPos",
+          "type": "Point",
+          "data": {
+            "x": "-figureHeight*0.01",
+            "y": "-figureHeight*0.07",
+            "z": "figureHeight*0.42 + figureHeight*0.11"
+          },
+          "position": {
+            "x": 40,
+            "y": 4980
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "quiverAxis",
+          "type": "VectorXYZ",
+          "data": {
+            "x": 0.12,
+            "y": -0.2,
+            "z": 1
+          },
+          "position": {
+            "x": 40,
+            "y": 4790
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "quiver",
+          "type": "Cylinder",
+          "data": {
+            "radius": "figureHeight*0.028",
+            "height": "figureHeight*0.2",
+            "color": "#5C3317"
+          },
+          "position": {
+            "x": 270,
+            "y": 3650
+          },
+          "measured": {
+            "width": 201,
+            "height": 296
+          }
+        },
+        {
+          "id": "arrow1Pos",
+          "type": "Point",
+          "data": {
+            "x": "-figureHeight*0.02",
+            "y": "-figureHeight*0.1",
+            "z": "figureHeight*0.42+figureHeight*0.22"
+          },
+          "position": {
+            "x": 40,
+            "y": 800
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "arrow1",
+          "type": "Cylinder",
+          "data": {
+            "radius": "figureHeight*0.004",
+            "height": "figureHeight*0.16",
+            "color": "#c9b896"
+          },
+          "position": {
+            "x": 270,
+            "y": 1370
+          },
+          "measured": {
+            "width": 201,
+            "height": 296
+          }
+        },
+        {
+          "id": "arrow2Pos",
+          "type": "Point",
+          "data": {
+            "x": "-figureHeight*0.035",
+            "y": "-figureHeight*0.075",
+            "z": "figureHeight*0.42+figureHeight*0.21"
+          },
+          "position": {
+            "x": 40,
+            "y": 990
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "arrow2",
+          "type": "Cylinder",
+          "data": {
+            "radius": "figureHeight*0.004",
+            "height": "figureHeight*0.15",
+            "color": "#c9b896"
+          },
+          "position": {
+            "x": 270,
+            "y": 1560
+          },
+          "measured": {
+            "width": 201,
+            "height": 296
+          }
+        },
+        {
+          "id": "arrow3Pos",
+          "type": "Point",
+          "data": {
+            "x": "figureHeight*0.01",
+            "y": "-figureHeight*0.09",
+            "z": "figureHeight*0.42+figureHeight*0.23"
+          },
+          "position": {
+            "x": 40,
+            "y": 1180
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "arrow3",
+          "type": "Cylinder",
+          "data": {
+            "radius": "figureHeight*0.004",
+            "height": "figureHeight*0.17",
+            "color": "#c9b896"
+          },
+          "position": {
+            "x": 270,
+            "y": 1940
+          },
+          "measured": {
+            "width": 201,
+            "height": 296
+          }
+        },
+        {
+          "id": "bootLPos",
+          "type": "Point",
+          "data": {
+            "x": "-figureHeight*0.04",
+            "y": 0,
+            "z": "figureHeight*0.02"
+          },
+          "position": {
+            "x": 40,
+            "y": 1560
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "bootRPos",
+          "type": "Point",
+          "data": {
+            "x": "figureHeight*0.04",
+            "y": 0,
+            "z": "figureHeight*0.02"
+          },
+          "position": {
+            "x": 40,
+            "y": 1750
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "bootL",
+          "type": "Cone",
+          "data": {
+            "radius1": "figureHeight*0.052",
+            "radius2": "figureHeight*0.05",
+            "height": "figureHeight*0.04",
+            "color": "#3a2614"
+          },
+          "position": {
+            "x": 270,
+            "y": 420
+          },
+          "measured": {
+            "width": 201,
+            "height": 344
+          }
+        },
+        {
+          "id": "bootR",
+          "type": "Cone",
+          "data": {
+            "radius1": "figureHeight*0.052",
+            "radius2": "figureHeight*0.05",
+            "height": "figureHeight*0.04",
+            "color": "#3a2614"
+          },
+          "position": {
+            "x": 270,
+            "y": 610
+          },
+          "measured": {
+            "width": 201,
+            "height": 344
+          }
+        },
+        {
+          "id": "handRPos",
+          "type": "Point",
+          "data": {
+            "x": "figureHeight*0.148",
+            "y": "figureHeight*0.019",
+            "z": "figureHeight*0.668"
+          },
+          "position": {
+            "x": 40,
+            "y": 4030
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "handLPos",
+          "type": "Point",
+          "data": {
+            "x": "-figureHeight*0.033",
+            "y": "-figureHeight*0.047",
+            "z": "figureHeight*0.8"
+          },
+          "position": {
+            "x": 40,
+            "y": 3840
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "handR",
+          "type": "Sphere",
+          "data": {
+            "radius": "figureHeight*0.025",
+            "color": "#e8c39e"
+          },
+          "position": {
+            "x": 270,
+            "y": 2890
+          },
+          "measured": {
+            "width": 201,
+            "height": 216
+          }
+        },
+        {
+          "id": "handL",
+          "type": "Sphere",
+          "data": {
+            "radius": "figureHeight*0.025",
+            "color": "#e8c39e"
+          },
+          "position": {
+            "x": 270,
+            "y": 2700
+          },
+          "measured": {
+            "width": 201,
+            "height": 216
+          }
+        },
+        {
+          "id": "tunicSkirtPos",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "figureHeight*0.33"
+          },
+          "position": {
+            "x": 40,
+            "y": 5360
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "tunicSkirt",
+          "type": "Cone",
+          "data": {
+            "radius1": "figureHeight*0.075",
+            "radius2": "figureHeight*0.055",
+            "height": "figureHeight*0.12",
+            "color": "#2d5a27"
+          },
+          "position": {
+            "x": 270,
+            "y": 4030
+          },
+          "measured": {
+            "width": 201,
+            "height": 344
+          }
+        },
+        {
+          "id": "bowstringLine",
+          "type": "Line",
+          "data": {
+            "color": "#d4d4d4"
+          },
+          "position": {
+            "x": 270,
+            "y": 990
+          },
+          "measured": {
+            "width": 177,
+            "height": 200
+          }
+        },
+        {
+          "id": "bowstring",
+          "type": "Pipe",
+          "data": {
+            "radius": "figureHeight*0.005",
+            "color": "#d4d4d4"
+          },
+          "position": {
+            "x": 500,
+            "y": 230
+          },
+          "measured": {
+            "width": 201,
+            "height": 270
+          }
+        },
+        {
+          "id": "groundRockPos",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "figureHeight*0.015"
+          },
+          "position": {
+            "x": 40,
+            "y": 3650
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "groundRock",
+          "type": "Cylinder",
+          "data": {
+            "radius": "figureHeight*0.18",
+            "height": "figureHeight*0.03",
+            "color": "#4a4a3a"
+          },
+          "position": {
+            "x": 270,
+            "y": 2510
+          },
+          "measured": {
+            "width": 201,
+            "height": 296
+          }
+        },
+        {
+          "id": "capePos",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": "-figureHeight*0.09",
+            "z": "figureHeight*0.5"
+          },
+          "position": {
+            "x": 40,
+            "y": 2700
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "capeShape",
+          "type": "Box",
+          "data": {
+            "width": "figureHeight*0.16",
+            "length": "figureHeight*0.03",
+            "height": "figureHeight*0.35",
+            "color": "#1d4d12"
+          },
+          "position": {
+            "x": 270,
+            "y": 1180
+          },
+          "measured": {
+            "width": 201,
+            "height": 312
+          }
+        },
+        {
+          "id": "cape",
+          "type": "Bend",
+          "data": {
+            "axis": "Y",
+            "angle": "12"
+          },
+          "position": {
+            "x": 500,
+            "y": 420
+          },
+          "measured": {
+            "width": 201,
+            "height": 216
+          }
+        }
+      ],
+      "edges": [
+        {
+          "source": "legLPos",
+          "sourceHandle": "point",
+          "target": "legL",
+          "targetHandle": "center",
+          "id": "e_legLPos_legL_center"
+        },
+        {
+          "source": "legRPos",
+          "sourceHandle": "point",
+          "target": "legR",
+          "targetHandle": "center",
+          "id": "e_legRPos_legR_center"
+        },
+        {
+          "source": "torsoPos",
+          "sourceHandle": "point",
+          "target": "torso",
+          "targetHandle": "center",
+          "id": "e_torsoPos_torso_center"
+        },
+        {
+          "source": "beltPos",
+          "sourceHandle": "point",
+          "target": "belt",
+          "targetHandle": "center",
+          "id": "e_beltPos_belt_center"
+        },
+        {
+          "source": "zUp",
+          "sourceHandle": "vector",
+          "target": "belt",
+          "targetHandle": "axis",
+          "id": "e_zUp_belt_axis"
+        },
+        {
+          "source": "headPos",
+          "sourceHandle": "point",
+          "target": "head",
+          "targetHandle": "center",
+          "id": "e_headPos_head_center"
+        },
+        {
+          "source": "capPos",
+          "sourceHandle": "point",
+          "target": "cap",
+          "targetHandle": "center",
+          "id": "e_capPos_cap_center"
+        },
+        {
+          "source": "featherPos",
+          "sourceHandle": "point",
+          "target": "featherShape",
+          "targetHandle": "center",
+          "id": "e_featherPos_featherShape_center"
+        },
+        {
+          "source": "featherShape",
+          "sourceHandle": "solid",
+          "target": "featherRot1",
+          "targetHandle": "solid",
+          "id": "e_featherShape_featherRot1_solid"
+        },
+        {
+          "source": "featherRot1",
+          "sourceHandle": "solid",
+          "target": "feather",
+          "targetHandle": "solid",
+          "id": "e_featherRot1_feather_solid"
+        },
+        {
+          "source": "armRPos",
+          "sourceHandle": "point",
+          "target": "armR",
+          "targetHandle": "center",
+          "id": "e_armRPos_armR_center"
+        },
+        {
+          "source": "armRAxis",
+          "sourceHandle": "vector",
+          "target": "armR",
+          "targetHandle": "axis",
+          "id": "e_armRAxis_armR_axis"
+        },
+        {
+          "source": "armLPos",
+          "sourceHandle": "point",
+          "target": "armL",
+          "targetHandle": "center",
+          "id": "e_armLPos_armL_center"
+        },
+        {
+          "source": "armLAxis",
+          "sourceHandle": "vector",
+          "target": "armL",
+          "targetHandle": "axis",
+          "id": "e_armLAxis_armL_axis"
+        },
+        {
+          "source": "bowStart",
+          "sourceHandle": "point",
+          "target": "bowArc",
+          "targetHandle": "start",
+          "id": "e_bowStart_bowArc_start"
+        },
+        {
+          "source": "bowMid",
+          "sourceHandle": "point",
+          "target": "bowArc",
+          "targetHandle": "middle",
+          "id": "e_bowMid_bowArc_middle"
+        },
+        {
+          "source": "bowEnd",
+          "sourceHandle": "point",
+          "target": "bowArc",
+          "targetHandle": "end",
+          "id": "e_bowEnd_bowArc_end"
+        },
+        {
+          "source": "bowArc",
+          "sourceHandle": "curve",
+          "target": "bow",
+          "targetHandle": "path",
+          "id": "e_bowArc_bow_path"
+        },
+        {
+          "source": "quiverPos",
+          "sourceHandle": "point",
+          "target": "quiver",
+          "targetHandle": "center",
+          "id": "e_quiverPos_quiver_center"
+        },
+        {
+          "source": "quiverAxis",
+          "sourceHandle": "vector",
+          "target": "quiver",
+          "targetHandle": "axis",
+          "id": "e_quiverAxis_quiver_axis"
+        },
+        {
+          "source": "arrow1Pos",
+          "sourceHandle": "point",
+          "target": "arrow1",
+          "targetHandle": "center",
+          "id": "e_arrow1Pos_arrow1_center"
+        },
+        {
+          "source": "quiverAxis",
+          "sourceHandle": "vector",
+          "target": "arrow1",
+          "targetHandle": "axis",
+          "id": "e_quiverAxis_arrow1_axis"
+        },
+        {
+          "source": "arrow2Pos",
+          "sourceHandle": "point",
+          "target": "arrow2",
+          "targetHandle": "center",
+          "id": "e_arrow2Pos_arrow2_center"
+        },
+        {
+          "source": "quiverAxis",
+          "sourceHandle": "vector",
+          "target": "arrow2",
+          "targetHandle": "axis",
+          "id": "e_quiverAxis_arrow2_axis"
+        },
+        {
+          "source": "arrow3Pos",
+          "sourceHandle": "point",
+          "target": "arrow3",
+          "targetHandle": "center",
+          "id": "e_arrow3Pos_arrow3_center"
+        },
+        {
+          "source": "quiverAxis",
+          "sourceHandle": "vector",
+          "target": "arrow3",
+          "targetHandle": "axis",
+          "id": "e_quiverAxis_arrow3_axis"
+        },
+        {
+          "source": "bootLPos",
+          "target": "bootL",
+          "id": "e_bootLPos_bootL_center",
+          "sourceHandle": "point",
+          "targetHandle": "center"
+        },
+        {
+          "source": "bootRPos",
+          "target": "bootR",
+          "id": "e_bootRPos_bootR_center",
+          "sourceHandle": "point",
+          "targetHandle": "center"
+        },
+        {
+          "source": "handRPos",
+          "target": "handR",
+          "id": "e_handRPos_handR_center",
+          "sourceHandle": "point",
+          "targetHandle": "center"
+        },
+        {
+          "source": "handLPos",
+          "target": "handL",
+          "id": "e_handLPos_handL_center",
+          "sourceHandle": "point",
+          "targetHandle": "center"
+        },
+        {
+          "source": "tunicSkirtPos",
+          "target": "tunicSkirt",
+          "id": "e_tunicSkirtPos_tunicSkirt_center",
+          "sourceHandle": "point",
+          "targetHandle": "center"
+        },
+        {
+          "source": "bowStart",
+          "target": "bowstringLine",
+          "id": "e_bowStart_bowstringLine_a",
+          "sourceHandle": "point",
+          "targetHandle": "a"
+        },
+        {
+          "source": "bowEnd",
+          "target": "bowstringLine",
+          "id": "e_bowEnd_bowstringLine_b",
+          "sourceHandle": "point",
+          "targetHandle": "b"
+        },
+        {
+          "source": "bowstringLine",
+          "target": "bowstring",
+          "id": "e_bowstringLine_bowstring_path",
+          "sourceHandle": "curve",
+          "targetHandle": "path"
+        },
+        {
+          "source": "groundRockPos",
+          "target": "groundRock",
+          "id": "e_groundRockPos_groundRock_center",
+          "sourceHandle": "point",
+          "targetHandle": "center"
+        },
+        {
+          "source": "capePos",
+          "target": "capeShape",
+          "id": "e_capePos_capeShape_center",
+          "sourceHandle": "point",
+          "targetHandle": "center"
+        },
+        {
+          "source": "capeShape",
+          "target": "cape",
+          "id": "e_capeShape_cape_solid",
+          "sourceHandle": "solid",
+          "targetHandle": "solid"
+        }
+      ]
+    },
+    {
+      "at": "2026-07-24T19:46:45.500Z",
+      "turn": 2,
+      "trigger": "ai-repair",
+      "label": "attempt 3: updated 10 node(s)",
+      "nodeCount": 57,
+      "edgeCount": 37,
+      "isolatedCount": 3,
+      "diff": {
+        "addedNodes": [],
+        "removedNodes": [],
+        "changedNodes": [
+          "featherPos",
+          "bow",
+          "bootLPos",
+          "bootRPos",
+          "bootL",
+          "bootR",
+          "handLPos",
+          "bowstring",
+          "groundRockPos",
+          "groundRock"
+        ],
+        "addedEdges": 0,
+        "removedEdges": 0
+      },
+      "nodes": [
+        {
+          "id": "figureHeight",
+          "type": "NumberSlider",
+          "data": {
+            "value": 42,
+            "label": "figureHeight",
+            "min": 20,
+            "max": 80,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 3460
+          },
+          "measured": {
+            "width": 201,
+            "height": 328
+          }
+        },
+        {
+          "id": "bowSize",
+          "type": "NumberSlider",
+          "data": {
+            "value": 16,
+            "label": "bowSize",
+            "min": 8,
+            "max": 30,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 2320
+          },
+          "measured": {
+            "width": 201,
+            "height": 328
+          }
+        },
+        {
+          "id": "capSize",
+          "type": "NumberSlider",
+          "data": {
+            "value": 5,
+            "label": "capSize",
+            "min": 3,
+            "max": 10,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 3080
+          },
+          "measured": {
+            "width": 201,
+            "height": 328
+          }
+        },
+        {
+          "id": "zUp",
+          "type": "VectorXYZ",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": 1
+          },
+          "position": {
+            "x": 40,
+            "y": 5550
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "legLPos",
+          "type": "Point",
+          "data": {
+            "x": "-figureHeight*0.04",
+            "y": 0,
+            "z": "figureHeight*0.21"
+          },
+          "position": {
+            "x": 40,
+            "y": 4410
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "legRPos",
+          "type": "Point",
+          "data": {
+            "x": "figureHeight*0.04",
+            "y": 0,
+            "z": "figureHeight*0.21"
+          },
+          "position": {
+            "x": 40,
+            "y": 4600
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "legL",
+          "type": "Cone",
+          "data": {
+            "radius1": "figureHeight*0.042",
+            "radius2": "figureHeight*0.025",
+            "height": "figureHeight*0.42",
+            "color": "#5C3317"
+          },
+          "position": {
+            "x": 270,
+            "y": 3270
+          },
+          "measured": {
+            "width": 201,
+            "height": 344
+          }
+        },
+        {
+          "id": "legR",
+          "type": "Cone",
+          "data": {
+            "radius1": "figureHeight*0.042",
+            "radius2": "figureHeight*0.025",
+            "height": "figureHeight*0.42",
+            "color": "#5C3317"
+          },
+          "position": {
+            "x": 270,
+            "y": 3460
+          },
+          "measured": {
+            "width": 201,
+            "height": 344
+          }
+        },
+        {
+          "id": "torsoPos",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "figureHeight*0.42 + figureHeight*0.165"
+          },
+          "position": {
+            "x": 40,
+            "y": 5170
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "torso",
+          "type": "Box",
+          "data": {
+            "width": "figureHeight*0.14",
+            "length": "figureHeight*0.09",
+            "height": "figureHeight*0.33",
+            "color": "#2d5a27"
+          },
+          "position": {
+            "x": 270,
+            "y": 3840
+          },
+          "measured": {
+            "width": 201,
+            "height": 312
+          }
+        },
+        {
+          "id": "beltPos",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "figureHeight*0.44"
+          },
+          "position": {
+            "x": 40,
+            "y": 1370
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "belt",
+          "type": "Torus",
+          "data": {
+            "majorRadius": "figureHeight*0.065",
+            "minorRadius": "figureHeight*0.012",
+            "color": "#4a3728"
+          },
+          "position": {
+            "x": 270,
+            "y": 2320
+          },
+          "measured": {
+            "width": 201,
+            "height": 296
+          }
+        },
+        {
+          "id": "headPos",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "figureHeight*0.82"
+          },
+          "position": {
+            "x": 40,
+            "y": 4220
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "head",
+          "type": "Sphere",
+          "data": {
+            "radius": "figureHeight*0.07",
+            "color": "#e8c39e"
+          },
+          "position": {
+            "x": 270,
+            "y": 3080
+          },
+          "measured": {
+            "width": 201,
+            "height": 216
+          }
+        },
+        {
+          "id": "capPos",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "figureHeight*0.82 + figureHeight*0.07 + capSize*0.9"
+          },
+          "position": {
+            "x": 40,
+            "y": 2890
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "cap",
+          "type": "Cone",
+          "data": {
+            "radius1": "capSize*0.75",
+            "radius2": "capSize*0.03",
+            "height": "capSize*1.8",
+            "color": "#1d4d12"
+          },
+          "position": {
+            "x": 270,
+            "y": 1750
+          },
+          "measured": {
+            "width": 201,
+            "height": 344
+          }
+        },
+        {
+          "id": "featherPos",
+          "type": "Point",
+          "data": {
+            "x": "capSize*0.35",
+            "y": 0,
+            "z": "figureHeight*0.82+figureHeight*0.06+capSize*0.2"
+          },
+          "position": {
+            "x": 40,
+            "y": 3270
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "featherShape",
+          "type": "Box",
+          "data": {
+            "width": 0.2,
+            "length": "capSize*0.55",
+            "height": "capSize*0.14"
+          },
+          "position": {
+            "x": 270,
+            "y": 2130
+          },
+          "measured": {
+            "width": 201,
+            "height": 312
+          }
+        },
+        {
+          "id": "featherRot1",
+          "type": "Rotate",
+          "data": {
+            "angle": 40,
+            "axisX": 0,
+            "axisY": 0,
+            "axisZ": 1
+          },
+          "position": {
+            "x": 500,
+            "y": 610
+          },
+          "measured": {
+            "width": 201,
+            "height": 414
+          }
+        },
+        {
+          "id": "feather",
+          "type": "Rotate",
+          "data": {
+            "angle": 30,
+            "axisX": 1,
+            "axisY": 0,
+            "axisZ": 0,
+            "color": "#dc143c"
+          },
+          "position": {
+            "x": 730,
+            "y": 40
+          },
+          "measured": {
+            "width": 201,
+            "height": 414
+          }
+        },
+        {
+          "id": "armRPos",
+          "type": "Point",
+          "data": {
+            "x": "figureHeight*0.055",
+            "y": 0,
+            "z": "figureHeight*0.42 + figureHeight*0.28"
+          },
+          "position": {
+            "x": 40,
+            "y": 610
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "armRAxis",
+          "type": "VectorXYZ",
+          "data": {
+            "x": 1,
+            "y": 0.2,
+            "z": -0.35
+          },
+          "position": {
+            "x": 40,
+            "y": 420
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "armR",
+          "type": "Cylinder",
+          "data": {
+            "radius": "figureHeight*0.022",
+            "height": "figureHeight*0.2",
+            "color": "#2d5a27"
+          },
+          "position": {
+            "x": 270,
+            "y": 230
+          },
+          "measured": {
+            "width": 201,
+            "height": 296
+          }
+        },
+        {
+          "id": "armLPos",
+          "type": "Point",
+          "data": {
+            "x": "-figureHeight*0.06",
+            "y": "-figureHeight*0.02",
+            "z": "figureHeight*0.72"
+          },
+          "position": {
+            "x": 40,
+            "y": 230
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "armLAxis",
+          "type": "VectorXYZ",
+          "data": {
+            "x": 0.3,
+            "y": -0.3,
+            "z": 0.9
+          },
+          "position": {
+            "x": 40,
+            "y": 40
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "armL",
+          "type": "Cylinder",
+          "data": {
+            "radius": "figureHeight*0.022",
+            "height": "figureHeight*0.18",
+            "color": "#2d5a27"
+          },
+          "position": {
+            "x": 270,
+            "y": 40
+          },
+          "measured": {
+            "width": 201,
+            "height": 296
+          }
+        },
+        {
+          "id": "bowStart",
+          "type": "Point",
+          "data": {
+            "x": "figureHeight*0.11",
+            "y": "bowSize*0.45",
+            "z": "figureHeight*0.42 + figureHeight*0.16"
+          },
+          "position": {
+            "x": 40,
+            "y": 2510
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "bowMid",
+          "type": "Point",
+          "data": {
+            "x": "figureHeight*0.11 + bowSize*0.35",
+            "y": 0,
+            "z": "figureHeight*0.42 + figureHeight*0.16"
+          },
+          "position": {
+            "x": 40,
+            "y": 2130
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "bowEnd",
+          "type": "Point",
+          "data": {
+            "x": "figureHeight*0.11",
+            "y": "-bowSize*0.45",
+            "z": "figureHeight*0.42 + figureHeight*0.16"
+          },
+          "position": {
+            "x": 40,
+            "y": 1940
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "bowArc",
+          "type": "Arc",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 800
+          },
+          "measured": {
+            "width": 177,
+            "height": 232
+          }
+        },
+        {
+          "id": "bow",
+          "type": "Pipe",
+          "data": {
+            "radius": "figureHeight*0.012 + bowSize*0.001",
+            "color": "#6B4226"
+          },
+          "position": {
+            "x": 500,
+            "y": 40
+          },
+          "measured": {
+            "width": 201,
+            "height": 270
+          }
+        },
+        {
+          "id": "quiverPos",
+          "type": "Point",
+          "data": {
+            "x": "-figureHeight*0.01",
+            "y": "-figureHeight*0.07",
+            "z": "figureHeight*0.42 + figureHeight*0.11"
+          },
+          "position": {
+            "x": 40,
+            "y": 4980
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "quiverAxis",
+          "type": "VectorXYZ",
+          "data": {
+            "x": 0.12,
+            "y": -0.2,
+            "z": 1
+          },
+          "position": {
+            "x": 40,
+            "y": 4790
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "quiver",
+          "type": "Cylinder",
+          "data": {
+            "radius": "figureHeight*0.028",
+            "height": "figureHeight*0.2",
+            "color": "#5C3317"
+          },
+          "position": {
+            "x": 270,
+            "y": 3650
+          },
+          "measured": {
+            "width": 201,
+            "height": 296
+          }
+        },
+        {
+          "id": "arrow1Pos",
+          "type": "Point",
+          "data": {
+            "x": "-figureHeight*0.02",
+            "y": "-figureHeight*0.1",
+            "z": "figureHeight*0.42+figureHeight*0.22"
+          },
+          "position": {
+            "x": 40,
+            "y": 800
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "arrow1",
+          "type": "Cylinder",
+          "data": {
+            "radius": "figureHeight*0.004",
+            "height": "figureHeight*0.16",
+            "color": "#c9b896"
+          },
+          "position": {
+            "x": 270,
+            "y": 1370
+          },
+          "measured": {
+            "width": 201,
+            "height": 296
+          }
+        },
+        {
+          "id": "arrow2Pos",
+          "type": "Point",
+          "data": {
+            "x": "-figureHeight*0.035",
+            "y": "-figureHeight*0.075",
+            "z": "figureHeight*0.42+figureHeight*0.21"
+          },
+          "position": {
+            "x": 40,
+            "y": 990
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "arrow2",
+          "type": "Cylinder",
+          "data": {
+            "radius": "figureHeight*0.004",
+            "height": "figureHeight*0.15",
+            "color": "#c9b896"
+          },
+          "position": {
+            "x": 270,
+            "y": 1560
+          },
+          "measured": {
+            "width": 201,
+            "height": 296
+          }
+        },
+        {
+          "id": "arrow3Pos",
+          "type": "Point",
+          "data": {
+            "x": "figureHeight*0.01",
+            "y": "-figureHeight*0.09",
+            "z": "figureHeight*0.42+figureHeight*0.23"
+          },
+          "position": {
+            "x": 40,
+            "y": 1180
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "arrow3",
+          "type": "Cylinder",
+          "data": {
+            "radius": "figureHeight*0.004",
+            "height": "figureHeight*0.17",
+            "color": "#c9b896"
+          },
+          "position": {
+            "x": 270,
+            "y": 1940
+          },
+          "measured": {
+            "width": 201,
+            "height": 296
+          }
+        },
+        {
+          "id": "bootLPos",
+          "type": "Point",
+          "data": {
+            "x": "-figureHeight*0.04",
+            "y": "figureHeight*0.015",
+            "z": "figureHeight*0.012"
+          },
+          "position": {
+            "x": 40,
+            "y": 1560
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "bootRPos",
+          "type": "Point",
+          "data": {
+            "x": "figureHeight*0.04",
+            "y": "figureHeight*0.015",
+            "z": "figureHeight*0.012"
+          },
+          "position": {
+            "x": 40,
+            "y": 1750
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "bootL",
+          "type": "Cone",
+          "data": {
+            "radius1": "figureHeight*0.055",
+            "radius2": "figureHeight*0.045",
+            "height": "figureHeight*0.025",
+            "color": "#3a2614"
+          },
+          "position": {
+            "x": 270,
+            "y": 420
+          },
+          "measured": {
+            "width": 201,
+            "height": 344
+          }
+        },
+        {
+          "id": "bootR",
+          "type": "Cone",
+          "data": {
+            "radius1": "figureHeight*0.055",
+            "radius2": "figureHeight*0.045",
+            "height": "figureHeight*0.025",
+            "color": "#3a2614"
+          },
+          "position": {
+            "x": 270,
+            "y": 610
+          },
+          "measured": {
+            "width": 201,
+            "height": 344
+          }
+        },
+        {
+          "id": "handRPos",
+          "type": "Point",
+          "data": {
+            "x": "figureHeight*0.148",
+            "y": "figureHeight*0.019",
+            "z": "figureHeight*0.668"
+          },
+          "position": {
+            "x": 40,
+            "y": 4030
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "handLPos",
+          "type": "Point",
+          "data": {
+            "x": "-figureHeight*0.08",
+            "y": "-figureHeight*0.02",
+            "z": "figureHeight*0.8"
+          },
+          "position": {
+            "x": 40,
+            "y": 3840
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "handR",
+          "type": "Sphere",
+          "data": {
+            "radius": "figureHeight*0.025",
+            "color": "#e8c39e"
+          },
+          "position": {
+            "x": 270,
+            "y": 2890
+          },
+          "measured": {
+            "width": 201,
+            "height": 216
+          }
+        },
+        {
+          "id": "handL",
+          "type": "Sphere",
+          "data": {
+            "radius": "figureHeight*0.025",
+            "color": "#e8c39e"
+          },
+          "position": {
+            "x": 270,
+            "y": 2700
+          },
+          "measured": {
+            "width": 201,
+            "height": 216
+          }
+        },
+        {
+          "id": "tunicSkirtPos",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "figureHeight*0.33"
+          },
+          "position": {
+            "x": 40,
+            "y": 5360
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "tunicSkirt",
+          "type": "Cone",
+          "data": {
+            "radius1": "figureHeight*0.075",
+            "radius2": "figureHeight*0.055",
+            "height": "figureHeight*0.12",
+            "color": "#2d5a27"
+          },
+          "position": {
+            "x": 270,
+            "y": 4030
+          },
+          "measured": {
+            "width": 201,
+            "height": 344
+          }
+        },
+        {
+          "id": "bowstringLine",
+          "type": "Line",
+          "data": {
+            "color": "#d4d4d4"
+          },
+          "position": {
+            "x": 270,
+            "y": 990
+          },
+          "measured": {
+            "width": 177,
+            "height": 200
+          }
+        },
+        {
+          "id": "bowstring",
+          "type": "Pipe",
+          "data": {
+            "radius": "figureHeight*0.006",
+            "color": "#d4d4d4"
+          },
+          "position": {
+            "x": 500,
+            "y": 230
+          },
+          "measured": {
+            "width": 201,
+            "height": 270
+          }
+        },
+        {
+          "id": "groundRockPos",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "figureHeight*0.005"
+          },
+          "position": {
+            "x": 40,
+            "y": 3650
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "groundRock",
+          "type": "Cylinder",
+          "data": {
+            "radius": "figureHeight*0.18",
+            "height": "figureHeight*0.01",
+            "color": "#4a4a3a"
+          },
+          "position": {
+            "x": 270,
+            "y": 2510
+          },
+          "measured": {
+            "width": 201,
+            "height": 296
+          }
+        },
+        {
+          "id": "capePos",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": "-figureHeight*0.09",
+            "z": "figureHeight*0.5"
+          },
+          "position": {
+            "x": 40,
+            "y": 2700
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "capeShape",
+          "type": "Box",
+          "data": {
+            "width": "figureHeight*0.16",
+            "length": "figureHeight*0.03",
+            "height": "figureHeight*0.35",
+            "color": "#1d4d12"
+          },
+          "position": {
+            "x": 270,
+            "y": 1180
+          },
+          "measured": {
+            "width": 201,
+            "height": 312
+          }
+        },
+        {
+          "id": "cape",
+          "type": "Bend",
+          "data": {
+            "axis": "Y",
+            "angle": "12"
+          },
+          "position": {
+            "x": 500,
+            "y": 420
+          },
+          "measured": {
+            "width": 201,
+            "height": 216
+          }
+        }
+      ],
+      "edges": [
+        {
+          "source": "legLPos",
+          "sourceHandle": "point",
+          "target": "legL",
+          "targetHandle": "center",
+          "id": "e_legLPos_legL_center"
+        },
+        {
+          "source": "legRPos",
+          "sourceHandle": "point",
+          "target": "legR",
+          "targetHandle": "center",
+          "id": "e_legRPos_legR_center"
+        },
+        {
+          "source": "torsoPos",
+          "sourceHandle": "point",
+          "target": "torso",
+          "targetHandle": "center",
+          "id": "e_torsoPos_torso_center"
+        },
+        {
+          "source": "beltPos",
+          "sourceHandle": "point",
+          "target": "belt",
+          "targetHandle": "center",
+          "id": "e_beltPos_belt_center"
+        },
+        {
+          "source": "zUp",
+          "sourceHandle": "vector",
+          "target": "belt",
+          "targetHandle": "axis",
+          "id": "e_zUp_belt_axis"
+        },
+        {
+          "source": "headPos",
+          "sourceHandle": "point",
+          "target": "head",
+          "targetHandle": "center",
+          "id": "e_headPos_head_center"
+        },
+        {
+          "source": "capPos",
+          "sourceHandle": "point",
+          "target": "cap",
+          "targetHandle": "center",
+          "id": "e_capPos_cap_center"
+        },
+        {
+          "source": "featherPos",
+          "sourceHandle": "point",
+          "target": "featherShape",
+          "targetHandle": "center",
+          "id": "e_featherPos_featherShape_center"
+        },
+        {
+          "source": "featherShape",
+          "sourceHandle": "solid",
+          "target": "featherRot1",
+          "targetHandle": "solid",
+          "id": "e_featherShape_featherRot1_solid"
+        },
+        {
+          "source": "featherRot1",
+          "sourceHandle": "solid",
+          "target": "feather",
+          "targetHandle": "solid",
+          "id": "e_featherRot1_feather_solid"
+        },
+        {
+          "source": "armRPos",
+          "sourceHandle": "point",
+          "target": "armR",
+          "targetHandle": "center",
+          "id": "e_armRPos_armR_center"
+        },
+        {
+          "source": "armRAxis",
+          "sourceHandle": "vector",
+          "target": "armR",
+          "targetHandle": "axis",
+          "id": "e_armRAxis_armR_axis"
+        },
+        {
+          "source": "armLPos",
+          "sourceHandle": "point",
+          "target": "armL",
+          "targetHandle": "center",
+          "id": "e_armLPos_armL_center"
+        },
+        {
+          "source": "armLAxis",
+          "sourceHandle": "vector",
+          "target": "armL",
+          "targetHandle": "axis",
+          "id": "e_armLAxis_armL_axis"
+        },
+        {
+          "source": "bowStart",
+          "sourceHandle": "point",
+          "target": "bowArc",
+          "targetHandle": "start",
+          "id": "e_bowStart_bowArc_start"
+        },
+        {
+          "source": "bowMid",
+          "sourceHandle": "point",
+          "target": "bowArc",
+          "targetHandle": "middle",
+          "id": "e_bowMid_bowArc_middle"
+        },
+        {
+          "source": "bowEnd",
+          "sourceHandle": "point",
+          "target": "bowArc",
+          "targetHandle": "end",
+          "id": "e_bowEnd_bowArc_end"
+        },
+        {
+          "source": "bowArc",
+          "sourceHandle": "curve",
+          "target": "bow",
+          "targetHandle": "path",
+          "id": "e_bowArc_bow_path"
+        },
+        {
+          "source": "quiverPos",
+          "sourceHandle": "point",
+          "target": "quiver",
+          "targetHandle": "center",
+          "id": "e_quiverPos_quiver_center"
+        },
+        {
+          "source": "quiverAxis",
+          "sourceHandle": "vector",
+          "target": "quiver",
+          "targetHandle": "axis",
+          "id": "e_quiverAxis_quiver_axis"
+        },
+        {
+          "source": "arrow1Pos",
+          "sourceHandle": "point",
+          "target": "arrow1",
+          "targetHandle": "center",
+          "id": "e_arrow1Pos_arrow1_center"
+        },
+        {
+          "source": "quiverAxis",
+          "sourceHandle": "vector",
+          "target": "arrow1",
+          "targetHandle": "axis",
+          "id": "e_quiverAxis_arrow1_axis"
+        },
+        {
+          "source": "arrow2Pos",
+          "sourceHandle": "point",
+          "target": "arrow2",
+          "targetHandle": "center",
+          "id": "e_arrow2Pos_arrow2_center"
+        },
+        {
+          "source": "quiverAxis",
+          "sourceHandle": "vector",
+          "target": "arrow2",
+          "targetHandle": "axis",
+          "id": "e_quiverAxis_arrow2_axis"
+        },
+        {
+          "source": "arrow3Pos",
+          "sourceHandle": "point",
+          "target": "arrow3",
+          "targetHandle": "center",
+          "id": "e_arrow3Pos_arrow3_center"
+        },
+        {
+          "source": "quiverAxis",
+          "sourceHandle": "vector",
+          "target": "arrow3",
+          "targetHandle": "axis",
+          "id": "e_quiverAxis_arrow3_axis"
+        },
+        {
+          "source": "bootLPos",
+          "target": "bootL",
+          "id": "e_bootLPos_bootL_center",
+          "sourceHandle": "point",
+          "targetHandle": "center"
+        },
+        {
+          "source": "bootRPos",
+          "target": "bootR",
+          "id": "e_bootRPos_bootR_center",
+          "sourceHandle": "point",
+          "targetHandle": "center"
+        },
+        {
+          "source": "handRPos",
+          "target": "handR",
+          "id": "e_handRPos_handR_center",
+          "sourceHandle": "point",
+          "targetHandle": "center"
+        },
+        {
+          "source": "handLPos",
+          "target": "handL",
+          "id": "e_handLPos_handL_center",
+          "sourceHandle": "point",
+          "targetHandle": "center"
+        },
+        {
+          "source": "tunicSkirtPos",
+          "target": "tunicSkirt",
+          "id": "e_tunicSkirtPos_tunicSkirt_center",
+          "sourceHandle": "point",
+          "targetHandle": "center"
+        },
+        {
+          "source": "bowStart",
+          "target": "bowstringLine",
+          "id": "e_bowStart_bowstringLine_a",
+          "sourceHandle": "point",
+          "targetHandle": "a"
+        },
+        {
+          "source": "bowEnd",
+          "target": "bowstringLine",
+          "id": "e_bowEnd_bowstringLine_b",
+          "sourceHandle": "point",
+          "targetHandle": "b"
+        },
+        {
+          "source": "bowstringLine",
+          "target": "bowstring",
+          "id": "e_bowstringLine_bowstring_path",
+          "sourceHandle": "curve",
+          "targetHandle": "path"
+        },
+        {
+          "source": "groundRockPos",
+          "target": "groundRock",
+          "id": "e_groundRockPos_groundRock_center",
+          "sourceHandle": "point",
+          "targetHandle": "center"
+        },
+        {
+          "source": "capePos",
+          "target": "capeShape",
+          "id": "e_capePos_capeShape_center",
+          "sourceHandle": "point",
+          "targetHandle": "center"
+        },
+        {
+          "source": "capeShape",
+          "target": "cape",
+          "id": "e_capeShape_cape_solid",
+          "sourceHandle": "solid",
+          "targetHandle": "solid"
+        }
+      ]
+    }
+  ]
+}

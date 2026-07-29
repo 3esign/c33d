@@ -1,0 +1,2460 @@
+{
+  "c33dExport": 2,
+  "exportedAt": "2026-07-24T19:40:59.345Z",
+  "comment": "almost correct this one smaller spheres as points",
+  "agent": {
+    "name": "Ollama (Local)",
+    "provider": "ollama",
+    "model": "deepseek-v4-flash:cloud"
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "pointCount",
+        "type": "NumberSlider",
+        "data": {
+          "value": 10,
+          "label": "pointCount",
+          "min": 3,
+          "max": 50,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 420
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "baseRadius",
+        "type": "NumberSlider",
+        "data": {
+          "value": 10,
+          "label": "baseRadius",
+          "min": 1,
+          "max": 50,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 40
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "heightStep",
+        "type": "NumberSlider",
+        "data": {
+          "value": 5,
+          "label": "heightStep",
+          "min": 1,
+          "max": 20,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 230
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "scaleFactor",
+        "type": "NumberSlider",
+        "data": {
+          "value": 0.8,
+          "label": "scaleFactor",
+          "min": 0.1,
+          "max": 1,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 3080
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "rotationAngle",
+        "type": "NumberSlider",
+        "data": {
+          "value": 18,
+          "label": "rotationAngle",
+          "min": 0,
+          "max": 360,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 2890
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "points1",
+        "type": "ListConstant",
+        "data": {
+          "values": "baseRadius"
+        },
+        "position": {
+          "x": 40,
+          "y": 610
+        },
+        "measured": {
+          "width": 177,
+          "height": 136
+        }
+      },
+      {
+        "id": "points1_x",
+        "type": "ListLength",
+        "data": {},
+        "position": {
+          "x": 270,
+          "y": 40
+        },
+        "measured": {
+          "width": 150,
+          "height": 106
+        }
+      },
+      {
+        "id": "points1_x_2",
+        "type": "RepeatEach",
+        "data": {
+          "count": "pointCount"
+        },
+        "position": {
+          "x": 270,
+          "y": 230
+        },
+        "measured": {
+          "width": 201,
+          "height": 194
+        }
+      },
+      {
+        "id": "points1_x_3",
+        "type": "Series",
+        "data": {
+          "start": 0,
+          "step": "2*pi/(pointCount)",
+          "count": "pointCount"
+        },
+        "position": {
+          "x": 40,
+          "y": 800
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "points1_x_4",
+        "type": "Tile",
+        "data": {},
+        "position": {
+          "x": 500,
+          "y": 40
+        },
+        "measured": {
+          "width": 201,
+          "height": 194
+        }
+      },
+      {
+        "id": "points1_x_5",
+        "type": "Expression",
+        "data": {
+          "formula": "a*cos(b)"
+        },
+        "position": {
+          "x": 730,
+          "y": 40
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "points1_x_6",
+        "type": "Expression",
+        "data": {
+          "formula": "a*sin(b)"
+        },
+        "position": {
+          "x": 730,
+          "y": 230
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "points1_x_7",
+        "type": "ListConstant",
+        "data": {
+          "values": "heightStep"
+        },
+        "position": {
+          "x": 40,
+          "y": 990
+        },
+        "measured": {
+          "width": 177,
+          "height": 136
+        }
+      },
+      {
+        "id": "points1_x_8",
+        "type": "ListConstant",
+        "data": {
+          "values": "1"
+        },
+        "position": {
+          "x": 40,
+          "y": 1180
+        },
+        "measured": {
+          "width": 177,
+          "height": 136
+        }
+      },
+      {
+        "id": "points1_x_9",
+        "type": "RepeatEach",
+        "data": {
+          "count": "pointCount"
+        },
+        "position": {
+          "x": 270,
+          "y": 420
+        },
+        "measured": {
+          "width": 201,
+          "height": 194
+        }
+      },
+      {
+        "id": "points1_x_10",
+        "type": "RepeatEach",
+        "data": {
+          "count": "pointCount"
+        },
+        "position": {
+          "x": 270,
+          "y": 610
+        },
+        "measured": {
+          "width": 201,
+          "height": 194
+        }
+      },
+      {
+        "id": "points1_x_11",
+        "type": "PointsFromLists",
+        "data": {},
+        "position": {
+          "x": 960,
+          "y": 40
+        },
+        "measured": {
+          "width": 150,
+          "height": 234
+        }
+      },
+      {
+        "id": "points2",
+        "type": "ListConstant",
+        "data": {
+          "values": "baseRadius*scaleFactor"
+        },
+        "position": {
+          "x": 40,
+          "y": 1370
+        },
+        "measured": {
+          "width": 177,
+          "height": 136
+        }
+      },
+      {
+        "id": "points2_x",
+        "type": "ListLength",
+        "data": {},
+        "position": {
+          "x": 270,
+          "y": 800
+        },
+        "measured": {
+          "width": 150,
+          "height": 106
+        }
+      },
+      {
+        "id": "points2_x_2",
+        "type": "RepeatEach",
+        "data": {
+          "count": "pointCount"
+        },
+        "position": {
+          "x": 270,
+          "y": 990
+        },
+        "measured": {
+          "width": 201,
+          "height": 194
+        }
+      },
+      {
+        "id": "points2_x_3",
+        "type": "Series",
+        "data": {
+          "start": 0,
+          "step": "2*pi/(pointCount)",
+          "count": "pointCount"
+        },
+        "position": {
+          "x": 40,
+          "y": 1560
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "points2_x_4",
+        "type": "Tile",
+        "data": {},
+        "position": {
+          "x": 500,
+          "y": 230
+        },
+        "measured": {
+          "width": 201,
+          "height": 194
+        }
+      },
+      {
+        "id": "points2_x_5",
+        "type": "Expression",
+        "data": {
+          "formula": "a*cos(b)"
+        },
+        "position": {
+          "x": 730,
+          "y": 420
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "points2_x_6",
+        "type": "Expression",
+        "data": {
+          "formula": "a*sin(b)"
+        },
+        "position": {
+          "x": 730,
+          "y": 610
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "points2_x_7",
+        "type": "ListConstant",
+        "data": {
+          "values": "heightStep*2"
+        },
+        "position": {
+          "x": 40,
+          "y": 1750
+        },
+        "measured": {
+          "width": 177,
+          "height": 136
+        }
+      },
+      {
+        "id": "points2_x_8",
+        "type": "ListConstant",
+        "data": {
+          "values": "scaleFactor"
+        },
+        "position": {
+          "x": 40,
+          "y": 1940
+        },
+        "measured": {
+          "width": 177,
+          "height": 136
+        }
+      },
+      {
+        "id": "points2_x_9",
+        "type": "RepeatEach",
+        "data": {
+          "count": "pointCount"
+        },
+        "position": {
+          "x": 270,
+          "y": 1180
+        },
+        "measured": {
+          "width": 201,
+          "height": 194
+        }
+      },
+      {
+        "id": "points2_x_10",
+        "type": "RepeatEach",
+        "data": {
+          "count": "pointCount"
+        },
+        "position": {
+          "x": 270,
+          "y": 1370
+        },
+        "measured": {
+          "width": 201,
+          "height": 194
+        }
+      },
+      {
+        "id": "points2_x_11",
+        "type": "PointsFromLists",
+        "data": {},
+        "position": {
+          "x": 960,
+          "y": 230
+        },
+        "measured": {
+          "width": 150,
+          "height": 234
+        }
+      },
+      {
+        "id": "points3",
+        "type": "ListConstant",
+        "data": {
+          "values": "baseRadius*scaleFactor*scaleFactor"
+        },
+        "position": {
+          "x": 40,
+          "y": 2130
+        },
+        "measured": {
+          "width": 177,
+          "height": 136
+        }
+      },
+      {
+        "id": "points3_x",
+        "type": "ListLength",
+        "data": {},
+        "position": {
+          "x": 270,
+          "y": 1560
+        },
+        "measured": {
+          "width": 150,
+          "height": 106
+        }
+      },
+      {
+        "id": "points3_x_2",
+        "type": "RepeatEach",
+        "data": {
+          "count": "pointCount"
+        },
+        "position": {
+          "x": 270,
+          "y": 1750
+        },
+        "measured": {
+          "width": 201,
+          "height": 194
+        }
+      },
+      {
+        "id": "points3_x_3",
+        "type": "Series",
+        "data": {
+          "start": "rotationAngle",
+          "step": "2*pi/(pointCount)",
+          "count": "pointCount"
+        },
+        "position": {
+          "x": 40,
+          "y": 2320
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "points3_x_4",
+        "type": "Tile",
+        "data": {},
+        "position": {
+          "x": 500,
+          "y": 420
+        },
+        "measured": {
+          "width": 201,
+          "height": 194
+        }
+      },
+      {
+        "id": "points3_x_5",
+        "type": "Expression",
+        "data": {
+          "formula": "a*cos(b)"
+        },
+        "position": {
+          "x": 730,
+          "y": 800
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "points3_x_6",
+        "type": "Expression",
+        "data": {
+          "formula": "a*sin(b)"
+        },
+        "position": {
+          "x": 730,
+          "y": 990
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "points3_x_7",
+        "type": "ListConstant",
+        "data": {
+          "values": "heightStep*3"
+        },
+        "position": {
+          "x": 40,
+          "y": 2510
+        },
+        "measured": {
+          "width": 177,
+          "height": 136
+        }
+      },
+      {
+        "id": "points3_x_8",
+        "type": "ListConstant",
+        "data": {
+          "values": "scaleFactor*scaleFactor"
+        },
+        "position": {
+          "x": 40,
+          "y": 2700
+        },
+        "measured": {
+          "width": 177,
+          "height": 136
+        }
+      },
+      {
+        "id": "points3_x_9",
+        "type": "RepeatEach",
+        "data": {
+          "count": "pointCount"
+        },
+        "position": {
+          "x": 270,
+          "y": 1940
+        },
+        "measured": {
+          "width": 201,
+          "height": 194
+        }
+      },
+      {
+        "id": "points3_x_10",
+        "type": "RepeatEach",
+        "data": {
+          "count": "pointCount"
+        },
+        "position": {
+          "x": 270,
+          "y": 2130
+        },
+        "measured": {
+          "width": 201,
+          "height": 194
+        }
+      },
+      {
+        "id": "points3_x_11",
+        "type": "PointsFromLists",
+        "data": {},
+        "position": {
+          "x": 960,
+          "y": 420
+        },
+        "measured": {
+          "width": 150,
+          "height": 234
+        }
+      },
+      {
+        "id": "sphere",
+        "type": "Sphere",
+        "data": {
+          "radius": 0.5
+        },
+        "position": {
+          "x": 40,
+          "y": 3270
+        },
+        "measured": {
+          "width": 201,
+          "height": 216
+        }
+      },
+      {
+        "id": "inst1",
+        "type": "InstanceOnPoints",
+        "data": {
+          "scaleStart": 1,
+          "scaleEnd": 1,
+          "alignToTangent": false
+        },
+        "position": {
+          "x": 1190,
+          "y": 40
+        },
+        "measured": {
+          "width": 201,
+          "height": 436
+        }
+      },
+      {
+        "id": "inst2",
+        "type": "InstanceOnPoints",
+        "data": {
+          "scaleStart": 1,
+          "scaleEnd": 1,
+          "alignToTangent": false
+        },
+        "position": {
+          "x": 1190,
+          "y": 230
+        },
+        "measured": {
+          "width": 201,
+          "height": 436
+        }
+      },
+      {
+        "id": "inst3",
+        "type": "InstanceOnPoints",
+        "data": {
+          "scaleStart": 1,
+          "scaleEnd": 1,
+          "alignToTangent": false
+        },
+        "position": {
+          "x": 1190,
+          "y": 420
+        },
+        "measured": {
+          "width": 201,
+          "height": 436
+        }
+      },
+      {
+        "id": "tower",
+        "type": "Compound",
+        "data": {
+          "color": "#3b82f6"
+        },
+        "position": {
+          "x": 1420,
+          "y": 40
+        },
+        "measured": {
+          "width": 150,
+          "height": 330
+        }
+      }
+    ],
+    "edges": [
+      {
+        "source": "points1",
+        "sourceHandle": "values",
+        "target": "points1_x",
+        "targetHandle": "list",
+        "id": "e_points1_points1_x_list"
+      },
+      {
+        "source": "points1",
+        "sourceHandle": "values",
+        "target": "points1_x_2",
+        "targetHandle": "list",
+        "id": "e_points1_points1_x_2_list"
+      },
+      {
+        "source": "points1_x",
+        "sourceHandle": "length",
+        "target": "points1_x_4",
+        "targetHandle": "count",
+        "id": "e_points1_x_points1_x_4_count"
+      },
+      {
+        "source": "points1_x_3",
+        "sourceHandle": "values",
+        "target": "points1_x_4",
+        "targetHandle": "list",
+        "id": "e_points1_x_3_points1_x_4_list"
+      },
+      {
+        "source": "points1_x_2",
+        "sourceHandle": "values",
+        "target": "points1_x_5",
+        "targetHandle": "a",
+        "id": "e_points1_x_2_points1_x_5_a"
+      },
+      {
+        "source": "points1_x_4",
+        "sourceHandle": "values",
+        "target": "points1_x_5",
+        "targetHandle": "b",
+        "id": "e_points1_x_4_points1_x_5_b"
+      },
+      {
+        "source": "points1_x_2",
+        "sourceHandle": "values",
+        "target": "points1_x_6",
+        "targetHandle": "a",
+        "id": "e_points1_x_2_points1_x_6_a"
+      },
+      {
+        "source": "points1_x_4",
+        "sourceHandle": "values",
+        "target": "points1_x_6",
+        "targetHandle": "b",
+        "id": "e_points1_x_4_points1_x_6_b"
+      },
+      {
+        "source": "points1_x_7",
+        "sourceHandle": "values",
+        "target": "points1_x_9",
+        "targetHandle": "list",
+        "id": "e_points1_x_7_points1_x_9_list"
+      },
+      {
+        "source": "points1_x_8",
+        "sourceHandle": "values",
+        "target": "points1_x_10",
+        "targetHandle": "list",
+        "id": "e_points1_x_8_points1_x_10_list"
+      },
+      {
+        "source": "points1_x_5",
+        "sourceHandle": "value",
+        "target": "points1_x_11",
+        "targetHandle": "x",
+        "id": "e_points1_x_5_points1_x_11_x"
+      },
+      {
+        "source": "points1_x_6",
+        "sourceHandle": "value",
+        "target": "points1_x_11",
+        "targetHandle": "y",
+        "id": "e_points1_x_6_points1_x_11_y"
+      },
+      {
+        "source": "points1_x_9",
+        "sourceHandle": "values",
+        "target": "points1_x_11",
+        "targetHandle": "z",
+        "id": "e_points1_x_9_points1_x_11_z"
+      },
+      {
+        "source": "points1_x_10",
+        "sourceHandle": "values",
+        "target": "points1_x_11",
+        "targetHandle": "scale",
+        "id": "e_points1_x_10_points1_x_11_scale"
+      },
+      {
+        "source": "points1_x_2",
+        "sourceHandle": "values",
+        "target": "points1_x_11",
+        "targetHandle": "group",
+        "id": "e_points1_x_2_points1_x_11_group"
+      },
+      {
+        "source": "points2",
+        "sourceHandle": "values",
+        "target": "points2_x",
+        "targetHandle": "list",
+        "id": "e_points2_points2_x_list"
+      },
+      {
+        "source": "points2",
+        "sourceHandle": "values",
+        "target": "points2_x_2",
+        "targetHandle": "list",
+        "id": "e_points2_points2_x_2_list"
+      },
+      {
+        "source": "points2_x",
+        "sourceHandle": "length",
+        "target": "points2_x_4",
+        "targetHandle": "count",
+        "id": "e_points2_x_points2_x_4_count"
+      },
+      {
+        "source": "points2_x_3",
+        "sourceHandle": "values",
+        "target": "points2_x_4",
+        "targetHandle": "list",
+        "id": "e_points2_x_3_points2_x_4_list"
+      },
+      {
+        "source": "points2_x_2",
+        "sourceHandle": "values",
+        "target": "points2_x_5",
+        "targetHandle": "a",
+        "id": "e_points2_x_2_points2_x_5_a"
+      },
+      {
+        "source": "points2_x_4",
+        "sourceHandle": "values",
+        "target": "points2_x_5",
+        "targetHandle": "b",
+        "id": "e_points2_x_4_points2_x_5_b"
+      },
+      {
+        "source": "points2_x_2",
+        "sourceHandle": "values",
+        "target": "points2_x_6",
+        "targetHandle": "a",
+        "id": "e_points2_x_2_points2_x_6_a"
+      },
+      {
+        "source": "points2_x_4",
+        "sourceHandle": "values",
+        "target": "points2_x_6",
+        "targetHandle": "b",
+        "id": "e_points2_x_4_points2_x_6_b"
+      },
+      {
+        "source": "points2_x_7",
+        "sourceHandle": "values",
+        "target": "points2_x_9",
+        "targetHandle": "list",
+        "id": "e_points2_x_7_points2_x_9_list"
+      },
+      {
+        "source": "points2_x_8",
+        "sourceHandle": "values",
+        "target": "points2_x_10",
+        "targetHandle": "list",
+        "id": "e_points2_x_8_points2_x_10_list"
+      },
+      {
+        "source": "points2_x_5",
+        "sourceHandle": "value",
+        "target": "points2_x_11",
+        "targetHandle": "x",
+        "id": "e_points2_x_5_points2_x_11_x"
+      },
+      {
+        "source": "points2_x_6",
+        "sourceHandle": "value",
+        "target": "points2_x_11",
+        "targetHandle": "y",
+        "id": "e_points2_x_6_points2_x_11_y"
+      },
+      {
+        "source": "points2_x_9",
+        "sourceHandle": "values",
+        "target": "points2_x_11",
+        "targetHandle": "z",
+        "id": "e_points2_x_9_points2_x_11_z"
+      },
+      {
+        "source": "points2_x_10",
+        "sourceHandle": "values",
+        "target": "points2_x_11",
+        "targetHandle": "scale",
+        "id": "e_points2_x_10_points2_x_11_scale"
+      },
+      {
+        "source": "points2_x_2",
+        "sourceHandle": "values",
+        "target": "points2_x_11",
+        "targetHandle": "group",
+        "id": "e_points2_x_2_points2_x_11_group"
+      },
+      {
+        "source": "points3",
+        "sourceHandle": "values",
+        "target": "points3_x",
+        "targetHandle": "list",
+        "id": "e_points3_points3_x_list"
+      },
+      {
+        "source": "points3",
+        "sourceHandle": "values",
+        "target": "points3_x_2",
+        "targetHandle": "list",
+        "id": "e_points3_points3_x_2_list"
+      },
+      {
+        "source": "points3_x",
+        "sourceHandle": "length",
+        "target": "points3_x_4",
+        "targetHandle": "count",
+        "id": "e_points3_x_points3_x_4_count"
+      },
+      {
+        "source": "points3_x_3",
+        "sourceHandle": "values",
+        "target": "points3_x_4",
+        "targetHandle": "list",
+        "id": "e_points3_x_3_points3_x_4_list"
+      },
+      {
+        "source": "points3_x_2",
+        "sourceHandle": "values",
+        "target": "points3_x_5",
+        "targetHandle": "a",
+        "id": "e_points3_x_2_points3_x_5_a"
+      },
+      {
+        "source": "points3_x_4",
+        "sourceHandle": "values",
+        "target": "points3_x_5",
+        "targetHandle": "b",
+        "id": "e_points3_x_4_points3_x_5_b"
+      },
+      {
+        "source": "points3_x_2",
+        "sourceHandle": "values",
+        "target": "points3_x_6",
+        "targetHandle": "a",
+        "id": "e_points3_x_2_points3_x_6_a"
+      },
+      {
+        "source": "points3_x_4",
+        "sourceHandle": "values",
+        "target": "points3_x_6",
+        "targetHandle": "b",
+        "id": "e_points3_x_4_points3_x_6_b"
+      },
+      {
+        "source": "points3_x_7",
+        "sourceHandle": "values",
+        "target": "points3_x_9",
+        "targetHandle": "list",
+        "id": "e_points3_x_7_points3_x_9_list"
+      },
+      {
+        "source": "points3_x_8",
+        "sourceHandle": "values",
+        "target": "points3_x_10",
+        "targetHandle": "list",
+        "id": "e_points3_x_8_points3_x_10_list"
+      },
+      {
+        "source": "points3_x_5",
+        "sourceHandle": "value",
+        "target": "points3_x_11",
+        "targetHandle": "x",
+        "id": "e_points3_x_5_points3_x_11_x"
+      },
+      {
+        "source": "points3_x_6",
+        "sourceHandle": "value",
+        "target": "points3_x_11",
+        "targetHandle": "y",
+        "id": "e_points3_x_6_points3_x_11_y"
+      },
+      {
+        "source": "points3_x_9",
+        "sourceHandle": "values",
+        "target": "points3_x_11",
+        "targetHandle": "z",
+        "id": "e_points3_x_9_points3_x_11_z"
+      },
+      {
+        "source": "points3_x_10",
+        "sourceHandle": "values",
+        "target": "points3_x_11",
+        "targetHandle": "scale",
+        "id": "e_points3_x_10_points3_x_11_scale"
+      },
+      {
+        "source": "points3_x_2",
+        "sourceHandle": "values",
+        "target": "points3_x_11",
+        "targetHandle": "group",
+        "id": "e_points3_x_2_points3_x_11_group"
+      },
+      {
+        "source": "sphere",
+        "sourceHandle": "solid",
+        "target": "inst1",
+        "targetHandle": "shape",
+        "id": "e_sphere_inst1_shape"
+      },
+      {
+        "source": "points1_x_11",
+        "sourceHandle": "points",
+        "target": "inst1",
+        "targetHandle": "points",
+        "id": "e_points1_x_11_inst1_points"
+      },
+      {
+        "source": "sphere",
+        "sourceHandle": "solid",
+        "target": "inst2",
+        "targetHandle": "shape",
+        "id": "e_sphere_inst2_shape"
+      },
+      {
+        "source": "points2_x_11",
+        "sourceHandle": "points",
+        "target": "inst2",
+        "targetHandle": "points",
+        "id": "e_points2_x_11_inst2_points"
+      },
+      {
+        "source": "sphere",
+        "sourceHandle": "solid",
+        "target": "inst3",
+        "targetHandle": "shape",
+        "id": "e_sphere_inst3_shape"
+      },
+      {
+        "source": "points3_x_11",
+        "sourceHandle": "points",
+        "target": "inst3",
+        "targetHandle": "points",
+        "id": "e_points3_x_11_inst3_points"
+      },
+      {
+        "source": "inst1",
+        "sourceHandle": "solid",
+        "target": "tower",
+        "targetHandle": "solid1",
+        "id": "e_inst1_tower_solid1"
+      },
+      {
+        "source": "inst2",
+        "sourceHandle": "solid",
+        "target": "tower",
+        "targetHandle": "solid2",
+        "id": "e_inst2_tower_solid2"
+      },
+      {
+        "source": "inst3",
+        "sourceHandle": "solid",
+        "target": "tower",
+        "targetHandle": "solid3",
+        "id": "e_inst3_tower_solid3"
+      }
+    ]
+  },
+  "conversation": [
+    {
+      "role": "system",
+      "content": "Workspace cleared."
+    },
+    {
+      "role": "user",
+      "content": "make a circle divide it on ten points translate them up and scale a bit then translate copy them again up and scale them down then translate them up again and copy and rotate a bit "
+    },
+    {
+      "role": "system",
+      "content": "IR program had compile errors (attempt 1/3) — asking the model to fix."
+    },
+    {
+      "role": "assistant",
+      "content": "A tower of points: a circle divided into 10 points, then translated up and scaled, repeated with scaling and rotation at each level."
+    }
+  ],
+  "plan": "",
+  "genome": null,
+  "geometryReport": {
+    "leaves": [
+      {
+        "id": "tower",
+        "bbox": {
+          "min": [
+            -10.516296299883694,
+            -10.06384098497493,
+            4.434188134067517
+          ],
+          "max": [
+            10.565811865932483,
+            10.06384098497493,
+            15.385811865932483
+          ],
+          "center": [
+            0.024757783024394797,
+            0,
+            9.91
+          ],
+          "size": [
+            21.082108165816177,
+            20.12768196994986,
+            10.951623731864967
+          ]
+        },
+        "volume": 9.289396261350683,
+        "meshOk": true,
+        "vertexCount": 790,
+        "error": null
+      }
+    ],
+    "nodeErrors": [],
+    "numbers": {
+      "pointCount": 10,
+      "baseRadius": 10,
+      "heightStep": 5,
+      "scaleFactor": 0.8,
+      "rotationAngle": 18,
+      "points1_x_8": [
+        1
+      ],
+      "points1_x_3": [
+        0,
+        0.6283185307179586,
+        1.2566370614359172,
+        1.8849555921538759,
+        2.5132741228718345,
+        3.141592653589793,
+        3.7699111843077517,
+        4.39822971502571,
+        5.026548245743669,
+        5.654866776461628
+      ],
+      "points2_x_3": [
+        0,
+        0.6283185307179586,
+        1.2566370614359172,
+        1.8849555921538759,
+        2.5132741228718345,
+        3.141592653589793,
+        3.7699111843077517,
+        4.39822971502571,
+        5.026548245743669,
+        5.654866776461628
+      ],
+      "points1": [
+        10
+      ],
+      "points1_x_7": [
+        5
+      ],
+      "points2_x_7": [
+        10
+      ],
+      "points3_x_7": [
+        15
+      ],
+      "points2": [
+        8
+      ],
+      "points2_x_8": [
+        0.8
+      ],
+      "points3": [
+        6.4
+      ],
+      "points3_x_8": [
+        0.6400000000000001
+      ],
+      "points3_x_3": [
+        18,
+        18.62831853071796,
+        19.256637061435917,
+        19.884955592153876,
+        20.513274122871834,
+        21.141592653589793,
+        21.76991118430775,
+        22.39822971502571,
+        23.02654824574367,
+        23.654866776461628
+      ],
+      "points1_x_10": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "points1_x": 1,
+      "points1_x_2": [
+        10,
+        10,
+        10,
+        10,
+        10,
+        10,
+        10,
+        10,
+        10,
+        10
+      ],
+      "points1_x_9": [
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5
+      ],
+      "points2_x_9": [
+        10,
+        10,
+        10,
+        10,
+        10,
+        10,
+        10,
+        10,
+        10,
+        10
+      ],
+      "points3_x_9": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ],
+      "points2_x": 1,
+      "points2_x_2": [
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8
+      ],
+      "points2_x_10": [
+        0.8,
+        0.8,
+        0.8,
+        0.8,
+        0.8,
+        0.8,
+        0.8,
+        0.8,
+        0.8,
+        0.8
+      ],
+      "points3_x": 1,
+      "points3_x_2": [
+        6.4,
+        6.4,
+        6.4,
+        6.4,
+        6.4,
+        6.4,
+        6.4,
+        6.4,
+        6.4,
+        6.4
+      ],
+      "points3_x_10": [
+        0.6400000000000001,
+        0.6400000000000001,
+        0.6400000000000001,
+        0.6400000000000001,
+        0.6400000000000001,
+        0.6400000000000001,
+        0.6400000000000001,
+        0.6400000000000001,
+        0.6400000000000001,
+        0.6400000000000001
+      ],
+      "points1_x_4": [
+        0,
+        0.6283185307179586,
+        1.2566370614359172,
+        1.8849555921538759,
+        2.5132741228718345,
+        3.141592653589793,
+        3.7699111843077517,
+        4.39822971502571,
+        5.026548245743669,
+        5.654866776461628
+      ],
+      "points2_x_4": [
+        0,
+        0.6283185307179586,
+        1.2566370614359172,
+        1.8849555921538759,
+        2.5132741228718345,
+        3.141592653589793,
+        3.7699111843077517,
+        4.39822971502571,
+        5.026548245743669,
+        5.654866776461628
+      ],
+      "points3_x_4": [
+        18,
+        18.62831853071796,
+        19.256637061435917,
+        19.884955592153876,
+        20.513274122871834,
+        21.141592653589793,
+        21.76991118430775,
+        22.39822971502571,
+        23.02654824574367,
+        23.654866776461628
+      ],
+      "points1_x_5": [
+        10,
+        8.090169943749475,
+        3.0901699437494745,
+        -3.0901699437494736,
+        -8.090169943749473,
+        -10,
+        -8.090169943749476,
+        -3.0901699437494754,
+        3.0901699437494723,
+        8.090169943749473
+      ],
+      "points1_x_6": [
+        0,
+        5.877852522924732,
+        9.510565162951535,
+        9.510565162951536,
+        5.877852522924733,
+        1.2246467991473533e-15,
+        -5.87785252292473,
+        -9.510565162951535,
+        -9.510565162951536,
+        -5.877852522924734
+      ],
+      "points2_x_5": [
+        8,
+        6.47213595499958,
+        2.4721359549995796,
+        -2.4721359549995787,
+        -6.472135954999579,
+        -8,
+        -6.4721359549995805,
+        -2.4721359549995805,
+        2.472135954999578,
+        6.472135954999579
+      ],
+      "points2_x_6": [
+        0,
+        4.702282018339785,
+        7.608452130361228,
+        7.608452130361229,
+        4.702282018339786,
+        9.797174393178826e-16,
+        -4.702282018339784,
+        -7.608452130361228,
+        -7.608452130361229,
+        -4.702282018339787
+      ],
+      "points3_x_5": [
+        4.226026932762113,
+        6.244010668488347,
+        5.876994554968984,
+        3.265166273149532,
+        -0.5938445460932178,
+        -4.226026932762113,
+        -6.244010668488347,
+        -5.876994554968985,
+        -3.265166273149533,
+        0.593844546093217
+      ],
+      "points3_x_6": [
+        -4.806318379338727,
+        -1.4043969423933207,
+        2.5339563928499063,
+        5.50442451203455,
+        6.3723895561300505,
+        4.806318379338728,
+        1.4043969423933216,
+        -2.5339563928499054,
+        -5.50442451203455,
+        -6.3723895561300505
+      ]
+    },
+    "sliders": {
+      "pointCount": 10,
+      "baseRadius": 10,
+      "heightStep": 5,
+      "scaleFactor": 0.8,
+      "rotationAngle": 18
+    },
+    "selections": {},
+    "helpers": {},
+    "nodeCount": 46,
+    "edgeCount": 54,
+    "transformCount": 3,
+    "nodesPerLeafRatio": 46,
+    "nodeEconomyWarning": true,
+    "placement": {
+      "anchored": [
+        "tower"
+      ],
+      "literal": [],
+      "origin": [],
+      "literalNodeIds": [],
+      "ratio": 1
+    },
+    "scene": {
+      "min": [
+        -10.516296299883694,
+        -10.06384098497493,
+        4.434188134067517
+      ],
+      "max": [
+        10.565811865932483,
+        10.06384098497493,
+        15.385811865932483
+      ],
+      "size": [
+        21.082108165816177,
+        20.12768196994986,
+        10.951623731864967
+      ]
+    },
+    "meshedLeafCount": 1,
+    "kernelFaultCount": 0,
+    "kernelSuspect": false,
+    "kernelHealth": "ok",
+    "evalCount": 1,
+    "recycleRecommended": false,
+    "perturbationIssues": [],
+    "proportionalIntegrity": 1
+  },
+  "timeline": [
+    {
+      "at": "2026-07-24T19:22:04.255Z",
+      "turn": 1,
+      "trigger": "ai-ir",
+      "label": "attempt 2: rebuilt graph (46 nodes)",
+      "nodeCount": 46,
+      "edgeCount": 54,
+      "isolatedCount": 5,
+      "diff": {
+        "addedNodes": [
+          "pointCount",
+          "baseRadius",
+          "heightStep",
+          "scaleFactor",
+          "rotationAngle",
+          "points1",
+          "points1_x",
+          "points1_x_2",
+          "points1_x_3",
+          "points1_x_4",
+          "points1_x_5",
+          "points1_x_6",
+          "points1_x_7",
+          "points1_x_8",
+          "points1_x_9",
+          "points1_x_10",
+          "points1_x_11",
+          "points2",
+          "points2_x",
+          "points2_x_2",
+          "points2_x_3",
+          "points2_x_4",
+          "points2_x_5",
+          "points2_x_6",
+          "points2_x_7",
+          "points2_x_8",
+          "points2_x_9",
+          "points2_x_10",
+          "points2_x_11",
+          "points3",
+          "points3_x",
+          "points3_x_2",
+          "points3_x_3",
+          "points3_x_4",
+          "points3_x_5",
+          "points3_x_6",
+          "points3_x_7",
+          "points3_x_8",
+          "points3_x_9",
+          "points3_x_10",
+          "points3_x_11",
+          "sphere",
+          "inst1",
+          "inst2",
+          "inst3",
+          "tower"
+        ],
+        "removedNodes": [],
+        "changedNodes": [],
+        "addedEdges": 54,
+        "removedEdges": 0
+      },
+      "details": [
+        "warning: Dead design parameters: sliders \"pointCount\", \"baseRadius\", \"heightStep\", \"scaleFactor\", \"rotationAngle\" are not referenced by any formula or edge — moving them changes nothing. Wire dimensions to them or remove them.",
+        "warning: PARAMETRIC COVERAGE IS LOW (0%): Only 0 of 1 dimensions are driven by slider-based formulas or edges. Hard-coded literals will break design scalability when sliders move. Please rewrite these bare literals as formulas of your sliders: sphere.radius=0.5."
+      ],
+      "nodes": [
+        {
+          "id": "pointCount",
+          "type": "NumberSlider",
+          "data": {
+            "value": 10,
+            "label": "pointCount",
+            "min": 3,
+            "max": 50,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 420
+          }
+        },
+        {
+          "id": "baseRadius",
+          "type": "NumberSlider",
+          "data": {
+            "value": 10,
+            "label": "baseRadius",
+            "min": 1,
+            "max": 50,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 40
+          }
+        },
+        {
+          "id": "heightStep",
+          "type": "NumberSlider",
+          "data": {
+            "value": 5,
+            "label": "heightStep",
+            "min": 1,
+            "max": 20,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 230
+          }
+        },
+        {
+          "id": "scaleFactor",
+          "type": "NumberSlider",
+          "data": {
+            "value": 0.8,
+            "label": "scaleFactor",
+            "min": 0.1,
+            "max": 1,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 3080
+          }
+        },
+        {
+          "id": "rotationAngle",
+          "type": "NumberSlider",
+          "data": {
+            "value": 18,
+            "label": "rotationAngle",
+            "min": 0,
+            "max": 360,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 2890
+          }
+        },
+        {
+          "id": "points1",
+          "type": "ListConstant",
+          "data": {
+            "values": "baseRadius"
+          },
+          "position": {
+            "x": 40,
+            "y": 610
+          }
+        },
+        {
+          "id": "points1_x",
+          "type": "ListLength",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 40
+          }
+        },
+        {
+          "id": "points1_x_2",
+          "type": "RepeatEach",
+          "data": {
+            "count": "pointCount"
+          },
+          "position": {
+            "x": 270,
+            "y": 230
+          }
+        },
+        {
+          "id": "points1_x_3",
+          "type": "Series",
+          "data": {
+            "start": 0,
+            "step": "2*pi/(pointCount)",
+            "count": "pointCount"
+          },
+          "position": {
+            "x": 40,
+            "y": 800
+          }
+        },
+        {
+          "id": "points1_x_4",
+          "type": "Tile",
+          "data": {},
+          "position": {
+            "x": 500,
+            "y": 40
+          }
+        },
+        {
+          "id": "points1_x_5",
+          "type": "Expression",
+          "data": {
+            "formula": "a*cos(b)"
+          },
+          "position": {
+            "x": 730,
+            "y": 40
+          }
+        },
+        {
+          "id": "points1_x_6",
+          "type": "Expression",
+          "data": {
+            "formula": "a*sin(b)"
+          },
+          "position": {
+            "x": 730,
+            "y": 230
+          }
+        },
+        {
+          "id": "points1_x_7",
+          "type": "ListConstant",
+          "data": {
+            "values": "heightStep"
+          },
+          "position": {
+            "x": 40,
+            "y": 990
+          }
+        },
+        {
+          "id": "points1_x_8",
+          "type": "ListConstant",
+          "data": {
+            "values": "1"
+          },
+          "position": {
+            "x": 40,
+            "y": 1180
+          }
+        },
+        {
+          "id": "points1_x_9",
+          "type": "RepeatEach",
+          "data": {
+            "count": "pointCount"
+          },
+          "position": {
+            "x": 270,
+            "y": 420
+          }
+        },
+        {
+          "id": "points1_x_10",
+          "type": "RepeatEach",
+          "data": {
+            "count": "pointCount"
+          },
+          "position": {
+            "x": 270,
+            "y": 610
+          }
+        },
+        {
+          "id": "points1_x_11",
+          "type": "PointsFromLists",
+          "data": {},
+          "position": {
+            "x": 960,
+            "y": 40
+          }
+        },
+        {
+          "id": "points2",
+          "type": "ListConstant",
+          "data": {
+            "values": "baseRadius*scaleFactor"
+          },
+          "position": {
+            "x": 40,
+            "y": 1370
+          }
+        },
+        {
+          "id": "points2_x",
+          "type": "ListLength",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 800
+          }
+        },
+        {
+          "id": "points2_x_2",
+          "type": "RepeatEach",
+          "data": {
+            "count": "pointCount"
+          },
+          "position": {
+            "x": 270,
+            "y": 990
+          }
+        },
+        {
+          "id": "points2_x_3",
+          "type": "Series",
+          "data": {
+            "start": 0,
+            "step": "2*pi/(pointCount)",
+            "count": "pointCount"
+          },
+          "position": {
+            "x": 40,
+            "y": 1560
+          }
+        },
+        {
+          "id": "points2_x_4",
+          "type": "Tile",
+          "data": {},
+          "position": {
+            "x": 500,
+            "y": 230
+          }
+        },
+        {
+          "id": "points2_x_5",
+          "type": "Expression",
+          "data": {
+            "formula": "a*cos(b)"
+          },
+          "position": {
+            "x": 730,
+            "y": 420
+          }
+        },
+        {
+          "id": "points2_x_6",
+          "type": "Expression",
+          "data": {
+            "formula": "a*sin(b)"
+          },
+          "position": {
+            "x": 730,
+            "y": 610
+          }
+        },
+        {
+          "id": "points2_x_7",
+          "type": "ListConstant",
+          "data": {
+            "values": "heightStep*2"
+          },
+          "position": {
+            "x": 40,
+            "y": 1750
+          }
+        },
+        {
+          "id": "points2_x_8",
+          "type": "ListConstant",
+          "data": {
+            "values": "scaleFactor"
+          },
+          "position": {
+            "x": 40,
+            "y": 1940
+          }
+        },
+        {
+          "id": "points2_x_9",
+          "type": "RepeatEach",
+          "data": {
+            "count": "pointCount"
+          },
+          "position": {
+            "x": 270,
+            "y": 1180
+          }
+        },
+        {
+          "id": "points2_x_10",
+          "type": "RepeatEach",
+          "data": {
+            "count": "pointCount"
+          },
+          "position": {
+            "x": 270,
+            "y": 1370
+          }
+        },
+        {
+          "id": "points2_x_11",
+          "type": "PointsFromLists",
+          "data": {},
+          "position": {
+            "x": 960,
+            "y": 230
+          }
+        },
+        {
+          "id": "points3",
+          "type": "ListConstant",
+          "data": {
+            "values": "baseRadius*scaleFactor*scaleFactor"
+          },
+          "position": {
+            "x": 40,
+            "y": 2130
+          }
+        },
+        {
+          "id": "points3_x",
+          "type": "ListLength",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 1560
+          }
+        },
+        {
+          "id": "points3_x_2",
+          "type": "RepeatEach",
+          "data": {
+            "count": "pointCount"
+          },
+          "position": {
+            "x": 270,
+            "y": 1750
+          }
+        },
+        {
+          "id": "points3_x_3",
+          "type": "Series",
+          "data": {
+            "start": "rotationAngle",
+            "step": "2*pi/(pointCount)",
+            "count": "pointCount"
+          },
+          "position": {
+            "x": 40,
+            "y": 2320
+          }
+        },
+        {
+          "id": "points3_x_4",
+          "type": "Tile",
+          "data": {},
+          "position": {
+            "x": 500,
+            "y": 420
+          }
+        },
+        {
+          "id": "points3_x_5",
+          "type": "Expression",
+          "data": {
+            "formula": "a*cos(b)"
+          },
+          "position": {
+            "x": 730,
+            "y": 800
+          }
+        },
+        {
+          "id": "points3_x_6",
+          "type": "Expression",
+          "data": {
+            "formula": "a*sin(b)"
+          },
+          "position": {
+            "x": 730,
+            "y": 990
+          }
+        },
+        {
+          "id": "points3_x_7",
+          "type": "ListConstant",
+          "data": {
+            "values": "heightStep*3"
+          },
+          "position": {
+            "x": 40,
+            "y": 2510
+          }
+        },
+        {
+          "id": "points3_x_8",
+          "type": "ListConstant",
+          "data": {
+            "values": "scaleFactor*scaleFactor"
+          },
+          "position": {
+            "x": 40,
+            "y": 2700
+          }
+        },
+        {
+          "id": "points3_x_9",
+          "type": "RepeatEach",
+          "data": {
+            "count": "pointCount"
+          },
+          "position": {
+            "x": 270,
+            "y": 1940
+          }
+        },
+        {
+          "id": "points3_x_10",
+          "type": "RepeatEach",
+          "data": {
+            "count": "pointCount"
+          },
+          "position": {
+            "x": 270,
+            "y": 2130
+          }
+        },
+        {
+          "id": "points3_x_11",
+          "type": "PointsFromLists",
+          "data": {},
+          "position": {
+            "x": 960,
+            "y": 420
+          }
+        },
+        {
+          "id": "sphere",
+          "type": "Sphere",
+          "data": {
+            "radius": 0.5
+          },
+          "position": {
+            "x": 40,
+            "y": 3270
+          }
+        },
+        {
+          "id": "inst1",
+          "type": "InstanceOnPoints",
+          "data": {
+            "scaleStart": 1,
+            "scaleEnd": 1,
+            "alignToTangent": false
+          },
+          "position": {
+            "x": 1190,
+            "y": 40
+          }
+        },
+        {
+          "id": "inst2",
+          "type": "InstanceOnPoints",
+          "data": {
+            "scaleStart": 1,
+            "scaleEnd": 1,
+            "alignToTangent": false
+          },
+          "position": {
+            "x": 1190,
+            "y": 230
+          }
+        },
+        {
+          "id": "inst3",
+          "type": "InstanceOnPoints",
+          "data": {
+            "scaleStart": 1,
+            "scaleEnd": 1,
+            "alignToTangent": false
+          },
+          "position": {
+            "x": 1190,
+            "y": 420
+          }
+        },
+        {
+          "id": "tower",
+          "type": "Compound",
+          "data": {
+            "color": "#3b82f6"
+          },
+          "position": {
+            "x": 1420,
+            "y": 40
+          }
+        }
+      ],
+      "edges": [
+        {
+          "source": "points1",
+          "sourceHandle": "values",
+          "target": "points1_x",
+          "targetHandle": "list",
+          "id": "e_points1_points1_x_list"
+        },
+        {
+          "source": "points1",
+          "sourceHandle": "values",
+          "target": "points1_x_2",
+          "targetHandle": "list",
+          "id": "e_points1_points1_x_2_list"
+        },
+        {
+          "source": "points1_x",
+          "sourceHandle": "length",
+          "target": "points1_x_4",
+          "targetHandle": "count",
+          "id": "e_points1_x_points1_x_4_count"
+        },
+        {
+          "source": "points1_x_3",
+          "sourceHandle": "values",
+          "target": "points1_x_4",
+          "targetHandle": "list",
+          "id": "e_points1_x_3_points1_x_4_list"
+        },
+        {
+          "source": "points1_x_2",
+          "sourceHandle": "values",
+          "target": "points1_x_5",
+          "targetHandle": "a",
+          "id": "e_points1_x_2_points1_x_5_a"
+        },
+        {
+          "source": "points1_x_4",
+          "sourceHandle": "values",
+          "target": "points1_x_5",
+          "targetHandle": "b",
+          "id": "e_points1_x_4_points1_x_5_b"
+        },
+        {
+          "source": "points1_x_2",
+          "sourceHandle": "values",
+          "target": "points1_x_6",
+          "targetHandle": "a",
+          "id": "e_points1_x_2_points1_x_6_a"
+        },
+        {
+          "source": "points1_x_4",
+          "sourceHandle": "values",
+          "target": "points1_x_6",
+          "targetHandle": "b",
+          "id": "e_points1_x_4_points1_x_6_b"
+        },
+        {
+          "source": "points1_x_7",
+          "sourceHandle": "values",
+          "target": "points1_x_9",
+          "targetHandle": "list",
+          "id": "e_points1_x_7_points1_x_9_list"
+        },
+        {
+          "source": "points1_x_8",
+          "sourceHandle": "values",
+          "target": "points1_x_10",
+          "targetHandle": "list",
+          "id": "e_points1_x_8_points1_x_10_list"
+        },
+        {
+          "source": "points1_x_5",
+          "sourceHandle": "value",
+          "target": "points1_x_11",
+          "targetHandle": "x",
+          "id": "e_points1_x_5_points1_x_11_x"
+        },
+        {
+          "source": "points1_x_6",
+          "sourceHandle": "value",
+          "target": "points1_x_11",
+          "targetHandle": "y",
+          "id": "e_points1_x_6_points1_x_11_y"
+        },
+        {
+          "source": "points1_x_9",
+          "sourceHandle": "values",
+          "target": "points1_x_11",
+          "targetHandle": "z",
+          "id": "e_points1_x_9_points1_x_11_z"
+        },
+        {
+          "source": "points1_x_10",
+          "sourceHandle": "values",
+          "target": "points1_x_11",
+          "targetHandle": "scale",
+          "id": "e_points1_x_10_points1_x_11_scale"
+        },
+        {
+          "source": "points1_x_2",
+          "sourceHandle": "values",
+          "target": "points1_x_11",
+          "targetHandle": "group",
+          "id": "e_points1_x_2_points1_x_11_group"
+        },
+        {
+          "source": "points2",
+          "sourceHandle": "values",
+          "target": "points2_x",
+          "targetHandle": "list",
+          "id": "e_points2_points2_x_list"
+        },
+        {
+          "source": "points2",
+          "sourceHandle": "values",
+          "target": "points2_x_2",
+          "targetHandle": "list",
+          "id": "e_points2_points2_x_2_list"
+        },
+        {
+          "source": "points2_x",
+          "sourceHandle": "length",
+          "target": "points2_x_4",
+          "targetHandle": "count",
+          "id": "e_points2_x_points2_x_4_count"
+        },
+        {
+          "source": "points2_x_3",
+          "sourceHandle": "values",
+          "target": "points2_x_4",
+          "targetHandle": "list",
+          "id": "e_points2_x_3_points2_x_4_list"
+        },
+        {
+          "source": "points2_x_2",
+          "sourceHandle": "values",
+          "target": "points2_x_5",
+          "targetHandle": "a",
+          "id": "e_points2_x_2_points2_x_5_a"
+        },
+        {
+          "source": "points2_x_4",
+          "sourceHandle": "values",
+          "target": "points2_x_5",
+          "targetHandle": "b",
+          "id": "e_points2_x_4_points2_x_5_b"
+        },
+        {
+          "source": "points2_x_2",
+          "sourceHandle": "values",
+          "target": "points2_x_6",
+          "targetHandle": "a",
+          "id": "e_points2_x_2_points2_x_6_a"
+        },
+        {
+          "source": "points2_x_4",
+          "sourceHandle": "values",
+          "target": "points2_x_6",
+          "targetHandle": "b",
+          "id": "e_points2_x_4_points2_x_6_b"
+        },
+        {
+          "source": "points2_x_7",
+          "sourceHandle": "values",
+          "target": "points2_x_9",
+          "targetHandle": "list",
+          "id": "e_points2_x_7_points2_x_9_list"
+        },
+        {
+          "source": "points2_x_8",
+          "sourceHandle": "values",
+          "target": "points2_x_10",
+          "targetHandle": "list",
+          "id": "e_points2_x_8_points2_x_10_list"
+        },
+        {
+          "source": "points2_x_5",
+          "sourceHandle": "value",
+          "target": "points2_x_11",
+          "targetHandle": "x",
+          "id": "e_points2_x_5_points2_x_11_x"
+        },
+        {
+          "source": "points2_x_6",
+          "sourceHandle": "value",
+          "target": "points2_x_11",
+          "targetHandle": "y",
+          "id": "e_points2_x_6_points2_x_11_y"
+        },
+        {
+          "source": "points2_x_9",
+          "sourceHandle": "values",
+          "target": "points2_x_11",
+          "targetHandle": "z",
+          "id": "e_points2_x_9_points2_x_11_z"
+        },
+        {
+          "source": "points2_x_10",
+          "sourceHandle": "values",
+          "target": "points2_x_11",
+          "targetHandle": "scale",
+          "id": "e_points2_x_10_points2_x_11_scale"
+        },
+        {
+          "source": "points2_x_2",
+          "sourceHandle": "values",
+          "target": "points2_x_11",
+          "targetHandle": "group",
+          "id": "e_points2_x_2_points2_x_11_group"
+        },
+        {
+          "source": "points3",
+          "sourceHandle": "values",
+          "target": "points3_x",
+          "targetHandle": "list",
+          "id": "e_points3_points3_x_list"
+        },
+        {
+          "source": "points3",
+          "sourceHandle": "values",
+          "target": "points3_x_2",
+          "targetHandle": "list",
+          "id": "e_points3_points3_x_2_list"
+        },
+        {
+          "source": "points3_x",
+          "sourceHandle": "length",
+          "target": "points3_x_4",
+          "targetHandle": "count",
+          "id": "e_points3_x_points3_x_4_count"
+        },
+        {
+          "source": "points3_x_3",
+          "sourceHandle": "values",
+          "target": "points3_x_4",
+          "targetHandle": "list",
+          "id": "e_points3_x_3_points3_x_4_list"
+        },
+        {
+          "source": "points3_x_2",
+          "sourceHandle": "values",
+          "target": "points3_x_5",
+          "targetHandle": "a",
+          "id": "e_points3_x_2_points3_x_5_a"
+        },
+        {
+          "source": "points3_x_4",
+          "sourceHandle": "values",
+          "target": "points3_x_5",
+          "targetHandle": "b",
+          "id": "e_points3_x_4_points3_x_5_b"
+        },
+        {
+          "source": "points3_x_2",
+          "sourceHandle": "values",
+          "target": "points3_x_6",
+          "targetHandle": "a",
+          "id": "e_points3_x_2_points3_x_6_a"
+        },
+        {
+          "source": "points3_x_4",
+          "sourceHandle": "values",
+          "target": "points3_x_6",
+          "targetHandle": "b",
+          "id": "e_points3_x_4_points3_x_6_b"
+        },
+        {
+          "source": "points3_x_7",
+          "sourceHandle": "values",
+          "target": "points3_x_9",
+          "targetHandle": "list",
+          "id": "e_points3_x_7_points3_x_9_list"
+        },
+        {
+          "source": "points3_x_8",
+          "sourceHandle": "values",
+          "target": "points3_x_10",
+          "targetHandle": "list",
+          "id": "e_points3_x_8_points3_x_10_list"
+        },
+        {
+          "source": "points3_x_5",
+          "sourceHandle": "value",
+          "target": "points3_x_11",
+          "targetHandle": "x",
+          "id": "e_points3_x_5_points3_x_11_x"
+        },
+        {
+          "source": "points3_x_6",
+          "sourceHandle": "value",
+          "target": "points3_x_11",
+          "targetHandle": "y",
+          "id": "e_points3_x_6_points3_x_11_y"
+        },
+        {
+          "source": "points3_x_9",
+          "sourceHandle": "values",
+          "target": "points3_x_11",
+          "targetHandle": "z",
+          "id": "e_points3_x_9_points3_x_11_z"
+        },
+        {
+          "source": "points3_x_10",
+          "sourceHandle": "values",
+          "target": "points3_x_11",
+          "targetHandle": "scale",
+          "id": "e_points3_x_10_points3_x_11_scale"
+        },
+        {
+          "source": "points3_x_2",
+          "sourceHandle": "values",
+          "target": "points3_x_11",
+          "targetHandle": "group",
+          "id": "e_points3_x_2_points3_x_11_group"
+        },
+        {
+          "source": "sphere",
+          "sourceHandle": "solid",
+          "target": "inst1",
+          "targetHandle": "shape",
+          "id": "e_sphere_inst1_shape"
+        },
+        {
+          "source": "points1_x_11",
+          "sourceHandle": "points",
+          "target": "inst1",
+          "targetHandle": "points",
+          "id": "e_points1_x_11_inst1_points"
+        },
+        {
+          "source": "sphere",
+          "sourceHandle": "solid",
+          "target": "inst2",
+          "targetHandle": "shape",
+          "id": "e_sphere_inst2_shape"
+        },
+        {
+          "source": "points2_x_11",
+          "sourceHandle": "points",
+          "target": "inst2",
+          "targetHandle": "points",
+          "id": "e_points2_x_11_inst2_points"
+        },
+        {
+          "source": "sphere",
+          "sourceHandle": "solid",
+          "target": "inst3",
+          "targetHandle": "shape",
+          "id": "e_sphere_inst3_shape"
+        },
+        {
+          "source": "points3_x_11",
+          "sourceHandle": "points",
+          "target": "inst3",
+          "targetHandle": "points",
+          "id": "e_points3_x_11_inst3_points"
+        },
+        {
+          "source": "inst1",
+          "sourceHandle": "solid",
+          "target": "tower",
+          "targetHandle": "solid1",
+          "id": "e_inst1_tower_solid1"
+        },
+        {
+          "source": "inst2",
+          "sourceHandle": "solid",
+          "target": "tower",
+          "targetHandle": "solid2",
+          "id": "e_inst2_tower_solid2"
+        },
+        {
+          "source": "inst3",
+          "sourceHandle": "solid",
+          "target": "tower",
+          "targetHandle": "solid3",
+          "id": "e_inst3_tower_solid3"
+        }
+      ]
+    }
+  ]
+}

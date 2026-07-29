@@ -1,0 +1,1709 @@
+{
+  "c33dExport": 2,
+  "exportedAt": "2026-07-24T15:42:47.072Z",
+  "comment": "fail no 3d preview",
+  "agent": {
+    "name": "Ollama (Local)",
+    "provider": "ollama",
+    "model": "nemotron-3-super:cloud"
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "slider_sphereRadius",
+        "type": "NumberSlider",
+        "data": {
+          "label": "sphereRadius",
+          "value": 20,
+          "min": 5,
+          "max": 100,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 610
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "slider_cylCount",
+        "type": "NumberSlider",
+        "data": {
+          "label": "cylCount",
+          "value": 200,
+          "min": 10,
+          "max": 500,
+          "step": 1
+        },
+        "position": {
+          "x": 40,
+          "y": 230
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "slider_seed",
+        "type": "NumberSlider",
+        "data": {
+          "label": "seed",
+          "value": 1,
+          "min": 1,
+          "max": 100,
+          "step": 1
+        },
+        "position": {
+          "x": 40,
+          "y": 420
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "sphere",
+        "type": "Sphere",
+        "data": {
+          "radius": "sphereRadius",
+          "color": "#3b82f6"
+        },
+        "position": {
+          "x": 40,
+          "y": 800
+        },
+        "measured": {
+          "width": 201,
+          "height": 216
+        }
+      },
+      {
+        "id": "scatter",
+        "type": "ScatterOnSurface",
+        "data": {
+          "count": "cylCount",
+          "seed": "seed",
+          "scaleMin": 1,
+          "scaleMax": 1,
+          "includeBase": false
+        },
+        "position": {
+          "x": 270,
+          "y": 40
+        },
+        "measured": {
+          "width": 201,
+          "height": 382
+        }
+      },
+      {
+        "id": "boolean",
+        "type": "Boolean",
+        "data": {
+          "operation": "union"
+        },
+        "position": {
+          "x": 500,
+          "y": 40
+        },
+        "measured": {
+          "width": 177,
+          "height": 200
+        }
+      },
+      {
+        "id": "cylinder",
+        "type": "Cylinder",
+        "data": {
+          "radius": "0.1 * sphereRadius",
+          "height": "4.0 * sphereRadius",
+          "color": "#ef4444"
+        },
+        "position": {
+          "x": 40,
+          "y": 40
+        },
+        "measured": {
+          "width": 201,
+          "height": 296
+        }
+      }
+    ],
+    "edges": [
+      {
+        "source": "sphere",
+        "target": "boolean",
+        "id": "e_sphere_boolean_target",
+        "sourceHandle": "solid",
+        "targetHandle": "target"
+      },
+      {
+        "source": "scatter",
+        "target": "boolean",
+        "id": "e_scatter_boolean_tool",
+        "sourceHandle": "solid",
+        "targetHandle": "tool"
+      },
+      {
+        "source": "sphere",
+        "target": "scatter",
+        "id": "e_sphere_scatter_surface",
+        "sourceHandle": "solid",
+        "targetHandle": "surface"
+      }
+    ]
+  },
+  "conversation": [
+    {
+      "role": "system",
+      "content": "Workspace cleared."
+    },
+    {
+      "role": "user",
+      "content": "generating a ScatterOnSurface with hundreds of intersecting cylinders on a sphere, and trying to run a boolean Union on all of them."
+    },
+    {
+      "role": "assistant",
+      "content": "Create a sphere base with hundreds of cylinders scattered over its surface, then union them into a single solid. Parameters control sphere size, cylinder dimensions, count, and seed."
+    },
+    {
+      "role": "system",
+      "content": "Engine fault (does not count against repair budget, 1/3) — retrying."
+    },
+    {
+      "role": "assistant",
+      "content": "The Boolean union failed likely because the scattered cylinders are not properly intersecting the sphere (they may be tangent or outside). Fix by: 1) Correcting ScatterOnSurface inputs (sphere→surface, cylinder→shape). 2) Making cylinders slightly longer to ensure penetration (height = cylLengthRatio * sphereRadius * 1.2). 3) Adding a small inward offset via Translate on cylinder before scattering to guarantee overlap."
+    },
+    {
+      "role": "system",
+      "content": "[Patch] 2 removedEdgeIds entries matched NO edge (already gone or never existed) — nothing was removed for: cylinder->scatter.surface; sphere->scatter.shape. This usually means those edges were already dropped or renamed — do NOT keep retrying them. Use the edge ids shown in the graph state, {\"source\",\"target\"} objects, or \"source->target\" strings. Edges that DO exist on those nodes: sphere->scatter.shape, sphere->boolean.target"
+    },
+    {
+      "role": "system",
+      "content": "[Patch] updatedNodes entry \"cylinder\" matched NO existing node — nothing was updated. Use addedNodes to create it."
+    },
+    {
+      "role": "system",
+      "content": "Structural validation error (does not count against repair budget, 1/3): \"scatter\" (ScatterOnSurface) is missing required input: \"surface\". Connect an upstream solid to handle \"surface\", or the node produces no geometry. | Dropped invalid edge: cyl_offset → scatter.shape (target node \"scatter.shape\" does not exist)"
+    },
+    {
+      "role": "assistant",
+      "content": "Fix ScatterOnSurface inputs: sphere should connect to surface, and the translated cylinder (cyl_offset) should connect to shape. Remove the incorrect edge sphere → scatter.shape."
+    },
+    {
+      "role": "system",
+      "content": "[Patch] 1 removedEdgeIds entry matched NO edge (already gone or never existed) — nothing was removed for: sphere->scatter.shape. This usually means those edges were already dropped or renamed — do NOT keep retrying them. Use the edge ids shown in the graph state, {\"source\",\"target\"} objects, or \"source->target\" strings. Edges that DO exist on those nodes: sphere->scatter.shape, sphere->boolean.target"
+    },
+    {
+      "role": "system",
+      "content": "Structural validation error (does not count against repair budget, 2/3): \"scatter\" (ScatterOnSurface) is missing required input: \"surface\". Connect an upstream solid to handle \"surface\", or the node produces no geometry. | Dropped invalid edge: sphere → scatter.surface (target node \"scatter.surface\" does not exist)"
+    },
+    {
+      "role": "assistant",
+      "content": "The ScatterOnSurface node requires two inputs: 'surface' (the base solid to scatter on) and 'shape' (the instance to scatter). Currently, the sphere is incorrectly connected to scatter.shape, and the surface input is missing. The cyl_offset (translated cylinder) should be the shape, and the sphere should be the surface. We need to: 1) remove the incorrect edge sphere → scatter.shape, 2) add edge sphere → scatter.surface, 3) add edge cyl_offset → scatter.shape."
+    },
+    {
+      "role": "system",
+      "content": "[Patch] 1 removedEdgeIds entry matched NO edge (already gone or never existed) — nothing was removed for: sphere->scatter.shape. This usually means those edges were already dropped or renamed — do NOT keep retrying them. Use the edge ids shown in the graph state, {\"source\",\"target\"} objects, or \"source->target\" strings. Edges that DO exist on those nodes: sphere->scatter.shape, sphere->boolean.target"
+    },
+    {
+      "role": "system",
+      "content": "Structural validation error (does not count against repair budget, 3/3): \"scatter\" (ScatterOnSurface) is missing required input: \"surface\". Connect an upstream solid to handle \"surface\", or the node produces no geometry. | Dropped invalid edge: sphere → scatter.surface (target node \"scatter.surface\" does not exist)"
+    },
+    {
+      "role": "assistant",
+      "content": "The ScatterOnSurface node has two solid inputs: 'surface' (base) and 'shape' (instance). The current edges are miswired: sphere is connected to scatter.shape (should be surface) and cyl_offset is not connected to scatter.shape (should be shape). We need to rewire: connect sphere to scatter.surface and cyl_offset to scatter.shape. Since the patch protocol infers handles, we must ensure correct ordering: first edge to scatter assigns to surface, second to shape. Currently there's one edge sphere→scatter.shape (which is actually connected to shape input due to existing wiring). We'll remove that edge and add two edges in order: sphere→scatter (surface), then cyl_offset→scatter (shape)."
+    },
+    {
+      "role": "system",
+      "content": "Engine fault (does not count against repair budget, 2/3) — retrying."
+    },
+    {
+      "role": "system",
+      "content": "Response was not valid JSON (attempt 1/3) — asking the model to resend."
+    },
+    {
+      "role": "assistant",
+      "content": "Replace complex positioning with a long cylinder that penetrates the sphere regardless of scatter position. Remove unnecessary sliders and nodes, update cylinder dimensions, and rewire inputs to ensure Boolean union succeeds."
+    },
+    {
+      "role": "system",
+      "content": "[Patch] 2 removedEdgeIds entries matched NO edge (already gone or never existed) — nothing was removed for: cyl_offset_shape->cyl_offset.solid; cyl_offset->scatter.shape. This usually means those edges were already dropped or renamed — do NOT keep retrying them. Use the edge ids shown in the graph state, {\"source\",\"target\"} objects, or \"source->target\" strings."
+    },
+    {
+      "role": "system",
+      "content": "[Patch] updatedNodes entry \"cylinder\" matched NO existing node — nothing was updated. Use addedNodes to create it."
+    },
+    {
+      "role": "system",
+      "content": "Structural validation error (exemptions exhausted, counts against repair budget): \"scatter\" (ScatterOnSurface) is missing required input: \"shape\". Connect an upstream solid to handle \"shape\", or the node produces no geometry. | Dropped invalid edge: cylinder → scatter.shape (source node \"cylinder\" does not exist)"
+    },
+    {
+      "role": "system",
+      "content": "Issues detected (auto-repair 2/2): \"scatter\" (ScatterOnSurface) is missing required input: \"shape\". Connect an upstream solid to handle \"shape\", or the node produces no geometry.; Dropped invalid edge: cylinder → scatter.shape (source node \"cylinder\" does not exist)"
+    },
+    {
+      "role": "assistant",
+      "content": "The cylinder node was removed in the previous step, causing the scatter.shape input to be missing. We need to add back the cylinder node with appropriate parameters and connect it to scatter.shape. Also ensure the boolean node receives sphere and scatter outputs."
+    },
+    {
+      "role": "system",
+      "content": "Structural validation error (exemptions exhausted, counts against repair budget): \"scatter\" (ScatterOnSurface) is missing required input: \"shape\". Connect an upstream solid to handle \"shape\", or the node produces no geometry. | Dropped invalid edge: cylinder → scatter.shape (target node \"scatter.shape\" does not exist)"
+    },
+    {
+      "role": "system",
+      "content": "Auto-repair limit reached. Remaining issues: Structural validation failed"
+    }
+  ],
+  "plan": "The cylinder node was removed in the previous step, causing the scatter.shape input to be missing. We need to add back the cylinder node with appropriate parameters and connect it to scatter.shape. Also ensure the boolean node receives sphere and scatter outputs.",
+  "genome": null,
+  "geometryReport": {
+    "leaves": [
+      {
+        "id": "cylinder",
+        "bbox": {
+          "min": [
+            -2.0000001000000003,
+            -2.032748689268936,
+            -40.04370489853239
+          ],
+          "max": [
+            2.043704898532389,
+            2.032748689268936,
+            40.04370489853239
+          ],
+          "center": [
+            0.02185239926619431,
+            0,
+            0
+          ],
+          "size": [
+            4.043704998532389,
+            4.065497378537872,
+            80.08740979706478
+          ]
+        },
+        "volume": 1005.3096491487336,
+        "meshOk": true,
+        "vertexCount": 62,
+        "error": null
+      },
+      {
+        "id": "scatter",
+        "bbox": null,
+        "meshOk": false,
+        "vertexCount": 0,
+        "error": "Node \"scatter\" (ScatterOnSurface) has no connection on input \"shape\" — connect an upstream solid there."
+      },
+      {
+        "id": "boolean",
+        "bbox": {
+          "min": [
+            -20.027222079733136,
+            -20.01506702257148,
+            -20.073846695922352
+          ],
+          "max": [
+            20.027222079733143,
+            20.015067022571483,
+            20.073846695922352
+          ],
+          "center": [
+            3.552713678800501e-15,
+            0,
+            0
+          ],
+          "size": [
+            40.05444415946628,
+            40.03013404514296,
+            40.147693391844705
+          ]
+        },
+        "volume": 33510.321638291134,
+        "meshOk": true,
+        "vertexCount": 1027,
+        "error": null
+      }
+    ],
+    "nodeErrors": [],
+    "numbers": {
+      "slider_sphereRadius": 20,
+      "slider_cylCount": 200,
+      "slider_seed": 1
+    },
+    "sliders": {
+      "sphereRadius": 20,
+      "cylCount": 200,
+      "seed": 1
+    },
+    "selections": {},
+    "helpers": {},
+    "nodeCount": 7,
+    "edgeCount": 3,
+    "transformCount": 1,
+    "nodesPerLeafRatio": 2.3333333333333335,
+    "nodeEconomyWarning": false,
+    "placement": {
+      "anchored": [
+        "scatter",
+        "boolean"
+      ],
+      "literal": [],
+      "origin": [
+        "cylinder"
+      ],
+      "literalNodeIds": [],
+      "ratio": 1
+    },
+    "scene": {
+      "min": [
+        -20.027222079733136,
+        -20.01506702257148,
+        -40.04370489853239
+      ],
+      "max": [
+        20.027222079733143,
+        20.015067022571483,
+        40.04370489853239
+      ],
+      "size": [
+        40.05444415946628,
+        40.03013404514296,
+        80.08740979706478
+      ]
+    },
+    "meshedLeafCount": 2,
+    "kernelFaultCount": 0,
+    "kernelSuspect": false,
+    "kernelHealth": "ok",
+    "evalCount": 3,
+    "recycleRecommended": false,
+    "perturbationIssues": [],
+    "proportionalIntegrity": 1
+  },
+  "timeline": [
+    {
+      "at": "2026-07-24T15:31:54.069Z",
+      "turn": 1,
+      "trigger": "ai-json",
+      "label": "attempt 1: rebuilt graph (0 nodes); added 9 node(s) [NumberSlider, Sphere, Cylinder, ScatterOnSurface]; added 4 edge(s)",
+      "nodeCount": 9,
+      "edgeCount": 4,
+      "isolatedCount": 5,
+      "diff": {
+        "addedNodes": [
+          "slider_sphereRadius",
+          "slider_cylCount",
+          "slider_cylLengthRatio",
+          "slider_cylRadiusRatio",
+          "slider_seed",
+          "sphere",
+          "cylinder",
+          "scatter",
+          "boolean"
+        ],
+        "removedNodes": [],
+        "changedNodes": [],
+        "addedEdges": 4,
+        "removedEdges": 0
+      },
+      "nodes": [
+        {
+          "id": "slider_sphereRadius",
+          "type": "NumberSlider",
+          "data": {
+            "label": "sphereRadius",
+            "value": 20,
+            "min": 5,
+            "max": 100,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 990
+          }
+        },
+        {
+          "id": "slider_cylCount",
+          "type": "NumberSlider",
+          "data": {
+            "label": "cylCount",
+            "value": 200,
+            "min": 10,
+            "max": 500,
+            "step": 1
+          },
+          "position": {
+            "x": 40,
+            "y": 230
+          }
+        },
+        {
+          "id": "slider_cylLengthRatio",
+          "type": "NumberSlider",
+          "data": {
+            "label": "cylLengthRatio",
+            "value": 0.3,
+            "min": 0.1,
+            "max": 1,
+            "step": 0.01
+          },
+          "position": {
+            "x": 40,
+            "y": 420
+          }
+        },
+        {
+          "id": "slider_cylRadiusRatio",
+          "type": "NumberSlider",
+          "data": {
+            "label": "cylRadiusRatio",
+            "value": 0.05,
+            "min": 0.01,
+            "max": 0.2,
+            "step": 0.005
+          },
+          "position": {
+            "x": 40,
+            "y": 610
+          }
+        },
+        {
+          "id": "slider_seed",
+          "type": "NumberSlider",
+          "data": {
+            "label": "seed",
+            "value": 1,
+            "min": 1,
+            "max": 100,
+            "step": 1
+          },
+          "position": {
+            "x": 40,
+            "y": 800
+          }
+        },
+        {
+          "id": "sphere",
+          "type": "Sphere",
+          "data": {
+            "radius": "sphereRadius",
+            "color": "#3b82f6"
+          },
+          "position": {
+            "x": 40,
+            "y": 1180
+          }
+        },
+        {
+          "id": "cylinder",
+          "type": "Cylinder",
+          "data": {
+            "radius": "cylRadiusRatio * sphereRadius",
+            "height": "cylLengthRatio * sphereRadius",
+            "color": "#ef4444"
+          },
+          "position": {
+            "x": 40,
+            "y": 40
+          }
+        },
+        {
+          "id": "scatter",
+          "type": "ScatterOnSurface",
+          "data": {
+            "count": "cylCount",
+            "seed": "seed",
+            "scaleMin": 1,
+            "scaleMax": 1,
+            "includeBase": false
+          },
+          "position": {
+            "x": 270,
+            "y": 40
+          }
+        },
+        {
+          "id": "boolean",
+          "type": "Boolean",
+          "data": {
+            "operation": "union"
+          },
+          "position": {
+            "x": 500,
+            "y": 40
+          }
+        }
+      ],
+      "edges": [
+        {
+          "source": "cylinder",
+          "target": "scatter",
+          "id": "e_cylinder_scatter_surface",
+          "sourceHandle": "solid",
+          "targetHandle": "surface"
+        },
+        {
+          "source": "sphere",
+          "target": "scatter",
+          "id": "e_sphere_scatter_shape",
+          "sourceHandle": "solid",
+          "targetHandle": "shape"
+        },
+        {
+          "source": "sphere",
+          "target": "boolean",
+          "id": "e_sphere_boolean_target",
+          "sourceHandle": "solid",
+          "targetHandle": "target"
+        },
+        {
+          "source": "scatter",
+          "target": "boolean",
+          "id": "e_scatter_boolean_tool",
+          "sourceHandle": "solid",
+          "targetHandle": "tool"
+        }
+      ]
+    },
+    {
+      "at": "2026-07-24T15:32:41.207Z",
+      "turn": 1,
+      "trigger": "ai-json",
+      "label": "attempt 1: added 2 node(s) [Translate, Cylinder]; updated 1 node(s) (type changes: cylinder→Cylinder); removed 1 node(s); added 2 edge(s); removed 2 edge(s)",
+      "nodeCount": 10,
+      "edgeCount": 4,
+      "isolatedCount": 5,
+      "diff": {
+        "addedNodes": [
+          "cyl_offset",
+          "cyl_offset_shape"
+        ],
+        "removedNodes": [
+          "cylinder"
+        ],
+        "changedNodes": [],
+        "addedEdges": 1,
+        "removedEdges": 1
+      },
+      "details": [
+        "dropped edge: cyl_offset → scatter.shape (target node \"scatter.shape\" does not exist)",
+        "structural: \"scatter\" (ScatterOnSurface) is missing required input: \"surface\". Connect an upstream solid to handle \"surface\", or the node produces no geometry."
+      ],
+      "nodes": [
+        {
+          "id": "slider_sphereRadius",
+          "type": "NumberSlider",
+          "data": {
+            "label": "sphereRadius",
+            "value": 20,
+            "min": 5,
+            "max": 100,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 990
+          }
+        },
+        {
+          "id": "slider_cylCount",
+          "type": "NumberSlider",
+          "data": {
+            "label": "cylCount",
+            "value": 200,
+            "min": 10,
+            "max": 500,
+            "step": 1
+          },
+          "position": {
+            "x": 40,
+            "y": 230
+          }
+        },
+        {
+          "id": "slider_cylLengthRatio",
+          "type": "NumberSlider",
+          "data": {
+            "label": "cylLengthRatio",
+            "value": 0.3,
+            "min": 0.1,
+            "max": 1,
+            "step": 0.01
+          },
+          "position": {
+            "x": 40,
+            "y": 420
+          }
+        },
+        {
+          "id": "slider_cylRadiusRatio",
+          "type": "NumberSlider",
+          "data": {
+            "label": "cylRadiusRatio",
+            "value": 0.05,
+            "min": 0.01,
+            "max": 0.2,
+            "step": 0.005
+          },
+          "position": {
+            "x": 40,
+            "y": 610
+          }
+        },
+        {
+          "id": "slider_seed",
+          "type": "NumberSlider",
+          "data": {
+            "label": "seed",
+            "value": 1,
+            "min": 1,
+            "max": 100,
+            "step": 1
+          },
+          "position": {
+            "x": 40,
+            "y": 800
+          }
+        },
+        {
+          "id": "sphere",
+          "type": "Sphere",
+          "data": {
+            "radius": "sphereRadius",
+            "color": "#3b82f6"
+          },
+          "position": {
+            "x": 40,
+            "y": 1180
+          }
+        },
+        {
+          "id": "scatter",
+          "type": "ScatterOnSurface",
+          "data": {
+            "count": "cylCount",
+            "seed": "seed",
+            "scaleMin": 1,
+            "scaleMax": 1,
+            "includeBase": false
+          },
+          "position": {
+            "x": 270,
+            "y": 230
+          }
+        },
+        {
+          "id": "boolean",
+          "type": "Boolean",
+          "data": {
+            "operation": "union"
+          },
+          "position": {
+            "x": 500,
+            "y": 40
+          }
+        },
+        {
+          "id": "cyl_offset",
+          "type": "Translate",
+          "data": {
+            "z": "-cylLengthRatio * sphereRadius * 0.1",
+            "isLocal": true
+          },
+          "position": {
+            "x": 270,
+            "y": 40
+          }
+        },
+        {
+          "id": "cyl_offset_shape",
+          "type": "Cylinder",
+          "data": {
+            "radius": "cylRadiusRatio * sphereRadius",
+            "height": "cylLengthRatio * sphereRadius * 1.2",
+            "color": "#ef4444"
+          },
+          "position": {
+            "x": 40,
+            "y": 40
+          }
+        }
+      ],
+      "edges": [
+        {
+          "source": "sphere",
+          "target": "scatter",
+          "id": "e_sphere_scatter_shape",
+          "sourceHandle": "solid",
+          "targetHandle": "shape"
+        },
+        {
+          "source": "sphere",
+          "target": "boolean",
+          "id": "e_sphere_boolean_target",
+          "sourceHandle": "solid",
+          "targetHandle": "target"
+        },
+        {
+          "source": "scatter",
+          "target": "boolean",
+          "id": "e_scatter_boolean_tool",
+          "sourceHandle": "solid",
+          "targetHandle": "tool"
+        },
+        {
+          "source": "cyl_offset_shape",
+          "target": "cyl_offset",
+          "id": "e_cyl_offset_shape_cyl_offset_solid",
+          "sourceHandle": "solid",
+          "targetHandle": "solid"
+        }
+      ]
+    },
+    {
+      "at": "2026-07-24T15:32:51.113Z",
+      "turn": 1,
+      "trigger": "ai-json",
+      "label": "attempt 1: added 2 edge(s); removed 1 edge(s)",
+      "nodeCount": 10,
+      "edgeCount": 4,
+      "isolatedCount": 5,
+      "diff": {
+        "addedNodes": [],
+        "removedNodes": [],
+        "changedNodes": [],
+        "addedEdges": 0,
+        "removedEdges": 0
+      },
+      "details": [
+        "dropped edge: sphere → scatter.surface (target node \"scatter.surface\" does not exist)",
+        "dropped edge: cyl_offset → scatter.shape (target node \"scatter.shape\" does not exist)",
+        "structural: \"scatter\" (ScatterOnSurface) is missing required input: \"surface\". Connect an upstream solid to handle \"surface\", or the node produces no geometry."
+      ],
+      "nodes": [
+        {
+          "id": "slider_sphereRadius",
+          "type": "NumberSlider",
+          "data": {
+            "label": "sphereRadius",
+            "value": 20,
+            "min": 5,
+            "max": 100,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 990
+          }
+        },
+        {
+          "id": "slider_cylCount",
+          "type": "NumberSlider",
+          "data": {
+            "label": "cylCount",
+            "value": 200,
+            "min": 10,
+            "max": 500,
+            "step": 1
+          },
+          "position": {
+            "x": 40,
+            "y": 230
+          }
+        },
+        {
+          "id": "slider_cylLengthRatio",
+          "type": "NumberSlider",
+          "data": {
+            "label": "cylLengthRatio",
+            "value": 0.3,
+            "min": 0.1,
+            "max": 1,
+            "step": 0.01
+          },
+          "position": {
+            "x": 40,
+            "y": 420
+          }
+        },
+        {
+          "id": "slider_cylRadiusRatio",
+          "type": "NumberSlider",
+          "data": {
+            "label": "cylRadiusRatio",
+            "value": 0.05,
+            "min": 0.01,
+            "max": 0.2,
+            "step": 0.005
+          },
+          "position": {
+            "x": 40,
+            "y": 610
+          }
+        },
+        {
+          "id": "slider_seed",
+          "type": "NumberSlider",
+          "data": {
+            "label": "seed",
+            "value": 1,
+            "min": 1,
+            "max": 100,
+            "step": 1
+          },
+          "position": {
+            "x": 40,
+            "y": 800
+          }
+        },
+        {
+          "id": "sphere",
+          "type": "Sphere",
+          "data": {
+            "radius": "sphereRadius",
+            "color": "#3b82f6"
+          },
+          "position": {
+            "x": 40,
+            "y": 1180
+          }
+        },
+        {
+          "id": "scatter",
+          "type": "ScatterOnSurface",
+          "data": {
+            "count": "cylCount",
+            "seed": "seed",
+            "scaleMin": 1,
+            "scaleMax": 1,
+            "includeBase": false
+          },
+          "position": {
+            "x": 270,
+            "y": 230
+          }
+        },
+        {
+          "id": "boolean",
+          "type": "Boolean",
+          "data": {
+            "operation": "union"
+          },
+          "position": {
+            "x": 500,
+            "y": 40
+          }
+        },
+        {
+          "id": "cyl_offset",
+          "type": "Translate",
+          "data": {
+            "z": "-cylLengthRatio * sphereRadius * 0.1",
+            "isLocal": true
+          },
+          "position": {
+            "x": 270,
+            "y": 40
+          }
+        },
+        {
+          "id": "cyl_offset_shape",
+          "type": "Cylinder",
+          "data": {
+            "radius": "cylRadiusRatio * sphereRadius",
+            "height": "cylLengthRatio * sphereRadius * 1.2",
+            "color": "#ef4444"
+          },
+          "position": {
+            "x": 40,
+            "y": 40
+          }
+        }
+      ],
+      "edges": [
+        {
+          "source": "sphere",
+          "target": "scatter",
+          "id": "e_sphere_scatter_shape",
+          "sourceHandle": "solid",
+          "targetHandle": "shape"
+        },
+        {
+          "source": "sphere",
+          "target": "boolean",
+          "id": "e_sphere_boolean_target",
+          "sourceHandle": "solid",
+          "targetHandle": "target"
+        },
+        {
+          "source": "scatter",
+          "target": "boolean",
+          "id": "e_scatter_boolean_tool",
+          "sourceHandle": "solid",
+          "targetHandle": "tool"
+        },
+        {
+          "source": "cyl_offset_shape",
+          "target": "cyl_offset",
+          "id": "e_cyl_offset_shape_cyl_offset_solid",
+          "sourceHandle": "solid",
+          "targetHandle": "solid"
+        }
+      ]
+    },
+    {
+      "at": "2026-07-24T15:33:17.889Z",
+      "turn": 1,
+      "trigger": "ai-json",
+      "label": "attempt 1: added 2 edge(s); removed 1 edge(s)",
+      "nodeCount": 10,
+      "edgeCount": 4,
+      "isolatedCount": 5,
+      "diff": {
+        "addedNodes": [],
+        "removedNodes": [],
+        "changedNodes": [],
+        "addedEdges": 0,
+        "removedEdges": 0
+      },
+      "details": [
+        "dropped edge: sphere → scatter.surface (target node \"scatter.surface\" does not exist)",
+        "dropped edge: cyl_offset → scatter.shape (target node \"scatter.shape\" does not exist)",
+        "structural: \"scatter\" (ScatterOnSurface) is missing required input: \"surface\". Connect an upstream solid to handle \"surface\", or the node produces no geometry."
+      ],
+      "nodes": [
+        {
+          "id": "slider_sphereRadius",
+          "type": "NumberSlider",
+          "data": {
+            "label": "sphereRadius",
+            "value": 20,
+            "min": 5,
+            "max": 100,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 990
+          }
+        },
+        {
+          "id": "slider_cylCount",
+          "type": "NumberSlider",
+          "data": {
+            "label": "cylCount",
+            "value": 200,
+            "min": 10,
+            "max": 500,
+            "step": 1
+          },
+          "position": {
+            "x": 40,
+            "y": 230
+          }
+        },
+        {
+          "id": "slider_cylLengthRatio",
+          "type": "NumberSlider",
+          "data": {
+            "label": "cylLengthRatio",
+            "value": 0.3,
+            "min": 0.1,
+            "max": 1,
+            "step": 0.01
+          },
+          "position": {
+            "x": 40,
+            "y": 420
+          }
+        },
+        {
+          "id": "slider_cylRadiusRatio",
+          "type": "NumberSlider",
+          "data": {
+            "label": "cylRadiusRatio",
+            "value": 0.05,
+            "min": 0.01,
+            "max": 0.2,
+            "step": 0.005
+          },
+          "position": {
+            "x": 40,
+            "y": 610
+          }
+        },
+        {
+          "id": "slider_seed",
+          "type": "NumberSlider",
+          "data": {
+            "label": "seed",
+            "value": 1,
+            "min": 1,
+            "max": 100,
+            "step": 1
+          },
+          "position": {
+            "x": 40,
+            "y": 800
+          }
+        },
+        {
+          "id": "sphere",
+          "type": "Sphere",
+          "data": {
+            "radius": "sphereRadius",
+            "color": "#3b82f6"
+          },
+          "position": {
+            "x": 40,
+            "y": 1180
+          }
+        },
+        {
+          "id": "scatter",
+          "type": "ScatterOnSurface",
+          "data": {
+            "count": "cylCount",
+            "seed": "seed",
+            "scaleMin": 1,
+            "scaleMax": 1,
+            "includeBase": false
+          },
+          "position": {
+            "x": 270,
+            "y": 230
+          }
+        },
+        {
+          "id": "boolean",
+          "type": "Boolean",
+          "data": {
+            "operation": "union"
+          },
+          "position": {
+            "x": 500,
+            "y": 40
+          }
+        },
+        {
+          "id": "cyl_offset",
+          "type": "Translate",
+          "data": {
+            "z": "-cylLengthRatio * sphereRadius * 0.1",
+            "isLocal": true
+          },
+          "position": {
+            "x": 270,
+            "y": 40
+          }
+        },
+        {
+          "id": "cyl_offset_shape",
+          "type": "Cylinder",
+          "data": {
+            "radius": "cylRadiusRatio * sphereRadius",
+            "height": "cylLengthRatio * sphereRadius * 1.2",
+            "color": "#ef4444"
+          },
+          "position": {
+            "x": 40,
+            "y": 40
+          }
+        }
+      ],
+      "edges": [
+        {
+          "source": "sphere",
+          "target": "scatter",
+          "id": "e_sphere_scatter_shape",
+          "sourceHandle": "solid",
+          "targetHandle": "shape"
+        },
+        {
+          "source": "sphere",
+          "target": "boolean",
+          "id": "e_sphere_boolean_target",
+          "sourceHandle": "solid",
+          "targetHandle": "target"
+        },
+        {
+          "source": "scatter",
+          "target": "boolean",
+          "id": "e_scatter_boolean_tool",
+          "sourceHandle": "solid",
+          "targetHandle": "tool"
+        },
+        {
+          "source": "cyl_offset_shape",
+          "target": "cyl_offset",
+          "id": "e_cyl_offset_shape_cyl_offset_solid",
+          "sourceHandle": "solid",
+          "targetHandle": "solid"
+        }
+      ]
+    },
+    {
+      "at": "2026-07-24T15:33:59.609Z",
+      "turn": 1,
+      "trigger": "ai-json",
+      "label": "attempt 1: added 2 edge(s); removed 1 edge(s)",
+      "nodeCount": 10,
+      "edgeCount": 5,
+      "isolatedCount": 5,
+      "diff": {
+        "addedNodes": [],
+        "removedNodes": [],
+        "changedNodes": [],
+        "addedEdges": 2,
+        "removedEdges": 1
+      },
+      "nodes": [
+        {
+          "id": "slider_sphereRadius",
+          "type": "NumberSlider",
+          "data": {
+            "label": "sphereRadius",
+            "value": 20,
+            "min": 5,
+            "max": 100,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 990
+          },
+          "measured": {
+            "width": 201,
+            "height": 328
+          }
+        },
+        {
+          "id": "slider_cylCount",
+          "type": "NumberSlider",
+          "data": {
+            "label": "cylCount",
+            "value": 200,
+            "min": 10,
+            "max": 500,
+            "step": 1
+          },
+          "position": {
+            "x": 40,
+            "y": 230
+          },
+          "measured": {
+            "width": 201,
+            "height": 328
+          }
+        },
+        {
+          "id": "slider_cylLengthRatio",
+          "type": "NumberSlider",
+          "data": {
+            "label": "cylLengthRatio",
+            "value": 0.3,
+            "min": 0.1,
+            "max": 1,
+            "step": 0.01
+          },
+          "position": {
+            "x": 40,
+            "y": 420
+          },
+          "measured": {
+            "width": 201,
+            "height": 328
+          }
+        },
+        {
+          "id": "slider_cylRadiusRatio",
+          "type": "NumberSlider",
+          "data": {
+            "label": "cylRadiusRatio",
+            "value": 0.05,
+            "min": 0.01,
+            "max": 0.2,
+            "step": 0.005
+          },
+          "position": {
+            "x": 40,
+            "y": 610
+          },
+          "measured": {
+            "width": 201,
+            "height": 328
+          }
+        },
+        {
+          "id": "slider_seed",
+          "type": "NumberSlider",
+          "data": {
+            "label": "seed",
+            "value": 1,
+            "min": 1,
+            "max": 100,
+            "step": 1
+          },
+          "position": {
+            "x": 40,
+            "y": 800
+          },
+          "measured": {
+            "width": 201,
+            "height": 328
+          }
+        },
+        {
+          "id": "sphere",
+          "type": "Sphere",
+          "data": {
+            "radius": "sphereRadius",
+            "color": "#3b82f6"
+          },
+          "position": {
+            "x": 40,
+            "y": 1180
+          },
+          "measured": {
+            "width": 201,
+            "height": 216
+          }
+        },
+        {
+          "id": "scatter",
+          "type": "ScatterOnSurface",
+          "data": {
+            "count": "cylCount",
+            "seed": "seed",
+            "scaleMin": 1,
+            "scaleMax": 1,
+            "includeBase": false
+          },
+          "position": {
+            "x": 500,
+            "y": 40
+          },
+          "measured": {
+            "width": 201,
+            "height": 382
+          }
+        },
+        {
+          "id": "boolean",
+          "type": "Boolean",
+          "data": {
+            "operation": "union"
+          },
+          "position": {
+            "x": 730,
+            "y": 40
+          },
+          "measured": {
+            "width": 177,
+            "height": 200
+          }
+        },
+        {
+          "id": "cyl_offset",
+          "type": "Translate",
+          "data": {
+            "z": "-cylLengthRatio * sphereRadius * 0.1",
+            "isLocal": true
+          },
+          "position": {
+            "x": 270,
+            "y": 40
+          },
+          "measured": {
+            "width": 201,
+            "height": 334
+          }
+        },
+        {
+          "id": "cyl_offset_shape",
+          "type": "Cylinder",
+          "data": {
+            "radius": "cylRadiusRatio * sphereRadius",
+            "height": "cylLengthRatio * sphereRadius * 1.2",
+            "color": "#ef4444"
+          },
+          "position": {
+            "x": 40,
+            "y": 40
+          },
+          "measured": {
+            "width": 201,
+            "height": 296
+          }
+        }
+      ],
+      "edges": [
+        {
+          "source": "sphere",
+          "target": "boolean",
+          "id": "e_sphere_boolean_target",
+          "sourceHandle": "solid",
+          "targetHandle": "target"
+        },
+        {
+          "source": "scatter",
+          "target": "boolean",
+          "id": "e_scatter_boolean_tool",
+          "sourceHandle": "solid",
+          "targetHandle": "tool"
+        },
+        {
+          "source": "cyl_offset_shape",
+          "target": "cyl_offset",
+          "id": "e_cyl_offset_shape_cyl_offset_solid",
+          "sourceHandle": "solid",
+          "targetHandle": "solid"
+        },
+        {
+          "source": "sphere",
+          "target": "scatter",
+          "id": "e_sphere_scatter_surface",
+          "sourceHandle": "solid",
+          "targetHandle": "surface"
+        },
+        {
+          "source": "cyl_offset",
+          "target": "scatter",
+          "id": "e_cyl_offset_scatter_shape",
+          "sourceHandle": "solid",
+          "targetHandle": "shape"
+        }
+      ]
+    },
+    {
+      "at": "2026-07-24T15:35:51.718Z",
+      "turn": 1,
+      "trigger": "ai-repair",
+      "label": "attempt 2: updated 1 node(s) (type changes: cylinder→Cylinder); removed 4 node(s); added 1 edge(s); removed 2 edge(s)",
+      "nodeCount": 6,
+      "edgeCount": 3,
+      "isolatedCount": 3,
+      "diff": {
+        "addedNodes": [],
+        "removedNodes": [
+          "slider_cylLengthRatio",
+          "slider_cylRadiusRatio",
+          "cyl_offset",
+          "cyl_offset_shape"
+        ],
+        "changedNodes": [],
+        "addedEdges": 0,
+        "removedEdges": 2
+      },
+      "details": [
+        "dropped edge: cylinder → scatter.shape (source node \"cylinder\" does not exist)",
+        "structural: \"scatter\" (ScatterOnSurface) is missing required input: \"shape\". Connect an upstream solid to handle \"shape\", or the node produces no geometry."
+      ],
+      "nodes": [
+        {
+          "id": "slider_sphereRadius",
+          "type": "NumberSlider",
+          "data": {
+            "label": "sphereRadius",
+            "value": 20,
+            "min": 5,
+            "max": 100,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 420
+          },
+          "measured": {
+            "width": 201,
+            "height": 328
+          }
+        },
+        {
+          "id": "slider_cylCount",
+          "type": "NumberSlider",
+          "data": {
+            "label": "cylCount",
+            "value": 200,
+            "min": 10,
+            "max": 500,
+            "step": 1
+          },
+          "position": {
+            "x": 40,
+            "y": 40
+          },
+          "measured": {
+            "width": 201,
+            "height": 328
+          }
+        },
+        {
+          "id": "slider_seed",
+          "type": "NumberSlider",
+          "data": {
+            "label": "seed",
+            "value": 1,
+            "min": 1,
+            "max": 100,
+            "step": 1
+          },
+          "position": {
+            "x": 40,
+            "y": 230
+          },
+          "measured": {
+            "width": 201,
+            "height": 328
+          }
+        },
+        {
+          "id": "sphere",
+          "type": "Sphere",
+          "data": {
+            "radius": "sphereRadius",
+            "color": "#3b82f6"
+          },
+          "position": {
+            "x": 40,
+            "y": 610
+          },
+          "measured": {
+            "width": 201,
+            "height": 216
+          }
+        },
+        {
+          "id": "scatter",
+          "type": "ScatterOnSurface",
+          "data": {
+            "count": "cylCount",
+            "seed": "seed",
+            "scaleMin": 1,
+            "scaleMax": 1,
+            "includeBase": false
+          },
+          "position": {
+            "x": 270,
+            "y": 40
+          },
+          "measured": {
+            "width": 201,
+            "height": 382
+          }
+        },
+        {
+          "id": "boolean",
+          "type": "Boolean",
+          "data": {
+            "operation": "union"
+          },
+          "position": {
+            "x": 500,
+            "y": 40
+          },
+          "measured": {
+            "width": 177,
+            "height": 200
+          }
+        }
+      ],
+      "edges": [
+        {
+          "source": "sphere",
+          "target": "boolean",
+          "id": "e_sphere_boolean_target",
+          "sourceHandle": "solid",
+          "targetHandle": "target"
+        },
+        {
+          "source": "scatter",
+          "target": "boolean",
+          "id": "e_scatter_boolean_tool",
+          "sourceHandle": "solid",
+          "targetHandle": "tool"
+        },
+        {
+          "source": "sphere",
+          "target": "scatter",
+          "id": "e_sphere_scatter_surface",
+          "sourceHandle": "solid",
+          "targetHandle": "surface"
+        }
+      ]
+    },
+    {
+      "at": "2026-07-24T15:35:57.453Z",
+      "turn": 1,
+      "trigger": "ai-repair",
+      "label": "attempt 3: added 1 node(s) [Cylinder]; added 1 edge(s)",
+      "nodeCount": 7,
+      "edgeCount": 3,
+      "isolatedCount": 4,
+      "diff": {
+        "addedNodes": [
+          "cylinder"
+        ],
+        "removedNodes": [],
+        "changedNodes": [],
+        "addedEdges": 0,
+        "removedEdges": 0
+      },
+      "details": [
+        "dropped edge: cylinder → scatter.shape (target node \"scatter.shape\" does not exist)",
+        "structural: \"scatter\" (ScatterOnSurface) is missing required input: \"shape\". Connect an upstream solid to handle \"shape\", or the node produces no geometry."
+      ],
+      "nodes": [
+        {
+          "id": "slider_sphereRadius",
+          "type": "NumberSlider",
+          "data": {
+            "label": "sphereRadius",
+            "value": 20,
+            "min": 5,
+            "max": 100,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 610
+          },
+          "measured": {
+            "width": 201,
+            "height": 328
+          }
+        },
+        {
+          "id": "slider_cylCount",
+          "type": "NumberSlider",
+          "data": {
+            "label": "cylCount",
+            "value": 200,
+            "min": 10,
+            "max": 500,
+            "step": 1
+          },
+          "position": {
+            "x": 40,
+            "y": 230
+          },
+          "measured": {
+            "width": 201,
+            "height": 328
+          }
+        },
+        {
+          "id": "slider_seed",
+          "type": "NumberSlider",
+          "data": {
+            "label": "seed",
+            "value": 1,
+            "min": 1,
+            "max": 100,
+            "step": 1
+          },
+          "position": {
+            "x": 40,
+            "y": 420
+          },
+          "measured": {
+            "width": 201,
+            "height": 328
+          }
+        },
+        {
+          "id": "sphere",
+          "type": "Sphere",
+          "data": {
+            "radius": "sphereRadius",
+            "color": "#3b82f6"
+          },
+          "position": {
+            "x": 40,
+            "y": 800
+          },
+          "measured": {
+            "width": 201,
+            "height": 216
+          }
+        },
+        {
+          "id": "scatter",
+          "type": "ScatterOnSurface",
+          "data": {
+            "count": "cylCount",
+            "seed": "seed",
+            "scaleMin": 1,
+            "scaleMax": 1,
+            "includeBase": false
+          },
+          "position": {
+            "x": 270,
+            "y": 40
+          },
+          "measured": {
+            "width": 201,
+            "height": 382
+          }
+        },
+        {
+          "id": "boolean",
+          "type": "Boolean",
+          "data": {
+            "operation": "union"
+          },
+          "position": {
+            "x": 500,
+            "y": 40
+          },
+          "measured": {
+            "width": 177,
+            "height": 200
+          }
+        },
+        {
+          "id": "cylinder",
+          "type": "Cylinder",
+          "data": {
+            "radius": "0.1 * sphereRadius",
+            "height": "4.0 * sphereRadius",
+            "color": "#ef4444"
+          },
+          "position": {
+            "x": 40,
+            "y": 40
+          }
+        }
+      ],
+      "edges": [
+        {
+          "source": "sphere",
+          "target": "boolean",
+          "id": "e_sphere_boolean_target",
+          "sourceHandle": "solid",
+          "targetHandle": "target"
+        },
+        {
+          "source": "scatter",
+          "target": "boolean",
+          "id": "e_scatter_boolean_tool",
+          "sourceHandle": "solid",
+          "targetHandle": "tool"
+        },
+        {
+          "source": "sphere",
+          "target": "scatter",
+          "id": "e_sphere_scatter_surface",
+          "sourceHandle": "solid",
+          "targetHandle": "surface"
+        }
+      ]
+    }
+  ]
+}

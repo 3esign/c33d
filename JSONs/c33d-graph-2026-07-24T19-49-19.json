@@ -1,0 +1,3191 @@
+{
+  "c33dExport": 2,
+  "exportedAt": "2026-07-24T19:49:19.525Z",
+  "comment": "there is intention in 3d model but highly primitive",
+  "agent": {
+    "name": "Ollama (Local)",
+    "provider": "ollama",
+    "model": "qwen3.5:cloud"
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "totalHeight",
+        "type": "NumberSlider",
+        "data": {
+          "value": 25,
+          "label": "totalHeight",
+          "min": 15,
+          "max": 50,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 1180
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "torsoWidth",
+        "type": "NumberSlider",
+        "data": {
+          "value": 6,
+          "label": "torsoWidth",
+          "min": 4,
+          "max": 12,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 990
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "hoodSize",
+        "type": "NumberSlider",
+        "data": {
+          "value": 4,
+          "label": "hoodSize",
+          "min": 2,
+          "max": 8,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 420
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "bowSpan",
+        "type": "NumberSlider",
+        "data": {
+          "value": 12,
+          "label": "bowSpan",
+          "min": 8,
+          "max": 20,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 40
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "legHeight",
+        "type": "ListConstant",
+        "data": {
+          "values": "totalHeight"
+        },
+        "position": {
+          "x": 40,
+          "y": 610
+        },
+        "measured": {
+          "width": 177,
+          "height": 136
+        }
+      },
+      {
+        "id": "legHeight_x",
+        "type": "Expression",
+        "data": {
+          "formula": "totalHeight*0.25"
+        },
+        "position": {
+          "x": 270,
+          "y": 230
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "torsoHeight",
+        "type": "ListConstant",
+        "data": {
+          "values": "totalHeight"
+        },
+        "position": {
+          "x": 40,
+          "y": 800
+        },
+        "measured": {
+          "width": 177,
+          "height": 136
+        }
+      },
+      {
+        "id": "torsoHeight_x",
+        "type": "Expression",
+        "data": {
+          "formula": "totalHeight*0.35"
+        },
+        "position": {
+          "x": 270,
+          "y": 420
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "headRadius",
+        "type": "ListConstant",
+        "data": {
+          "values": "torsoWidth"
+        },
+        "position": {
+          "x": 40,
+          "y": 230
+        },
+        "measured": {
+          "width": 177,
+          "height": 136
+        }
+      },
+      {
+        "id": "headRadius_x",
+        "type": "Expression",
+        "data": {
+          "formula": "torsoWidth*0.4"
+        },
+        "position": {
+          "x": 270,
+          "y": 40
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "legLeft_center_z",
+        "type": "Expression",
+        "data": {
+          "formula": "a/2"
+        },
+        "position": {
+          "x": 500,
+          "y": 40
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "legLeft_center",
+        "type": "Point",
+        "data": {
+          "x": "-torsoWidth*0.25",
+          "y": 0
+        },
+        "position": {
+          "x": 730,
+          "y": 40
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "legLeft",
+        "type": "Cylinder",
+        "data": {
+          "radius": "torsoWidth*0.15"
+        },
+        "position": {
+          "x": 960,
+          "y": 40
+        },
+        "measured": {
+          "width": 201,
+          "height": 296
+        }
+      },
+      {
+        "id": "legRight_center_z",
+        "type": "Expression",
+        "data": {
+          "formula": "a/2"
+        },
+        "position": {
+          "x": 500,
+          "y": 230
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "legRight_center",
+        "type": "Point",
+        "data": {
+          "x": "torsoWidth*0.25",
+          "y": 0
+        },
+        "position": {
+          "x": 730,
+          "y": 800
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "legRight",
+        "type": "Cylinder",
+        "data": {
+          "radius": "torsoWidth*0.15"
+        },
+        "position": {
+          "x": 960,
+          "y": 610
+        },
+        "measured": {
+          "width": 201,
+          "height": 296
+        }
+      },
+      {
+        "id": "legs",
+        "type": "Compound",
+        "data": {},
+        "position": {
+          "x": 1190,
+          "y": 230
+        },
+        "measured": {
+          "width": 150,
+          "height": 330
+        }
+      },
+      {
+        "id": "torso_center_z",
+        "type": "Expression",
+        "data": {
+          "formula": "a+b/2"
+        },
+        "position": {
+          "x": 500,
+          "y": 610
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "torso_center",
+        "type": "Point",
+        "data": {
+          "x": 0,
+          "y": 0
+        },
+        "position": {
+          "x": 730,
+          "y": 2320
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "torso",
+        "type": "Cone",
+        "data": {
+          "radius2": "torsoWidth*0.7"
+        },
+        "position": {
+          "x": 960,
+          "y": 1370
+        },
+        "measured": {
+          "width": 201,
+          "height": 344
+        }
+      },
+      {
+        "id": "neckY",
+        "type": "Expression",
+        "data": {
+          "formula": "legHeight+torsoHeight"
+        },
+        "position": {
+          "x": 500,
+          "y": 420
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "head_center_z",
+        "type": "Expression",
+        "data": {
+          "formula": "a+b"
+        },
+        "position": {
+          "x": 730,
+          "y": 230
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "head_center",
+        "type": "Point",
+        "data": {
+          "x": 0,
+          "y": 0
+        },
+        "position": {
+          "x": 960,
+          "y": 230
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "head",
+        "type": "Sphere",
+        "data": {
+          "color": "#fca5a5"
+        },
+        "position": {
+          "x": 1190,
+          "y": 40
+        },
+        "measured": {
+          "width": 201,
+          "height": 216
+        }
+      },
+      {
+        "id": "hoodBack_center_z",
+        "type": "Expression",
+        "data": {
+          "formula": "a+b"
+        },
+        "position": {
+          "x": 730,
+          "y": 420
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "hoodBack_center",
+        "type": "Point",
+        "data": {
+          "x": 0,
+          "y": "-hoodSize*0.3"
+        },
+        "position": {
+          "x": 960,
+          "y": 420
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "hoodBack",
+        "type": "Sphere",
+        "data": {},
+        "position": {
+          "x": 1190,
+          "y": 420
+        },
+        "measured": {
+          "width": 201,
+          "height": 216
+        }
+      },
+      {
+        "id": "hoodFront_center_z",
+        "type": "Expression",
+        "data": {
+          "formula": "a+b+b*0.3"
+        },
+        "position": {
+          "x": 730,
+          "y": 610
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "hoodFront_center",
+        "type": "Point",
+        "data": {
+          "x": 0,
+          "y": "hoodSize*0.2"
+        },
+        "position": {
+          "x": 960,
+          "y": 800
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "hoodFront",
+        "type": "Cone",
+        "data": {
+          "radius1": "hoodSize*0.9",
+          "radius2": "hoodSize*0.3",
+          "height": "hoodSize*0.6"
+        },
+        "position": {
+          "x": 1190,
+          "y": 800
+        },
+        "measured": {
+          "width": 201,
+          "height": 344
+        }
+      },
+      {
+        "id": "hood",
+        "type": "Compound",
+        "data": {
+          "color": "#16a34a"
+        },
+        "position": {
+          "x": 1420,
+          "y": 40
+        },
+        "measured": {
+          "width": 150,
+          "height": 330
+        }
+      },
+      {
+        "id": "armLength",
+        "type": "Expression",
+        "data": {
+          "formula": "torsoWidth*0.9"
+        },
+        "position": {
+          "x": 270,
+          "y": 610
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "armLeft_center_z",
+        "type": "Expression",
+        "data": {
+          "formula": "a-b*0.3"
+        },
+        "position": {
+          "x": 730,
+          "y": 990
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "armLeft_center",
+        "type": "Point",
+        "data": {
+          "x": "-torsoWidth*0.6",
+          "y": 0
+        },
+        "position": {
+          "x": 960,
+          "y": 990
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "armLeft",
+        "type": "Cylinder",
+        "data": {
+          "radius": "torsoWidth*0.12"
+        },
+        "position": {
+          "x": 1190,
+          "y": 610
+        },
+        "measured": {
+          "width": 201,
+          "height": 296
+        }
+      },
+      {
+        "id": "armRight_center_z",
+        "type": "Expression",
+        "data": {
+          "formula": "a-b*0.3"
+        },
+        "position": {
+          "x": 730,
+          "y": 1180
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "armRight_center",
+        "type": "Point",
+        "data": {
+          "x": "torsoWidth*0.6",
+          "y": 0
+        },
+        "position": {
+          "x": 960,
+          "y": 1180
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "armRight",
+        "type": "Cylinder",
+        "data": {
+          "radius": "torsoWidth*0.12"
+        },
+        "position": {
+          "x": 1190,
+          "y": 990
+        },
+        "measured": {
+          "width": 201,
+          "height": 296
+        }
+      },
+      {
+        "id": "arms",
+        "type": "Compound",
+        "data": {},
+        "position": {
+          "x": 1420,
+          "y": 230
+        },
+        "measured": {
+          "width": 150,
+          "height": 330
+        }
+      },
+      {
+        "id": "bowCurve_start_z",
+        "type": "Expression",
+        "data": {
+          "formula": "a-b*0.5"
+        },
+        "position": {
+          "x": 730,
+          "y": 2130
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "bowCurve_start",
+        "type": "Point",
+        "data": {
+          "x": "-bowSpan/2",
+          "y": "bowSpan*0.3"
+        },
+        "position": {
+          "x": 960,
+          "y": 2320
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "bowCurve_mid_z",
+        "type": "Expression",
+        "data": {
+          "formula": "a-b*0.5"
+        },
+        "position": {
+          "x": 730,
+          "y": 1940
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "bowCurve_mid",
+        "type": "Point",
+        "data": {
+          "x": 0,
+          "y": "bowSpan*0.5"
+        },
+        "position": {
+          "x": 960,
+          "y": 2130
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "bowCurve_end_z",
+        "type": "Expression",
+        "data": {
+          "formula": "a-b*0.5"
+        },
+        "position": {
+          "x": 730,
+          "y": 1750
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "bowCurve_end",
+        "type": "Point",
+        "data": {
+          "x": "bowSpan/2",
+          "y": "bowSpan*0.3"
+        },
+        "position": {
+          "x": 960,
+          "y": 1940
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "bowCurve",
+        "type": "Arc",
+        "data": {},
+        "position": {
+          "x": 1190,
+          "y": 1560
+        },
+        "measured": {
+          "width": 177,
+          "height": 232
+        }
+      },
+      {
+        "id": "bow",
+        "type": "Pipe",
+        "data": {
+          "radius": "torsoWidth*0.08"
+        },
+        "position": {
+          "x": 1420,
+          "y": 610
+        },
+        "measured": {
+          "width": 201,
+          "height": 270
+        }
+      },
+      {
+        "id": "arrowShaft_center_z",
+        "type": "Expression",
+        "data": {
+          "formula": "a-b*0.5"
+        },
+        "position": {
+          "x": 730,
+          "y": 1370
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "arrowShaft_center",
+        "type": "Point",
+        "data": {
+          "x": 0,
+          "y": "bowSpan*0.4"
+        },
+        "position": {
+          "x": 960,
+          "y": 1560
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "arrowShaft",
+        "type": "Cylinder",
+        "data": {
+          "radius": "torsoWidth*0.04",
+          "height": "bowSpan*0.9"
+        },
+        "position": {
+          "x": 1190,
+          "y": 1180
+        },
+        "measured": {
+          "width": 201,
+          "height": 296
+        }
+      },
+      {
+        "id": "arrowTip_center_z",
+        "type": "Expression",
+        "data": {
+          "formula": "a-b*0.5"
+        },
+        "position": {
+          "x": 730,
+          "y": 1560
+        },
+        "measured": {
+          "width": 177,
+          "height": 264
+        }
+      },
+      {
+        "id": "arrowTip_center",
+        "type": "Point",
+        "data": {
+          "x": 0,
+          "y": "bowSpan*0.4+bowSpan*0.45"
+        },
+        "position": {
+          "x": 960,
+          "y": 1750
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "arrowTip",
+        "type": "Cone",
+        "data": {
+          "radius1": "torsoWidth*0.08",
+          "radius2": 0,
+          "height": "bowSpan*0.15"
+        },
+        "position": {
+          "x": 1190,
+          "y": 1370
+        },
+        "measured": {
+          "width": 201,
+          "height": 344
+        }
+      },
+      {
+        "id": "arrow",
+        "type": "Compound",
+        "data": {
+          "color": "#6b7280"
+        },
+        "position": {
+          "x": 1420,
+          "y": 420
+        },
+        "measured": {
+          "width": 150,
+          "height": 330
+        }
+      },
+      {
+        "id": "base",
+        "type": "Compound",
+        "data": {
+          "color": "#22c55e"
+        },
+        "position": {
+          "x": 1650,
+          "y": 40
+        },
+        "measured": {
+          "width": 150,
+          "height": 330
+        }
+      },
+      {
+        "id": "weapons",
+        "type": "Compound",
+        "data": {
+          "color": "#92400e"
+        },
+        "position": {
+          "x": 1650,
+          "y": 230
+        },
+        "measured": {
+          "width": 150,
+          "height": 330
+        }
+      }
+    ],
+    "edges": [
+      {
+        "source": "legHeight",
+        "sourceHandle": "values",
+        "target": "legHeight_x",
+        "targetHandle": "a",
+        "id": "e_legHeight_legHeight_x_a"
+      },
+      {
+        "source": "torsoHeight",
+        "sourceHandle": "values",
+        "target": "torsoHeight_x",
+        "targetHandle": "a",
+        "id": "e_torsoHeight_torsoHeight_x_a"
+      },
+      {
+        "source": "headRadius",
+        "sourceHandle": "values",
+        "target": "headRadius_x",
+        "targetHandle": "a",
+        "id": "e_headRadius_headRadius_x_a"
+      },
+      {
+        "source": "legHeight_x",
+        "sourceHandle": "value",
+        "target": "legLeft_center_z",
+        "targetHandle": "a",
+        "id": "e_legHeight_x_legLeft_center_z_a"
+      },
+      {
+        "source": "legLeft_center_z",
+        "sourceHandle": "value",
+        "target": "legLeft_center",
+        "targetHandle": "z",
+        "id": "e_legLeft_center_z_legLeft_center_z"
+      },
+      {
+        "source": "legHeight_x",
+        "sourceHandle": "value",
+        "target": "legLeft",
+        "targetHandle": "param:height",
+        "id": "e_legHeight_x_legLeft_param:height"
+      },
+      {
+        "source": "legLeft_center",
+        "sourceHandle": "point",
+        "target": "legLeft",
+        "targetHandle": "center",
+        "id": "e_legLeft_center_legLeft_center"
+      },
+      {
+        "source": "legHeight_x",
+        "sourceHandle": "value",
+        "target": "legRight_center_z",
+        "targetHandle": "a",
+        "id": "e_legHeight_x_legRight_center_z_a"
+      },
+      {
+        "source": "legRight_center_z",
+        "sourceHandle": "value",
+        "target": "legRight_center",
+        "targetHandle": "z",
+        "id": "e_legRight_center_z_legRight_center_z"
+      },
+      {
+        "source": "legHeight_x",
+        "sourceHandle": "value",
+        "target": "legRight",
+        "targetHandle": "param:height",
+        "id": "e_legHeight_x_legRight_param:height"
+      },
+      {
+        "source": "legRight_center",
+        "sourceHandle": "point",
+        "target": "legRight",
+        "targetHandle": "center",
+        "id": "e_legRight_center_legRight_center"
+      },
+      {
+        "source": "legLeft",
+        "sourceHandle": "solid",
+        "target": "legs",
+        "targetHandle": "solid1",
+        "id": "e_legLeft_legs_solid1"
+      },
+      {
+        "source": "legRight",
+        "sourceHandle": "solid",
+        "target": "legs",
+        "targetHandle": "solid2",
+        "id": "e_legRight_legs_solid2"
+      },
+      {
+        "source": "legHeight_x",
+        "sourceHandle": "value",
+        "target": "torso_center_z",
+        "targetHandle": "a",
+        "id": "e_legHeight_x_torso_center_z_a"
+      },
+      {
+        "source": "torsoHeight_x",
+        "sourceHandle": "value",
+        "target": "torso_center_z",
+        "targetHandle": "b",
+        "id": "e_torsoHeight_x_torso_center_z_b"
+      },
+      {
+        "source": "torso_center_z",
+        "sourceHandle": "value",
+        "target": "torso_center",
+        "targetHandle": "z",
+        "id": "e_torso_center_z_torso_center_z"
+      },
+      {
+        "source": "torsoWidth",
+        "sourceHandle": "value",
+        "target": "torso",
+        "targetHandle": "param:radius1",
+        "id": "e_torsoWidth_torso_param:radius1"
+      },
+      {
+        "source": "torsoHeight_x",
+        "sourceHandle": "value",
+        "target": "torso",
+        "targetHandle": "param:height",
+        "id": "e_torsoHeight_x_torso_param:height"
+      },
+      {
+        "source": "torso_center",
+        "sourceHandle": "point",
+        "target": "torso",
+        "targetHandle": "center",
+        "id": "e_torso_center_torso_center"
+      },
+      {
+        "source": "legHeight_x",
+        "sourceHandle": "value",
+        "target": "neckY",
+        "targetHandle": "a",
+        "id": "e_legHeight_x_neckY_a"
+      },
+      {
+        "source": "torsoHeight_x",
+        "sourceHandle": "value",
+        "target": "neckY",
+        "targetHandle": "b",
+        "id": "e_torsoHeight_x_neckY_b"
+      },
+      {
+        "source": "neckY",
+        "sourceHandle": "value",
+        "target": "head_center_z",
+        "targetHandle": "a",
+        "id": "e_neckY_head_center_z_a"
+      },
+      {
+        "source": "headRadius_x",
+        "sourceHandle": "value",
+        "target": "head_center_z",
+        "targetHandle": "b",
+        "id": "e_headRadius_x_head_center_z_b"
+      },
+      {
+        "source": "head_center_z",
+        "sourceHandle": "value",
+        "target": "head_center",
+        "targetHandle": "z",
+        "id": "e_head_center_z_head_center_z"
+      },
+      {
+        "source": "headRadius_x",
+        "sourceHandle": "value",
+        "target": "head",
+        "targetHandle": "param:radius",
+        "id": "e_headRadius_x_head_param:radius"
+      },
+      {
+        "source": "head_center",
+        "sourceHandle": "point",
+        "target": "head",
+        "targetHandle": "center",
+        "id": "e_head_center_head_center"
+      },
+      {
+        "source": "neckY",
+        "sourceHandle": "value",
+        "target": "hoodBack_center_z",
+        "targetHandle": "a",
+        "id": "e_neckY_hoodBack_center_z_a"
+      },
+      {
+        "source": "headRadius_x",
+        "sourceHandle": "value",
+        "target": "hoodBack_center_z",
+        "targetHandle": "b",
+        "id": "e_headRadius_x_hoodBack_center_z_b"
+      },
+      {
+        "source": "hoodBack_center_z",
+        "sourceHandle": "value",
+        "target": "hoodBack_center",
+        "targetHandle": "z",
+        "id": "e_hoodBack_center_z_hoodBack_center_z"
+      },
+      {
+        "source": "hoodSize",
+        "sourceHandle": "value",
+        "target": "hoodBack",
+        "targetHandle": "param:radius",
+        "id": "e_hoodSize_hoodBack_param:radius"
+      },
+      {
+        "source": "hoodBack_center",
+        "sourceHandle": "point",
+        "target": "hoodBack",
+        "targetHandle": "center",
+        "id": "e_hoodBack_center_hoodBack_center"
+      },
+      {
+        "source": "neckY",
+        "sourceHandle": "value",
+        "target": "hoodFront_center_z",
+        "targetHandle": "a",
+        "id": "e_neckY_hoodFront_center_z_a"
+      },
+      {
+        "source": "headRadius_x",
+        "sourceHandle": "value",
+        "target": "hoodFront_center_z",
+        "targetHandle": "b",
+        "id": "e_headRadius_x_hoodFront_center_z_b"
+      },
+      {
+        "source": "hoodFront_center_z",
+        "sourceHandle": "value",
+        "target": "hoodFront_center",
+        "targetHandle": "z",
+        "id": "e_hoodFront_center_z_hoodFront_center_z"
+      },
+      {
+        "source": "hoodFront_center",
+        "sourceHandle": "point",
+        "target": "hoodFront",
+        "targetHandle": "center",
+        "id": "e_hoodFront_center_hoodFront_center"
+      },
+      {
+        "source": "hoodBack",
+        "sourceHandle": "solid",
+        "target": "hood",
+        "targetHandle": "solid1",
+        "id": "e_hoodBack_hood_solid1"
+      },
+      {
+        "source": "hoodFront",
+        "sourceHandle": "solid",
+        "target": "hood",
+        "targetHandle": "solid2",
+        "id": "e_hoodFront_hood_solid2"
+      },
+      {
+        "source": "torsoWidth",
+        "sourceHandle": "value",
+        "target": "armLength",
+        "targetHandle": "a",
+        "id": "e_torsoWidth_armLength_a"
+      },
+      {
+        "source": "neckY",
+        "sourceHandle": "value",
+        "target": "armLeft_center_z",
+        "targetHandle": "a",
+        "id": "e_neckY_armLeft_center_z_a"
+      },
+      {
+        "source": "armLength",
+        "sourceHandle": "value",
+        "target": "armLeft_center_z",
+        "targetHandle": "b",
+        "id": "e_armLength_armLeft_center_z_b"
+      },
+      {
+        "source": "armLeft_center_z",
+        "sourceHandle": "value",
+        "target": "armLeft_center",
+        "targetHandle": "z",
+        "id": "e_armLeft_center_z_armLeft_center_z"
+      },
+      {
+        "source": "armLength",
+        "sourceHandle": "value",
+        "target": "armLeft",
+        "targetHandle": "param:height",
+        "id": "e_armLength_armLeft_param:height"
+      },
+      {
+        "source": "armLeft_center",
+        "sourceHandle": "point",
+        "target": "armLeft",
+        "targetHandle": "center",
+        "id": "e_armLeft_center_armLeft_center"
+      },
+      {
+        "source": "neckY",
+        "sourceHandle": "value",
+        "target": "armRight_center_z",
+        "targetHandle": "a",
+        "id": "e_neckY_armRight_center_z_a"
+      },
+      {
+        "source": "armLength",
+        "sourceHandle": "value",
+        "target": "armRight_center_z",
+        "targetHandle": "b",
+        "id": "e_armLength_armRight_center_z_b"
+      },
+      {
+        "source": "armRight_center_z",
+        "sourceHandle": "value",
+        "target": "armRight_center",
+        "targetHandle": "z",
+        "id": "e_armRight_center_z_armRight_center_z"
+      },
+      {
+        "source": "armLength",
+        "sourceHandle": "value",
+        "target": "armRight",
+        "targetHandle": "param:height",
+        "id": "e_armLength_armRight_param:height"
+      },
+      {
+        "source": "armRight_center",
+        "sourceHandle": "point",
+        "target": "armRight",
+        "targetHandle": "center",
+        "id": "e_armRight_center_armRight_center"
+      },
+      {
+        "source": "armLeft",
+        "sourceHandle": "solid",
+        "target": "arms",
+        "targetHandle": "solid1",
+        "id": "e_armLeft_arms_solid1"
+      },
+      {
+        "source": "armRight",
+        "sourceHandle": "solid",
+        "target": "arms",
+        "targetHandle": "solid2",
+        "id": "e_armRight_arms_solid2"
+      },
+      {
+        "source": "neckY",
+        "sourceHandle": "value",
+        "target": "bowCurve_start_z",
+        "targetHandle": "a",
+        "id": "e_neckY_bowCurve_start_z_a"
+      },
+      {
+        "source": "armLength",
+        "sourceHandle": "value",
+        "target": "bowCurve_start_z",
+        "targetHandle": "b",
+        "id": "e_armLength_bowCurve_start_z_b"
+      },
+      {
+        "source": "bowCurve_start_z",
+        "sourceHandle": "value",
+        "target": "bowCurve_start",
+        "targetHandle": "z",
+        "id": "e_bowCurve_start_z_bowCurve_start_z"
+      },
+      {
+        "source": "neckY",
+        "sourceHandle": "value",
+        "target": "bowCurve_mid_z",
+        "targetHandle": "a",
+        "id": "e_neckY_bowCurve_mid_z_a"
+      },
+      {
+        "source": "armLength",
+        "sourceHandle": "value",
+        "target": "bowCurve_mid_z",
+        "targetHandle": "b",
+        "id": "e_armLength_bowCurve_mid_z_b"
+      },
+      {
+        "source": "bowCurve_mid_z",
+        "sourceHandle": "value",
+        "target": "bowCurve_mid",
+        "targetHandle": "z",
+        "id": "e_bowCurve_mid_z_bowCurve_mid_z"
+      },
+      {
+        "source": "neckY",
+        "sourceHandle": "value",
+        "target": "bowCurve_end_z",
+        "targetHandle": "a",
+        "id": "e_neckY_bowCurve_end_z_a"
+      },
+      {
+        "source": "armLength",
+        "sourceHandle": "value",
+        "target": "bowCurve_end_z",
+        "targetHandle": "b",
+        "id": "e_armLength_bowCurve_end_z_b"
+      },
+      {
+        "source": "bowCurve_end_z",
+        "sourceHandle": "value",
+        "target": "bowCurve_end",
+        "targetHandle": "z",
+        "id": "e_bowCurve_end_z_bowCurve_end_z"
+      },
+      {
+        "source": "bowCurve_start",
+        "sourceHandle": "point",
+        "target": "bowCurve",
+        "targetHandle": "start",
+        "id": "e_bowCurve_start_bowCurve_start"
+      },
+      {
+        "source": "bowCurve_mid",
+        "sourceHandle": "point",
+        "target": "bowCurve",
+        "targetHandle": "middle",
+        "id": "e_bowCurve_mid_bowCurve_middle"
+      },
+      {
+        "source": "bowCurve_end",
+        "sourceHandle": "point",
+        "target": "bowCurve",
+        "targetHandle": "end",
+        "id": "e_bowCurve_end_bowCurve_end"
+      },
+      {
+        "source": "bowCurve",
+        "sourceHandle": "curve",
+        "target": "bow",
+        "targetHandle": "path",
+        "id": "e_bowCurve_bow_path"
+      },
+      {
+        "source": "neckY",
+        "sourceHandle": "value",
+        "target": "arrowShaft_center_z",
+        "targetHandle": "a",
+        "id": "e_neckY_arrowShaft_center_z_a"
+      },
+      {
+        "source": "armLength",
+        "sourceHandle": "value",
+        "target": "arrowShaft_center_z",
+        "targetHandle": "b",
+        "id": "e_armLength_arrowShaft_center_z_b"
+      },
+      {
+        "source": "arrowShaft_center_z",
+        "sourceHandle": "value",
+        "target": "arrowShaft_center",
+        "targetHandle": "z",
+        "id": "e_arrowShaft_center_z_arrowShaft_center_z"
+      },
+      {
+        "source": "arrowShaft_center",
+        "sourceHandle": "point",
+        "target": "arrowShaft",
+        "targetHandle": "center",
+        "id": "e_arrowShaft_center_arrowShaft_center"
+      },
+      {
+        "source": "neckY",
+        "sourceHandle": "value",
+        "target": "arrowTip_center_z",
+        "targetHandle": "a",
+        "id": "e_neckY_arrowTip_center_z_a"
+      },
+      {
+        "source": "armLength",
+        "sourceHandle": "value",
+        "target": "arrowTip_center_z",
+        "targetHandle": "b",
+        "id": "e_armLength_arrowTip_center_z_b"
+      },
+      {
+        "source": "arrowTip_center_z",
+        "sourceHandle": "value",
+        "target": "arrowTip_center",
+        "targetHandle": "z",
+        "id": "e_arrowTip_center_z_arrowTip_center_z"
+      },
+      {
+        "source": "arrowTip_center",
+        "sourceHandle": "point",
+        "target": "arrowTip",
+        "targetHandle": "center",
+        "id": "e_arrowTip_center_arrowTip_center"
+      },
+      {
+        "source": "arrowShaft",
+        "sourceHandle": "solid",
+        "target": "arrow",
+        "targetHandle": "solid1",
+        "id": "e_arrowShaft_arrow_solid1"
+      },
+      {
+        "source": "arrowTip",
+        "sourceHandle": "solid",
+        "target": "arrow",
+        "targetHandle": "solid2",
+        "id": "e_arrowTip_arrow_solid2"
+      },
+      {
+        "source": "legs",
+        "sourceHandle": "solid",
+        "target": "base",
+        "targetHandle": "solid1",
+        "id": "e_legs_base_solid1"
+      },
+      {
+        "source": "torso",
+        "sourceHandle": "solid",
+        "target": "base",
+        "targetHandle": "solid2",
+        "id": "e_torso_base_solid2"
+      },
+      {
+        "source": "head",
+        "sourceHandle": "solid",
+        "target": "base",
+        "targetHandle": "solid3",
+        "id": "e_head_base_solid3"
+      },
+      {
+        "source": "hood",
+        "sourceHandle": "solid",
+        "target": "base",
+        "targetHandle": "solid4",
+        "id": "e_hood_base_solid4"
+      },
+      {
+        "source": "arms",
+        "sourceHandle": "solid",
+        "target": "weapons",
+        "targetHandle": "solid1",
+        "id": "e_arms_weapons_solid1"
+      },
+      {
+        "source": "bow",
+        "sourceHandle": "solid",
+        "target": "weapons",
+        "targetHandle": "solid2",
+        "id": "e_bow_weapons_solid2"
+      },
+      {
+        "source": "arrow",
+        "sourceHandle": "solid",
+        "target": "weapons",
+        "targetHandle": "solid3",
+        "id": "e_arrow_weapons_solid3"
+      }
+    ]
+  },
+  "conversation": [
+    {
+      "role": "system",
+      "content": "Workspace cleared."
+    },
+    {
+      "role": "user",
+      "content": "make a robinhood"
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline expr() from \"legLeft_center.z\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"expr\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Argument \"z\" of \"point\": formula \"$legHeight/2\" named computed binding(s) \"legHeight\" — auto-wired via expr(\"a/2\"). Sliders can be named directly in formulas; computed bindings must be referenced as \"$name\" args."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline point() from \"legLeft.center\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"point\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline expr() from \"legRight_center.z\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"expr\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Argument \"z\" of \"point\": formula \"$legHeight/2\" named computed binding(s) \"legHeight\" — auto-wired via expr(\"a/2\"). Sliders can be named directly in formulas; computed bindings must be referenced as \"$name\" args."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline point() from \"legRight.center\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"point\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline expr() from \"torso_center.z\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"expr\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Argument \"z\" of \"point\": formula \"$legHeight+$torsoHeight/2\" named computed binding(s) \"legHeight\", \"torsoHeight\" — auto-wired via expr(\"a+b/2\"). Sliders can be named directly in formulas; computed bindings must be referenced as \"$name\" args."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline point() from \"torso.center\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"point\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline expr() from \"head_center.z\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"expr\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Argument \"z\" of \"point\": formula \"$neckY+$headRadius\" named computed binding(s) \"neckY\", \"headRadius\" — auto-wired via expr(\"a+b\"). Sliders can be named directly in formulas; computed bindings must be referenced as \"$name\" args."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline point() from \"head.center\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"point\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline expr() from \"hoodBack_center.z\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"expr\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Argument \"z\" of \"point\": formula \"$neckY+$headRadius\" named computed binding(s) \"neckY\", \"headRadius\" — auto-wired via expr(\"a+b\"). Sliders can be named directly in formulas; computed bindings must be referenced as \"$name\" args."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline point() from \"hoodBack.center\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"point\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline expr() from \"hoodFront_center.z\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"expr\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Argument \"z\" of \"point\": formula \"$neckY+$headRadius+$headRadius*0.3\" named computed binding(s) \"neckY\", \"headRadius\" — auto-wired via expr(\"a+b+b*0.3\"). Sliders can be named directly in formulas; computed bindings must be referenced as \"$name\" args."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline point() from \"hoodFront.center\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"point\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline expr() from \"armLeft_center.z\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"expr\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Argument \"z\" of \"point\": formula \"$neckY-$armLength*0.3\" named computed binding(s) \"neckY\", \"armLength\" — auto-wired via expr(\"a-b*0.3\"). Sliders can be named directly in formulas; computed bindings must be referenced as \"$name\" args."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline point() from \"armLeft.center\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"point\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline expr() from \"armRight_center.z\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"expr\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Argument \"z\" of \"point\": formula \"$neckY-$armLength*0.3\" named computed binding(s) \"neckY\", \"armLength\" — auto-wired via expr(\"a-b*0.3\"). Sliders can be named directly in formulas; computed bindings must be referenced as \"$name\" args."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline point() from \"armRight.center\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"point\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline expr() from \"bowCurve_start.z\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"expr\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Argument \"z\" of \"point\": formula \"$neckY-$armLength*0.5\" named computed binding(s) \"neckY\", \"armLength\" — auto-wired via expr(\"a-b*0.5\"). Sliders can be named directly in formulas; computed bindings must be referenced as \"$name\" args."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline point() from \"bowCurve.start\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"point\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline expr() from \"bowCurve_mid.z\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"expr\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Argument \"z\" of \"point\": formula \"$neckY-$armLength*0.5\" named computed binding(s) \"neckY\", \"armLength\" — auto-wired via expr(\"a-b*0.5\"). Sliders can be named directly in formulas; computed bindings must be referenced as \"$name\" args."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline point() from \"bowCurve.mid\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"point\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline expr() from \"bowCurve_end.z\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"expr\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Argument \"z\" of \"point\": formula \"$neckY-$armLength*0.5\" named computed binding(s) \"neckY\", \"armLength\" — auto-wired via expr(\"a-b*0.5\"). Sliders can be named directly in formulas; computed bindings must be referenced as \"$name\" args."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline point() from \"bowCurve.end\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"point\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline expr() from \"arrowShaft_center.z\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"expr\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Argument \"z\" of \"point\": formula \"$neckY-$armLength*0.5\" named computed binding(s) \"neckY\", \"armLength\" — auto-wired via expr(\"a-b*0.5\"). Sliders can be named directly in formulas; computed bindings must be referenced as \"$name\" args."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline point() from \"arrowShaft.center\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"point\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline expr() from \"arrowTip_center.z\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"expr\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Argument \"z\" of \"point\": formula \"$neckY-$armLength*0.5\" named computed binding(s) \"neckY\", \"armLength\" — auto-wired via expr(\"a-b*0.5\"). Sliders can be named directly in formulas; computed bindings must be referenced as \"$name\" args."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline point() from \"arrowTip.center\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"point\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "system",
+      "content": "[IR] 3 emitted binding(s) are also consumed downstream and will not render as separate leaves: $hood, $head, $arrow. (Only unconsumed bindings render.)"
+    },
+    {
+      "role": "assistant",
+      "content": "Parametric Robin Hood character figure with green hood, tunic, bow and arrow in medieval stance"
+    }
+  ],
+  "plan": "",
+  "genome": null,
+  "geometryReport": {
+    "leaves": [
+      {
+        "id": "base",
+        "bbox": {
+          "min": [
+            -6.153242033117622,
+            -6.109495277705946,
+            -4.528242033117622
+          ],
+          "max": [
+            6.153242033117622,
+            6.109495277705946,
+            4.528242033117622
+          ],
+          "center": [
+            0,
+            0,
+            0
+          ],
+          "size": [
+            12.306484066235244,
+            12.218990555411892,
+            9.056484066235244
+          ]
+        },
+        "volume": 1127.2547567880263,
+        "meshOk": true,
+        "vertexCount": 662,
+        "error": null
+      },
+      {
+        "id": "weapons",
+        "bbox": {
+          "min": [
+            -6.099370256818711,
+            -0.8084318389874998,
+            -5.49937025681871
+          ],
+          "max": [
+            6.578799507710507,
+            10.779370256818712,
+            5.49937025681871
+          ],
+          "center": [
+            0.23971462544589794,
+            4.985469208915607,
+            0
+          ],
+          "size": [
+            12.678169764529217,
+            11.587802095806213,
+            10.99874051363742
+          ]
+        },
+        "volume": 26.918985045526046,
+        "meshOk": true,
+        "vertexCount": 390,
+        "error": null
+      }
+    ],
+    "nodeErrors": [],
+    "numbers": {
+      "totalHeight": 25,
+      "torsoWidth": 6,
+      "hoodSize": 4,
+      "bowSpan": 12,
+      "legHeight": [
+        25
+      ],
+      "torsoHeight": [
+        25
+      ],
+      "armLength": [
+        5.4
+      ],
+      "headRadius": [
+        6
+      ],
+      "legHeight_x": [
+        6.25
+      ],
+      "torsoHeight_x": [
+        8.75
+      ],
+      "headRadius_x": [
+        2.4000000000000004
+      ],
+      "legLeft_center_z": [
+        3.125
+      ],
+      "legRight_center_z": [
+        3.125
+      ],
+      "torso_center_z": [
+        10.625
+      ],
+      "neckY": [
+        50
+      ],
+      "head_center_z": [
+        52.4
+      ],
+      "hoodBack_center_z": [
+        52.4
+      ],
+      "hoodFront_center_z": [
+        53.12
+      ],
+      "armLeft_center_z": [
+        48.38
+      ],
+      "armRight_center_z": [
+        48.38
+      ],
+      "bowCurve_start_z": [
+        47.3
+      ],
+      "bowCurve_mid_z": [
+        47.3
+      ],
+      "bowCurve_end_z": [
+        47.3
+      ],
+      "arrowShaft_center_z": [
+        47.3
+      ],
+      "arrowTip_center_z": [
+        47.3
+      ]
+    },
+    "sliders": {
+      "totalHeight": 25,
+      "torsoWidth": 6,
+      "hoodSize": 4,
+      "bowSpan": 12
+    },
+    "selections": {},
+    "helpers": {
+      "legLeft_center": {
+        "type": "Point",
+        "x": -1.5,
+        "y": 0,
+        "z": 0,
+        "sourceNodeId": "legLeft_center",
+        "ancestorNodeIds": []
+      },
+      "legRight_center": {
+        "type": "Point",
+        "x": 1.5,
+        "y": 0,
+        "z": 0,
+        "sourceNodeId": "legRight_center",
+        "ancestorNodeIds": []
+      },
+      "torso_center": {
+        "type": "Point",
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "sourceNodeId": "torso_center",
+        "ancestorNodeIds": []
+      },
+      "head_center": {
+        "type": "Point",
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "sourceNodeId": "head_center",
+        "ancestorNodeIds": []
+      },
+      "hoodBack_center": {
+        "type": "Point",
+        "x": 0,
+        "y": -1.2,
+        "z": 0,
+        "sourceNodeId": "hoodBack_center",
+        "ancestorNodeIds": []
+      },
+      "hoodFront_center": {
+        "type": "Point",
+        "x": 0,
+        "y": 0.8,
+        "z": 0,
+        "sourceNodeId": "hoodFront_center",
+        "ancestorNodeIds": []
+      },
+      "armLeft_center": {
+        "type": "Point",
+        "x": -3.5999999999999996,
+        "y": 0,
+        "z": 0,
+        "sourceNodeId": "armLeft_center",
+        "ancestorNodeIds": []
+      },
+      "armRight_center": {
+        "type": "Point",
+        "x": 3.5999999999999996,
+        "y": 0,
+        "z": 0,
+        "sourceNodeId": "armRight_center",
+        "ancestorNodeIds": []
+      },
+      "bowCurve_start": {
+        "type": "Point",
+        "x": -6,
+        "y": 3.5999999999999996,
+        "z": 0,
+        "sourceNodeId": "bowCurve_start",
+        "ancestorNodeIds": []
+      },
+      "bowCurve_mid": {
+        "type": "Point",
+        "x": 0,
+        "y": 6,
+        "z": 0,
+        "sourceNodeId": "bowCurve_mid",
+        "ancestorNodeIds": []
+      },
+      "bowCurve_end": {
+        "type": "Point",
+        "x": 6,
+        "y": 3.5999999999999996,
+        "z": 0,
+        "sourceNodeId": "bowCurve_end",
+        "ancestorNodeIds": []
+      },
+      "arrowShaft_center": {
+        "type": "Point",
+        "x": 0,
+        "y": 4.800000000000001,
+        "z": 0,
+        "sourceNodeId": "arrowShaft_center",
+        "ancestorNodeIds": []
+      },
+      "arrowTip_center": {
+        "type": "Point",
+        "x": 0,
+        "y": 10.200000000000001,
+        "z": 0,
+        "sourceNodeId": "arrowTip_center",
+        "ancestorNodeIds": []
+      }
+    },
+    "nodeCount": 56,
+    "edgeCount": 80,
+    "transformCount": 0,
+    "nodesPerLeafRatio": 28,
+    "nodeEconomyWarning": false,
+    "placement": {
+      "anchored": [
+        "base",
+        "weapons"
+      ],
+      "literal": [],
+      "origin": [],
+      "literalNodeIds": [],
+      "ratio": 1
+    },
+    "scene": {
+      "min": [
+        -6.153242033117622,
+        -6.109495277705946,
+        -5.49937025681871
+      ],
+      "max": [
+        6.578799507710507,
+        10.779370256818712,
+        5.49937025681871
+      ],
+      "size": [
+        12.732041540828128,
+        16.88886553452466,
+        10.99874051363742
+      ]
+    },
+    "meshedLeafCount": 2,
+    "kernelFaultCount": 0,
+    "kernelSuspect": false,
+    "kernelHealth": "ok",
+    "evalCount": 1,
+    "recycleRecommended": false,
+    "perturbationIssues": [
+      "At torsoWidth increase (1.5x), \"base\" shifts non-proportionally relative to the assembly center (deviation 10%). Derive its position from the driver sliders or use Align.",
+      "At bowSpan decrease (0.6x), \"base\" shifts non-proportionally relative to the assembly center (deviation 12%). Derive its position from the driver sliders or use Align.",
+      "At bowSpan increase (1.5x), \"base\" shifts non-proportionally relative to the assembly center (deviation 8%). Derive its position from the driver sliders or use Align."
+    ],
+    "proportionalIntegrity": 0.5
+  },
+  "timeline": [
+    {
+      "at": "2026-07-24T19:41:09.602Z",
+      "turn": 1,
+      "trigger": "ai-ir",
+      "label": "attempt 1: rebuilt graph (56 nodes)",
+      "nodeCount": 56,
+      "edgeCount": 80,
+      "isolatedCount": 2,
+      "diff": {
+        "addedNodes": [
+          "totalHeight",
+          "torsoWidth",
+          "hoodSize",
+          "bowSpan",
+          "legHeight",
+          "legHeight_x",
+          "torsoHeight",
+          "torsoHeight_x",
+          "headRadius",
+          "headRadius_x",
+          "legLeft_center_z",
+          "legLeft_center",
+          "legLeft",
+          "legRight_center_z",
+          "legRight_center",
+          "legRight",
+          "legs",
+          "torso_center_z",
+          "torso_center",
+          "torso",
+          "neckY",
+          "head_center_z",
+          "head_center",
+          "head",
+          "hoodBack_center_z",
+          "hoodBack_center",
+          "hoodBack",
+          "hoodFront_center_z",
+          "hoodFront_center",
+          "hoodFront",
+          "hood",
+          "armLength",
+          "armLeft_center_z",
+          "armLeft_center",
+          "armLeft",
+          "armRight_center_z",
+          "armRight_center",
+          "armRight",
+          "arms",
+          "bowCurve_start_z",
+          "bowCurve_start",
+          "bowCurve_mid_z",
+          "bowCurve_mid",
+          "bowCurve_end_z",
+          "bowCurve_end",
+          "bowCurve",
+          "bow",
+          "arrowShaft_center_z",
+          "arrowShaft_center",
+          "arrowShaft",
+          "arrowTip_center_z",
+          "arrowTip_center",
+          "arrowTip",
+          "arrow",
+          "base",
+          "weapons"
+        ],
+        "removedNodes": [],
+        "changedNodes": [],
+        "addedEdges": 80,
+        "removedEdges": 0
+      },
+      "details": [
+        "warning: Dead design parameter: slider \"totalHeight\" is not referenced by any formula or edge — moving it changes nothing. Wire dimensions to it or remove it."
+      ],
+      "nodes": [
+        {
+          "id": "totalHeight",
+          "type": "NumberSlider",
+          "data": {
+            "value": 25,
+            "label": "totalHeight",
+            "min": 15,
+            "max": 50,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 1180
+          }
+        },
+        {
+          "id": "torsoWidth",
+          "type": "NumberSlider",
+          "data": {
+            "value": 6,
+            "label": "torsoWidth",
+            "min": 4,
+            "max": 12,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 990
+          }
+        },
+        {
+          "id": "hoodSize",
+          "type": "NumberSlider",
+          "data": {
+            "value": 4,
+            "label": "hoodSize",
+            "min": 2,
+            "max": 8,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 420
+          }
+        },
+        {
+          "id": "bowSpan",
+          "type": "NumberSlider",
+          "data": {
+            "value": 12,
+            "label": "bowSpan",
+            "min": 8,
+            "max": 20,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 40
+          }
+        },
+        {
+          "id": "legHeight",
+          "type": "ListConstant",
+          "data": {
+            "values": "totalHeight"
+          },
+          "position": {
+            "x": 40,
+            "y": 610
+          }
+        },
+        {
+          "id": "legHeight_x",
+          "type": "Expression",
+          "data": {
+            "formula": "totalHeight*0.25"
+          },
+          "position": {
+            "x": 270,
+            "y": 230
+          }
+        },
+        {
+          "id": "torsoHeight",
+          "type": "ListConstant",
+          "data": {
+            "values": "totalHeight"
+          },
+          "position": {
+            "x": 40,
+            "y": 800
+          }
+        },
+        {
+          "id": "torsoHeight_x",
+          "type": "Expression",
+          "data": {
+            "formula": "totalHeight*0.35"
+          },
+          "position": {
+            "x": 270,
+            "y": 420
+          }
+        },
+        {
+          "id": "headRadius",
+          "type": "ListConstant",
+          "data": {
+            "values": "torsoWidth"
+          },
+          "position": {
+            "x": 40,
+            "y": 230
+          }
+        },
+        {
+          "id": "headRadius_x",
+          "type": "Expression",
+          "data": {
+            "formula": "torsoWidth*0.4"
+          },
+          "position": {
+            "x": 270,
+            "y": 40
+          }
+        },
+        {
+          "id": "legLeft_center_z",
+          "type": "Expression",
+          "data": {
+            "formula": "a/2"
+          },
+          "position": {
+            "x": 500,
+            "y": 40
+          }
+        },
+        {
+          "id": "legLeft_center",
+          "type": "Point",
+          "data": {
+            "x": "-torsoWidth*0.25",
+            "y": 0
+          },
+          "position": {
+            "x": 730,
+            "y": 40
+          }
+        },
+        {
+          "id": "legLeft",
+          "type": "Cylinder",
+          "data": {
+            "radius": "torsoWidth*0.15"
+          },
+          "position": {
+            "x": 960,
+            "y": 40
+          }
+        },
+        {
+          "id": "legRight_center_z",
+          "type": "Expression",
+          "data": {
+            "formula": "a/2"
+          },
+          "position": {
+            "x": 500,
+            "y": 230
+          }
+        },
+        {
+          "id": "legRight_center",
+          "type": "Point",
+          "data": {
+            "x": "torsoWidth*0.25",
+            "y": 0
+          },
+          "position": {
+            "x": 730,
+            "y": 800
+          }
+        },
+        {
+          "id": "legRight",
+          "type": "Cylinder",
+          "data": {
+            "radius": "torsoWidth*0.15"
+          },
+          "position": {
+            "x": 960,
+            "y": 610
+          }
+        },
+        {
+          "id": "legs",
+          "type": "Compound",
+          "data": {},
+          "position": {
+            "x": 1190,
+            "y": 230
+          }
+        },
+        {
+          "id": "torso_center_z",
+          "type": "Expression",
+          "data": {
+            "formula": "a+b/2"
+          },
+          "position": {
+            "x": 500,
+            "y": 610
+          }
+        },
+        {
+          "id": "torso_center",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0
+          },
+          "position": {
+            "x": 730,
+            "y": 2320
+          }
+        },
+        {
+          "id": "torso",
+          "type": "Cone",
+          "data": {
+            "radius2": "torsoWidth*0.7"
+          },
+          "position": {
+            "x": 960,
+            "y": 1370
+          }
+        },
+        {
+          "id": "neckY",
+          "type": "Expression",
+          "data": {
+            "formula": "legHeight+torsoHeight"
+          },
+          "position": {
+            "x": 500,
+            "y": 420
+          }
+        },
+        {
+          "id": "head_center_z",
+          "type": "Expression",
+          "data": {
+            "formula": "a+b"
+          },
+          "position": {
+            "x": 730,
+            "y": 230
+          }
+        },
+        {
+          "id": "head_center",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0
+          },
+          "position": {
+            "x": 960,
+            "y": 230
+          }
+        },
+        {
+          "id": "head",
+          "type": "Sphere",
+          "data": {
+            "color": "#fca5a5"
+          },
+          "position": {
+            "x": 1190,
+            "y": 40
+          }
+        },
+        {
+          "id": "hoodBack_center_z",
+          "type": "Expression",
+          "data": {
+            "formula": "a+b"
+          },
+          "position": {
+            "x": 730,
+            "y": 420
+          }
+        },
+        {
+          "id": "hoodBack_center",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": "-hoodSize*0.3"
+          },
+          "position": {
+            "x": 960,
+            "y": 420
+          }
+        },
+        {
+          "id": "hoodBack",
+          "type": "Sphere",
+          "data": {},
+          "position": {
+            "x": 1190,
+            "y": 420
+          }
+        },
+        {
+          "id": "hoodFront_center_z",
+          "type": "Expression",
+          "data": {
+            "formula": "a+b+b*0.3"
+          },
+          "position": {
+            "x": 730,
+            "y": 610
+          }
+        },
+        {
+          "id": "hoodFront_center",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": "hoodSize*0.2"
+          },
+          "position": {
+            "x": 960,
+            "y": 800
+          }
+        },
+        {
+          "id": "hoodFront",
+          "type": "Cone",
+          "data": {
+            "radius1": "hoodSize*0.9",
+            "radius2": "hoodSize*0.3",
+            "height": "hoodSize*0.6"
+          },
+          "position": {
+            "x": 1190,
+            "y": 800
+          }
+        },
+        {
+          "id": "hood",
+          "type": "Compound",
+          "data": {
+            "color": "#16a34a"
+          },
+          "position": {
+            "x": 1420,
+            "y": 40
+          }
+        },
+        {
+          "id": "armLength",
+          "type": "Expression",
+          "data": {
+            "formula": "torsoWidth*0.9"
+          },
+          "position": {
+            "x": 270,
+            "y": 610
+          }
+        },
+        {
+          "id": "armLeft_center_z",
+          "type": "Expression",
+          "data": {
+            "formula": "a-b*0.3"
+          },
+          "position": {
+            "x": 730,
+            "y": 990
+          }
+        },
+        {
+          "id": "armLeft_center",
+          "type": "Point",
+          "data": {
+            "x": "-torsoWidth*0.6",
+            "y": 0
+          },
+          "position": {
+            "x": 960,
+            "y": 990
+          }
+        },
+        {
+          "id": "armLeft",
+          "type": "Cylinder",
+          "data": {
+            "radius": "torsoWidth*0.12"
+          },
+          "position": {
+            "x": 1190,
+            "y": 610
+          }
+        },
+        {
+          "id": "armRight_center_z",
+          "type": "Expression",
+          "data": {
+            "formula": "a-b*0.3"
+          },
+          "position": {
+            "x": 730,
+            "y": 1180
+          }
+        },
+        {
+          "id": "armRight_center",
+          "type": "Point",
+          "data": {
+            "x": "torsoWidth*0.6",
+            "y": 0
+          },
+          "position": {
+            "x": 960,
+            "y": 1180
+          }
+        },
+        {
+          "id": "armRight",
+          "type": "Cylinder",
+          "data": {
+            "radius": "torsoWidth*0.12"
+          },
+          "position": {
+            "x": 1190,
+            "y": 990
+          }
+        },
+        {
+          "id": "arms",
+          "type": "Compound",
+          "data": {},
+          "position": {
+            "x": 1420,
+            "y": 230
+          }
+        },
+        {
+          "id": "bowCurve_start_z",
+          "type": "Expression",
+          "data": {
+            "formula": "a-b*0.5"
+          },
+          "position": {
+            "x": 730,
+            "y": 2130
+          }
+        },
+        {
+          "id": "bowCurve_start",
+          "type": "Point",
+          "data": {
+            "x": "-bowSpan/2",
+            "y": "bowSpan*0.3"
+          },
+          "position": {
+            "x": 960,
+            "y": 2320
+          }
+        },
+        {
+          "id": "bowCurve_mid_z",
+          "type": "Expression",
+          "data": {
+            "formula": "a-b*0.5"
+          },
+          "position": {
+            "x": 730,
+            "y": 1940
+          }
+        },
+        {
+          "id": "bowCurve_mid",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": "bowSpan*0.5"
+          },
+          "position": {
+            "x": 960,
+            "y": 2130
+          }
+        },
+        {
+          "id": "bowCurve_end_z",
+          "type": "Expression",
+          "data": {
+            "formula": "a-b*0.5"
+          },
+          "position": {
+            "x": 730,
+            "y": 1750
+          }
+        },
+        {
+          "id": "bowCurve_end",
+          "type": "Point",
+          "data": {
+            "x": "bowSpan/2",
+            "y": "bowSpan*0.3"
+          },
+          "position": {
+            "x": 960,
+            "y": 1940
+          }
+        },
+        {
+          "id": "bowCurve",
+          "type": "Arc",
+          "data": {},
+          "position": {
+            "x": 1190,
+            "y": 1560
+          }
+        },
+        {
+          "id": "bow",
+          "type": "Pipe",
+          "data": {
+            "radius": "torsoWidth*0.08"
+          },
+          "position": {
+            "x": 1420,
+            "y": 610
+          }
+        },
+        {
+          "id": "arrowShaft_center_z",
+          "type": "Expression",
+          "data": {
+            "formula": "a-b*0.5"
+          },
+          "position": {
+            "x": 730,
+            "y": 1370
+          }
+        },
+        {
+          "id": "arrowShaft_center",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": "bowSpan*0.4"
+          },
+          "position": {
+            "x": 960,
+            "y": 1560
+          }
+        },
+        {
+          "id": "arrowShaft",
+          "type": "Cylinder",
+          "data": {
+            "radius": "torsoWidth*0.04",
+            "height": "bowSpan*0.9"
+          },
+          "position": {
+            "x": 1190,
+            "y": 1180
+          }
+        },
+        {
+          "id": "arrowTip_center_z",
+          "type": "Expression",
+          "data": {
+            "formula": "a-b*0.5"
+          },
+          "position": {
+            "x": 730,
+            "y": 1560
+          }
+        },
+        {
+          "id": "arrowTip_center",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": "bowSpan*0.4+bowSpan*0.45"
+          },
+          "position": {
+            "x": 960,
+            "y": 1750
+          }
+        },
+        {
+          "id": "arrowTip",
+          "type": "Cone",
+          "data": {
+            "radius1": "torsoWidth*0.08",
+            "radius2": 0,
+            "height": "bowSpan*0.15"
+          },
+          "position": {
+            "x": 1190,
+            "y": 1370
+          }
+        },
+        {
+          "id": "arrow",
+          "type": "Compound",
+          "data": {
+            "color": "#6b7280"
+          },
+          "position": {
+            "x": 1420,
+            "y": 420
+          }
+        },
+        {
+          "id": "base",
+          "type": "Compound",
+          "data": {
+            "color": "#22c55e"
+          },
+          "position": {
+            "x": 1650,
+            "y": 40
+          }
+        },
+        {
+          "id": "weapons",
+          "type": "Compound",
+          "data": {
+            "color": "#92400e"
+          },
+          "position": {
+            "x": 1650,
+            "y": 230
+          }
+        }
+      ],
+      "edges": [
+        {
+          "source": "legHeight",
+          "sourceHandle": "values",
+          "target": "legHeight_x",
+          "targetHandle": "a",
+          "id": "e_legHeight_legHeight_x_a"
+        },
+        {
+          "source": "torsoHeight",
+          "sourceHandle": "values",
+          "target": "torsoHeight_x",
+          "targetHandle": "a",
+          "id": "e_torsoHeight_torsoHeight_x_a"
+        },
+        {
+          "source": "headRadius",
+          "sourceHandle": "values",
+          "target": "headRadius_x",
+          "targetHandle": "a",
+          "id": "e_headRadius_headRadius_x_a"
+        },
+        {
+          "source": "legHeight_x",
+          "sourceHandle": "value",
+          "target": "legLeft_center_z",
+          "targetHandle": "a",
+          "id": "e_legHeight_x_legLeft_center_z_a"
+        },
+        {
+          "source": "legLeft_center_z",
+          "sourceHandle": "value",
+          "target": "legLeft_center",
+          "targetHandle": "z",
+          "id": "e_legLeft_center_z_legLeft_center_z"
+        },
+        {
+          "source": "legHeight_x",
+          "sourceHandle": "value",
+          "target": "legLeft",
+          "targetHandle": "param:height",
+          "id": "e_legHeight_x_legLeft_param:height"
+        },
+        {
+          "source": "legLeft_center",
+          "sourceHandle": "point",
+          "target": "legLeft",
+          "targetHandle": "center",
+          "id": "e_legLeft_center_legLeft_center"
+        },
+        {
+          "source": "legHeight_x",
+          "sourceHandle": "value",
+          "target": "legRight_center_z",
+          "targetHandle": "a",
+          "id": "e_legHeight_x_legRight_center_z_a"
+        },
+        {
+          "source": "legRight_center_z",
+          "sourceHandle": "value",
+          "target": "legRight_center",
+          "targetHandle": "z",
+          "id": "e_legRight_center_z_legRight_center_z"
+        },
+        {
+          "source": "legHeight_x",
+          "sourceHandle": "value",
+          "target": "legRight",
+          "targetHandle": "param:height",
+          "id": "e_legHeight_x_legRight_param:height"
+        },
+        {
+          "source": "legRight_center",
+          "sourceHandle": "point",
+          "target": "legRight",
+          "targetHandle": "center",
+          "id": "e_legRight_center_legRight_center"
+        },
+        {
+          "source": "legLeft",
+          "sourceHandle": "solid",
+          "target": "legs",
+          "targetHandle": "solid1",
+          "id": "e_legLeft_legs_solid1"
+        },
+        {
+          "source": "legRight",
+          "sourceHandle": "solid",
+          "target": "legs",
+          "targetHandle": "solid2",
+          "id": "e_legRight_legs_solid2"
+        },
+        {
+          "source": "legHeight_x",
+          "sourceHandle": "value",
+          "target": "torso_center_z",
+          "targetHandle": "a",
+          "id": "e_legHeight_x_torso_center_z_a"
+        },
+        {
+          "source": "torsoHeight_x",
+          "sourceHandle": "value",
+          "target": "torso_center_z",
+          "targetHandle": "b",
+          "id": "e_torsoHeight_x_torso_center_z_b"
+        },
+        {
+          "source": "torso_center_z",
+          "sourceHandle": "value",
+          "target": "torso_center",
+          "targetHandle": "z",
+          "id": "e_torso_center_z_torso_center_z"
+        },
+        {
+          "source": "torsoWidth",
+          "sourceHandle": "value",
+          "target": "torso",
+          "targetHandle": "param:radius1",
+          "id": "e_torsoWidth_torso_param:radius1"
+        },
+        {
+          "source": "torsoHeight_x",
+          "sourceHandle": "value",
+          "target": "torso",
+          "targetHandle": "param:height",
+          "id": "e_torsoHeight_x_torso_param:height"
+        },
+        {
+          "source": "torso_center",
+          "sourceHandle": "point",
+          "target": "torso",
+          "targetHandle": "center",
+          "id": "e_torso_center_torso_center"
+        },
+        {
+          "source": "legHeight_x",
+          "sourceHandle": "value",
+          "target": "neckY",
+          "targetHandle": "a",
+          "id": "e_legHeight_x_neckY_a"
+        },
+        {
+          "source": "torsoHeight_x",
+          "sourceHandle": "value",
+          "target": "neckY",
+          "targetHandle": "b",
+          "id": "e_torsoHeight_x_neckY_b"
+        },
+        {
+          "source": "neckY",
+          "sourceHandle": "value",
+          "target": "head_center_z",
+          "targetHandle": "a",
+          "id": "e_neckY_head_center_z_a"
+        },
+        {
+          "source": "headRadius_x",
+          "sourceHandle": "value",
+          "target": "head_center_z",
+          "targetHandle": "b",
+          "id": "e_headRadius_x_head_center_z_b"
+        },
+        {
+          "source": "head_center_z",
+          "sourceHandle": "value",
+          "target": "head_center",
+          "targetHandle": "z",
+          "id": "e_head_center_z_head_center_z"
+        },
+        {
+          "source": "headRadius_x",
+          "sourceHandle": "value",
+          "target": "head",
+          "targetHandle": "param:radius",
+          "id": "e_headRadius_x_head_param:radius"
+        },
+        {
+          "source": "head_center",
+          "sourceHandle": "point",
+          "target": "head",
+          "targetHandle": "center",
+          "id": "e_head_center_head_center"
+        },
+        {
+          "source": "neckY",
+          "sourceHandle": "value",
+          "target": "hoodBack_center_z",
+          "targetHandle": "a",
+          "id": "e_neckY_hoodBack_center_z_a"
+        },
+        {
+          "source": "headRadius_x",
+          "sourceHandle": "value",
+          "target": "hoodBack_center_z",
+          "targetHandle": "b",
+          "id": "e_headRadius_x_hoodBack_center_z_b"
+        },
+        {
+          "source": "hoodBack_center_z",
+          "sourceHandle": "value",
+          "target": "hoodBack_center",
+          "targetHandle": "z",
+          "id": "e_hoodBack_center_z_hoodBack_center_z"
+        },
+        {
+          "source": "hoodSize",
+          "sourceHandle": "value",
+          "target": "hoodBack",
+          "targetHandle": "param:radius",
+          "id": "e_hoodSize_hoodBack_param:radius"
+        },
+        {
+          "source": "hoodBack_center",
+          "sourceHandle": "point",
+          "target": "hoodBack",
+          "targetHandle": "center",
+          "id": "e_hoodBack_center_hoodBack_center"
+        },
+        {
+          "source": "neckY",
+          "sourceHandle": "value",
+          "target": "hoodFront_center_z",
+          "targetHandle": "a",
+          "id": "e_neckY_hoodFront_center_z_a"
+        },
+        {
+          "source": "headRadius_x",
+          "sourceHandle": "value",
+          "target": "hoodFront_center_z",
+          "targetHandle": "b",
+          "id": "e_headRadius_x_hoodFront_center_z_b"
+        },
+        {
+          "source": "hoodFront_center_z",
+          "sourceHandle": "value",
+          "target": "hoodFront_center",
+          "targetHandle": "z",
+          "id": "e_hoodFront_center_z_hoodFront_center_z"
+        },
+        {
+          "source": "hoodFront_center",
+          "sourceHandle": "point",
+          "target": "hoodFront",
+          "targetHandle": "center",
+          "id": "e_hoodFront_center_hoodFront_center"
+        },
+        {
+          "source": "hoodBack",
+          "sourceHandle": "solid",
+          "target": "hood",
+          "targetHandle": "solid1",
+          "id": "e_hoodBack_hood_solid1"
+        },
+        {
+          "source": "hoodFront",
+          "sourceHandle": "solid",
+          "target": "hood",
+          "targetHandle": "solid2",
+          "id": "e_hoodFront_hood_solid2"
+        },
+        {
+          "source": "torsoWidth",
+          "sourceHandle": "value",
+          "target": "armLength",
+          "targetHandle": "a",
+          "id": "e_torsoWidth_armLength_a"
+        },
+        {
+          "source": "neckY",
+          "sourceHandle": "value",
+          "target": "armLeft_center_z",
+          "targetHandle": "a",
+          "id": "e_neckY_armLeft_center_z_a"
+        },
+        {
+          "source": "armLength",
+          "sourceHandle": "value",
+          "target": "armLeft_center_z",
+          "targetHandle": "b",
+          "id": "e_armLength_armLeft_center_z_b"
+        },
+        {
+          "source": "armLeft_center_z",
+          "sourceHandle": "value",
+          "target": "armLeft_center",
+          "targetHandle": "z",
+          "id": "e_armLeft_center_z_armLeft_center_z"
+        },
+        {
+          "source": "armLength",
+          "sourceHandle": "value",
+          "target": "armLeft",
+          "targetHandle": "param:height",
+          "id": "e_armLength_armLeft_param:height"
+        },
+        {
+          "source": "armLeft_center",
+          "sourceHandle": "point",
+          "target": "armLeft",
+          "targetHandle": "center",
+          "id": "e_armLeft_center_armLeft_center"
+        },
+        {
+          "source": "neckY",
+          "sourceHandle": "value",
+          "target": "armRight_center_z",
+          "targetHandle": "a",
+          "id": "e_neckY_armRight_center_z_a"
+        },
+        {
+          "source": "armLength",
+          "sourceHandle": "value",
+          "target": "armRight_center_z",
+          "targetHandle": "b",
+          "id": "e_armLength_armRight_center_z_b"
+        },
+        {
+          "source": "armRight_center_z",
+          "sourceHandle": "value",
+          "target": "armRight_center",
+          "targetHandle": "z",
+          "id": "e_armRight_center_z_armRight_center_z"
+        },
+        {
+          "source": "armLength",
+          "sourceHandle": "value",
+          "target": "armRight",
+          "targetHandle": "param:height",
+          "id": "e_armLength_armRight_param:height"
+        },
+        {
+          "source": "armRight_center",
+          "sourceHandle": "point",
+          "target": "armRight",
+          "targetHandle": "center",
+          "id": "e_armRight_center_armRight_center"
+        },
+        {
+          "source": "armLeft",
+          "sourceHandle": "solid",
+          "target": "arms",
+          "targetHandle": "solid1",
+          "id": "e_armLeft_arms_solid1"
+        },
+        {
+          "source": "armRight",
+          "sourceHandle": "solid",
+          "target": "arms",
+          "targetHandle": "solid2",
+          "id": "e_armRight_arms_solid2"
+        },
+        {
+          "source": "neckY",
+          "sourceHandle": "value",
+          "target": "bowCurve_start_z",
+          "targetHandle": "a",
+          "id": "e_neckY_bowCurve_start_z_a"
+        },
+        {
+          "source": "armLength",
+          "sourceHandle": "value",
+          "target": "bowCurve_start_z",
+          "targetHandle": "b",
+          "id": "e_armLength_bowCurve_start_z_b"
+        },
+        {
+          "source": "bowCurve_start_z",
+          "sourceHandle": "value",
+          "target": "bowCurve_start",
+          "targetHandle": "z",
+          "id": "e_bowCurve_start_z_bowCurve_start_z"
+        },
+        {
+          "source": "neckY",
+          "sourceHandle": "value",
+          "target": "bowCurve_mid_z",
+          "targetHandle": "a",
+          "id": "e_neckY_bowCurve_mid_z_a"
+        },
+        {
+          "source": "armLength",
+          "sourceHandle": "value",
+          "target": "bowCurve_mid_z",
+          "targetHandle": "b",
+          "id": "e_armLength_bowCurve_mid_z_b"
+        },
+        {
+          "source": "bowCurve_mid_z",
+          "sourceHandle": "value",
+          "target": "bowCurve_mid",
+          "targetHandle": "z",
+          "id": "e_bowCurve_mid_z_bowCurve_mid_z"
+        },
+        {
+          "source": "neckY",
+          "sourceHandle": "value",
+          "target": "bowCurve_end_z",
+          "targetHandle": "a",
+          "id": "e_neckY_bowCurve_end_z_a"
+        },
+        {
+          "source": "armLength",
+          "sourceHandle": "value",
+          "target": "bowCurve_end_z",
+          "targetHandle": "b",
+          "id": "e_armLength_bowCurve_end_z_b"
+        },
+        {
+          "source": "bowCurve_end_z",
+          "sourceHandle": "value",
+          "target": "bowCurve_end",
+          "targetHandle": "z",
+          "id": "e_bowCurve_end_z_bowCurve_end_z"
+        },
+        {
+          "source": "bowCurve_start",
+          "sourceHandle": "point",
+          "target": "bowCurve",
+          "targetHandle": "start",
+          "id": "e_bowCurve_start_bowCurve_start"
+        },
+        {
+          "source": "bowCurve_mid",
+          "sourceHandle": "point",
+          "target": "bowCurve",
+          "targetHandle": "middle",
+          "id": "e_bowCurve_mid_bowCurve_middle"
+        },
+        {
+          "source": "bowCurve_end",
+          "sourceHandle": "point",
+          "target": "bowCurve",
+          "targetHandle": "end",
+          "id": "e_bowCurve_end_bowCurve_end"
+        },
+        {
+          "source": "bowCurve",
+          "sourceHandle": "curve",
+          "target": "bow",
+          "targetHandle": "path",
+          "id": "e_bowCurve_bow_path"
+        },
+        {
+          "source": "neckY",
+          "sourceHandle": "value",
+          "target": "arrowShaft_center_z",
+          "targetHandle": "a",
+          "id": "e_neckY_arrowShaft_center_z_a"
+        },
+        {
+          "source": "armLength",
+          "sourceHandle": "value",
+          "target": "arrowShaft_center_z",
+          "targetHandle": "b",
+          "id": "e_armLength_arrowShaft_center_z_b"
+        },
+        {
+          "source": "arrowShaft_center_z",
+          "sourceHandle": "value",
+          "target": "arrowShaft_center",
+          "targetHandle": "z",
+          "id": "e_arrowShaft_center_z_arrowShaft_center_z"
+        },
+        {
+          "source": "arrowShaft_center",
+          "sourceHandle": "point",
+          "target": "arrowShaft",
+          "targetHandle": "center",
+          "id": "e_arrowShaft_center_arrowShaft_center"
+        },
+        {
+          "source": "neckY",
+          "sourceHandle": "value",
+          "target": "arrowTip_center_z",
+          "targetHandle": "a",
+          "id": "e_neckY_arrowTip_center_z_a"
+        },
+        {
+          "source": "armLength",
+          "sourceHandle": "value",
+          "target": "arrowTip_center_z",
+          "targetHandle": "b",
+          "id": "e_armLength_arrowTip_center_z_b"
+        },
+        {
+          "source": "arrowTip_center_z",
+          "sourceHandle": "value",
+          "target": "arrowTip_center",
+          "targetHandle": "z",
+          "id": "e_arrowTip_center_z_arrowTip_center_z"
+        },
+        {
+          "source": "arrowTip_center",
+          "sourceHandle": "point",
+          "target": "arrowTip",
+          "targetHandle": "center",
+          "id": "e_arrowTip_center_arrowTip_center"
+        },
+        {
+          "source": "arrowShaft",
+          "sourceHandle": "solid",
+          "target": "arrow",
+          "targetHandle": "solid1",
+          "id": "e_arrowShaft_arrow_solid1"
+        },
+        {
+          "source": "arrowTip",
+          "sourceHandle": "solid",
+          "target": "arrow",
+          "targetHandle": "solid2",
+          "id": "e_arrowTip_arrow_solid2"
+        },
+        {
+          "source": "legs",
+          "sourceHandle": "solid",
+          "target": "base",
+          "targetHandle": "solid1",
+          "id": "e_legs_base_solid1"
+        },
+        {
+          "source": "torso",
+          "sourceHandle": "solid",
+          "target": "base",
+          "targetHandle": "solid2",
+          "id": "e_torso_base_solid2"
+        },
+        {
+          "source": "head",
+          "sourceHandle": "solid",
+          "target": "base",
+          "targetHandle": "solid3",
+          "id": "e_head_base_solid3"
+        },
+        {
+          "source": "hood",
+          "sourceHandle": "solid",
+          "target": "base",
+          "targetHandle": "solid4",
+          "id": "e_hood_base_solid4"
+        },
+        {
+          "source": "arms",
+          "sourceHandle": "solid",
+          "target": "weapons",
+          "targetHandle": "solid1",
+          "id": "e_arms_weapons_solid1"
+        },
+        {
+          "source": "bow",
+          "sourceHandle": "solid",
+          "target": "weapons",
+          "targetHandle": "solid2",
+          "id": "e_bow_weapons_solid2"
+        },
+        {
+          "source": "arrow",
+          "sourceHandle": "solid",
+          "target": "weapons",
+          "targetHandle": "solid3",
+          "id": "e_arrow_weapons_solid3"
+        }
+      ]
+    }
+  ]
+}

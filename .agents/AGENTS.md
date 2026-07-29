@@ -179,4 +179,10 @@ Do NOT treat examples as rigid topic recipes (e.g., do not copy a "flower" or "c
 *   **Pattern**: Base `Box` + `Cylinder` column translated and fed to `LinearPattern` (`count`, `spacing`) + an overlapping roof `Box` (with 0.1-0.2 unit vertical Z-overlap to ensure clean Boolean fusion).
 *   **Applications**: Colonnades, fence posts, bridge piers, rib cages, louvers.
 
-
+### Idiom 5: Procedural Data Trees & Sub-List Lacing (The Grasshopper Philosophy)
+*   **Topology**: Instead of relying on hidden parameters inside a single node (like a "twist" angle or "random scale min/max"), generate foundational lists of geometry, branch them into Data Trees ("sub-folders"), and apply transformations natively via Lacing.
+*   **Pattern**: 
+    1. **Slicing**: Use `DivideCurve` on an array of arcs. This outputs points grouped into sub-lists (tagged by `wireIndex`). You can pass these directly into the `SliceList` (Cull) node (e.g. `startIndex=1, endIndex=-1`) to trim the start/end points off of *every* arc simultaneously.
+    2. **Lacing**: If you feed a list of 5 shapes into `InstanceOnPoints`, it automatically applies Shape 1 to Branch 1 (Arc 1), Shape 2 to Branch 2, etc., based on the `wireIndex` modulo tree-matching.
+    3. **Procedural Lofts**: To build a twisting horn, don't use a "Sweep with twist" node. Instead: Array a profile, rotate each incrementally (using a `Series`), and feed the array of curves directly into `LoftCurves` to skin the continuous solid.
+*   **Applications**: Twisting towers, organic petals with graded sizes, randomized procedural scattered features, woven textures.

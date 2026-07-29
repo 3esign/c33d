@@ -145,6 +145,17 @@ export interface ExpandCtx {
   /** Required geometry/list reference of one of the accepted types. */
   ref(name: string, ...accept: IrType[]): ValueRef;
   refOpt(name: string, ...accept: IrType[]): ValueRef | undefined;
+  /**
+   * An argument holding SEVERAL references — `["$a", "$b", {x,y,z}, "point(0,0,1)"]`.
+   * Returns one ValueRef per entry (a non-array value yields a single-entry list),
+   * so a skill can fold them itself (union) instead of taking the default merge.
+   */
+  refList(name: string, ...accept: IrType[]): ValueRef[] | undefined;
+  /**
+   * Merge several same-typed refs into one value — points via MergePoints,
+   * solids via Compound, chained in groups of 8 for lists of any length.
+   */
+  combine(refs: ValueRef[], ...accept: IrType[]): ValueRef;
   /** number[] arg: a $ref to a list binding, or a data literal. */
   list(name: string): { ref?: ValueRef; literal?: (number | string)[] } | undefined;
   str(name: string): string | undefined;

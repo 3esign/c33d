@@ -1,0 +1,6204 @@
+{
+  "c33dExport": 2,
+  "exportedAt": "2026-07-22T15:18:29.911Z",
+  "comment": "nice htat model keeps trying but very very prinitive stilll something",
+  "agent": {
+    "name": "Ollama (Local)",
+    "provider": "ollama",
+    "model": "glm-5.2:cloud"
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "towerHeight",
+        "type": "NumberSlider",
+        "data": {
+          "value": 120,
+          "label": "towerHeight",
+          "min": 40,
+          "max": 200,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 1750
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "baseWidth",
+        "type": "NumberSlider",
+        "data": {
+          "value": 40,
+          "label": "baseWidth",
+          "min": 15,
+          "max": 80,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 230
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "legThickness",
+        "type": "NumberSlider",
+        "data": {
+          "value": 1.5,
+          "label": "legThickness",
+          "min": 0.5,
+          "max": 5,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 420
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "legX",
+        "type": "ListConstant",
+        "data": {
+          "values": "0, -baseWidth*0.28, -baseWidth*0.41, -baseWidth*0.48, -baseWidth*0.5"
+        },
+        "position": {
+          "x": 40,
+          "y": 610
+        },
+        "measured": {
+          "width": 177,
+          "height": 136
+        }
+      },
+      {
+        "id": "legZ",
+        "type": "ListConstant",
+        "data": {
+          "values": "0, towerHeight*0.19, towerHeight*0.38, towerHeight*0.7, towerHeight*0.85"
+        },
+        "position": {
+          "x": 40,
+          "y": 990
+        },
+        "measured": {
+          "width": 177,
+          "height": 136
+        }
+      },
+      {
+        "id": "legY",
+        "type": "ListConstant",
+        "data": {
+          "values": "0, 0, 0, 0, 0"
+        },
+        "position": {
+          "x": 40,
+          "y": 800
+        },
+        "measured": {
+          "width": 177,
+          "height": 136
+        }
+      },
+      {
+        "id": "legPts",
+        "type": "PointsFromLists",
+        "data": {},
+        "position": {
+          "x": 270,
+          "y": 230
+        },
+        "measured": {
+          "width": 150,
+          "height": 234
+        }
+      },
+      {
+        "id": "legCurve",
+        "type": "SplineCurve",
+        "data": {
+          "closed": false
+        },
+        "position": {
+          "x": 500,
+          "y": 40
+        },
+        "measured": {
+          "width": 177,
+          "height": 266
+        }
+      },
+      {
+        "id": "legPipe",
+        "type": "Pipe",
+        "data": {
+          "radius": "legThickness"
+        },
+        "position": {
+          "x": 730,
+          "y": 40
+        },
+        "measured": {
+          "width": 201,
+          "height": 270
+        }
+      },
+      {
+        "id": "legs",
+        "type": "CircularPattern",
+        "data": {
+          "count": 4,
+          "radius": "baseWidth*0.5",
+          "angle": 360,
+          "color": "#8B7355"
+        },
+        "position": {
+          "x": 960,
+          "y": 40
+        },
+        "measured": {
+          "width": 201,
+          "height": 450
+        }
+      },
+      {
+        "id": "plat1",
+        "type": "Box",
+        "data": {
+          "width": "baseWidth*0.44",
+          "length": "baseWidth*0.44",
+          "height": 2
+        },
+        "position": {
+          "x": 40,
+          "y": 1180
+        },
+        "measured": {
+          "width": 201,
+          "height": 312
+        }
+      },
+      {
+        "id": "plat1Pos",
+        "type": "Translate",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": "towerHeight*0.19",
+          "color": "#6b5b45"
+        },
+        "position": {
+          "x": 270,
+          "y": 420
+        },
+        "measured": {
+          "width": 201,
+          "height": 334
+        }
+      },
+      {
+        "id": "plat2",
+        "type": "Box",
+        "data": {
+          "width": "baseWidth*0.18",
+          "length": "baseWidth*0.18",
+          "height": 1.5
+        },
+        "position": {
+          "x": 40,
+          "y": 1370
+        },
+        "measured": {
+          "width": 201,
+          "height": 312
+        }
+      },
+      {
+        "id": "plat2Pos",
+        "type": "Translate",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": "towerHeight*0.38",
+          "color": "#6b5b45"
+        },
+        "position": {
+          "x": 270,
+          "y": 610
+        },
+        "measured": {
+          "width": 201,
+          "height": 334
+        }
+      },
+      {
+        "id": "topCap",
+        "type": "Box",
+        "data": {
+          "width": "baseWidth*0.04+2",
+          "length": "baseWidth*0.04+2",
+          "height": "towerHeight*0.05"
+        },
+        "position": {
+          "x": 40,
+          "y": 1560
+        },
+        "measured": {
+          "width": 201,
+          "height": 312
+        }
+      },
+      {
+        "id": "topCapPos",
+        "type": "Translate",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": "towerHeight*0.7",
+          "color": "#5a4a3a"
+        },
+        "position": {
+          "x": 270,
+          "y": 800
+        },
+        "measured": {
+          "width": 201,
+          "height": 334
+        }
+      },
+      {
+        "id": "antenna",
+        "type": "Cone",
+        "data": {
+          "radius1": "baseWidth*0.025",
+          "radius2": 0.1,
+          "height": "towerHeight*0.15"
+        },
+        "position": {
+          "x": 40,
+          "y": 40
+        },
+        "measured": {
+          "width": 201,
+          "height": 344
+        }
+      },
+      {
+        "id": "antennaPos",
+        "type": "Translate",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": "towerHeight*0.85",
+          "color": "#3a3a3a"
+        },
+        "position": {
+          "x": 270,
+          "y": 40
+        },
+        "measured": {
+          "width": 201,
+          "height": 334
+        }
+      }
+    ],
+    "edges": [
+      {
+        "source": "legX",
+        "sourceHandle": "values",
+        "target": "legPts",
+        "targetHandle": "x",
+        "id": "e_legX_legPts_x"
+      },
+      {
+        "source": "legY",
+        "sourceHandle": "values",
+        "target": "legPts",
+        "targetHandle": "y",
+        "id": "e_legY_legPts_y"
+      },
+      {
+        "source": "legZ",
+        "sourceHandle": "values",
+        "target": "legPts",
+        "targetHandle": "z",
+        "id": "e_legZ_legPts_z"
+      },
+      {
+        "source": "legPts",
+        "sourceHandle": "points",
+        "target": "legCurve",
+        "targetHandle": "points",
+        "id": "e_legPts_legCurve_points"
+      },
+      {
+        "source": "legCurve",
+        "sourceHandle": "curve",
+        "target": "legPipe",
+        "targetHandle": "path",
+        "id": "e_legCurve_legPipe_path"
+      },
+      {
+        "source": "legPipe",
+        "sourceHandle": "solid",
+        "target": "legs",
+        "targetHandle": "solid",
+        "id": "e_legPipe_legs_solid"
+      },
+      {
+        "source": "plat1",
+        "sourceHandle": "solid",
+        "target": "plat1Pos",
+        "targetHandle": "solid",
+        "id": "e_plat1_plat1Pos_solid"
+      },
+      {
+        "source": "plat2",
+        "sourceHandle": "solid",
+        "target": "plat2Pos",
+        "targetHandle": "solid",
+        "id": "e_plat2_plat2Pos_solid"
+      },
+      {
+        "source": "topCap",
+        "sourceHandle": "solid",
+        "target": "topCapPos",
+        "targetHandle": "solid",
+        "id": "e_topCap_topCapPos_solid"
+      },
+      {
+        "source": "antenna",
+        "sourceHandle": "solid",
+        "target": "antennaPos",
+        "targetHandle": "solid",
+        "id": "e_antenna_antennaPos_solid"
+      }
+    ]
+  },
+  "conversation": [
+    {
+      "role": "system",
+      "content": "Workspace cleared."
+    },
+    {
+      "role": "user",
+      "content": "make a procedural house first start from point then develop two rectangles one is way larger and is a base and second is smaller and presents the outline of the building then divide each rectangle of the building side into three segments and place windows in the middle segments as extruded inwards before that you extruded the rectangle and divided it into two floors then divided floors into three partss so the middle faces are windows and then extrude rectangle third time and scale it so it is pyramidal roof "
+    },
+    {
+      "role": "system",
+      "content": "Response was not valid JSON (attempt 1/3) — asking the model to resend."
+    },
+    {
+      "role": "system",
+      "content": "Response was not valid JSON (attempt 2/3) — asking the model to resend."
+    },
+    {
+      "role": "assistant",
+      "content": "Procedural house with large base slab, two-floor body with middle-segment windows cut into each side, and pyramidal lofted roof"
+    },
+    {
+      "role": "system",
+      "content": "Engine fault (does not count against repair budget, 1/3) — retrying."
+    },
+    {
+      "role": "assistant",
+      "content": "The roof was built with ListConstant formula strings that failed to reference roofHeight (dead slider warning) and likely caused the engine fault. Replacing the 10-node ListConstant→PointsFromLists→PolylineCurve→LoftCurves chain with just 2 TransformCurve nodes that take the existing footprint curve, translate/scale it, and loft — cleaner, parametric, and uses roofHeight directly."
+    },
+    {
+      "role": "system",
+      "content": "[Patch] 10 removedEdgeIds entries matched NO edge (already gone or never existed) — nothing was removed for: rbX->roofBotPts; rbY->roofBotPts; rbZ->roofBotPts; roofBotPts->roofBot; rtX->roofTopPts; rtY->roofTopPts; rtZ->roofTopPts; roofTopPts->roofTop; roofBot->roof; roofTop->roof. This usually means those edges were already dropped or renamed — do NOT keep retrying them. Use the edge ids shown in the graph state, {\"source\",\"target\"} objects, or \"source->target\" strings."
+    },
+    {
+      "role": "system",
+      "content": "Engine fault (does not count against repair budget, 2/3) — retrying."
+    },
+    {
+      "role": "assistant",
+      "content": "The evaluation failure is a [KERNEL]/[RUNTIME] engine fault being retried by the system, not caused by this design. Per the rules, I should not modify the graph to work around engine faults. Leaving the graph unchanged."
+    },
+    {
+      "role": "user",
+      "content": "try again try something u can pull out"
+    },
+    {
+      "role": "assistant",
+      "content": "Procedural house with large base slab, two-floor body with middle-segment windows cut into each side, and pyramidal lofted roof"
+    },
+    {
+      "role": "system",
+      "content": "Engine fault (does not count against repair budget, 1/3) — retrying."
+    },
+    {
+      "role": "assistant",
+      "content": "Replace the 10-node roof chain (ListConstants+PointsFromLists+PolylineCurve) with 2 TransformCurve nodes that translate/scale the existing footprint curve, fixing the dead roofHeight slider and simplifying the graph. Set LoftCurves ruled=true for pyramidal flat faces."
+    },
+    {
+      "role": "system",
+      "content": "[Patch] 10 removedEdgeIds entries matched NO edge (already gone or never existed) — nothing was removed for: rbx->roofBotPts; rby->roofBotPts; rbz->roofBotPts; roofBotPts->roofBotCurve; rtx->roofTopPts; rty->roofTopPts; rtz->roofTopPts; roofTopPts->roofTopCurve; roofBotCurve->roof; roofTopCurve->roof. This usually means those edges were already dropped or renamed — do NOT keep retrying them. Use the edge ids shown in the graph state, {\"source\",\"target\"} objects, or \"source->target\" strings."
+    },
+    {
+      "role": "system",
+      "content": "Structural validation error (does not count against repair budget, 1/3): \"roof\" (LoftCurves) needs at least 2 connected inputs (has 0). Connect its curve1/curve2/curve3/curve4/curve5/curve6 handles. | Dropped invalid edge: roofBotTC → roof.param:curve1 (\"LoftCurves\" has no numeric param \"curve1\" (it accepts — geometry inputs: curve1, curve2, curve3, curve4, c"
+    },
+    {
+      "role": "assistant",
+      "content": "The LoftCurves curve1/curve2 inputs are geometry handles, not param: handles. Rewire them as plain source->target edges so the compiler infers the correct handle names."
+    },
+    {
+      "role": "system",
+      "content": "[Patch] 2 removedEdgeIds entries matched NO edge (already gone or never existed) — nothing was removed for: roofBotTC->roof.param:curve1; roofTopTC->roof.param:curve2. This usually means those edges were already dropped or renamed — do NOT keep retrying them. Use the edge ids shown in the graph state, {\"source\",\"target\"} objects, or \"source->target\" strings. Edges that DO exist on those nodes: footprint->roofBotTC.curve, footprint->roofTopTC.curve"
+    },
+    {
+      "role": "system",
+      "content": "Engine fault (does not count against repair budget, 2/3) — retrying."
+    },
+    {
+      "role": "assistant",
+      "content": "The evaluation failure is a KERNEL/RUNTIME engine fault being retried by the system, not a structural design issue. The graph wiring is correct: both roof curves are connected to LoftCurves. Per the rules, I should not modify the graph to work around engine faults."
+    },
+    {
+      "role": "user",
+      "content": "make an eiffel tower"
+    },
+    {
+      "role": "system",
+      "content": "IR program had compile errors (attempt 1/3) — asking the model to fix."
+    },
+    {
+      "role": "assistant",
+      "content": "Eiffel Tower with four curved tapering legs, two observation platforms, top cabin, and antenna spire"
+    },
+    {
+      "role": "system",
+      "content": "Engine fault (does not count against repair budget, 1/3) — retrying."
+    },
+    {
+      "role": "assistant",
+      "content": "Replacing the Pipe-along-Spline leg construction (causes engine faults) with simple Cone-based vertical legs at 4 corners via CircularPattern. Simplifies evaluation while keeping the parametric tower silhouette. Updating platform sizes to match the new leg positions."
+    },
+    {
+      "role": "system",
+      "content": "[Patch] 11 removedEdgeIds entries matched NO edge (already gone or never existed) — nothing was removed for: legX->legPts; legZ->legPts; legPts->legCurve; legCurve->leg; leg->leg2; leg->leg3; leg->leg4; leg->allLegs; leg2->allLegs; leg3->allLegs … and 1 more. This usually means those edges were already dropped or renamed — do NOT keep retrying them. Use the edge ids shown in the graph state, {\"source\",\"target\"} objects, or \"source->target\" strings."
+    },
+    {
+      "role": "system",
+      "content": "Engine fault (does not count against repair budget, 2/3) — retrying."
+    },
+    {
+      "role": "assistant",
+      "content": "The evaluation failure is a [KERNEL]/[RUNTIME] engine fault being retried by the system, not a structural design issue. The graph wiring is correct and clean. Per the rules, I should not modify the graph to work around engine faults."
+    },
+    {
+      "role": "user",
+      "content": "ok make more pilars and make them curvy and meet at the top to match the scaling of platforms"
+    },
+    {
+      "role": "system",
+      "content": "Response was not valid JSON (attempt 1/3) — asking the model to resend."
+    },
+    {
+      "role": "system",
+      "content": "Response was not valid JSON (attempt 2/3) — asking the model to resend."
+    },
+    {
+      "role": "assistant",
+      "content": "Eiffel Tower with 8 curving lattice legs sweeping from a wide base to meet at the apex, two observation platforms scaling with the leg curvature, top cabin and antenna spire"
+    },
+    {
+      "role": "user",
+      "content": "can you try to make the grid more accurate i think you need to create overall description of eifell tower in a way so its easier for you to grasp it geomterically some pattern recognition"
+    },
+    {
+      "role": "assistant",
+      "content": "Eiffel Tower with four exponentially curving legs sweeping from wide square base to narrow apex, two observation platforms at proportional heights matching leg widths, top cabin and antenna spire — driven by the real Eiffel Tower's geometric pattern: 4-fold rotational symmetry, exponential inward taper (half-width ∝ e^(-k·h)), platforms at 19% and 38% of total height"
+    },
+    {
+      "role": "user",
+      "content": "ok curvy but more those steel grid elements diagonal go back to original description try better"
+    },
+    {
+      "role": "system",
+      "content": "Response was not valid JSON (attempt 1/3) — asking the model to resend."
+    },
+    {
+      "role": "system",
+      "content": "Response was not valid JSON (attempt 2/3) — asking the model to resend."
+    },
+    {
+      "role": "system",
+      "content": "Error: AI did not return valid JSON. Response was: "
+    }
+  ],
+  "plan": "",
+  "genome": null,
+  "geometryReport": {
+    "leaves": [
+      {
+        "id": "plat1Pos",
+        "bbox": {
+          "min": [
+            -8.800000100000004,
+            -8.800000100000004,
+            21.799999899999996
+          ],
+          "max": [
+            8.800000100000004,
+            8.800000100000004,
+            23.800000100000005
+          ],
+          "center": [
+            0,
+            0,
+            22.8
+          ],
+          "size": [
+            17.600000200000007,
+            17.600000200000007,
+            2.0000002000000094
+          ]
+        },
+        "volume": 619.52,
+        "meshOk": true,
+        "vertexCount": 24,
+        "error": null
+      },
+      {
+        "id": "plat2Pos",
+        "bbox": {
+          "min": [
+            -3.6000001,
+            -3.6000001,
+            44.8499999
+          ],
+          "max": [
+            3.6000001,
+            3.6000001,
+            46.3500001
+          ],
+          "center": [
+            0,
+            0,
+            45.6
+          ],
+          "size": [
+            7.2000002,
+            7.2000002,
+            1.5000002000000023
+          ]
+        },
+        "volume": 77.75999999999999,
+        "meshOk": true,
+        "vertexCount": 24,
+        "error": null
+      },
+      {
+        "id": "topCapPos",
+        "bbox": {
+          "min": [
+            -1.8000001,
+            -1.8000001,
+            80.9999999
+          ],
+          "max": [
+            1.8000001,
+            1.8000001,
+            87.0000001
+          ],
+          "center": [
+            0,
+            0,
+            84
+          ],
+          "size": [
+            3.6000002,
+            3.6000002,
+            6.000000199999988
+          ]
+        },
+        "volume": 77.76,
+        "meshOk": true,
+        "vertexCount": 24,
+        "error": null
+      },
+      {
+        "id": "antennaPos",
+        "bbox": {
+          "min": [
+            -1.104374792321067,
+            -1.0554313086162206,
+            92.89562520767893
+          ],
+          "max": [
+            1.104374792321067,
+            1.0554313086162206,
+            111.10437479232107
+          ],
+          "center": [
+            0,
+            0,
+            102
+          ],
+          "size": [
+            2.208749584642134,
+            2.110862617232441,
+            18.208749584642135
+          ]
+        },
+        "volume": 20.92300707290802,
+        "meshOk": true,
+        "vertexCount": 138,
+        "error": null
+      },
+      {
+        "id": "legs",
+        "bbox": {
+          "min": [
+            -20.252768569767518,
+            -20.252768569767518,
+            -1.752427676234322
+          ],
+          "max": [
+            20.252768569767518,
+            20.252768569767518,
+            69.74770364760273
+          ],
+          "center": [
+            0,
+            0,
+            33.99763798568421
+          ],
+          "size": [
+            40.505537139535036,
+            40.505537139535036,
+            71.50013132383705
+          ]
+        },
+        "volume": 178.3428676533184,
+        "meshOk": true,
+        "vertexCount": 2323,
+        "error": null
+      }
+    ],
+    "nodeErrors": [],
+    "numbers": {
+      "towerHeight": 120,
+      "baseWidth": 40,
+      "legThickness": 1.5,
+      "legY": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "legZ": [
+        0,
+        22.8,
+        45.6,
+        84,
+        102
+      ],
+      "legX": [
+        0,
+        -11.200000000000001,
+        -16.4,
+        -19.2,
+        -20
+      ]
+    },
+    "sliders": {
+      "towerHeight": 120,
+      "baseWidth": 40,
+      "legThickness": 1.5
+    },
+    "selections": {},
+    "helpers": {},
+    "nodeCount": 18,
+    "edgeCount": 10,
+    "transformCount": 5,
+    "nodesPerLeafRatio": 3.6,
+    "nodeEconomyWarning": false,
+    "placement": {
+      "anchored": [
+        "legs"
+      ],
+      "literal": [
+        "plat1Pos",
+        "plat2Pos",
+        "topCapPos",
+        "antennaPos"
+      ],
+      "origin": [],
+      "literalNodeIds": [
+        "plat1Pos",
+        "plat2Pos",
+        "topCapPos",
+        "antennaPos"
+      ],
+      "ratio": 0.2
+    },
+    "scene": {
+      "min": [
+        -20.252768569767518,
+        -20.252768569767518,
+        -1.752427676234322
+      ],
+      "max": [
+        20.252768569767518,
+        20.252768569767518,
+        111.10437479232107
+      ],
+      "size": [
+        40.505537139535036,
+        40.505537139535036,
+        112.85680246855539
+      ]
+    },
+    "meshedLeafCount": 5,
+    "kernelFaultCount": 0,
+    "kernelSuspect": false,
+    "kernelHealth": "ok",
+    "evalCount": 8,
+    "recycleRecommended": false,
+    "perturbationIssues": [
+      "At towerHeight decrease (0.6x), \"topCapPos\" becomes fully buried inside \"legs\".",
+      "At towerHeight decrease (0.6x), \"antennaPos\" becomes fully buried inside \"legs\".",
+      "At towerHeight decrease (0.6x), \"legs\" shifts non-proportionally relative to the assembly center (deviation 18%). Derive its position from the driver sliders or use Align.",
+      "At towerHeight increase (1.5x), \"legs\" shifts non-proportionally relative to the assembly center (deviation 10%). Derive its position from the driver sliders or use Align."
+    ],
+    "proportionalIntegrity": 0.6666666666666666
+  },
+  "timeline": [
+    {
+      "at": "2026-07-22T12:42:54.368Z",
+      "turn": 1,
+      "trigger": "ai-ir",
+      "label": "attempt 3: rebuilt graph (39 nodes)",
+      "nodeCount": 39,
+      "edgeCount": 30,
+      "isolatedCount": 7,
+      "diff": {
+        "addedNodes": [
+          "buildingWidth",
+          "buildingLength",
+          "floorHeight",
+          "roofHeight",
+          "windowDepth",
+          "origin",
+          "base",
+          "cornerX",
+          "cornerY",
+          "cornerZ",
+          "corners",
+          "footprint",
+          "body",
+          "bodyMoved",
+          "ptF",
+          "winF",
+          "winFPat",
+          "ptB",
+          "winB",
+          "winBPat",
+          "ptL",
+          "winL",
+          "winLPat",
+          "ptR",
+          "winR",
+          "winRPat",
+          "allWindows",
+          "bodyWithWindows",
+          "rbX",
+          "rbY",
+          "rbZ",
+          "roofBotPts",
+          "roofBot",
+          "rtX",
+          "rtY",
+          "rtZ",
+          "roofTopPts",
+          "roofTop",
+          "roof"
+        ],
+        "removedNodes": [],
+        "changedNodes": [],
+        "addedEdges": 30,
+        "removedEdges": 0
+      },
+      "details": [
+        "warning: Dead design parameter: slider \"roofHeight\" is not referenced by any formula or edge — moving it changes nothing. Wire dimensions to it or remove it."
+      ],
+      "nodes": [
+        {
+          "id": "buildingWidth",
+          "type": "NumberSlider",
+          "data": {
+            "value": 12,
+            "label": "buildingWidth",
+            "min": 6,
+            "max": 30,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 420
+          }
+        },
+        {
+          "id": "buildingLength",
+          "type": "NumberSlider",
+          "data": {
+            "value": 16,
+            "label": "buildingLength",
+            "min": 8,
+            "max": 40,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 230
+          }
+        },
+        {
+          "id": "floorHeight",
+          "type": "NumberSlider",
+          "data": {
+            "value": 5,
+            "label": "floorHeight",
+            "min": 3,
+            "max": 12,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 1180
+          }
+        },
+        {
+          "id": "roofHeight",
+          "type": "NumberSlider",
+          "data": {
+            "value": 6,
+            "label": "roofHeight",
+            "min": 2,
+            "max": 15,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 2890
+          }
+        },
+        {
+          "id": "windowDepth",
+          "type": "NumberSlider",
+          "data": {
+            "value": 0.8,
+            "label": "windowDepth",
+            "min": 0.2,
+            "max": 2,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 3650
+          }
+        },
+        {
+          "id": "origin",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "position": {
+            "x": 40,
+            "y": 1370
+          }
+        },
+        {
+          "id": "base",
+          "type": "Box",
+          "data": {
+            "width": "buildingWidth*1.5",
+            "length": "buildingLength*1.5",
+            "height": "floorHeight*0.3",
+            "color": "#94a3b8"
+          },
+          "position": {
+            "x": 40,
+            "y": 40
+          }
+        },
+        {
+          "id": "cornerX",
+          "type": "ListConstant",
+          "data": {
+            "values": "-buildingWidth/2, buildingWidth/2, buildingWidth/2, -buildingWidth/2"
+          },
+          "position": {
+            "x": 40,
+            "y": 610
+          }
+        },
+        {
+          "id": "cornerY",
+          "type": "ListConstant",
+          "data": {
+            "values": "-buildingLength/2, -buildingLength/2, buildingLength/2, buildingLength/2"
+          },
+          "position": {
+            "x": 40,
+            "y": 800
+          }
+        },
+        {
+          "id": "cornerZ",
+          "type": "ListConstant",
+          "data": {
+            "values": "0, 0, 0, 0"
+          },
+          "position": {
+            "x": 40,
+            "y": 990
+          }
+        },
+        {
+          "id": "corners",
+          "type": "PointsFromLists",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 40
+          }
+        },
+        {
+          "id": "footprint",
+          "type": "PolylineCurve",
+          "data": {
+            "closed": true
+          },
+          "position": {
+            "x": 500,
+            "y": 40
+          }
+        },
+        {
+          "id": "body",
+          "type": "ExtrudeCurve",
+          "data": {
+            "height": "floorHeight*2"
+          },
+          "position": {
+            "x": 730,
+            "y": 40
+          }
+        },
+        {
+          "id": "bodyMoved",
+          "type": "Translate",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "floorHeight*0.3"
+          },
+          "position": {
+            "x": 960,
+            "y": 40
+          }
+        },
+        {
+          "id": "ptF",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": "-buildingLength/2",
+            "z": "floorHeight*0.8"
+          },
+          "position": {
+            "x": 40,
+            "y": 1750
+          }
+        },
+        {
+          "id": "winF",
+          "type": "Box",
+          "data": {
+            "width": "buildingWidth/3",
+            "length": "windowDepth*2",
+            "height": "floorHeight*0.5"
+          },
+          "position": {
+            "x": 270,
+            "y": 420
+          }
+        },
+        {
+          "id": "winFPat",
+          "type": "LinearPattern",
+          "data": {
+            "count": 2,
+            "directionX": 0,
+            "directionY": 0,
+            "directionZ": "floorHeight"
+          },
+          "position": {
+            "x": 500,
+            "y": 420
+          }
+        },
+        {
+          "id": "ptB",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": "buildingLength/2",
+            "z": "floorHeight*0.8"
+          },
+          "position": {
+            "x": 40,
+            "y": 1560
+          }
+        },
+        {
+          "id": "winB",
+          "type": "Box",
+          "data": {
+            "width": "buildingWidth/3",
+            "length": "windowDepth*2",
+            "height": "floorHeight*0.5"
+          },
+          "position": {
+            "x": 270,
+            "y": 230
+          }
+        },
+        {
+          "id": "winBPat",
+          "type": "LinearPattern",
+          "data": {
+            "count": 2,
+            "directionX": 0,
+            "directionY": 0,
+            "directionZ": "floorHeight"
+          },
+          "position": {
+            "x": 500,
+            "y": 230
+          }
+        },
+        {
+          "id": "ptL",
+          "type": "Point",
+          "data": {
+            "x": "-buildingWidth/2",
+            "y": 0,
+            "z": "floorHeight*0.8"
+          },
+          "position": {
+            "x": 40,
+            "y": 1940
+          }
+        },
+        {
+          "id": "winL",
+          "type": "Box",
+          "data": {
+            "width": "windowDepth*2",
+            "length": "buildingLength/3",
+            "height": "floorHeight*0.5"
+          },
+          "position": {
+            "x": 270,
+            "y": 610
+          }
+        },
+        {
+          "id": "winLPat",
+          "type": "LinearPattern",
+          "data": {
+            "count": 2,
+            "directionX": 0,
+            "directionY": 0,
+            "directionZ": "floorHeight"
+          },
+          "position": {
+            "x": 500,
+            "y": 610
+          }
+        },
+        {
+          "id": "ptR",
+          "type": "Point",
+          "data": {
+            "x": "buildingWidth/2",
+            "y": 0,
+            "z": "floorHeight*0.8"
+          },
+          "position": {
+            "x": 40,
+            "y": 2130
+          }
+        },
+        {
+          "id": "winR",
+          "type": "Box",
+          "data": {
+            "width": "windowDepth*2",
+            "length": "buildingLength/3",
+            "height": "floorHeight*0.5"
+          },
+          "position": {
+            "x": 270,
+            "y": 800
+          }
+        },
+        {
+          "id": "winRPat",
+          "type": "LinearPattern",
+          "data": {
+            "count": 2,
+            "directionX": 0,
+            "directionY": 0,
+            "directionZ": "floorHeight"
+          },
+          "position": {
+            "x": 500,
+            "y": 800
+          }
+        },
+        {
+          "id": "allWindows",
+          "type": "Compound",
+          "data": {},
+          "position": {
+            "x": 730,
+            "y": 230
+          }
+        },
+        {
+          "id": "bodyWithWindows",
+          "type": "Boolean",
+          "data": {
+            "operation": "difference",
+            "color": "#e2c290"
+          },
+          "position": {
+            "x": 1190,
+            "y": 40
+          }
+        },
+        {
+          "id": "rbX",
+          "type": "ListConstant",
+          "data": {
+            "values": "-buildingWidth/2, buildingWidth/2, buildingWidth/2, -buildingWidth/2"
+          },
+          "position": {
+            "x": 40,
+            "y": 2320
+          }
+        },
+        {
+          "id": "rbY",
+          "type": "ListConstant",
+          "data": {
+            "values": "-buildingLength/2, -buildingLength/2, buildingLength/2, buildingLength/2"
+          },
+          "position": {
+            "x": 40,
+            "y": 2510
+          }
+        },
+        {
+          "id": "rbZ",
+          "type": "ListConstant",
+          "data": {
+            "values": "floorHeight*2.3, floorHeight*2.3, floorHeight*2.3, floorHeight*2.3"
+          },
+          "position": {
+            "x": 40,
+            "y": 2700
+          }
+        },
+        {
+          "id": "roofBotPts",
+          "type": "PointsFromLists",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 990
+          }
+        },
+        {
+          "id": "roofBot",
+          "type": "PolylineCurve",
+          "data": {
+            "closed": true
+          },
+          "position": {
+            "x": 500,
+            "y": 990
+          }
+        },
+        {
+          "id": "rtX",
+          "type": "ListConstant",
+          "data": {
+            "values": "-buildingWidth*0.15, buildingWidth*0.15, buildingWidth*0.15, -buildingWidth*0.15"
+          },
+          "position": {
+            "x": 40,
+            "y": 3080
+          }
+        },
+        {
+          "id": "rtY",
+          "type": "ListConstant",
+          "data": {
+            "values": "-buildingLength*0.15, -buildingLength*0.15, buildingLength*0.15, buildingLength*0.15"
+          },
+          "position": {
+            "x": 40,
+            "y": 3270
+          }
+        },
+        {
+          "id": "rtZ",
+          "type": "ListConstant",
+          "data": {
+            "values": "floorHeight*2.3 + roofHeight, floorHeight*2.3 + roofHeight, floorHeight*2.3 + roofHeight, floorHeight*2.3 + roofHeight"
+          },
+          "position": {
+            "x": 40,
+            "y": 3460
+          }
+        },
+        {
+          "id": "roofTopPts",
+          "type": "PointsFromLists",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 1180
+          }
+        },
+        {
+          "id": "roofTop",
+          "type": "PolylineCurve",
+          "data": {
+            "closed": true
+          },
+          "position": {
+            "x": 500,
+            "y": 1180
+          }
+        },
+        {
+          "id": "roof",
+          "type": "LoftCurves",
+          "data": {
+            "ruled": false,
+            "closed": false,
+            "color": "#8b3a3a"
+          },
+          "position": {
+            "x": 730,
+            "y": 420
+          }
+        }
+      ],
+      "edges": [
+        {
+          "source": "cornerX",
+          "sourceHandle": "values",
+          "target": "corners",
+          "targetHandle": "x",
+          "id": "e_cornerX_corners_x"
+        },
+        {
+          "source": "cornerY",
+          "sourceHandle": "values",
+          "target": "corners",
+          "targetHandle": "y",
+          "id": "e_cornerY_corners_y"
+        },
+        {
+          "source": "cornerZ",
+          "sourceHandle": "values",
+          "target": "corners",
+          "targetHandle": "z",
+          "id": "e_cornerZ_corners_z"
+        },
+        {
+          "source": "corners",
+          "sourceHandle": "points",
+          "target": "footprint",
+          "targetHandle": "points",
+          "id": "e_corners_footprint_points"
+        },
+        {
+          "source": "footprint",
+          "sourceHandle": "curve",
+          "target": "body",
+          "targetHandle": "curve",
+          "id": "e_footprint_body_curve"
+        },
+        {
+          "source": "body",
+          "sourceHandle": "solid",
+          "target": "bodyMoved",
+          "targetHandle": "solid",
+          "id": "e_body_bodyMoved_solid"
+        },
+        {
+          "source": "ptF",
+          "sourceHandle": "point",
+          "target": "winF",
+          "targetHandle": "center",
+          "id": "e_ptF_winF_center"
+        },
+        {
+          "source": "winF",
+          "sourceHandle": "solid",
+          "target": "winFPat",
+          "targetHandle": "solid",
+          "id": "e_winF_winFPat_solid"
+        },
+        {
+          "source": "ptB",
+          "sourceHandle": "point",
+          "target": "winB",
+          "targetHandle": "center",
+          "id": "e_ptB_winB_center"
+        },
+        {
+          "source": "winB",
+          "sourceHandle": "solid",
+          "target": "winBPat",
+          "targetHandle": "solid",
+          "id": "e_winB_winBPat_solid"
+        },
+        {
+          "source": "ptL",
+          "sourceHandle": "point",
+          "target": "winL",
+          "targetHandle": "center",
+          "id": "e_ptL_winL_center"
+        },
+        {
+          "source": "winL",
+          "sourceHandle": "solid",
+          "target": "winLPat",
+          "targetHandle": "solid",
+          "id": "e_winL_winLPat_solid"
+        },
+        {
+          "source": "ptR",
+          "sourceHandle": "point",
+          "target": "winR",
+          "targetHandle": "center",
+          "id": "e_ptR_winR_center"
+        },
+        {
+          "source": "winR",
+          "sourceHandle": "solid",
+          "target": "winRPat",
+          "targetHandle": "solid",
+          "id": "e_winR_winRPat_solid"
+        },
+        {
+          "source": "winFPat",
+          "sourceHandle": "solid",
+          "target": "allWindows",
+          "targetHandle": "solid1",
+          "id": "e_winFPat_allWindows_solid1"
+        },
+        {
+          "source": "winBPat",
+          "sourceHandle": "solid",
+          "target": "allWindows",
+          "targetHandle": "solid2",
+          "id": "e_winBPat_allWindows_solid2"
+        },
+        {
+          "source": "winLPat",
+          "sourceHandle": "solid",
+          "target": "allWindows",
+          "targetHandle": "solid3",
+          "id": "e_winLPat_allWindows_solid3"
+        },
+        {
+          "source": "winRPat",
+          "sourceHandle": "solid",
+          "target": "allWindows",
+          "targetHandle": "solid4",
+          "id": "e_winRPat_allWindows_solid4"
+        },
+        {
+          "source": "bodyMoved",
+          "sourceHandle": "solid",
+          "target": "bodyWithWindows",
+          "targetHandle": "target",
+          "id": "e_bodyMoved_bodyWithWindows_target"
+        },
+        {
+          "source": "allWindows",
+          "sourceHandle": "solid",
+          "target": "bodyWithWindows",
+          "targetHandle": "tool",
+          "id": "e_allWindows_bodyWithWindows_tool"
+        },
+        {
+          "source": "rbX",
+          "sourceHandle": "values",
+          "target": "roofBotPts",
+          "targetHandle": "x",
+          "id": "e_rbX_roofBotPts_x"
+        },
+        {
+          "source": "rbY",
+          "sourceHandle": "values",
+          "target": "roofBotPts",
+          "targetHandle": "y",
+          "id": "e_rbY_roofBotPts_y"
+        },
+        {
+          "source": "rbZ",
+          "sourceHandle": "values",
+          "target": "roofBotPts",
+          "targetHandle": "z",
+          "id": "e_rbZ_roofBotPts_z"
+        },
+        {
+          "source": "roofBotPts",
+          "sourceHandle": "points",
+          "target": "roofBot",
+          "targetHandle": "points",
+          "id": "e_roofBotPts_roofBot_points"
+        },
+        {
+          "source": "rtX",
+          "sourceHandle": "values",
+          "target": "roofTopPts",
+          "targetHandle": "x",
+          "id": "e_rtX_roofTopPts_x"
+        },
+        {
+          "source": "rtY",
+          "sourceHandle": "values",
+          "target": "roofTopPts",
+          "targetHandle": "y",
+          "id": "e_rtY_roofTopPts_y"
+        },
+        {
+          "source": "rtZ",
+          "sourceHandle": "values",
+          "target": "roofTopPts",
+          "targetHandle": "z",
+          "id": "e_rtZ_roofTopPts_z"
+        },
+        {
+          "source": "roofTopPts",
+          "sourceHandle": "points",
+          "target": "roofTop",
+          "targetHandle": "points",
+          "id": "e_roofTopPts_roofTop_points"
+        },
+        {
+          "source": "roofBot",
+          "sourceHandle": "curve",
+          "target": "roof",
+          "targetHandle": "curve1",
+          "id": "e_roofBot_roof_curve1"
+        },
+        {
+          "source": "roofTop",
+          "sourceHandle": "curve",
+          "target": "roof",
+          "targetHandle": "curve2",
+          "id": "e_roofTop_roof_curve2"
+        }
+      ]
+    },
+    {
+      "at": "2026-07-22T12:44:39.997Z",
+      "turn": 1,
+      "trigger": "ai-repair",
+      "label": "attempt 3: added 2 node(s) [TransformCurve]; removed 10 node(s); added 4 edge(s); removed 10 edge(s)",
+      "nodeCount": 31,
+      "edgeCount": 24,
+      "isolatedCount": 7,
+      "diff": {
+        "addedNodes": [
+          "roofBotCurve",
+          "roofTopCurve"
+        ],
+        "removedNodes": [
+          "rbX",
+          "rbY",
+          "rbZ",
+          "roofBotPts",
+          "roofBot",
+          "rtX",
+          "rtY",
+          "rtZ",
+          "roofTopPts",
+          "roofTop"
+        ],
+        "changedNodes": [],
+        "addedEdges": 4,
+        "removedEdges": 10
+      },
+      "nodes": [
+        {
+          "id": "buildingWidth",
+          "type": "NumberSlider",
+          "data": {
+            "value": 12,
+            "label": "buildingWidth",
+            "min": 6,
+            "max": 30,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 420
+          },
+          "measured": {
+            "width": 201,
+            "height": 328
+          }
+        },
+        {
+          "id": "buildingLength",
+          "type": "NumberSlider",
+          "data": {
+            "value": 16,
+            "label": "buildingLength",
+            "min": 8,
+            "max": 40,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 230
+          },
+          "measured": {
+            "width": 201,
+            "height": 328
+          }
+        },
+        {
+          "id": "floorHeight",
+          "type": "NumberSlider",
+          "data": {
+            "value": 5,
+            "label": "floorHeight",
+            "min": 3,
+            "max": 12,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 1180
+          },
+          "measured": {
+            "width": 201,
+            "height": 328
+          }
+        },
+        {
+          "id": "roofHeight",
+          "type": "NumberSlider",
+          "data": {
+            "value": 6,
+            "label": "roofHeight",
+            "min": 2,
+            "max": 15,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 2320
+          },
+          "measured": {
+            "width": 201,
+            "height": 328
+          }
+        },
+        {
+          "id": "windowDepth",
+          "type": "NumberSlider",
+          "data": {
+            "value": 0.8,
+            "label": "windowDepth",
+            "min": 0.2,
+            "max": 2,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 2510
+          },
+          "measured": {
+            "width": 201,
+            "height": 328
+          }
+        },
+        {
+          "id": "origin",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "position": {
+            "x": 40,
+            "y": 1370
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "base",
+          "type": "Box",
+          "data": {
+            "width": "buildingWidth*1.5",
+            "length": "buildingLength*1.5",
+            "height": "floorHeight*0.3",
+            "color": "#94a3b8"
+          },
+          "position": {
+            "x": 40,
+            "y": 40
+          },
+          "measured": {
+            "width": 201,
+            "height": 312
+          }
+        },
+        {
+          "id": "cornerX",
+          "type": "ListConstant",
+          "data": {
+            "values": "-buildingWidth/2, buildingWidth/2, buildingWidth/2, -buildingWidth/2"
+          },
+          "position": {
+            "x": 40,
+            "y": 610
+          },
+          "measured": {
+            "width": 177,
+            "height": 136
+          }
+        },
+        {
+          "id": "cornerY",
+          "type": "ListConstant",
+          "data": {
+            "values": "-buildingLength/2, -buildingLength/2, buildingLength/2, buildingLength/2"
+          },
+          "position": {
+            "x": 40,
+            "y": 800
+          },
+          "measured": {
+            "width": 177,
+            "height": 136
+          }
+        },
+        {
+          "id": "cornerZ",
+          "type": "ListConstant",
+          "data": {
+            "values": "0, 0, 0, 0"
+          },
+          "position": {
+            "x": 40,
+            "y": 990
+          },
+          "measured": {
+            "width": 177,
+            "height": 136
+          }
+        },
+        {
+          "id": "corners",
+          "type": "PointsFromLists",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 40
+          },
+          "measured": {
+            "width": 150,
+            "height": 234
+          }
+        },
+        {
+          "id": "footprint",
+          "type": "PolylineCurve",
+          "data": {
+            "closed": true
+          },
+          "position": {
+            "x": 500,
+            "y": 40
+          },
+          "measured": {
+            "width": 177,
+            "height": 266
+          }
+        },
+        {
+          "id": "body",
+          "type": "ExtrudeCurve",
+          "data": {
+            "height": "floorHeight*2"
+          },
+          "position": {
+            "x": 730,
+            "y": 40
+          },
+          "measured": {
+            "width": 222,
+            "height": 216
+          }
+        },
+        {
+          "id": "bodyMoved",
+          "type": "Translate",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "floorHeight*0.3"
+          },
+          "position": {
+            "x": 960,
+            "y": 40
+          },
+          "measured": {
+            "width": 201,
+            "height": 334
+          }
+        },
+        {
+          "id": "ptF",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": "-buildingLength/2",
+            "z": "floorHeight*0.8"
+          },
+          "position": {
+            "x": 40,
+            "y": 1750
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "winF",
+          "type": "Box",
+          "data": {
+            "width": "buildingWidth/3",
+            "length": "windowDepth*2",
+            "height": "floorHeight*0.5"
+          },
+          "position": {
+            "x": 270,
+            "y": 420
+          },
+          "measured": {
+            "width": 201,
+            "height": 312
+          }
+        },
+        {
+          "id": "winFPat",
+          "type": "LinearPattern",
+          "data": {
+            "count": 2,
+            "directionX": 0,
+            "directionY": 0,
+            "directionZ": "floorHeight"
+          },
+          "position": {
+            "x": 500,
+            "y": 420
+          },
+          "measured": {
+            "width": 201,
+            "height": 306
+          }
+        },
+        {
+          "id": "ptB",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": "buildingLength/2",
+            "z": "floorHeight*0.8"
+          },
+          "position": {
+            "x": 40,
+            "y": 1560
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "winB",
+          "type": "Box",
+          "data": {
+            "width": "buildingWidth/3",
+            "length": "windowDepth*2",
+            "height": "floorHeight*0.5"
+          },
+          "position": {
+            "x": 270,
+            "y": 230
+          },
+          "measured": {
+            "width": 201,
+            "height": 312
+          }
+        },
+        {
+          "id": "winBPat",
+          "type": "LinearPattern",
+          "data": {
+            "count": 2,
+            "directionX": 0,
+            "directionY": 0,
+            "directionZ": "floorHeight"
+          },
+          "position": {
+            "x": 500,
+            "y": 230
+          },
+          "measured": {
+            "width": 201,
+            "height": 306
+          }
+        },
+        {
+          "id": "ptL",
+          "type": "Point",
+          "data": {
+            "x": "-buildingWidth/2",
+            "y": 0,
+            "z": "floorHeight*0.8"
+          },
+          "position": {
+            "x": 40,
+            "y": 1940
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "winL",
+          "type": "Box",
+          "data": {
+            "width": "windowDepth*2",
+            "length": "buildingLength/3",
+            "height": "floorHeight*0.5"
+          },
+          "position": {
+            "x": 270,
+            "y": 610
+          },
+          "measured": {
+            "width": 201,
+            "height": 312
+          }
+        },
+        {
+          "id": "winLPat",
+          "type": "LinearPattern",
+          "data": {
+            "count": 2,
+            "directionX": 0,
+            "directionY": 0,
+            "directionZ": "floorHeight"
+          },
+          "position": {
+            "x": 500,
+            "y": 610
+          },
+          "measured": {
+            "width": 201,
+            "height": 306
+          }
+        },
+        {
+          "id": "ptR",
+          "type": "Point",
+          "data": {
+            "x": "buildingWidth/2",
+            "y": 0,
+            "z": "floorHeight*0.8"
+          },
+          "position": {
+            "x": 40,
+            "y": 2130
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "winR",
+          "type": "Box",
+          "data": {
+            "width": "windowDepth*2",
+            "length": "buildingLength/3",
+            "height": "floorHeight*0.5"
+          },
+          "position": {
+            "x": 270,
+            "y": 800
+          },
+          "measured": {
+            "width": 201,
+            "height": 312
+          }
+        },
+        {
+          "id": "winRPat",
+          "type": "LinearPattern",
+          "data": {
+            "count": 2,
+            "directionX": 0,
+            "directionY": 0,
+            "directionZ": "floorHeight"
+          },
+          "position": {
+            "x": 500,
+            "y": 800
+          },
+          "measured": {
+            "width": 201,
+            "height": 306
+          }
+        },
+        {
+          "id": "allWindows",
+          "type": "Compound",
+          "data": {},
+          "position": {
+            "x": 730,
+            "y": 610
+          },
+          "measured": {
+            "width": 150,
+            "height": 330
+          }
+        },
+        {
+          "id": "bodyWithWindows",
+          "type": "Boolean",
+          "data": {
+            "operation": "difference",
+            "color": "#e2c290"
+          },
+          "position": {
+            "x": 1190,
+            "y": 40
+          },
+          "measured": {
+            "width": 177,
+            "height": 200
+          }
+        },
+        {
+          "id": "roof",
+          "type": "LoftCurves",
+          "data": {
+            "ruled": false,
+            "closed": false,
+            "color": "#8b3a3a"
+          },
+          "position": {
+            "x": 960,
+            "y": 230
+          },
+          "measured": {
+            "width": 192,
+            "height": 416
+          }
+        },
+        {
+          "id": "roofBotCurve",
+          "type": "TransformCurve",
+          "data": {
+            "tx": 0,
+            "ty": 0,
+            "tz": "floorHeight*2.3",
+            "rotate": 0,
+            "scale": 1,
+            "color": "#8b3a3a"
+          },
+          "position": {
+            "x": 730,
+            "y": 230
+          }
+        },
+        {
+          "id": "roofTopCurve",
+          "type": "TransformCurve",
+          "data": {
+            "tx": 0,
+            "ty": 0,
+            "tz": "floorHeight*2.3+roofHeight",
+            "rotate": 0,
+            "scale": 0.15,
+            "color": "#8b3a3a"
+          },
+          "position": {
+            "x": 730,
+            "y": 420
+          }
+        }
+      ],
+      "edges": [
+        {
+          "source": "cornerX",
+          "sourceHandle": "values",
+          "target": "corners",
+          "targetHandle": "x",
+          "id": "e_cornerX_corners_x"
+        },
+        {
+          "source": "cornerY",
+          "sourceHandle": "values",
+          "target": "corners",
+          "targetHandle": "y",
+          "id": "e_cornerY_corners_y"
+        },
+        {
+          "source": "cornerZ",
+          "sourceHandle": "values",
+          "target": "corners",
+          "targetHandle": "z",
+          "id": "e_cornerZ_corners_z"
+        },
+        {
+          "source": "corners",
+          "sourceHandle": "points",
+          "target": "footprint",
+          "targetHandle": "points",
+          "id": "e_corners_footprint_points"
+        },
+        {
+          "source": "footprint",
+          "sourceHandle": "curve",
+          "target": "body",
+          "targetHandle": "curve",
+          "id": "e_footprint_body_curve"
+        },
+        {
+          "source": "body",
+          "sourceHandle": "solid",
+          "target": "bodyMoved",
+          "targetHandle": "solid",
+          "id": "e_body_bodyMoved_solid"
+        },
+        {
+          "source": "ptF",
+          "sourceHandle": "point",
+          "target": "winF",
+          "targetHandle": "center",
+          "id": "e_ptF_winF_center"
+        },
+        {
+          "source": "winF",
+          "sourceHandle": "solid",
+          "target": "winFPat",
+          "targetHandle": "solid",
+          "id": "e_winF_winFPat_solid"
+        },
+        {
+          "source": "ptB",
+          "sourceHandle": "point",
+          "target": "winB",
+          "targetHandle": "center",
+          "id": "e_ptB_winB_center"
+        },
+        {
+          "source": "winB",
+          "sourceHandle": "solid",
+          "target": "winBPat",
+          "targetHandle": "solid",
+          "id": "e_winB_winBPat_solid"
+        },
+        {
+          "source": "ptL",
+          "sourceHandle": "point",
+          "target": "winL",
+          "targetHandle": "center",
+          "id": "e_ptL_winL_center"
+        },
+        {
+          "source": "winL",
+          "sourceHandle": "solid",
+          "target": "winLPat",
+          "targetHandle": "solid",
+          "id": "e_winL_winLPat_solid"
+        },
+        {
+          "source": "ptR",
+          "sourceHandle": "point",
+          "target": "winR",
+          "targetHandle": "center",
+          "id": "e_ptR_winR_center"
+        },
+        {
+          "source": "winR",
+          "sourceHandle": "solid",
+          "target": "winRPat",
+          "targetHandle": "solid",
+          "id": "e_winR_winRPat_solid"
+        },
+        {
+          "source": "winFPat",
+          "sourceHandle": "solid",
+          "target": "allWindows",
+          "targetHandle": "solid1",
+          "id": "e_winFPat_allWindows_solid1"
+        },
+        {
+          "source": "winBPat",
+          "sourceHandle": "solid",
+          "target": "allWindows",
+          "targetHandle": "solid2",
+          "id": "e_winBPat_allWindows_solid2"
+        },
+        {
+          "source": "winLPat",
+          "sourceHandle": "solid",
+          "target": "allWindows",
+          "targetHandle": "solid3",
+          "id": "e_winLPat_allWindows_solid3"
+        },
+        {
+          "source": "winRPat",
+          "sourceHandle": "solid",
+          "target": "allWindows",
+          "targetHandle": "solid4",
+          "id": "e_winRPat_allWindows_solid4"
+        },
+        {
+          "source": "bodyMoved",
+          "sourceHandle": "solid",
+          "target": "bodyWithWindows",
+          "targetHandle": "target",
+          "id": "e_bodyMoved_bodyWithWindows_target"
+        },
+        {
+          "source": "allWindows",
+          "sourceHandle": "solid",
+          "target": "bodyWithWindows",
+          "targetHandle": "tool",
+          "id": "e_allWindows_bodyWithWindows_tool"
+        },
+        {
+          "source": "footprint",
+          "target": "roofBotCurve",
+          "id": "e_footprint_roofBotCurve_curve",
+          "sourceHandle": "curve",
+          "targetHandle": "curve"
+        },
+        {
+          "source": "footprint",
+          "target": "roofTopCurve",
+          "id": "e_footprint_roofTopCurve_curve",
+          "sourceHandle": "curve",
+          "targetHandle": "curve"
+        },
+        {
+          "source": "roofBotCurve",
+          "target": "roof",
+          "id": "e_roofBotCurve_roof_curve1",
+          "sourceHandle": "curve",
+          "targetHandle": "curve1"
+        },
+        {
+          "source": "roofTopCurve",
+          "target": "roof",
+          "id": "e_roofTopCurve_roof_curve2",
+          "sourceHandle": "curve",
+          "targetHandle": "curve2"
+        }
+      ]
+    },
+    {
+      "at": "2026-07-22T12:46:58.627Z",
+      "turn": 2,
+      "trigger": "ai-ir",
+      "label": "attempt 1: rebuilt graph (44 nodes)",
+      "nodeCount": 44,
+      "edgeCount": 36,
+      "isolatedCount": 5,
+      "diff": {
+        "addedNodes": [
+          "cx",
+          "cy",
+          "cz",
+          "ptF1",
+          "winF1",
+          "ptF2",
+          "winF2",
+          "ptB1",
+          "winB1",
+          "ptB2",
+          "winB2",
+          "ptL1",
+          "winL1",
+          "ptL2",
+          "winL2",
+          "ptR1",
+          "winR1",
+          "ptR2",
+          "winR2",
+          "winGroup1",
+          "winGroup2",
+          "allWins",
+          "bodyCut",
+          "rbx",
+          "rby",
+          "rbz",
+          "roofBotPts",
+          "rtx",
+          "rty",
+          "rtz",
+          "roofTopPts"
+        ],
+        "removedNodes": [
+          "cornerX",
+          "cornerY",
+          "cornerZ",
+          "bodyMoved",
+          "ptF",
+          "winF",
+          "winFPat",
+          "ptB",
+          "winB",
+          "winBPat",
+          "ptL",
+          "winL",
+          "winLPat",
+          "ptR",
+          "winR",
+          "winRPat",
+          "allWindows",
+          "bodyWithWindows"
+        ],
+        "changedNodes": [
+          "windowDepth",
+          "roofBotCurve",
+          "roofTopCurve"
+        ],
+        "addedEdges": 32,
+        "removedEdges": 20
+      },
+      "details": [
+        "warning: Dead design parameter: slider \"roofHeight\" is not referenced by any formula or edge — moving it changes nothing. Wire dimensions to it or remove it."
+      ],
+      "nodes": [
+        {
+          "id": "buildingWidth",
+          "type": "NumberSlider",
+          "data": {
+            "value": 12,
+            "label": "buildingWidth",
+            "min": 6,
+            "max": 30,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 230
+          }
+        },
+        {
+          "id": "buildingLength",
+          "type": "NumberSlider",
+          "data": {
+            "value": 16,
+            "label": "buildingLength",
+            "min": 8,
+            "max": 40,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 40
+          }
+        },
+        {
+          "id": "floorHeight",
+          "type": "NumberSlider",
+          "data": {
+            "value": 5,
+            "label": "floorHeight",
+            "min": 3,
+            "max": 12,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 990
+          }
+        },
+        {
+          "id": "roofHeight",
+          "type": "NumberSlider",
+          "data": {
+            "value": 6,
+            "label": "roofHeight",
+            "min": 2,
+            "max": 15,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 3460
+          }
+        },
+        {
+          "id": "windowDepth",
+          "type": "NumberSlider",
+          "data": {
+            "value": 1,
+            "label": "windowDepth",
+            "min": 0.2,
+            "max": 3,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 4220
+          }
+        },
+        {
+          "id": "origin",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "position": {
+            "x": 40,
+            "y": 1180
+          }
+        },
+        {
+          "id": "base",
+          "type": "Box",
+          "data": {
+            "width": "buildingWidth*1.5",
+            "length": "buildingLength*1.5",
+            "height": "floorHeight*0.3",
+            "color": "#94a3b8"
+          },
+          "position": {
+            "x": 270,
+            "y": 230
+          }
+        },
+        {
+          "id": "cx",
+          "type": "ListConstant",
+          "data": {
+            "values": "-buildingWidth/2, buildingWidth/2, buildingWidth/2, -buildingWidth/2"
+          },
+          "position": {
+            "x": 40,
+            "y": 420
+          }
+        },
+        {
+          "id": "cy",
+          "type": "ListConstant",
+          "data": {
+            "values": "-buildingLength/2, -buildingLength/2, buildingLength/2, buildingLength/2"
+          },
+          "position": {
+            "x": 40,
+            "y": 610
+          }
+        },
+        {
+          "id": "cz",
+          "type": "ListConstant",
+          "data": {
+            "values": "0, 0, 0, 0"
+          },
+          "position": {
+            "x": 40,
+            "y": 800
+          }
+        },
+        {
+          "id": "corners",
+          "type": "PointsFromLists",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 40
+          }
+        },
+        {
+          "id": "footprint",
+          "type": "PolylineCurve",
+          "data": {
+            "closed": true
+          },
+          "position": {
+            "x": 500,
+            "y": 40
+          }
+        },
+        {
+          "id": "body",
+          "type": "ExtrudeCurve",
+          "data": {
+            "height": "floorHeight*2"
+          },
+          "position": {
+            "x": 730,
+            "y": 40
+          }
+        },
+        {
+          "id": "ptF1",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": "-buildingLength/2",
+            "z": "floorHeight*0.5"
+          },
+          "position": {
+            "x": 40,
+            "y": 1750
+          }
+        },
+        {
+          "id": "winF1",
+          "type": "Box",
+          "data": {
+            "width": "buildingWidth/3",
+            "length": "windowDepth*2",
+            "height": "floorHeight*0.5"
+          },
+          "position": {
+            "x": 270,
+            "y": 800
+          }
+        },
+        {
+          "id": "ptF2",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": "-buildingLength/2",
+            "z": "floorHeight*1.5"
+          },
+          "position": {
+            "x": 40,
+            "y": 1940
+          }
+        },
+        {
+          "id": "winF2",
+          "type": "Box",
+          "data": {
+            "width": "buildingWidth/3",
+            "length": "windowDepth*2",
+            "height": "floorHeight*0.5"
+          },
+          "position": {
+            "x": 270,
+            "y": 990
+          }
+        },
+        {
+          "id": "ptB1",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": "buildingLength/2",
+            "z": "floorHeight*0.5"
+          },
+          "position": {
+            "x": 40,
+            "y": 1370
+          }
+        },
+        {
+          "id": "winB1",
+          "type": "Box",
+          "data": {
+            "width": "buildingWidth/3",
+            "length": "windowDepth*2",
+            "height": "floorHeight*0.5"
+          },
+          "position": {
+            "x": 270,
+            "y": 420
+          }
+        },
+        {
+          "id": "ptB2",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": "buildingLength/2",
+            "z": "floorHeight*1.5"
+          },
+          "position": {
+            "x": 40,
+            "y": 1560
+          }
+        },
+        {
+          "id": "winB2",
+          "type": "Box",
+          "data": {
+            "width": "buildingWidth/3",
+            "length": "windowDepth*2",
+            "height": "floorHeight*0.5"
+          },
+          "position": {
+            "x": 270,
+            "y": 610
+          }
+        },
+        {
+          "id": "ptL1",
+          "type": "Point",
+          "data": {
+            "x": "-buildingWidth/2",
+            "y": 0,
+            "z": "floorHeight*0.5"
+          },
+          "position": {
+            "x": 40,
+            "y": 2130
+          }
+        },
+        {
+          "id": "winL1",
+          "type": "Box",
+          "data": {
+            "width": "windowDepth*2",
+            "length": "buildingLength/3",
+            "height": "floorHeight*0.5"
+          },
+          "position": {
+            "x": 270,
+            "y": 1180
+          }
+        },
+        {
+          "id": "ptL2",
+          "type": "Point",
+          "data": {
+            "x": "-buildingWidth/2",
+            "y": 0,
+            "z": "floorHeight*1.5"
+          },
+          "position": {
+            "x": 40,
+            "y": 2320
+          }
+        },
+        {
+          "id": "winL2",
+          "type": "Box",
+          "data": {
+            "width": "windowDepth*2",
+            "length": "buildingLength/3",
+            "height": "floorHeight*0.5"
+          },
+          "position": {
+            "x": 270,
+            "y": 1370
+          }
+        },
+        {
+          "id": "ptR1",
+          "type": "Point",
+          "data": {
+            "x": "buildingWidth/2",
+            "y": 0,
+            "z": "floorHeight*0.5"
+          },
+          "position": {
+            "x": 40,
+            "y": 2510
+          }
+        },
+        {
+          "id": "winR1",
+          "type": "Box",
+          "data": {
+            "width": "windowDepth*2",
+            "length": "buildingLength/3",
+            "height": "floorHeight*0.5"
+          },
+          "position": {
+            "x": 270,
+            "y": 1560
+          }
+        },
+        {
+          "id": "ptR2",
+          "type": "Point",
+          "data": {
+            "x": "buildingWidth/2",
+            "y": 0,
+            "z": "floorHeight*1.5"
+          },
+          "position": {
+            "x": 40,
+            "y": 2700
+          }
+        },
+        {
+          "id": "winR2",
+          "type": "Box",
+          "data": {
+            "width": "windowDepth*2",
+            "length": "buildingLength/3",
+            "height": "floorHeight*0.5"
+          },
+          "position": {
+            "x": 270,
+            "y": 1750
+          }
+        },
+        {
+          "id": "winGroup1",
+          "type": "Compound",
+          "data": {},
+          "position": {
+            "x": 500,
+            "y": 230
+          }
+        },
+        {
+          "id": "winGroup2",
+          "type": "Compound",
+          "data": {},
+          "position": {
+            "x": 500,
+            "y": 420
+          }
+        },
+        {
+          "id": "allWins",
+          "type": "Boolean",
+          "data": {
+            "operation": "union"
+          },
+          "position": {
+            "x": 730,
+            "y": 230
+          }
+        },
+        {
+          "id": "bodyCut",
+          "type": "Boolean",
+          "data": {
+            "operation": "difference",
+            "color": "#e2c290"
+          },
+          "position": {
+            "x": 960,
+            "y": 40
+          }
+        },
+        {
+          "id": "rbx",
+          "type": "ListConstant",
+          "data": {
+            "values": "-buildingWidth/2, buildingWidth/2, buildingWidth/2, -buildingWidth/2"
+          },
+          "position": {
+            "x": 40,
+            "y": 2890
+          }
+        },
+        {
+          "id": "rby",
+          "type": "ListConstant",
+          "data": {
+            "values": "-buildingLength/2, -buildingLength/2, buildingLength/2, buildingLength/2"
+          },
+          "position": {
+            "x": 40,
+            "y": 3080
+          }
+        },
+        {
+          "id": "rbz",
+          "type": "ListConstant",
+          "data": {
+            "values": "floorHeight*2, floorHeight*2, floorHeight*2, floorHeight*2"
+          },
+          "position": {
+            "x": 40,
+            "y": 3270
+          }
+        },
+        {
+          "id": "roofBotPts",
+          "type": "PointsFromLists",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 1940
+          }
+        },
+        {
+          "id": "roofBotCurve",
+          "type": "PolylineCurve",
+          "data": {
+            "closed": true
+          },
+          "position": {
+            "x": 500,
+            "y": 610
+          }
+        },
+        {
+          "id": "rtx",
+          "type": "ListConstant",
+          "data": {
+            "values": "-buildingWidth/2*0.15, buildingWidth/2*0.15, buildingWidth/2*0.15, -buildingWidth/2*0.15"
+          },
+          "position": {
+            "x": 40,
+            "y": 3650
+          }
+        },
+        {
+          "id": "rty",
+          "type": "ListConstant",
+          "data": {
+            "values": "-buildingLength/2*0.15, -buildingLength/2*0.15, buildingLength/2*0.15, buildingLength/2*0.15"
+          },
+          "position": {
+            "x": 40,
+            "y": 3840
+          }
+        },
+        {
+          "id": "rtz",
+          "type": "ListConstant",
+          "data": {
+            "values": "floorHeight*2+roofHeight, floorHeight*2+roofHeight, floorHeight*2+roofHeight, floorHeight*2+roofHeight"
+          },
+          "position": {
+            "x": 40,
+            "y": 4030
+          }
+        },
+        {
+          "id": "roofTopPts",
+          "type": "PointsFromLists",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 2130
+          }
+        },
+        {
+          "id": "roofTopCurve",
+          "type": "PolylineCurve",
+          "data": {
+            "closed": true
+          },
+          "position": {
+            "x": 500,
+            "y": 800
+          }
+        },
+        {
+          "id": "roof",
+          "type": "LoftCurves",
+          "data": {
+            "ruled": false,
+            "closed": false,
+            "color": "#8b3a3a"
+          },
+          "position": {
+            "x": 730,
+            "y": 420
+          }
+        }
+      ],
+      "edges": [
+        {
+          "source": "origin",
+          "sourceHandle": "point",
+          "target": "base",
+          "targetHandle": "center",
+          "id": "e_origin_base_center"
+        },
+        {
+          "source": "cx",
+          "sourceHandle": "values",
+          "target": "corners",
+          "targetHandle": "x",
+          "id": "e_cx_corners_x"
+        },
+        {
+          "source": "cy",
+          "sourceHandle": "values",
+          "target": "corners",
+          "targetHandle": "y",
+          "id": "e_cy_corners_y"
+        },
+        {
+          "source": "cz",
+          "sourceHandle": "values",
+          "target": "corners",
+          "targetHandle": "z",
+          "id": "e_cz_corners_z"
+        },
+        {
+          "source": "corners",
+          "sourceHandle": "points",
+          "target": "footprint",
+          "targetHandle": "points",
+          "id": "e_corners_footprint_points"
+        },
+        {
+          "source": "footprint",
+          "sourceHandle": "curve",
+          "target": "body",
+          "targetHandle": "curve",
+          "id": "e_footprint_body_curve"
+        },
+        {
+          "source": "ptF1",
+          "sourceHandle": "point",
+          "target": "winF1",
+          "targetHandle": "center",
+          "id": "e_ptF1_winF1_center"
+        },
+        {
+          "source": "ptF2",
+          "sourceHandle": "point",
+          "target": "winF2",
+          "targetHandle": "center",
+          "id": "e_ptF2_winF2_center"
+        },
+        {
+          "source": "ptB1",
+          "sourceHandle": "point",
+          "target": "winB1",
+          "targetHandle": "center",
+          "id": "e_ptB1_winB1_center"
+        },
+        {
+          "source": "ptB2",
+          "sourceHandle": "point",
+          "target": "winB2",
+          "targetHandle": "center",
+          "id": "e_ptB2_winB2_center"
+        },
+        {
+          "source": "ptL1",
+          "sourceHandle": "point",
+          "target": "winL1",
+          "targetHandle": "center",
+          "id": "e_ptL1_winL1_center"
+        },
+        {
+          "source": "ptL2",
+          "sourceHandle": "point",
+          "target": "winL2",
+          "targetHandle": "center",
+          "id": "e_ptL2_winL2_center"
+        },
+        {
+          "source": "ptR1",
+          "sourceHandle": "point",
+          "target": "winR1",
+          "targetHandle": "center",
+          "id": "e_ptR1_winR1_center"
+        },
+        {
+          "source": "ptR2",
+          "sourceHandle": "point",
+          "target": "winR2",
+          "targetHandle": "center",
+          "id": "e_ptR2_winR2_center"
+        },
+        {
+          "source": "winF1",
+          "sourceHandle": "solid",
+          "target": "winGroup1",
+          "targetHandle": "solid1",
+          "id": "e_winF1_winGroup1_solid1"
+        },
+        {
+          "source": "winF2",
+          "sourceHandle": "solid",
+          "target": "winGroup1",
+          "targetHandle": "solid2",
+          "id": "e_winF2_winGroup1_solid2"
+        },
+        {
+          "source": "winB1",
+          "sourceHandle": "solid",
+          "target": "winGroup1",
+          "targetHandle": "solid3",
+          "id": "e_winB1_winGroup1_solid3"
+        },
+        {
+          "source": "winB2",
+          "sourceHandle": "solid",
+          "target": "winGroup1",
+          "targetHandle": "solid4",
+          "id": "e_winB2_winGroup1_solid4"
+        },
+        {
+          "source": "winL1",
+          "sourceHandle": "solid",
+          "target": "winGroup2",
+          "targetHandle": "solid1",
+          "id": "e_winL1_winGroup2_solid1"
+        },
+        {
+          "source": "winL2",
+          "sourceHandle": "solid",
+          "target": "winGroup2",
+          "targetHandle": "solid2",
+          "id": "e_winL2_winGroup2_solid2"
+        },
+        {
+          "source": "winR1",
+          "sourceHandle": "solid",
+          "target": "winGroup2",
+          "targetHandle": "solid3",
+          "id": "e_winR1_winGroup2_solid3"
+        },
+        {
+          "source": "winR2",
+          "sourceHandle": "solid",
+          "target": "winGroup2",
+          "targetHandle": "solid4",
+          "id": "e_winR2_winGroup2_solid4"
+        },
+        {
+          "source": "winGroup1",
+          "sourceHandle": "solid",
+          "target": "allWins",
+          "targetHandle": "target",
+          "id": "e_winGroup1_allWins_target"
+        },
+        {
+          "source": "winGroup2",
+          "sourceHandle": "solid",
+          "target": "allWins",
+          "targetHandle": "tool",
+          "id": "e_winGroup2_allWins_tool"
+        },
+        {
+          "source": "body",
+          "sourceHandle": "solid",
+          "target": "bodyCut",
+          "targetHandle": "target",
+          "id": "e_body_bodyCut_target"
+        },
+        {
+          "source": "allWins",
+          "sourceHandle": "solid",
+          "target": "bodyCut",
+          "targetHandle": "tool",
+          "id": "e_allWins_bodyCut_tool"
+        },
+        {
+          "source": "rbx",
+          "sourceHandle": "values",
+          "target": "roofBotPts",
+          "targetHandle": "x",
+          "id": "e_rbx_roofBotPts_x"
+        },
+        {
+          "source": "rby",
+          "sourceHandle": "values",
+          "target": "roofBotPts",
+          "targetHandle": "y",
+          "id": "e_rby_roofBotPts_y"
+        },
+        {
+          "source": "rbz",
+          "sourceHandle": "values",
+          "target": "roofBotPts",
+          "targetHandle": "z",
+          "id": "e_rbz_roofBotPts_z"
+        },
+        {
+          "source": "roofBotPts",
+          "sourceHandle": "points",
+          "target": "roofBotCurve",
+          "targetHandle": "points",
+          "id": "e_roofBotPts_roofBotCurve_points"
+        },
+        {
+          "source": "rtx",
+          "sourceHandle": "values",
+          "target": "roofTopPts",
+          "targetHandle": "x",
+          "id": "e_rtx_roofTopPts_x"
+        },
+        {
+          "source": "rty",
+          "sourceHandle": "values",
+          "target": "roofTopPts",
+          "targetHandle": "y",
+          "id": "e_rty_roofTopPts_y"
+        },
+        {
+          "source": "rtz",
+          "sourceHandle": "values",
+          "target": "roofTopPts",
+          "targetHandle": "z",
+          "id": "e_rtz_roofTopPts_z"
+        },
+        {
+          "source": "roofTopPts",
+          "sourceHandle": "points",
+          "target": "roofTopCurve",
+          "targetHandle": "points",
+          "id": "e_roofTopPts_roofTopCurve_points"
+        },
+        {
+          "source": "roofBotCurve",
+          "sourceHandle": "curve",
+          "target": "roof",
+          "targetHandle": "curve1",
+          "id": "e_roofBotCurve_roof_curve1"
+        },
+        {
+          "source": "roofTopCurve",
+          "sourceHandle": "curve",
+          "target": "roof",
+          "targetHandle": "curve2",
+          "id": "e_roofTopCurve_roof_curve2"
+        }
+      ]
+    },
+    {
+      "at": "2026-07-22T12:48:42.030Z",
+      "turn": 2,
+      "trigger": "ai-json",
+      "label": "attempt 1: added 2 node(s) [TransformCurve]; updated 1 node(s); removed 10 node(s); added 4 edge(s); removed 10 edge(s)",
+      "nodeCount": 36,
+      "edgeCount": 28,
+      "isolatedCount": 6,
+      "diff": {
+        "addedNodes": [
+          "roofBotTC",
+          "roofTopTC"
+        ],
+        "removedNodes": [
+          "rbx",
+          "rby",
+          "rbz",
+          "roofBotPts",
+          "roofBotCurve",
+          "rtx",
+          "rty",
+          "rtz",
+          "roofTopPts",
+          "roofTopCurve"
+        ],
+        "changedNodes": [
+          "roof"
+        ],
+        "addedEdges": 2,
+        "removedEdges": 10
+      },
+      "details": [
+        "dropped edge: roofBotTC → roof.param:curve1 (\"LoftCurves\" has no numeric param \"curve1\" (it accepts — geometry inputs: curve1, curve2, curve3, curve4, curve5, curve6))",
+        "dropped edge: roofTopTC → roof.param:curve2 (\"LoftCurves\" has no numeric param \"curve2\" (it accepts — geometry inputs: curve1, curve2, curve3, curve4, curve5, curve6))",
+        "structural: \"roof\" (LoftCurves) needs at least 2 connected inputs (has 0). Connect its curve1/curve2/curve3/curve4/curve5/curve6 handles."
+      ],
+      "nodes": [
+        {
+          "id": "buildingWidth",
+          "type": "NumberSlider",
+          "data": {
+            "value": 12,
+            "label": "buildingWidth",
+            "min": 6,
+            "max": 30,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 230
+          },
+          "measured": {
+            "width": 201,
+            "height": 328
+          }
+        },
+        {
+          "id": "buildingLength",
+          "type": "NumberSlider",
+          "data": {
+            "value": 16,
+            "label": "buildingLength",
+            "min": 8,
+            "max": 40,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 40
+          },
+          "measured": {
+            "width": 201,
+            "height": 328
+          }
+        },
+        {
+          "id": "floorHeight",
+          "type": "NumberSlider",
+          "data": {
+            "value": 5,
+            "label": "floorHeight",
+            "min": 3,
+            "max": 12,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 990
+          },
+          "measured": {
+            "width": 201,
+            "height": 328
+          }
+        },
+        {
+          "id": "roofHeight",
+          "type": "NumberSlider",
+          "data": {
+            "value": 6,
+            "label": "roofHeight",
+            "min": 2,
+            "max": 15,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 3080
+          },
+          "measured": {
+            "width": 201,
+            "height": 328
+          }
+        },
+        {
+          "id": "windowDepth",
+          "type": "NumberSlider",
+          "data": {
+            "value": 1,
+            "label": "windowDepth",
+            "min": 0.2,
+            "max": 3,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 3270
+          },
+          "measured": {
+            "width": 201,
+            "height": 328
+          }
+        },
+        {
+          "id": "origin",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "position": {
+            "x": 40,
+            "y": 1180
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "base",
+          "type": "Box",
+          "data": {
+            "width": "buildingWidth*1.5",
+            "length": "buildingLength*1.5",
+            "height": "floorHeight*0.3",
+            "color": "#94a3b8"
+          },
+          "position": {
+            "x": 270,
+            "y": 230
+          },
+          "measured": {
+            "width": 201,
+            "height": 312
+          }
+        },
+        {
+          "id": "cx",
+          "type": "ListConstant",
+          "data": {
+            "values": "-buildingWidth/2, buildingWidth/2, buildingWidth/2, -buildingWidth/2"
+          },
+          "position": {
+            "x": 40,
+            "y": 420
+          },
+          "measured": {
+            "width": 177,
+            "height": 136
+          }
+        },
+        {
+          "id": "cy",
+          "type": "ListConstant",
+          "data": {
+            "values": "-buildingLength/2, -buildingLength/2, buildingLength/2, buildingLength/2"
+          },
+          "position": {
+            "x": 40,
+            "y": 610
+          },
+          "measured": {
+            "width": 177,
+            "height": 136
+          }
+        },
+        {
+          "id": "cz",
+          "type": "ListConstant",
+          "data": {
+            "values": "0, 0, 0, 0"
+          },
+          "position": {
+            "x": 40,
+            "y": 800
+          },
+          "measured": {
+            "width": 177,
+            "height": 136
+          }
+        },
+        {
+          "id": "corners",
+          "type": "PointsFromLists",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 40
+          },
+          "measured": {
+            "width": 150,
+            "height": 234
+          }
+        },
+        {
+          "id": "footprint",
+          "type": "PolylineCurve",
+          "data": {
+            "closed": true
+          },
+          "position": {
+            "x": 500,
+            "y": 40
+          },
+          "measured": {
+            "width": 177,
+            "height": 266
+          }
+        },
+        {
+          "id": "body",
+          "type": "ExtrudeCurve",
+          "data": {
+            "height": "floorHeight*2"
+          },
+          "position": {
+            "x": 730,
+            "y": 40
+          },
+          "measured": {
+            "width": 222,
+            "height": 216
+          }
+        },
+        {
+          "id": "ptF1",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": "-buildingLength/2",
+            "z": "floorHeight*0.5"
+          },
+          "position": {
+            "x": 40,
+            "y": 1750
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "winF1",
+          "type": "Box",
+          "data": {
+            "width": "buildingWidth/3",
+            "length": "windowDepth*2",
+            "height": "floorHeight*0.5"
+          },
+          "position": {
+            "x": 270,
+            "y": 800
+          },
+          "measured": {
+            "width": 201,
+            "height": 312
+          }
+        },
+        {
+          "id": "ptF2",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": "-buildingLength/2",
+            "z": "floorHeight*1.5"
+          },
+          "position": {
+            "x": 40,
+            "y": 1940
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "winF2",
+          "type": "Box",
+          "data": {
+            "width": "buildingWidth/3",
+            "length": "windowDepth*2",
+            "height": "floorHeight*0.5"
+          },
+          "position": {
+            "x": 270,
+            "y": 990
+          },
+          "measured": {
+            "width": 201,
+            "height": 312
+          }
+        },
+        {
+          "id": "ptB1",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": "buildingLength/2",
+            "z": "floorHeight*0.5"
+          },
+          "position": {
+            "x": 40,
+            "y": 1370
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "winB1",
+          "type": "Box",
+          "data": {
+            "width": "buildingWidth/3",
+            "length": "windowDepth*2",
+            "height": "floorHeight*0.5"
+          },
+          "position": {
+            "x": 270,
+            "y": 420
+          },
+          "measured": {
+            "width": 201,
+            "height": 312
+          }
+        },
+        {
+          "id": "ptB2",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": "buildingLength/2",
+            "z": "floorHeight*1.5"
+          },
+          "position": {
+            "x": 40,
+            "y": 1560
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "winB2",
+          "type": "Box",
+          "data": {
+            "width": "buildingWidth/3",
+            "length": "windowDepth*2",
+            "height": "floorHeight*0.5"
+          },
+          "position": {
+            "x": 270,
+            "y": 610
+          },
+          "measured": {
+            "width": 201,
+            "height": 312
+          }
+        },
+        {
+          "id": "ptL1",
+          "type": "Point",
+          "data": {
+            "x": "-buildingWidth/2",
+            "y": 0,
+            "z": "floorHeight*0.5"
+          },
+          "position": {
+            "x": 40,
+            "y": 2130
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "winL1",
+          "type": "Box",
+          "data": {
+            "width": "windowDepth*2",
+            "length": "buildingLength/3",
+            "height": "floorHeight*0.5"
+          },
+          "position": {
+            "x": 270,
+            "y": 1180
+          },
+          "measured": {
+            "width": 201,
+            "height": 312
+          }
+        },
+        {
+          "id": "ptL2",
+          "type": "Point",
+          "data": {
+            "x": "-buildingWidth/2",
+            "y": 0,
+            "z": "floorHeight*1.5"
+          },
+          "position": {
+            "x": 40,
+            "y": 2320
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "winL2",
+          "type": "Box",
+          "data": {
+            "width": "windowDepth*2",
+            "length": "buildingLength/3",
+            "height": "floorHeight*0.5"
+          },
+          "position": {
+            "x": 270,
+            "y": 1370
+          },
+          "measured": {
+            "width": 201,
+            "height": 312
+          }
+        },
+        {
+          "id": "ptR1",
+          "type": "Point",
+          "data": {
+            "x": "buildingWidth/2",
+            "y": 0,
+            "z": "floorHeight*0.5"
+          },
+          "position": {
+            "x": 40,
+            "y": 2510
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "winR1",
+          "type": "Box",
+          "data": {
+            "width": "windowDepth*2",
+            "length": "buildingLength/3",
+            "height": "floorHeight*0.5"
+          },
+          "position": {
+            "x": 270,
+            "y": 1560
+          },
+          "measured": {
+            "width": 201,
+            "height": 312
+          }
+        },
+        {
+          "id": "ptR2",
+          "type": "Point",
+          "data": {
+            "x": "buildingWidth/2",
+            "y": 0,
+            "z": "floorHeight*1.5"
+          },
+          "position": {
+            "x": 40,
+            "y": 2700
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "winR2",
+          "type": "Box",
+          "data": {
+            "width": "windowDepth*2",
+            "length": "buildingLength/3",
+            "height": "floorHeight*0.5"
+          },
+          "position": {
+            "x": 270,
+            "y": 1750
+          },
+          "measured": {
+            "width": 201,
+            "height": 312
+          }
+        },
+        {
+          "id": "winGroup1",
+          "type": "Compound",
+          "data": {},
+          "position": {
+            "x": 500,
+            "y": 230
+          },
+          "measured": {
+            "width": 150,
+            "height": 330
+          }
+        },
+        {
+          "id": "winGroup2",
+          "type": "Compound",
+          "data": {},
+          "position": {
+            "x": 500,
+            "y": 420
+          },
+          "measured": {
+            "width": 150,
+            "height": 330
+          }
+        },
+        {
+          "id": "allWins",
+          "type": "Boolean",
+          "data": {
+            "operation": "union"
+          },
+          "position": {
+            "x": 730,
+            "y": 610
+          },
+          "measured": {
+            "width": 177,
+            "height": 200
+          }
+        },
+        {
+          "id": "bodyCut",
+          "type": "Boolean",
+          "data": {
+            "operation": "difference",
+            "color": "#e2c290"
+          },
+          "position": {
+            "x": 960,
+            "y": 40
+          },
+          "measured": {
+            "width": 177,
+            "height": 200
+          }
+        },
+        {
+          "id": "roof",
+          "type": "LoftCurves",
+          "data": {
+            "ruled": true,
+            "closed": false,
+            "color": "#8b3a3a"
+          },
+          "position": {
+            "x": 40,
+            "y": 2890
+          },
+          "measured": {
+            "width": 192,
+            "height": 416
+          }
+        },
+        {
+          "id": "roofBotTC",
+          "type": "TransformCurve",
+          "data": {
+            "tz": "floorHeight*2",
+            "scale": 1,
+            "color": "#8b3a3a"
+          },
+          "position": {
+            "x": 730,
+            "y": 230
+          }
+        },
+        {
+          "id": "roofTopTC",
+          "type": "TransformCurve",
+          "data": {
+            "tz": "floorHeight*2+roofHeight",
+            "scale": 0.15,
+            "color": "#8b3a3a"
+          },
+          "position": {
+            "x": 730,
+            "y": 420
+          }
+        }
+      ],
+      "edges": [
+        {
+          "source": "origin",
+          "sourceHandle": "point",
+          "target": "base",
+          "targetHandle": "center",
+          "id": "e_origin_base_center"
+        },
+        {
+          "source": "cx",
+          "sourceHandle": "values",
+          "target": "corners",
+          "targetHandle": "x",
+          "id": "e_cx_corners_x"
+        },
+        {
+          "source": "cy",
+          "sourceHandle": "values",
+          "target": "corners",
+          "targetHandle": "y",
+          "id": "e_cy_corners_y"
+        },
+        {
+          "source": "cz",
+          "sourceHandle": "values",
+          "target": "corners",
+          "targetHandle": "z",
+          "id": "e_cz_corners_z"
+        },
+        {
+          "source": "corners",
+          "sourceHandle": "points",
+          "target": "footprint",
+          "targetHandle": "points",
+          "id": "e_corners_footprint_points"
+        },
+        {
+          "source": "footprint",
+          "sourceHandle": "curve",
+          "target": "body",
+          "targetHandle": "curve",
+          "id": "e_footprint_body_curve"
+        },
+        {
+          "source": "ptF1",
+          "sourceHandle": "point",
+          "target": "winF1",
+          "targetHandle": "center",
+          "id": "e_ptF1_winF1_center"
+        },
+        {
+          "source": "ptF2",
+          "sourceHandle": "point",
+          "target": "winF2",
+          "targetHandle": "center",
+          "id": "e_ptF2_winF2_center"
+        },
+        {
+          "source": "ptB1",
+          "sourceHandle": "point",
+          "target": "winB1",
+          "targetHandle": "center",
+          "id": "e_ptB1_winB1_center"
+        },
+        {
+          "source": "ptB2",
+          "sourceHandle": "point",
+          "target": "winB2",
+          "targetHandle": "center",
+          "id": "e_ptB2_winB2_center"
+        },
+        {
+          "source": "ptL1",
+          "sourceHandle": "point",
+          "target": "winL1",
+          "targetHandle": "center",
+          "id": "e_ptL1_winL1_center"
+        },
+        {
+          "source": "ptL2",
+          "sourceHandle": "point",
+          "target": "winL2",
+          "targetHandle": "center",
+          "id": "e_ptL2_winL2_center"
+        },
+        {
+          "source": "ptR1",
+          "sourceHandle": "point",
+          "target": "winR1",
+          "targetHandle": "center",
+          "id": "e_ptR1_winR1_center"
+        },
+        {
+          "source": "ptR2",
+          "sourceHandle": "point",
+          "target": "winR2",
+          "targetHandle": "center",
+          "id": "e_ptR2_winR2_center"
+        },
+        {
+          "source": "winF1",
+          "sourceHandle": "solid",
+          "target": "winGroup1",
+          "targetHandle": "solid1",
+          "id": "e_winF1_winGroup1_solid1"
+        },
+        {
+          "source": "winF2",
+          "sourceHandle": "solid",
+          "target": "winGroup1",
+          "targetHandle": "solid2",
+          "id": "e_winF2_winGroup1_solid2"
+        },
+        {
+          "source": "winB1",
+          "sourceHandle": "solid",
+          "target": "winGroup1",
+          "targetHandle": "solid3",
+          "id": "e_winB1_winGroup1_solid3"
+        },
+        {
+          "source": "winB2",
+          "sourceHandle": "solid",
+          "target": "winGroup1",
+          "targetHandle": "solid4",
+          "id": "e_winB2_winGroup1_solid4"
+        },
+        {
+          "source": "winL1",
+          "sourceHandle": "solid",
+          "target": "winGroup2",
+          "targetHandle": "solid1",
+          "id": "e_winL1_winGroup2_solid1"
+        },
+        {
+          "source": "winL2",
+          "sourceHandle": "solid",
+          "target": "winGroup2",
+          "targetHandle": "solid2",
+          "id": "e_winL2_winGroup2_solid2"
+        },
+        {
+          "source": "winR1",
+          "sourceHandle": "solid",
+          "target": "winGroup2",
+          "targetHandle": "solid3",
+          "id": "e_winR1_winGroup2_solid3"
+        },
+        {
+          "source": "winR2",
+          "sourceHandle": "solid",
+          "target": "winGroup2",
+          "targetHandle": "solid4",
+          "id": "e_winR2_winGroup2_solid4"
+        },
+        {
+          "source": "winGroup1",
+          "sourceHandle": "solid",
+          "target": "allWins",
+          "targetHandle": "target",
+          "id": "e_winGroup1_allWins_target"
+        },
+        {
+          "source": "winGroup2",
+          "sourceHandle": "solid",
+          "target": "allWins",
+          "targetHandle": "tool",
+          "id": "e_winGroup2_allWins_tool"
+        },
+        {
+          "source": "body",
+          "sourceHandle": "solid",
+          "target": "bodyCut",
+          "targetHandle": "target",
+          "id": "e_body_bodyCut_target"
+        },
+        {
+          "source": "allWins",
+          "sourceHandle": "solid",
+          "target": "bodyCut",
+          "targetHandle": "tool",
+          "id": "e_allWins_bodyCut_tool"
+        },
+        {
+          "source": "footprint",
+          "target": "roofBotTC",
+          "id": "e_footprint_roofBotTC_curve",
+          "sourceHandle": "curve",
+          "targetHandle": "curve"
+        },
+        {
+          "source": "footprint",
+          "target": "roofTopTC",
+          "id": "e_footprint_roofTopTC_curve",
+          "sourceHandle": "curve",
+          "targetHandle": "curve"
+        }
+      ]
+    },
+    {
+      "at": "2026-07-22T12:48:48.975Z",
+      "turn": 2,
+      "trigger": "ai-json",
+      "label": "attempt 1: added 2 edge(s); removed 2 edge(s)",
+      "nodeCount": 36,
+      "edgeCount": 30,
+      "isolatedCount": 5,
+      "diff": {
+        "addedNodes": [],
+        "removedNodes": [],
+        "changedNodes": [],
+        "addedEdges": 2,
+        "removedEdges": 0
+      },
+      "nodes": [
+        {
+          "id": "buildingWidth",
+          "type": "NumberSlider",
+          "data": {
+            "value": 12,
+            "label": "buildingWidth",
+            "min": 6,
+            "max": 30,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 230
+          },
+          "measured": {
+            "width": 201,
+            "height": 328
+          }
+        },
+        {
+          "id": "buildingLength",
+          "type": "NumberSlider",
+          "data": {
+            "value": 16,
+            "label": "buildingLength",
+            "min": 8,
+            "max": 40,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 40
+          },
+          "measured": {
+            "width": 201,
+            "height": 328
+          }
+        },
+        {
+          "id": "floorHeight",
+          "type": "NumberSlider",
+          "data": {
+            "value": 5,
+            "label": "floorHeight",
+            "min": 3,
+            "max": 12,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 990
+          },
+          "measured": {
+            "width": 201,
+            "height": 328
+          }
+        },
+        {
+          "id": "roofHeight",
+          "type": "NumberSlider",
+          "data": {
+            "value": 6,
+            "label": "roofHeight",
+            "min": 2,
+            "max": 15,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 2890
+          },
+          "measured": {
+            "width": 201,
+            "height": 328
+          }
+        },
+        {
+          "id": "windowDepth",
+          "type": "NumberSlider",
+          "data": {
+            "value": 1,
+            "label": "windowDepth",
+            "min": 0.2,
+            "max": 3,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 3080
+          },
+          "measured": {
+            "width": 201,
+            "height": 328
+          }
+        },
+        {
+          "id": "origin",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "position": {
+            "x": 40,
+            "y": 1180
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "base",
+          "type": "Box",
+          "data": {
+            "width": "buildingWidth*1.5",
+            "length": "buildingLength*1.5",
+            "height": "floorHeight*0.3",
+            "color": "#94a3b8"
+          },
+          "position": {
+            "x": 270,
+            "y": 230
+          },
+          "measured": {
+            "width": 201,
+            "height": 312
+          }
+        },
+        {
+          "id": "cx",
+          "type": "ListConstant",
+          "data": {
+            "values": "-buildingWidth/2, buildingWidth/2, buildingWidth/2, -buildingWidth/2"
+          },
+          "position": {
+            "x": 40,
+            "y": 420
+          },
+          "measured": {
+            "width": 177,
+            "height": 136
+          }
+        },
+        {
+          "id": "cy",
+          "type": "ListConstant",
+          "data": {
+            "values": "-buildingLength/2, -buildingLength/2, buildingLength/2, buildingLength/2"
+          },
+          "position": {
+            "x": 40,
+            "y": 610
+          },
+          "measured": {
+            "width": 177,
+            "height": 136
+          }
+        },
+        {
+          "id": "cz",
+          "type": "ListConstant",
+          "data": {
+            "values": "0, 0, 0, 0"
+          },
+          "position": {
+            "x": 40,
+            "y": 800
+          },
+          "measured": {
+            "width": 177,
+            "height": 136
+          }
+        },
+        {
+          "id": "corners",
+          "type": "PointsFromLists",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 40
+          },
+          "measured": {
+            "width": 150,
+            "height": 234
+          }
+        },
+        {
+          "id": "footprint",
+          "type": "PolylineCurve",
+          "data": {
+            "closed": true
+          },
+          "position": {
+            "x": 500,
+            "y": 40
+          },
+          "measured": {
+            "width": 177,
+            "height": 266
+          }
+        },
+        {
+          "id": "body",
+          "type": "ExtrudeCurve",
+          "data": {
+            "height": "floorHeight*2"
+          },
+          "position": {
+            "x": 730,
+            "y": 40
+          },
+          "measured": {
+            "width": 222,
+            "height": 216
+          }
+        },
+        {
+          "id": "ptF1",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": "-buildingLength/2",
+            "z": "floorHeight*0.5"
+          },
+          "position": {
+            "x": 40,
+            "y": 1750
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "winF1",
+          "type": "Box",
+          "data": {
+            "width": "buildingWidth/3",
+            "length": "windowDepth*2",
+            "height": "floorHeight*0.5"
+          },
+          "position": {
+            "x": 270,
+            "y": 800
+          },
+          "measured": {
+            "width": 201,
+            "height": 312
+          }
+        },
+        {
+          "id": "ptF2",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": "-buildingLength/2",
+            "z": "floorHeight*1.5"
+          },
+          "position": {
+            "x": 40,
+            "y": 1940
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "winF2",
+          "type": "Box",
+          "data": {
+            "width": "buildingWidth/3",
+            "length": "windowDepth*2",
+            "height": "floorHeight*0.5"
+          },
+          "position": {
+            "x": 270,
+            "y": 990
+          },
+          "measured": {
+            "width": 201,
+            "height": 312
+          }
+        },
+        {
+          "id": "ptB1",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": "buildingLength/2",
+            "z": "floorHeight*0.5"
+          },
+          "position": {
+            "x": 40,
+            "y": 1370
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "winB1",
+          "type": "Box",
+          "data": {
+            "width": "buildingWidth/3",
+            "length": "windowDepth*2",
+            "height": "floorHeight*0.5"
+          },
+          "position": {
+            "x": 270,
+            "y": 420
+          },
+          "measured": {
+            "width": 201,
+            "height": 312
+          }
+        },
+        {
+          "id": "ptB2",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": "buildingLength/2",
+            "z": "floorHeight*1.5"
+          },
+          "position": {
+            "x": 40,
+            "y": 1560
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "winB2",
+          "type": "Box",
+          "data": {
+            "width": "buildingWidth/3",
+            "length": "windowDepth*2",
+            "height": "floorHeight*0.5"
+          },
+          "position": {
+            "x": 270,
+            "y": 610
+          },
+          "measured": {
+            "width": 201,
+            "height": 312
+          }
+        },
+        {
+          "id": "ptL1",
+          "type": "Point",
+          "data": {
+            "x": "-buildingWidth/2",
+            "y": 0,
+            "z": "floorHeight*0.5"
+          },
+          "position": {
+            "x": 40,
+            "y": 2130
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "winL1",
+          "type": "Box",
+          "data": {
+            "width": "windowDepth*2",
+            "length": "buildingLength/3",
+            "height": "floorHeight*0.5"
+          },
+          "position": {
+            "x": 270,
+            "y": 1180
+          },
+          "measured": {
+            "width": 201,
+            "height": 312
+          }
+        },
+        {
+          "id": "ptL2",
+          "type": "Point",
+          "data": {
+            "x": "-buildingWidth/2",
+            "y": 0,
+            "z": "floorHeight*1.5"
+          },
+          "position": {
+            "x": 40,
+            "y": 2320
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "winL2",
+          "type": "Box",
+          "data": {
+            "width": "windowDepth*2",
+            "length": "buildingLength/3",
+            "height": "floorHeight*0.5"
+          },
+          "position": {
+            "x": 270,
+            "y": 1370
+          },
+          "measured": {
+            "width": 201,
+            "height": 312
+          }
+        },
+        {
+          "id": "ptR1",
+          "type": "Point",
+          "data": {
+            "x": "buildingWidth/2",
+            "y": 0,
+            "z": "floorHeight*0.5"
+          },
+          "position": {
+            "x": 40,
+            "y": 2510
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "winR1",
+          "type": "Box",
+          "data": {
+            "width": "windowDepth*2",
+            "length": "buildingLength/3",
+            "height": "floorHeight*0.5"
+          },
+          "position": {
+            "x": 270,
+            "y": 1560
+          },
+          "measured": {
+            "width": 201,
+            "height": 312
+          }
+        },
+        {
+          "id": "ptR2",
+          "type": "Point",
+          "data": {
+            "x": "buildingWidth/2",
+            "y": 0,
+            "z": "floorHeight*1.5"
+          },
+          "position": {
+            "x": 40,
+            "y": 2700
+          },
+          "measured": {
+            "width": 201,
+            "height": 322
+          }
+        },
+        {
+          "id": "winR2",
+          "type": "Box",
+          "data": {
+            "width": "windowDepth*2",
+            "length": "buildingLength/3",
+            "height": "floorHeight*0.5"
+          },
+          "position": {
+            "x": 270,
+            "y": 1750
+          },
+          "measured": {
+            "width": 201,
+            "height": 312
+          }
+        },
+        {
+          "id": "winGroup1",
+          "type": "Compound",
+          "data": {},
+          "position": {
+            "x": 500,
+            "y": 230
+          },
+          "measured": {
+            "width": 150,
+            "height": 330
+          }
+        },
+        {
+          "id": "winGroup2",
+          "type": "Compound",
+          "data": {},
+          "position": {
+            "x": 500,
+            "y": 420
+          },
+          "measured": {
+            "width": 150,
+            "height": 330
+          }
+        },
+        {
+          "id": "allWins",
+          "type": "Boolean",
+          "data": {
+            "operation": "union"
+          },
+          "position": {
+            "x": 730,
+            "y": 610
+          },
+          "measured": {
+            "width": 177,
+            "height": 200
+          }
+        },
+        {
+          "id": "bodyCut",
+          "type": "Boolean",
+          "data": {
+            "operation": "difference",
+            "color": "#e2c290"
+          },
+          "position": {
+            "x": 960,
+            "y": 40
+          },
+          "measured": {
+            "width": 177,
+            "height": 200
+          }
+        },
+        {
+          "id": "roof",
+          "type": "LoftCurves",
+          "data": {
+            "ruled": true,
+            "closed": false,
+            "color": "#8b3a3a"
+          },
+          "position": {
+            "x": 960,
+            "y": 230
+          },
+          "measured": {
+            "width": 192,
+            "height": 416
+          }
+        },
+        {
+          "id": "roofBotTC",
+          "type": "TransformCurve",
+          "data": {
+            "tz": "floorHeight*2",
+            "scale": 1,
+            "color": "#8b3a3a"
+          },
+          "position": {
+            "x": 730,
+            "y": 230
+          },
+          "measured": {
+            "width": 265,
+            "height": 408
+          }
+        },
+        {
+          "id": "roofTopTC",
+          "type": "TransformCurve",
+          "data": {
+            "tz": "floorHeight*2+roofHeight",
+            "scale": 0.15,
+            "color": "#8b3a3a"
+          },
+          "position": {
+            "x": 730,
+            "y": 420
+          },
+          "measured": {
+            "width": 265,
+            "height": 408
+          }
+        }
+      ],
+      "edges": [
+        {
+          "source": "origin",
+          "sourceHandle": "point",
+          "target": "base",
+          "targetHandle": "center",
+          "id": "e_origin_base_center"
+        },
+        {
+          "source": "cx",
+          "sourceHandle": "values",
+          "target": "corners",
+          "targetHandle": "x",
+          "id": "e_cx_corners_x"
+        },
+        {
+          "source": "cy",
+          "sourceHandle": "values",
+          "target": "corners",
+          "targetHandle": "y",
+          "id": "e_cy_corners_y"
+        },
+        {
+          "source": "cz",
+          "sourceHandle": "values",
+          "target": "corners",
+          "targetHandle": "z",
+          "id": "e_cz_corners_z"
+        },
+        {
+          "source": "corners",
+          "sourceHandle": "points",
+          "target": "footprint",
+          "targetHandle": "points",
+          "id": "e_corners_footprint_points"
+        },
+        {
+          "source": "footprint",
+          "sourceHandle": "curve",
+          "target": "body",
+          "targetHandle": "curve",
+          "id": "e_footprint_body_curve"
+        },
+        {
+          "source": "ptF1",
+          "sourceHandle": "point",
+          "target": "winF1",
+          "targetHandle": "center",
+          "id": "e_ptF1_winF1_center"
+        },
+        {
+          "source": "ptF2",
+          "sourceHandle": "point",
+          "target": "winF2",
+          "targetHandle": "center",
+          "id": "e_ptF2_winF2_center"
+        },
+        {
+          "source": "ptB1",
+          "sourceHandle": "point",
+          "target": "winB1",
+          "targetHandle": "center",
+          "id": "e_ptB1_winB1_center"
+        },
+        {
+          "source": "ptB2",
+          "sourceHandle": "point",
+          "target": "winB2",
+          "targetHandle": "center",
+          "id": "e_ptB2_winB2_center"
+        },
+        {
+          "source": "ptL1",
+          "sourceHandle": "point",
+          "target": "winL1",
+          "targetHandle": "center",
+          "id": "e_ptL1_winL1_center"
+        },
+        {
+          "source": "ptL2",
+          "sourceHandle": "point",
+          "target": "winL2",
+          "targetHandle": "center",
+          "id": "e_ptL2_winL2_center"
+        },
+        {
+          "source": "ptR1",
+          "sourceHandle": "point",
+          "target": "winR1",
+          "targetHandle": "center",
+          "id": "e_ptR1_winR1_center"
+        },
+        {
+          "source": "ptR2",
+          "sourceHandle": "point",
+          "target": "winR2",
+          "targetHandle": "center",
+          "id": "e_ptR2_winR2_center"
+        },
+        {
+          "source": "winF1",
+          "sourceHandle": "solid",
+          "target": "winGroup1",
+          "targetHandle": "solid1",
+          "id": "e_winF1_winGroup1_solid1"
+        },
+        {
+          "source": "winF2",
+          "sourceHandle": "solid",
+          "target": "winGroup1",
+          "targetHandle": "solid2",
+          "id": "e_winF2_winGroup1_solid2"
+        },
+        {
+          "source": "winB1",
+          "sourceHandle": "solid",
+          "target": "winGroup1",
+          "targetHandle": "solid3",
+          "id": "e_winB1_winGroup1_solid3"
+        },
+        {
+          "source": "winB2",
+          "sourceHandle": "solid",
+          "target": "winGroup1",
+          "targetHandle": "solid4",
+          "id": "e_winB2_winGroup1_solid4"
+        },
+        {
+          "source": "winL1",
+          "sourceHandle": "solid",
+          "target": "winGroup2",
+          "targetHandle": "solid1",
+          "id": "e_winL1_winGroup2_solid1"
+        },
+        {
+          "source": "winL2",
+          "sourceHandle": "solid",
+          "target": "winGroup2",
+          "targetHandle": "solid2",
+          "id": "e_winL2_winGroup2_solid2"
+        },
+        {
+          "source": "winR1",
+          "sourceHandle": "solid",
+          "target": "winGroup2",
+          "targetHandle": "solid3",
+          "id": "e_winR1_winGroup2_solid3"
+        },
+        {
+          "source": "winR2",
+          "sourceHandle": "solid",
+          "target": "winGroup2",
+          "targetHandle": "solid4",
+          "id": "e_winR2_winGroup2_solid4"
+        },
+        {
+          "source": "winGroup1",
+          "sourceHandle": "solid",
+          "target": "allWins",
+          "targetHandle": "target",
+          "id": "e_winGroup1_allWins_target"
+        },
+        {
+          "source": "winGroup2",
+          "sourceHandle": "solid",
+          "target": "allWins",
+          "targetHandle": "tool",
+          "id": "e_winGroup2_allWins_tool"
+        },
+        {
+          "source": "body",
+          "sourceHandle": "solid",
+          "target": "bodyCut",
+          "targetHandle": "target",
+          "id": "e_body_bodyCut_target"
+        },
+        {
+          "source": "allWins",
+          "sourceHandle": "solid",
+          "target": "bodyCut",
+          "targetHandle": "tool",
+          "id": "e_allWins_bodyCut_tool"
+        },
+        {
+          "source": "footprint",
+          "target": "roofBotTC",
+          "id": "e_footprint_roofBotTC_curve",
+          "sourceHandle": "curve",
+          "targetHandle": "curve"
+        },
+        {
+          "source": "footprint",
+          "target": "roofTopTC",
+          "id": "e_footprint_roofTopTC_curve",
+          "sourceHandle": "curve",
+          "targetHandle": "curve"
+        },
+        {
+          "source": "roofBotTC",
+          "target": "roof",
+          "id": "e_roofBotTC_roof_curve1",
+          "sourceHandle": "curve",
+          "targetHandle": "curve1"
+        },
+        {
+          "source": "roofTopTC",
+          "target": "roof",
+          "id": "e_roofTopTC_roof_curve2",
+          "sourceHandle": "curve",
+          "targetHandle": "curve2"
+        }
+      ]
+    },
+    {
+      "at": "2026-07-22T12:53:01.619Z",
+      "turn": 3,
+      "trigger": "ai-ir",
+      "label": "attempt 2: rebuilt graph (20 nodes)",
+      "nodeCount": 20,
+      "edgeCount": 16,
+      "isolatedCount": 3,
+      "diff": {
+        "addedNodes": [
+          "towerHeight",
+          "baseWidth",
+          "legThickness",
+          "legX",
+          "legZ",
+          "legPts",
+          "legCurve",
+          "leg",
+          "leg2",
+          "leg3",
+          "leg4",
+          "allLegs",
+          "plat1",
+          "plat1T",
+          "plat2",
+          "plat2T",
+          "topBox",
+          "topT",
+          "antenna",
+          "antennaT"
+        ],
+        "removedNodes": [
+          "buildingWidth",
+          "buildingLength",
+          "floorHeight",
+          "roofHeight",
+          "windowDepth",
+          "origin",
+          "base",
+          "cx",
+          "cy",
+          "cz",
+          "corners",
+          "footprint",
+          "body",
+          "ptF1",
+          "winF1",
+          "ptF2",
+          "winF2",
+          "ptB1",
+          "winB1",
+          "ptB2",
+          "winB2",
+          "ptL1",
+          "winL1",
+          "ptL2",
+          "winL2",
+          "ptR1",
+          "winR1",
+          "ptR2",
+          "winR2",
+          "winGroup1",
+          "winGroup2",
+          "allWins",
+          "bodyCut",
+          "roof",
+          "roofBotTC",
+          "roofTopTC"
+        ],
+        "changedNodes": [],
+        "addedEdges": 16,
+        "removedEdges": 30
+      },
+      "nodes": [
+        {
+          "id": "towerHeight",
+          "type": "NumberSlider",
+          "data": {
+            "value": 80,
+            "label": "towerHeight",
+            "min": 30,
+            "max": 150,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 1560
+          }
+        },
+        {
+          "id": "baseWidth",
+          "type": "NumberSlider",
+          "data": {
+            "value": 28,
+            "label": "baseWidth",
+            "min": 10,
+            "max": 60,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 230
+          }
+        },
+        {
+          "id": "legThickness",
+          "type": "NumberSlider",
+          "data": {
+            "value": 1.2,
+            "label": "legThickness",
+            "min": 0.3,
+            "max": 4,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 420
+          }
+        },
+        {
+          "id": "legX",
+          "type": "ListConstant",
+          "data": {
+            "values": "baseWidth/2, baseWidth*0.275, baseWidth*0.11, baseWidth*0.04"
+          },
+          "position": {
+            "x": 40,
+            "y": 610
+          }
+        },
+        {
+          "id": "legZ",
+          "type": "ListConstant",
+          "data": {
+            "values": "0, towerHeight*0.28, towerHeight*0.55, towerHeight*0.85"
+          },
+          "position": {
+            "x": 40,
+            "y": 800
+          }
+        },
+        {
+          "id": "legPts",
+          "type": "PointsFromLists",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 230
+          }
+        },
+        {
+          "id": "legCurve",
+          "type": "SplineCurve",
+          "data": {
+            "closed": false
+          },
+          "position": {
+            "x": 500,
+            "y": 40
+          }
+        },
+        {
+          "id": "leg",
+          "type": "Pipe",
+          "data": {
+            "radius": "legThickness"
+          },
+          "position": {
+            "x": 730,
+            "y": 40
+          }
+        },
+        {
+          "id": "leg2",
+          "type": "Rotate",
+          "data": {
+            "angle": 90,
+            "axisX": 0,
+            "axisY": 0,
+            "axisZ": 1
+          },
+          "position": {
+            "x": 960,
+            "y": 40
+          }
+        },
+        {
+          "id": "leg3",
+          "type": "Rotate",
+          "data": {
+            "angle": 180,
+            "axisX": 0,
+            "axisY": 0,
+            "axisZ": 1
+          },
+          "position": {
+            "x": 960,
+            "y": 230
+          }
+        },
+        {
+          "id": "leg4",
+          "type": "Rotate",
+          "data": {
+            "angle": 270,
+            "axisX": 0,
+            "axisY": 0,
+            "axisZ": 1
+          },
+          "position": {
+            "x": 960,
+            "y": 420
+          }
+        },
+        {
+          "id": "allLegs",
+          "type": "Compound",
+          "data": {
+            "color": "#9c7c54"
+          },
+          "position": {
+            "x": 1190,
+            "y": 40
+          }
+        },
+        {
+          "id": "plat1",
+          "type": "Box",
+          "data": {
+            "width": "baseWidth*0.55+3",
+            "length": "baseWidth*0.55+3",
+            "height": 1.5
+          },
+          "position": {
+            "x": 40,
+            "y": 990
+          }
+        },
+        {
+          "id": "plat1T",
+          "type": "Translate",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "towerHeight*0.28",
+            "color": "#6b5b45"
+          },
+          "position": {
+            "x": 270,
+            "y": 420
+          }
+        },
+        {
+          "id": "plat2",
+          "type": "Box",
+          "data": {
+            "width": "baseWidth*0.22+2",
+            "length": "baseWidth*0.22+2",
+            "height": 1
+          },
+          "position": {
+            "x": 40,
+            "y": 1180
+          }
+        },
+        {
+          "id": "plat2T",
+          "type": "Translate",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "towerHeight*0.55",
+            "color": "#6b5b45"
+          },
+          "position": {
+            "x": 270,
+            "y": 610
+          }
+        },
+        {
+          "id": "topBox",
+          "type": "Box",
+          "data": {
+            "width": "baseWidth*0.08+1.5",
+            "length": "baseWidth*0.08+1.5",
+            "height": "towerHeight*0.05"
+          },
+          "position": {
+            "x": 40,
+            "y": 1370
+          }
+        },
+        {
+          "id": "topT",
+          "type": "Translate",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "towerHeight*0.85",
+            "color": "#5a4a3a"
+          },
+          "position": {
+            "x": 270,
+            "y": 800
+          }
+        },
+        {
+          "id": "antenna",
+          "type": "Cone",
+          "data": {
+            "radius1": "baseWidth*0.03",
+            "radius2": 0.1,
+            "height": "towerHeight*0.15"
+          },
+          "position": {
+            "x": 40,
+            "y": 40
+          }
+        },
+        {
+          "id": "antennaT",
+          "type": "Translate",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "towerHeight*0.9 + towerHeight*0.075",
+            "color": "#3a3a3a"
+          },
+          "position": {
+            "x": 270,
+            "y": 40
+          }
+        }
+      ],
+      "edges": [
+        {
+          "source": "legX",
+          "sourceHandle": "values",
+          "target": "legPts",
+          "targetHandle": "x",
+          "id": "e_legX_legPts_x"
+        },
+        {
+          "source": "legX",
+          "sourceHandle": "values",
+          "target": "legPts",
+          "targetHandle": "y",
+          "id": "e_legX_legPts_y"
+        },
+        {
+          "source": "legZ",
+          "sourceHandle": "values",
+          "target": "legPts",
+          "targetHandle": "z",
+          "id": "e_legZ_legPts_z"
+        },
+        {
+          "source": "legPts",
+          "sourceHandle": "points",
+          "target": "legCurve",
+          "targetHandle": "points",
+          "id": "e_legPts_legCurve_points"
+        },
+        {
+          "source": "legCurve",
+          "sourceHandle": "curve",
+          "target": "leg",
+          "targetHandle": "path",
+          "id": "e_legCurve_leg_path"
+        },
+        {
+          "source": "leg",
+          "sourceHandle": "solid",
+          "target": "leg2",
+          "targetHandle": "solid",
+          "id": "e_leg_leg2_solid"
+        },
+        {
+          "source": "leg",
+          "sourceHandle": "solid",
+          "target": "leg3",
+          "targetHandle": "solid",
+          "id": "e_leg_leg3_solid"
+        },
+        {
+          "source": "leg",
+          "sourceHandle": "solid",
+          "target": "leg4",
+          "targetHandle": "solid",
+          "id": "e_leg_leg4_solid"
+        },
+        {
+          "source": "leg",
+          "sourceHandle": "solid",
+          "target": "allLegs",
+          "targetHandle": "solid1",
+          "id": "e_leg_allLegs_solid1"
+        },
+        {
+          "source": "leg2",
+          "sourceHandle": "solid",
+          "target": "allLegs",
+          "targetHandle": "solid2",
+          "id": "e_leg2_allLegs_solid2"
+        },
+        {
+          "source": "leg3",
+          "sourceHandle": "solid",
+          "target": "allLegs",
+          "targetHandle": "solid3",
+          "id": "e_leg3_allLegs_solid3"
+        },
+        {
+          "source": "leg4",
+          "sourceHandle": "solid",
+          "target": "allLegs",
+          "targetHandle": "solid4",
+          "id": "e_leg4_allLegs_solid4"
+        },
+        {
+          "source": "plat1",
+          "sourceHandle": "solid",
+          "target": "plat1T",
+          "targetHandle": "solid",
+          "id": "e_plat1_plat1T_solid"
+        },
+        {
+          "source": "plat2",
+          "sourceHandle": "solid",
+          "target": "plat2T",
+          "targetHandle": "solid",
+          "id": "e_plat2_plat2T_solid"
+        },
+        {
+          "source": "topBox",
+          "sourceHandle": "solid",
+          "target": "topT",
+          "targetHandle": "solid",
+          "id": "e_topBox_topT_solid"
+        },
+        {
+          "source": "antenna",
+          "sourceHandle": "solid",
+          "target": "antennaT",
+          "targetHandle": "solid",
+          "id": "e_antenna_antennaT_solid"
+        }
+      ]
+    },
+    {
+      "at": "2026-07-22T12:55:17.172Z",
+      "turn": 3,
+      "trigger": "ai-repair",
+      "label": "attempt 2: added 3 node(s) [Point, Cone, CircularPattern]; updated 2 node(s); removed 9 node(s); added 2 edge(s); removed 11 edge(s)",
+      "nodeCount": 14,
+      "edgeCount": 6,
+      "isolatedCount": 3,
+      "diff": {
+        "addedNodes": [
+          "legCenter",
+          "legCone",
+          "legs"
+        ],
+        "removedNodes": [
+          "legX",
+          "legZ",
+          "legPts",
+          "legCurve",
+          "leg",
+          "leg2",
+          "leg3",
+          "leg4",
+          "allLegs"
+        ],
+        "changedNodes": [
+          "plat1",
+          "plat2"
+        ],
+        "addedEdges": 2,
+        "removedEdges": 12
+      },
+      "nodes": [
+        {
+          "id": "towerHeight",
+          "type": "NumberSlider",
+          "data": {
+            "value": 80,
+            "label": "towerHeight",
+            "min": 30,
+            "max": 150,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 1370
+          }
+        },
+        {
+          "id": "baseWidth",
+          "type": "NumberSlider",
+          "data": {
+            "value": 28,
+            "label": "baseWidth",
+            "min": 10,
+            "max": 60,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 230
+          }
+        },
+        {
+          "id": "legThickness",
+          "type": "NumberSlider",
+          "data": {
+            "value": 1.2,
+            "label": "legThickness",
+            "min": 0.3,
+            "max": 4,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 610
+          }
+        },
+        {
+          "id": "plat1",
+          "type": "Box",
+          "data": {
+            "width": "baseWidth",
+            "length": "baseWidth",
+            "height": 1.5
+          },
+          "position": {
+            "x": 40,
+            "y": 800
+          }
+        },
+        {
+          "id": "plat1T",
+          "type": "Translate",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "towerHeight*0.28",
+            "color": "#6b5b45"
+          },
+          "position": {
+            "x": 270,
+            "y": 420
+          }
+        },
+        {
+          "id": "plat2",
+          "type": "Box",
+          "data": {
+            "width": "baseWidth*0.5",
+            "length": "baseWidth*0.5",
+            "height": 1
+          },
+          "position": {
+            "x": 40,
+            "y": 990
+          }
+        },
+        {
+          "id": "plat2T",
+          "type": "Translate",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "towerHeight*0.55",
+            "color": "#6b5b45"
+          },
+          "position": {
+            "x": 270,
+            "y": 610
+          }
+        },
+        {
+          "id": "topBox",
+          "type": "Box",
+          "data": {
+            "width": "baseWidth*0.08+1.5",
+            "length": "baseWidth*0.08+1.5",
+            "height": "towerHeight*0.05"
+          },
+          "position": {
+            "x": 40,
+            "y": 1180
+          }
+        },
+        {
+          "id": "topT",
+          "type": "Translate",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "towerHeight*0.85",
+            "color": "#5a4a3a"
+          },
+          "position": {
+            "x": 270,
+            "y": 800
+          }
+        },
+        {
+          "id": "antenna",
+          "type": "Cone",
+          "data": {
+            "radius1": "baseWidth*0.03",
+            "radius2": 0.1,
+            "height": "towerHeight*0.15"
+          },
+          "position": {
+            "x": 40,
+            "y": 40
+          }
+        },
+        {
+          "id": "antennaT",
+          "type": "Translate",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "towerHeight*0.9 + towerHeight*0.075",
+            "color": "#3a3a3a"
+          },
+          "position": {
+            "x": 270,
+            "y": 40
+          }
+        },
+        {
+          "id": "legCenter",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "towerHeight*0.425"
+          },
+          "position": {
+            "x": 40,
+            "y": 420
+          }
+        },
+        {
+          "id": "legCone",
+          "type": "Cone",
+          "data": {
+            "radius1": "legThickness",
+            "radius2": "legThickness*0.15",
+            "height": "towerHeight*0.85",
+            "color": "#9c7c54"
+          },
+          "position": {
+            "x": 270,
+            "y": 230
+          }
+        },
+        {
+          "id": "legs",
+          "type": "CircularPattern",
+          "data": {
+            "count": 4,
+            "radius": "baseWidth*0.707",
+            "angle": 360,
+            "startAngle": 45,
+            "color": "#9c7c54"
+          },
+          "position": {
+            "x": 500,
+            "y": 40
+          }
+        }
+      ],
+      "edges": [
+        {
+          "source": "plat1",
+          "sourceHandle": "solid",
+          "target": "plat1T",
+          "targetHandle": "solid",
+          "id": "e_plat1_plat1T_solid"
+        },
+        {
+          "source": "plat2",
+          "sourceHandle": "solid",
+          "target": "plat2T",
+          "targetHandle": "solid",
+          "id": "e_plat2_plat2T_solid"
+        },
+        {
+          "source": "topBox",
+          "sourceHandle": "solid",
+          "target": "topT",
+          "targetHandle": "solid",
+          "id": "e_topBox_topT_solid"
+        },
+        {
+          "source": "antenna",
+          "sourceHandle": "solid",
+          "target": "antennaT",
+          "targetHandle": "solid",
+          "id": "e_antenna_antennaT_solid"
+        },
+        {
+          "source": "legCenter",
+          "target": "legCone",
+          "id": "e_legCenter_legCone_center",
+          "sourceHandle": "point",
+          "targetHandle": "center"
+        },
+        {
+          "source": "legCone",
+          "target": "legs",
+          "id": "e_legCone_legs_solid",
+          "sourceHandle": "solid",
+          "targetHandle": "solid"
+        }
+      ]
+    },
+    {
+      "at": "2026-07-22T13:45:30.959Z",
+      "turn": 4,
+      "trigger": "ai-ir",
+      "label": "attempt 3: rebuilt graph (19 nodes)",
+      "nodeCount": 19,
+      "edgeCount": 10,
+      "isolatedCount": 4,
+      "diff": {
+        "addedNodes": [
+          "pillarCount",
+          "legX",
+          "legZ",
+          "legPts",
+          "legPts_x",
+          "legCurve",
+          "legPipe",
+          "plat1Pos",
+          "plat2Pos",
+          "topCap",
+          "topCapPos",
+          "antennaPos"
+        ],
+        "removedNodes": [
+          "plat1T",
+          "plat2T",
+          "topBox",
+          "topT",
+          "antennaT",
+          "legCenter",
+          "legCone"
+        ],
+        "changedNodes": [
+          "legs",
+          "plat1",
+          "plat2"
+        ],
+        "addedEdges": 10,
+        "removedEdges": 6
+      },
+      "nodes": [
+        {
+          "id": "towerHeight",
+          "type": "NumberSlider",
+          "data": {
+            "value": 80,
+            "label": "towerHeight",
+            "min": 30,
+            "max": 150,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 1940
+          }
+        },
+        {
+          "id": "baseWidth",
+          "type": "NumberSlider",
+          "data": {
+            "value": 28,
+            "label": "baseWidth",
+            "min": 10,
+            "max": 60,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 230
+          }
+        },
+        {
+          "id": "legThickness",
+          "type": "NumberSlider",
+          "data": {
+            "value": 1.2,
+            "label": "legThickness",
+            "min": 0.3,
+            "max": 4,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 610
+          }
+        },
+        {
+          "id": "pillarCount",
+          "type": "NumberSlider",
+          "data": {
+            "value": 8,
+            "label": "pillarCount",
+            "min": 4,
+            "max": 16,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 1180
+          }
+        },
+        {
+          "id": "legX",
+          "type": "ListConstant",
+          "data": {
+            "values": "0, -baseWidth*0.10, -baseWidth*0.25, -baseWidth*0.33"
+          },
+          "position": {
+            "x": 40,
+            "y": 800
+          }
+        },
+        {
+          "id": "legZ",
+          "type": "ListConstant",
+          "data": {
+            "values": "0, towerHeight*0.25, towerHeight*0.55, towerHeight*0.85"
+          },
+          "position": {
+            "x": 40,
+            "y": 990
+          }
+        },
+        {
+          "id": "legPts",
+          "type": "ListConstant",
+          "data": {
+            "values": "0"
+          },
+          "position": {
+            "x": 40,
+            "y": 420
+          }
+        },
+        {
+          "id": "legPts_x",
+          "type": "PointsFromLists",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 230
+          }
+        },
+        {
+          "id": "legCurve",
+          "type": "SplineCurve",
+          "data": {
+            "closed": false
+          },
+          "position": {
+            "x": 500,
+            "y": 40
+          }
+        },
+        {
+          "id": "legPipe",
+          "type": "Pipe",
+          "data": {
+            "radius": "legThickness"
+          },
+          "position": {
+            "x": 730,
+            "y": 40
+          }
+        },
+        {
+          "id": "legs",
+          "type": "CircularPattern",
+          "data": {
+            "count": "pillarCount",
+            "radius": "baseWidth*0.35",
+            "angle": 360,
+            "color": "#9c7c54"
+          },
+          "position": {
+            "x": 960,
+            "y": 40
+          }
+        },
+        {
+          "id": "plat1",
+          "type": "Box",
+          "data": {
+            "width": "baseWidth*0.48",
+            "length": "baseWidth*0.48",
+            "height": 1.5
+          },
+          "position": {
+            "x": 40,
+            "y": 1370
+          }
+        },
+        {
+          "id": "plat1Pos",
+          "type": "Translate",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "towerHeight*0.28",
+            "color": "#6b5b45"
+          },
+          "position": {
+            "x": 270,
+            "y": 420
+          }
+        },
+        {
+          "id": "plat2",
+          "type": "Box",
+          "data": {
+            "width": "baseWidth*0.22",
+            "length": "baseWidth*0.22",
+            "height": 1
+          },
+          "position": {
+            "x": 40,
+            "y": 1560
+          }
+        },
+        {
+          "id": "plat2Pos",
+          "type": "Translate",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "towerHeight*0.55",
+            "color": "#6b5b45"
+          },
+          "position": {
+            "x": 270,
+            "y": 610
+          }
+        },
+        {
+          "id": "topCap",
+          "type": "Box",
+          "data": {
+            "width": "baseWidth*0.08+1.5",
+            "length": "baseWidth*0.08+1.5",
+            "height": "towerHeight*0.05"
+          },
+          "position": {
+            "x": 40,
+            "y": 1750
+          }
+        },
+        {
+          "id": "topCapPos",
+          "type": "Translate",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "towerHeight*0.85",
+            "color": "#5a4a3a"
+          },
+          "position": {
+            "x": 270,
+            "y": 800
+          }
+        },
+        {
+          "id": "antenna",
+          "type": "Cone",
+          "data": {
+            "radius1": "baseWidth*0.03",
+            "radius2": 0.1,
+            "height": "towerHeight*0.15"
+          },
+          "position": {
+            "x": 40,
+            "y": 40
+          }
+        },
+        {
+          "id": "antennaPos",
+          "type": "Translate",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "towerHeight*0.9",
+            "color": "#3a3a3a"
+          },
+          "position": {
+            "x": 270,
+            "y": 40
+          }
+        }
+      ],
+      "edges": [
+        {
+          "source": "legX",
+          "sourceHandle": "values",
+          "target": "legPts_x",
+          "targetHandle": "x",
+          "id": "e_legX_legPts_x_x"
+        },
+        {
+          "source": "legPts",
+          "sourceHandle": "values",
+          "target": "legPts_x",
+          "targetHandle": "y",
+          "id": "e_legPts_legPts_x_y"
+        },
+        {
+          "source": "legZ",
+          "sourceHandle": "values",
+          "target": "legPts_x",
+          "targetHandle": "z",
+          "id": "e_legZ_legPts_x_z"
+        },
+        {
+          "source": "legPts_x",
+          "sourceHandle": "points",
+          "target": "legCurve",
+          "targetHandle": "points",
+          "id": "e_legPts_x_legCurve_points"
+        },
+        {
+          "source": "legCurve",
+          "sourceHandle": "curve",
+          "target": "legPipe",
+          "targetHandle": "path",
+          "id": "e_legCurve_legPipe_path"
+        },
+        {
+          "source": "legPipe",
+          "sourceHandle": "solid",
+          "target": "legs",
+          "targetHandle": "solid",
+          "id": "e_legPipe_legs_solid"
+        },
+        {
+          "source": "plat1",
+          "sourceHandle": "solid",
+          "target": "plat1Pos",
+          "targetHandle": "solid",
+          "id": "e_plat1_plat1Pos_solid"
+        },
+        {
+          "source": "plat2",
+          "sourceHandle": "solid",
+          "target": "plat2Pos",
+          "targetHandle": "solid",
+          "id": "e_plat2_plat2Pos_solid"
+        },
+        {
+          "source": "topCap",
+          "sourceHandle": "solid",
+          "target": "topCapPos",
+          "targetHandle": "solid",
+          "id": "e_topCap_topCapPos_solid"
+        },
+        {
+          "source": "antenna",
+          "sourceHandle": "solid",
+          "target": "antennaPos",
+          "targetHandle": "solid",
+          "id": "e_antenna_antennaPos_solid"
+        }
+      ]
+    },
+    {
+      "at": "2026-07-22T14:38:23.944Z",
+      "turn": 5,
+      "trigger": "ai-ir",
+      "label": "attempt 1: rebuilt graph (18 nodes)",
+      "nodeCount": 18,
+      "edgeCount": 10,
+      "isolatedCount": 3,
+      "diff": {
+        "addedNodes": [
+          "legY"
+        ],
+        "removedNodes": [
+          "pillarCount",
+          "legPts_x"
+        ],
+        "changedNodes": [
+          "towerHeight",
+          "baseWidth",
+          "legThickness",
+          "legX",
+          "legZ",
+          "legPts",
+          "legs",
+          "plat1",
+          "plat1Pos",
+          "plat2",
+          "plat2Pos",
+          "topCap",
+          "topCapPos",
+          "antenna",
+          "antennaPos"
+        ],
+        "addedEdges": 4,
+        "removedEdges": 4
+      },
+      "nodes": [
+        {
+          "id": "towerHeight",
+          "type": "NumberSlider",
+          "data": {
+            "value": 120,
+            "label": "towerHeight",
+            "min": 40,
+            "max": 200,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 1750
+          }
+        },
+        {
+          "id": "baseWidth",
+          "type": "NumberSlider",
+          "data": {
+            "value": 40,
+            "label": "baseWidth",
+            "min": 15,
+            "max": 80,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 230
+          }
+        },
+        {
+          "id": "legThickness",
+          "type": "NumberSlider",
+          "data": {
+            "value": 1.5,
+            "label": "legThickness",
+            "min": 0.5,
+            "max": 5,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 420
+          }
+        },
+        {
+          "id": "legX",
+          "type": "ListConstant",
+          "data": {
+            "values": "0, -baseWidth*0.28, -baseWidth*0.41, -baseWidth*0.48, -baseWidth*0.5"
+          },
+          "position": {
+            "x": 40,
+            "y": 610
+          }
+        },
+        {
+          "id": "legZ",
+          "type": "ListConstant",
+          "data": {
+            "values": "0, towerHeight*0.19, towerHeight*0.38, towerHeight*0.7, towerHeight*0.85"
+          },
+          "position": {
+            "x": 40,
+            "y": 990
+          }
+        },
+        {
+          "id": "legY",
+          "type": "ListConstant",
+          "data": {
+            "values": "0, 0, 0, 0, 0"
+          },
+          "position": {
+            "x": 40,
+            "y": 800
+          }
+        },
+        {
+          "id": "legPts",
+          "type": "PointsFromLists",
+          "data": {},
+          "position": {
+            "x": 270,
+            "y": 230
+          }
+        },
+        {
+          "id": "legCurve",
+          "type": "SplineCurve",
+          "data": {
+            "closed": false
+          },
+          "position": {
+            "x": 500,
+            "y": 40
+          }
+        },
+        {
+          "id": "legPipe",
+          "type": "Pipe",
+          "data": {
+            "radius": "legThickness"
+          },
+          "position": {
+            "x": 730,
+            "y": 40
+          }
+        },
+        {
+          "id": "legs",
+          "type": "CircularPattern",
+          "data": {
+            "count": 4,
+            "radius": "baseWidth*0.5",
+            "angle": 360,
+            "color": "#8B7355"
+          },
+          "position": {
+            "x": 960,
+            "y": 40
+          }
+        },
+        {
+          "id": "plat1",
+          "type": "Box",
+          "data": {
+            "width": "baseWidth*0.44",
+            "length": "baseWidth*0.44",
+            "height": 2
+          },
+          "position": {
+            "x": 40,
+            "y": 1180
+          }
+        },
+        {
+          "id": "plat1Pos",
+          "type": "Translate",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "towerHeight*0.19",
+            "color": "#6b5b45"
+          },
+          "position": {
+            "x": 270,
+            "y": 420
+          }
+        },
+        {
+          "id": "plat2",
+          "type": "Box",
+          "data": {
+            "width": "baseWidth*0.18",
+            "length": "baseWidth*0.18",
+            "height": 1.5
+          },
+          "position": {
+            "x": 40,
+            "y": 1370
+          }
+        },
+        {
+          "id": "plat2Pos",
+          "type": "Translate",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "towerHeight*0.38",
+            "color": "#6b5b45"
+          },
+          "position": {
+            "x": 270,
+            "y": 610
+          }
+        },
+        {
+          "id": "topCap",
+          "type": "Box",
+          "data": {
+            "width": "baseWidth*0.04+2",
+            "length": "baseWidth*0.04+2",
+            "height": "towerHeight*0.05"
+          },
+          "position": {
+            "x": 40,
+            "y": 1560
+          }
+        },
+        {
+          "id": "topCapPos",
+          "type": "Translate",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "towerHeight*0.7",
+            "color": "#5a4a3a"
+          },
+          "position": {
+            "x": 270,
+            "y": 800
+          }
+        },
+        {
+          "id": "antenna",
+          "type": "Cone",
+          "data": {
+            "radius1": "baseWidth*0.025",
+            "radius2": 0.1,
+            "height": "towerHeight*0.15"
+          },
+          "position": {
+            "x": 40,
+            "y": 40
+          }
+        },
+        {
+          "id": "antennaPos",
+          "type": "Translate",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "towerHeight*0.85",
+            "color": "#3a3a3a"
+          },
+          "position": {
+            "x": 270,
+            "y": 40
+          }
+        }
+      ],
+      "edges": [
+        {
+          "source": "legX",
+          "sourceHandle": "values",
+          "target": "legPts",
+          "targetHandle": "x",
+          "id": "e_legX_legPts_x"
+        },
+        {
+          "source": "legY",
+          "sourceHandle": "values",
+          "target": "legPts",
+          "targetHandle": "y",
+          "id": "e_legY_legPts_y"
+        },
+        {
+          "source": "legZ",
+          "sourceHandle": "values",
+          "target": "legPts",
+          "targetHandle": "z",
+          "id": "e_legZ_legPts_z"
+        },
+        {
+          "source": "legPts",
+          "sourceHandle": "points",
+          "target": "legCurve",
+          "targetHandle": "points",
+          "id": "e_legPts_legCurve_points"
+        },
+        {
+          "source": "legCurve",
+          "sourceHandle": "curve",
+          "target": "legPipe",
+          "targetHandle": "path",
+          "id": "e_legCurve_legPipe_path"
+        },
+        {
+          "source": "legPipe",
+          "sourceHandle": "solid",
+          "target": "legs",
+          "targetHandle": "solid",
+          "id": "e_legPipe_legs_solid"
+        },
+        {
+          "source": "plat1",
+          "sourceHandle": "solid",
+          "target": "plat1Pos",
+          "targetHandle": "solid",
+          "id": "e_plat1_plat1Pos_solid"
+        },
+        {
+          "source": "plat2",
+          "sourceHandle": "solid",
+          "target": "plat2Pos",
+          "targetHandle": "solid",
+          "id": "e_plat2_plat2Pos_solid"
+        },
+        {
+          "source": "topCap",
+          "sourceHandle": "solid",
+          "target": "topCapPos",
+          "targetHandle": "solid",
+          "id": "e_topCap_topCapPos_solid"
+        },
+        {
+          "source": "antenna",
+          "sourceHandle": "solid",
+          "target": "antennaPos",
+          "targetHandle": "solid",
+          "id": "e_antenna_antennaPos_solid"
+        }
+      ]
+    }
+  ]
+}

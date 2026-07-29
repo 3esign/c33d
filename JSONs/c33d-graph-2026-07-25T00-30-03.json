@@ -1,0 +1,1817 @@
+{
+  "c33dExport": 2,
+  "exportedAt": "2026-07-25T00:30:03.538Z",
+  "comment": "intersting",
+  "agent": {
+    "name": "Ollama (Local)",
+    "provider": "ollama",
+    "model": "glm-5.2:cloud"
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "palaceHeight",
+        "type": "NumberSlider",
+        "data": {
+          "value": 50,
+          "label": "palaceHeight",
+          "min": 20,
+          "max": 100,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 1940
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "palaceWidth",
+        "type": "NumberSlider",
+        "data": {
+          "value": 40,
+          "label": "palaceWidth",
+          "min": 20,
+          "max": 80,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 2130
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "columnCount",
+        "type": "NumberSlider",
+        "data": {
+          "value": 8,
+          "label": "columnCount",
+          "min": 4,
+          "max": 16,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 230
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "spireHeight",
+        "type": "NumberSlider",
+        "data": {
+          "value": 15,
+          "label": "spireHeight",
+          "min": 5,
+          "max": 30,
+          "step": 0.1
+        },
+        "position": {
+          "x": 40,
+          "y": 2510
+        },
+        "measured": {
+          "width": 201,
+          "height": 328
+        }
+      },
+      {
+        "id": "p1_center",
+        "type": "Point",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": "palaceHeight*0.03"
+        },
+        "position": {
+          "x": 40,
+          "y": 1370
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "p1",
+        "type": "Box",
+        "data": {
+          "width": "palaceWidth",
+          "length": "palaceWidth",
+          "height": "palaceHeight*0.06"
+        },
+        "position": {
+          "x": 270,
+          "y": 1180
+        },
+        "measured": {
+          "width": 201,
+          "height": 312
+        }
+      },
+      {
+        "id": "p2_center",
+        "type": "Point",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": "palaceHeight*0.085"
+        },
+        "position": {
+          "x": 40,
+          "y": 1560
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "p2",
+        "type": "Box",
+        "data": {
+          "width": "palaceWidth*0.85",
+          "length": "palaceWidth*0.85",
+          "height": "palaceHeight*0.05"
+        },
+        "position": {
+          "x": 270,
+          "y": 1370
+        },
+        "measured": {
+          "width": 201,
+          "height": 312
+        }
+      },
+      {
+        "id": "p3_center",
+        "type": "Point",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": "palaceHeight*0.13"
+        },
+        "position": {
+          "x": 40,
+          "y": 1750
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "p3",
+        "type": "Box",
+        "data": {
+          "width": "palaceWidth*0.7",
+          "length": "palaceWidth*0.7",
+          "height": "palaceHeight*0.04"
+        },
+        "position": {
+          "x": 270,
+          "y": 1560
+        },
+        "measured": {
+          "width": 201,
+          "height": 312
+        }
+      },
+      {
+        "id": "podium",
+        "type": "Compound",
+        "data": {
+          "color": "#8b7355"
+        },
+        "position": {
+          "x": 500,
+          "y": 420
+        },
+        "measured": {
+          "width": 150,
+          "height": 330
+        }
+      },
+      {
+        "id": "towerBase_center",
+        "type": "Point",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": "palaceHeight*0.325"
+        },
+        "position": {
+          "x": 40,
+          "y": 2700
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "towerBase",
+        "type": "Cylinder",
+        "data": {
+          "radius": "palaceWidth*0.18",
+          "height": "palaceHeight*0.35"
+        },
+        "position": {
+          "x": 270,
+          "y": 1940
+        },
+        "measured": {
+          "width": 201,
+          "height": 296
+        }
+      },
+      {
+        "id": "towerMid_center",
+        "type": "Point",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": "palaceHeight*0.625"
+        },
+        "position": {
+          "x": 40,
+          "y": 2890
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "towerMid",
+        "type": "Cone",
+        "data": {
+          "radius1": "palaceWidth*0.15",
+          "radius2": "palaceWidth*0.08",
+          "height": "palaceHeight*0.25"
+        },
+        "position": {
+          "x": 270,
+          "y": 2130
+        },
+        "measured": {
+          "width": 201,
+          "height": 344
+        }
+      },
+      {
+        "id": "towerBody",
+        "type": "Compound",
+        "data": {
+          "color": "#c9b99a"
+        },
+        "position": {
+          "x": 500,
+          "y": 610
+        },
+        "measured": {
+          "width": 150,
+          "height": 330
+        }
+      },
+      {
+        "id": "drum_center",
+        "type": "Point",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": "palaceHeight*0.765"
+        },
+        "position": {
+          "x": 40,
+          "y": 990
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "drum",
+        "type": "Cylinder",
+        "data": {
+          "radius": "palaceWidth*0.08",
+          "height": "palaceHeight*0.03",
+          "color": "#d4c5a9"
+        },
+        "position": {
+          "x": 270,
+          "y": 800
+        },
+        "measured": {
+          "width": 201,
+          "height": 296
+        }
+      },
+      {
+        "id": "dome_center",
+        "type": "Point",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": "palaceHeight*0.78"
+        },
+        "position": {
+          "x": 40,
+          "y": 800
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "dome",
+        "type": "Sphere",
+        "data": {
+          "radius": "palaceWidth*0.08",
+          "color": "#4a90d9"
+        },
+        "position": {
+          "x": 270,
+          "y": 610
+        },
+        "measured": {
+          "width": 201,
+          "height": 216
+        }
+      },
+      {
+        "id": "spire_center",
+        "type": "Point",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": "palaceHeight*0.78+palaceWidth*0.08+spireHeight*0.5"
+        },
+        "position": {
+          "x": 40,
+          "y": 2320
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "spire",
+        "type": "Cone",
+        "data": {
+          "radius1": "palaceWidth*0.02",
+          "radius2": 0.001,
+          "height": "spireHeight",
+          "color": "#daa520"
+        },
+        "position": {
+          "x": 270,
+          "y": 1750
+        },
+        "measured": {
+          "width": 201,
+          "height": 344
+        }
+      },
+      {
+        "id": "finial_center",
+        "type": "Point",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": "palaceHeight*0.78+palaceWidth*0.08+spireHeight+palaceWidth*0.015"
+        },
+        "position": {
+          "x": 40,
+          "y": 1180
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "finial",
+        "type": "Sphere",
+        "data": {
+          "radius": "palaceWidth*0.015",
+          "color": "#daa520"
+        },
+        "position": {
+          "x": 270,
+          "y": 990
+        },
+        "measured": {
+          "width": 201,
+          "height": 216
+        }
+      },
+      {
+        "id": "cornerCol_center",
+        "type": "Point",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": "palaceHeight*0.275"
+        },
+        "position": {
+          "x": 40,
+          "y": 610
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "cornerCol",
+        "type": "Cylinder",
+        "data": {
+          "radius": "palaceWidth*0.04",
+          "height": "palaceHeight*0.25"
+        },
+        "position": {
+          "x": 270,
+          "y": 420
+        },
+        "measured": {
+          "width": 201,
+          "height": 296
+        }
+      },
+      {
+        "id": "cornerCap_center",
+        "type": "Point",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": "palaceHeight*0.44"
+        },
+        "position": {
+          "x": 40,
+          "y": 420
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "cornerCap",
+        "type": "Cone",
+        "data": {
+          "radius1": "palaceWidth*0.04",
+          "radius2": 0.001,
+          "height": "palaceHeight*0.08"
+        },
+        "position": {
+          "x": 270,
+          "y": 230
+        },
+        "measured": {
+          "width": 201,
+          "height": 344
+        }
+      },
+      {
+        "id": "cornerFull",
+        "type": "Compound",
+        "data": {},
+        "position": {
+          "x": 500,
+          "y": 230
+        },
+        "measured": {
+          "width": 150,
+          "height": 330
+        }
+      },
+      {
+        "id": "corners",
+        "type": "CircularPattern",
+        "data": {
+          "count": 4,
+          "radius": "palaceWidth*0.3",
+          "startAngle": 45,
+          "color": "#a89878"
+        },
+        "position": {
+          "x": 730,
+          "y": 40
+        },
+        "measured": {
+          "width": 201,
+          "height": 450
+        }
+      },
+      {
+        "id": "col_center",
+        "type": "Point",
+        "data": {
+          "x": 0,
+          "y": 0,
+          "z": "palaceHeight*0.2"
+        },
+        "position": {
+          "x": 40,
+          "y": 40
+        },
+        "measured": {
+          "width": 201,
+          "height": 322
+        }
+      },
+      {
+        "id": "col",
+        "type": "Cylinder",
+        "data": {
+          "radius": "palaceWidth*0.015",
+          "height": "palaceHeight*0.1"
+        },
+        "position": {
+          "x": 270,
+          "y": 40
+        },
+        "measured": {
+          "width": 201,
+          "height": 296
+        }
+      },
+      {
+        "id": "colonnade",
+        "type": "CircularPattern",
+        "data": {
+          "count": "columnCount",
+          "radius": "palaceWidth*0.3",
+          "color": "#c9b99a"
+        },
+        "position": {
+          "x": 500,
+          "y": 40
+        },
+        "measured": {
+          "width": 201,
+          "height": 450
+        }
+      }
+    ],
+    "edges": [
+      {
+        "source": "p1_center",
+        "sourceHandle": "point",
+        "target": "p1",
+        "targetHandle": "center",
+        "id": "e_p1_center_p1_center"
+      },
+      {
+        "source": "p2_center",
+        "sourceHandle": "point",
+        "target": "p2",
+        "targetHandle": "center",
+        "id": "e_p2_center_p2_center"
+      },
+      {
+        "source": "p3_center",
+        "sourceHandle": "point",
+        "target": "p3",
+        "targetHandle": "center",
+        "id": "e_p3_center_p3_center"
+      },
+      {
+        "source": "p1",
+        "sourceHandle": "solid",
+        "target": "podium",
+        "targetHandle": "solid1",
+        "id": "e_p1_podium_solid1"
+      },
+      {
+        "source": "p2",
+        "sourceHandle": "solid",
+        "target": "podium",
+        "targetHandle": "solid2",
+        "id": "e_p2_podium_solid2"
+      },
+      {
+        "source": "p3",
+        "sourceHandle": "solid",
+        "target": "podium",
+        "targetHandle": "solid3",
+        "id": "e_p3_podium_solid3"
+      },
+      {
+        "source": "towerBase_center",
+        "sourceHandle": "point",
+        "target": "towerBase",
+        "targetHandle": "center",
+        "id": "e_towerBase_center_towerBase_center"
+      },
+      {
+        "source": "towerMid_center",
+        "sourceHandle": "point",
+        "target": "towerMid",
+        "targetHandle": "center",
+        "id": "e_towerMid_center_towerMid_center"
+      },
+      {
+        "source": "towerBase",
+        "sourceHandle": "solid",
+        "target": "towerBody",
+        "targetHandle": "solid1",
+        "id": "e_towerBase_towerBody_solid1"
+      },
+      {
+        "source": "towerMid",
+        "sourceHandle": "solid",
+        "target": "towerBody",
+        "targetHandle": "solid2",
+        "id": "e_towerMid_towerBody_solid2"
+      },
+      {
+        "source": "drum_center",
+        "sourceHandle": "point",
+        "target": "drum",
+        "targetHandle": "center",
+        "id": "e_drum_center_drum_center"
+      },
+      {
+        "source": "dome_center",
+        "sourceHandle": "point",
+        "target": "dome",
+        "targetHandle": "center",
+        "id": "e_dome_center_dome_center"
+      },
+      {
+        "source": "spire_center",
+        "sourceHandle": "point",
+        "target": "spire",
+        "targetHandle": "center",
+        "id": "e_spire_center_spire_center"
+      },
+      {
+        "source": "finial_center",
+        "sourceHandle": "point",
+        "target": "finial",
+        "targetHandle": "center",
+        "id": "e_finial_center_finial_center"
+      },
+      {
+        "source": "cornerCol_center",
+        "sourceHandle": "point",
+        "target": "cornerCol",
+        "targetHandle": "center",
+        "id": "e_cornerCol_center_cornerCol_center"
+      },
+      {
+        "source": "cornerCap_center",
+        "sourceHandle": "point",
+        "target": "cornerCap",
+        "targetHandle": "center",
+        "id": "e_cornerCap_center_cornerCap_center"
+      },
+      {
+        "source": "cornerCol",
+        "sourceHandle": "solid",
+        "target": "cornerFull",
+        "targetHandle": "solid1",
+        "id": "e_cornerCol_cornerFull_solid1"
+      },
+      {
+        "source": "cornerCap",
+        "sourceHandle": "solid",
+        "target": "cornerFull",
+        "targetHandle": "solid2",
+        "id": "e_cornerCap_cornerFull_solid2"
+      },
+      {
+        "source": "cornerFull",
+        "sourceHandle": "solid",
+        "target": "corners",
+        "targetHandle": "solid",
+        "id": "e_cornerFull_corners_solid"
+      },
+      {
+        "source": "col_center",
+        "sourceHandle": "point",
+        "target": "col",
+        "targetHandle": "center",
+        "id": "e_col_center_col_center"
+      },
+      {
+        "source": "col",
+        "sourceHandle": "solid",
+        "target": "colonnade",
+        "targetHandle": "solid",
+        "id": "e_col_colonnade_solid"
+      }
+    ]
+  },
+  "conversation": [
+    {
+      "role": "system",
+      "content": "Workspace cleared."
+    },
+    {
+      "role": "user",
+      "content": "make your own perfect memory palace"
+    },
+    {
+      "role": "system",
+      "content": "Response was not valid JSON (attempt 1/3) — asking the model to resend."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline point() from \"p1.center\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"point\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline point() from \"p2.center\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"point\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline point() from \"p3.center\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"point\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline point() from \"towerBase.center\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"point\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline point() from \"towerMid.center\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"point\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline point() from \"drum.center\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"point\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline point() from \"dome.center\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"point\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline point() from \"spire.center\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"point\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline point() from \"finial.center\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"point\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline point() from \"cornerCol.center\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"point\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline point() from \"cornerCap.center\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"point\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "system",
+      "content": "[IR] Auto-lifted inline point() from \"col.center\" into its own step — canonical form is a separate {\"let\": \"...\", \"op\": \"point\", ...} referenced as \"$name\"."
+    },
+    {
+      "role": "assistant",
+      "content": "A grand memory palace with a stepped stone podium, central tapered tower crowned by a blue dome and golden spire, four corner towers with conical caps, and a circular colonnade"
+    }
+  ],
+  "plan": "",
+  "genome": null,
+  "geometryReport": {
+    "leaves": [
+      {
+        "id": "drum",
+        "bbox": {
+          "min": [
+            -3.2486152903609353,
+            -3.200000100000002,
+            37.451384709639065
+          ],
+          "max": [
+            3.2486152903609353,
+            3.200000100000001,
+            39.048615290360935
+          ],
+          "center": [
+            0,
+            -4.440892098500626e-16,
+            38.25
+          ],
+          "size": [
+            6.497230580721871,
+            6.400000200000003,
+            1.5972305807218703
+          ]
+        },
+        "volume": 48.25486315913922,
+        "meshOk": true,
+        "vertexCount": 74,
+        "error": null
+      },
+      {
+        "id": "dome",
+        "bbox": {
+          "min": [
+            -3.2265086329276986,
+            -3.226508632927698,
+            35.72487617671136
+          ],
+          "max": [
+            3.2265086329276995,
+            3.226508632927698,
+            42.27512382328864
+          ],
+          "center": [
+            4.440892098500626e-16,
+            0,
+            39
+          ],
+          "size": [
+            6.453017265855398,
+            6.453017265855396,
+            6.550247646577276
+          ]
+        },
+        "volume": 137.25827743044047,
+        "meshOk": true,
+        "vertexCount": 160,
+        "error": null
+      },
+      {
+        "id": "spire",
+        "bbox": {
+          "min": [
+            -0.8890558394753991,
+            -0.849901052511522,
+            42.1109441605246
+          ],
+          "max": [
+            0.8890558394753991,
+            0.849901052511522,
+            57.2890558394754
+          ],
+          "center": [
+            0,
+            0,
+            49.7
+          ],
+          "size": [
+            1.7781116789507982,
+            1.699802105023044,
+            15.178111678950799
+          ]
+        },
+        "volume": 10.06567857006497,
+        "meshOk": true,
+        "vertexCount": 138,
+        "error": null
+      },
+      {
+        "id": "finial",
+        "bbox": {
+          "min": [
+            -0.6699709108939561,
+            -0.6699709108939561,
+            57.130029089106046
+          ],
+          "max": [
+            0.6699709108939561,
+            0.6699709108939561,
+            58.46997091089396
+          ],
+          "center": [
+            0,
+            0,
+            57.800000000000004
+          ],
+          "size": [
+            1.3399418217879122,
+            1.3399418217879122,
+            1.3399418217879173
+          ]
+        },
+        "volume": 0.9047786842338599,
+        "meshOk": true,
+        "vertexCount": 33,
+        "error": null
+      },
+      {
+        "id": "podium",
+        "bbox": {
+          "min": [
+            -20.0000001,
+            -20.0000001,
+            -1.0000000125607397e-7
+          ],
+          "max": [
+            20.0000001,
+            20.0000001,
+            7.500000100000001
+          ],
+          "center": [
+            0,
+            0,
+            3.75
+          ],
+          "size": [
+            40.0000002,
+            40.0000002,
+            7.500000200000002
+          ]
+        },
+        "volume": 9258.000000000002,
+        "meshOk": true,
+        "vertexCount": 72,
+        "error": null
+      },
+      {
+        "id": "towerBody",
+        "bbox": {
+          "min": [
+            -7.297119576869526,
+            -7.333622140680666,
+            7.354196598872464
+          ],
+          "max": [
+            7.345803401127536,
+            7.333622140680666,
+            37.64580340112754
+          ],
+          "center": [
+            0.02434191212900494,
+            0,
+            22.5
+          ],
+          "size": [
+            14.642922977997062,
+            14.667244281361333,
+            30.291606802255075
+          ]
+        },
+        "volume": 3706.6604522154767,
+        "meshOk": true,
+        "vertexCount": 282,
+        "error": null
+      },
+      {
+        "id": "colonnade",
+        "bbox": {
+          "min": [
+            -12.64567238049323,
+            -12.64567238049323,
+            7.454327619506771
+          ],
+          "max": [
+            12.64567238049323,
+            12.64567238049323,
+            12.54567238049323
+          ],
+          "center": [
+            0,
+            0,
+            10
+          ],
+          "size": [
+            25.29134476098646,
+            25.29134476098646,
+            5.091344760986458
+          ]
+        },
+        "volume": 45.238934211692936,
+        "meshOk": true,
+        "vertexCount": 272,
+        "error": null
+      },
+      {
+        "id": "corners",
+        "bbox": {
+          "min": [
+            -10.212007173717653,
+            -10.212007173717653,
+            7.363213736350107
+          ],
+          "max": [
+            10.212007173717653,
+            10.212007173717653,
+            24.136786263649896
+          ],
+          "center": [
+            0,
+            0,
+            15.75
+          ],
+          "size": [
+            20.424014347435307,
+            20.424014347435307,
+            16.773572527299788
+          ]
+        },
+        "volume": 445.0438963689775,
+        "meshOk": true,
+        "vertexCount": 488,
+        "error": null
+      }
+    ],
+    "nodeErrors": [],
+    "numbers": {
+      "palaceHeight": 50,
+      "palaceWidth": 40,
+      "columnCount": 8,
+      "spireHeight": 15
+    },
+    "sliders": {
+      "palaceHeight": 50,
+      "palaceWidth": 40,
+      "columnCount": 8,
+      "spireHeight": 15
+    },
+    "selections": {},
+    "helpers": {
+      "p1_center": {
+        "type": "Point",
+        "x": 0,
+        "y": 0,
+        "z": 1.5,
+        "sourceNodeId": "p1_center",
+        "ancestorNodeIds": []
+      },
+      "p2_center": {
+        "type": "Point",
+        "x": 0,
+        "y": 0,
+        "z": 4.25,
+        "sourceNodeId": "p2_center",
+        "ancestorNodeIds": []
+      },
+      "p3_center": {
+        "type": "Point",
+        "x": 0,
+        "y": 0,
+        "z": 6.5,
+        "sourceNodeId": "p3_center",
+        "ancestorNodeIds": []
+      },
+      "towerBase_center": {
+        "type": "Point",
+        "x": 0,
+        "y": 0,
+        "z": 16.25,
+        "sourceNodeId": "towerBase_center",
+        "ancestorNodeIds": []
+      },
+      "towerMid_center": {
+        "type": "Point",
+        "x": 0,
+        "y": 0,
+        "z": 31.25,
+        "sourceNodeId": "towerMid_center",
+        "ancestorNodeIds": []
+      },
+      "drum_center": {
+        "type": "Point",
+        "x": 0,
+        "y": 0,
+        "z": 38.25,
+        "sourceNodeId": "drum_center",
+        "ancestorNodeIds": []
+      },
+      "dome_center": {
+        "type": "Point",
+        "x": 0,
+        "y": 0,
+        "z": 39,
+        "sourceNodeId": "dome_center",
+        "ancestorNodeIds": []
+      },
+      "cornerCol_center": {
+        "type": "Point",
+        "x": 0,
+        "y": 0,
+        "z": 13.750000000000002,
+        "sourceNodeId": "cornerCol_center",
+        "ancestorNodeIds": []
+      },
+      "cornerCap_center": {
+        "type": "Point",
+        "x": 0,
+        "y": 0,
+        "z": 22,
+        "sourceNodeId": "cornerCap_center",
+        "ancestorNodeIds": []
+      },
+      "col_center": {
+        "type": "Point",
+        "x": 0,
+        "y": 0,
+        "z": 10,
+        "sourceNodeId": "col_center",
+        "ancestorNodeIds": []
+      },
+      "spire_center": {
+        "type": "Point",
+        "x": 0,
+        "y": 0,
+        "z": 49.7,
+        "sourceNodeId": "spire_center",
+        "ancestorNodeIds": []
+      },
+      "finial_center": {
+        "type": "Point",
+        "x": 0,
+        "y": 0,
+        "z": 57.800000000000004,
+        "sourceNodeId": "finial_center",
+        "ancestorNodeIds": []
+      }
+    },
+    "nodeCount": 33,
+    "edgeCount": 21,
+    "transformCount": 2,
+    "nodesPerLeafRatio": 4.125,
+    "nodeEconomyWarning": false,
+    "placement": {
+      "anchored": [
+        "drum",
+        "dome",
+        "spire",
+        "finial",
+        "podium",
+        "towerBody",
+        "colonnade",
+        "corners"
+      ],
+      "literal": [],
+      "origin": [],
+      "literalNodeIds": [],
+      "ratio": 1
+    },
+    "scene": {
+      "min": [
+        -20.0000001,
+        -20.0000001,
+        -1.0000000125607397e-7
+      ],
+      "max": [
+        20.0000001,
+        20.0000001,
+        58.46997091089396
+      ],
+      "size": [
+        40.0000002,
+        40.0000002,
+        58.469971010893964
+      ]
+    },
+    "meshedLeafCount": 8,
+    "kernelFaultCount": 0,
+    "kernelSuspect": false,
+    "kernelHealth": "ok",
+    "evalCount": 1,
+    "recycleRecommended": false,
+    "perturbationIssues": [
+      "At palaceHeight decrease (0.6x), \"drum\" shifts non-proportionally relative to the assembly center (deviation 12%). Derive its position from the driver sliders or use Align.",
+      "At palaceHeight decrease (0.6x), \"dome\" shifts non-proportionally relative to the assembly center (deviation 12%). Derive its position from the driver sliders or use Align.",
+      "At palaceHeight increase (1.5x), \"drum\" shifts non-proportionally relative to the assembly center (deviation 8%). Derive its position from the driver sliders or use Align.",
+      "At palaceHeight increase (1.5x), \"dome\" shifts non-proportionally relative to the assembly center (deviation 8%). Derive its position from the driver sliders or use Align."
+    ],
+    "proportionalIntegrity": 0.6666666666666666
+  },
+  "timeline": [
+    {
+      "at": "2026-07-24T23:48:31.601Z",
+      "turn": 1,
+      "trigger": "ai-ir",
+      "label": "attempt 2: rebuilt graph (33 nodes)",
+      "nodeCount": 33,
+      "edgeCount": 21,
+      "isolatedCount": 4,
+      "diff": {
+        "addedNodes": [
+          "palaceHeight",
+          "palaceWidth",
+          "columnCount",
+          "spireHeight",
+          "p1_center",
+          "p1",
+          "p2_center",
+          "p2",
+          "p3_center",
+          "p3",
+          "podium",
+          "towerBase_center",
+          "towerBase",
+          "towerMid_center",
+          "towerMid",
+          "towerBody",
+          "drum_center",
+          "drum",
+          "dome_center",
+          "dome",
+          "spire_center",
+          "spire",
+          "finial_center",
+          "finial",
+          "cornerCol_center",
+          "cornerCol",
+          "cornerCap_center",
+          "cornerCap",
+          "cornerFull",
+          "corners",
+          "col_center",
+          "col",
+          "colonnade"
+        ],
+        "removedNodes": [],
+        "changedNodes": [],
+        "addedEdges": 21,
+        "removedEdges": 0
+      },
+      "nodes": [
+        {
+          "id": "palaceHeight",
+          "type": "NumberSlider",
+          "data": {
+            "value": 50,
+            "label": "palaceHeight",
+            "min": 20,
+            "max": 100,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 1940
+          }
+        },
+        {
+          "id": "palaceWidth",
+          "type": "NumberSlider",
+          "data": {
+            "value": 40,
+            "label": "palaceWidth",
+            "min": 20,
+            "max": 80,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 2130
+          }
+        },
+        {
+          "id": "columnCount",
+          "type": "NumberSlider",
+          "data": {
+            "value": 8,
+            "label": "columnCount",
+            "min": 4,
+            "max": 16,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 230
+          }
+        },
+        {
+          "id": "spireHeight",
+          "type": "NumberSlider",
+          "data": {
+            "value": 15,
+            "label": "spireHeight",
+            "min": 5,
+            "max": 30,
+            "step": 0.1
+          },
+          "position": {
+            "x": 40,
+            "y": 2510
+          }
+        },
+        {
+          "id": "p1_center",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "palaceHeight*0.03"
+          },
+          "position": {
+            "x": 40,
+            "y": 1370
+          }
+        },
+        {
+          "id": "p1",
+          "type": "Box",
+          "data": {
+            "width": "palaceWidth",
+            "length": "palaceWidth",
+            "height": "palaceHeight*0.06"
+          },
+          "position": {
+            "x": 270,
+            "y": 1180
+          }
+        },
+        {
+          "id": "p2_center",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "palaceHeight*0.085"
+          },
+          "position": {
+            "x": 40,
+            "y": 1560
+          }
+        },
+        {
+          "id": "p2",
+          "type": "Box",
+          "data": {
+            "width": "palaceWidth*0.85",
+            "length": "palaceWidth*0.85",
+            "height": "palaceHeight*0.05"
+          },
+          "position": {
+            "x": 270,
+            "y": 1370
+          }
+        },
+        {
+          "id": "p3_center",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "palaceHeight*0.13"
+          },
+          "position": {
+            "x": 40,
+            "y": 1750
+          }
+        },
+        {
+          "id": "p3",
+          "type": "Box",
+          "data": {
+            "width": "palaceWidth*0.7",
+            "length": "palaceWidth*0.7",
+            "height": "palaceHeight*0.04"
+          },
+          "position": {
+            "x": 270,
+            "y": 1560
+          }
+        },
+        {
+          "id": "podium",
+          "type": "Compound",
+          "data": {
+            "color": "#8b7355"
+          },
+          "position": {
+            "x": 500,
+            "y": 420
+          }
+        },
+        {
+          "id": "towerBase_center",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "palaceHeight*0.325"
+          },
+          "position": {
+            "x": 40,
+            "y": 2700
+          }
+        },
+        {
+          "id": "towerBase",
+          "type": "Cylinder",
+          "data": {
+            "radius": "palaceWidth*0.18",
+            "height": "palaceHeight*0.35"
+          },
+          "position": {
+            "x": 270,
+            "y": 1940
+          }
+        },
+        {
+          "id": "towerMid_center",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "palaceHeight*0.625"
+          },
+          "position": {
+            "x": 40,
+            "y": 2890
+          }
+        },
+        {
+          "id": "towerMid",
+          "type": "Cone",
+          "data": {
+            "radius1": "palaceWidth*0.15",
+            "radius2": "palaceWidth*0.08",
+            "height": "palaceHeight*0.25"
+          },
+          "position": {
+            "x": 270,
+            "y": 2130
+          }
+        },
+        {
+          "id": "towerBody",
+          "type": "Compound",
+          "data": {
+            "color": "#c9b99a"
+          },
+          "position": {
+            "x": 500,
+            "y": 610
+          }
+        },
+        {
+          "id": "drum_center",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "palaceHeight*0.765"
+          },
+          "position": {
+            "x": 40,
+            "y": 990
+          }
+        },
+        {
+          "id": "drum",
+          "type": "Cylinder",
+          "data": {
+            "radius": "palaceWidth*0.08",
+            "height": "palaceHeight*0.03",
+            "color": "#d4c5a9"
+          },
+          "position": {
+            "x": 270,
+            "y": 800
+          }
+        },
+        {
+          "id": "dome_center",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "palaceHeight*0.78"
+          },
+          "position": {
+            "x": 40,
+            "y": 800
+          }
+        },
+        {
+          "id": "dome",
+          "type": "Sphere",
+          "data": {
+            "radius": "palaceWidth*0.08",
+            "color": "#4a90d9"
+          },
+          "position": {
+            "x": 270,
+            "y": 610
+          }
+        },
+        {
+          "id": "spire_center",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "palaceHeight*0.78+palaceWidth*0.08+spireHeight*0.5"
+          },
+          "position": {
+            "x": 40,
+            "y": 2320
+          }
+        },
+        {
+          "id": "spire",
+          "type": "Cone",
+          "data": {
+            "radius1": "palaceWidth*0.02",
+            "radius2": 0.001,
+            "height": "spireHeight",
+            "color": "#daa520"
+          },
+          "position": {
+            "x": 270,
+            "y": 1750
+          }
+        },
+        {
+          "id": "finial_center",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "palaceHeight*0.78+palaceWidth*0.08+spireHeight+palaceWidth*0.015"
+          },
+          "position": {
+            "x": 40,
+            "y": 1180
+          }
+        },
+        {
+          "id": "finial",
+          "type": "Sphere",
+          "data": {
+            "radius": "palaceWidth*0.015",
+            "color": "#daa520"
+          },
+          "position": {
+            "x": 270,
+            "y": 990
+          }
+        },
+        {
+          "id": "cornerCol_center",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "palaceHeight*0.275"
+          },
+          "position": {
+            "x": 40,
+            "y": 610
+          }
+        },
+        {
+          "id": "cornerCol",
+          "type": "Cylinder",
+          "data": {
+            "radius": "palaceWidth*0.04",
+            "height": "palaceHeight*0.25"
+          },
+          "position": {
+            "x": 270,
+            "y": 420
+          }
+        },
+        {
+          "id": "cornerCap_center",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "palaceHeight*0.44"
+          },
+          "position": {
+            "x": 40,
+            "y": 420
+          }
+        },
+        {
+          "id": "cornerCap",
+          "type": "Cone",
+          "data": {
+            "radius1": "palaceWidth*0.04",
+            "radius2": 0.001,
+            "height": "palaceHeight*0.08"
+          },
+          "position": {
+            "x": 270,
+            "y": 230
+          }
+        },
+        {
+          "id": "cornerFull",
+          "type": "Compound",
+          "data": {},
+          "position": {
+            "x": 500,
+            "y": 230
+          }
+        },
+        {
+          "id": "corners",
+          "type": "CircularPattern",
+          "data": {
+            "count": 4,
+            "radius": "palaceWidth*0.3",
+            "startAngle": 45,
+            "color": "#a89878"
+          },
+          "position": {
+            "x": 730,
+            "y": 40
+          }
+        },
+        {
+          "id": "col_center",
+          "type": "Point",
+          "data": {
+            "x": 0,
+            "y": 0,
+            "z": "palaceHeight*0.2"
+          },
+          "position": {
+            "x": 40,
+            "y": 40
+          }
+        },
+        {
+          "id": "col",
+          "type": "Cylinder",
+          "data": {
+            "radius": "palaceWidth*0.015",
+            "height": "palaceHeight*0.1"
+          },
+          "position": {
+            "x": 270,
+            "y": 40
+          }
+        },
+        {
+          "id": "colonnade",
+          "type": "CircularPattern",
+          "data": {
+            "count": "columnCount",
+            "radius": "palaceWidth*0.3",
+            "color": "#c9b99a"
+          },
+          "position": {
+            "x": 500,
+            "y": 40
+          }
+        }
+      ],
+      "edges": [
+        {
+          "source": "p1_center",
+          "sourceHandle": "point",
+          "target": "p1",
+          "targetHandle": "center",
+          "id": "e_p1_center_p1_center"
+        },
+        {
+          "source": "p2_center",
+          "sourceHandle": "point",
+          "target": "p2",
+          "targetHandle": "center",
+          "id": "e_p2_center_p2_center"
+        },
+        {
+          "source": "p3_center",
+          "sourceHandle": "point",
+          "target": "p3",
+          "targetHandle": "center",
+          "id": "e_p3_center_p3_center"
+        },
+        {
+          "source": "p1",
+          "sourceHandle": "solid",
+          "target": "podium",
+          "targetHandle": "solid1",
+          "id": "e_p1_podium_solid1"
+        },
+        {
+          "source": "p2",
+          "sourceHandle": "solid",
+          "target": "podium",
+          "targetHandle": "solid2",
+          "id": "e_p2_podium_solid2"
+        },
+        {
+          "source": "p3",
+          "sourceHandle": "solid",
+          "target": "podium",
+          "targetHandle": "solid3",
+          "id": "e_p3_podium_solid3"
+        },
+        {
+          "source": "towerBase_center",
+          "sourceHandle": "point",
+          "target": "towerBase",
+          "targetHandle": "center",
+          "id": "e_towerBase_center_towerBase_center"
+        },
+        {
+          "source": "towerMid_center",
+          "sourceHandle": "point",
+          "target": "towerMid",
+          "targetHandle": "center",
+          "id": "e_towerMid_center_towerMid_center"
+        },
+        {
+          "source": "towerBase",
+          "sourceHandle": "solid",
+          "target": "towerBody",
+          "targetHandle": "solid1",
+          "id": "e_towerBase_towerBody_solid1"
+        },
+        {
+          "source": "towerMid",
+          "sourceHandle": "solid",
+          "target": "towerBody",
+          "targetHandle": "solid2",
+          "id": "e_towerMid_towerBody_solid2"
+        },
+        {
+          "source": "drum_center",
+          "sourceHandle": "point",
+          "target": "drum",
+          "targetHandle": "center",
+          "id": "e_drum_center_drum_center"
+        },
+        {
+          "source": "dome_center",
+          "sourceHandle": "point",
+          "target": "dome",
+          "targetHandle": "center",
+          "id": "e_dome_center_dome_center"
+        },
+        {
+          "source": "spire_center",
+          "sourceHandle": "point",
+          "target": "spire",
+          "targetHandle": "center",
+          "id": "e_spire_center_spire_center"
+        },
+        {
+          "source": "finial_center",
+          "sourceHandle": "point",
+          "target": "finial",
+          "targetHandle": "center",
+          "id": "e_finial_center_finial_center"
+        },
+        {
+          "source": "cornerCol_center",
+          "sourceHandle": "point",
+          "target": "cornerCol",
+          "targetHandle": "center",
+          "id": "e_cornerCol_center_cornerCol_center"
+        },
+        {
+          "source": "cornerCap_center",
+          "sourceHandle": "point",
+          "target": "cornerCap",
+          "targetHandle": "center",
+          "id": "e_cornerCap_center_cornerCap_center"
+        },
+        {
+          "source": "cornerCol",
+          "sourceHandle": "solid",
+          "target": "cornerFull",
+          "targetHandle": "solid1",
+          "id": "e_cornerCol_cornerFull_solid1"
+        },
+        {
+          "source": "cornerCap",
+          "sourceHandle": "solid",
+          "target": "cornerFull",
+          "targetHandle": "solid2",
+          "id": "e_cornerCap_cornerFull_solid2"
+        },
+        {
+          "source": "cornerFull",
+          "sourceHandle": "solid",
+          "target": "corners",
+          "targetHandle": "solid",
+          "id": "e_cornerFull_corners_solid"
+        },
+        {
+          "source": "col_center",
+          "sourceHandle": "point",
+          "target": "col",
+          "targetHandle": "center",
+          "id": "e_col_center_col_center"
+        },
+        {
+          "source": "col",
+          "sourceHandle": "solid",
+          "target": "colonnade",
+          "targetHandle": "solid",
+          "id": "e_col_colonnade_solid"
+        }
+      ]
+    }
+  ]
+}
