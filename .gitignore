@@ -34,5 +34,22 @@ transcript_tail.txt
 context.txt
 transcript_extracted.txt
 scratch/
+_to_delete/
 
 .vercel
+
+# Session store — the database is local working data, not source. The corpus
+# lives in archive/ (imported exports) and can be re-imported at any time.
+data/c33d.db
+data/c33d.db-wal
+data/c33d.db-shm
+intelligence_log.*.json
+*.tmp-*
+*.unreadable-*
+*.merged-*
+*.backup-*
+
+# The index is derived and rebuildable; the event log is the source of truth.
+# Keep the log OUT of git too — it is large and grows every run. Back it up
+# with the folder, or commit archive/ snapshots at version boundaries.
+data/events/

@@ -31,6 +31,13 @@ function zUpVector(ctx: ExpandCtx): ValueRef {
 
 /** Wrap an inline numeric/formula (or data literal) into a number[]-producing node. */
 function literalList(ctx: ExpandCtx, entries: (number | string)[]): ValueRef {
+  // ListConstant parses its `values` param by splitting on commas — an entry
+  // that itself contains a comma ("min(a, b)", "1,5") would be silently split
+  // into corrupt fragments. Refuse with a repairable message instead.
+  const bad = entries.find(e => typeof e === 'string' && e.includes(','));
+  if (bad !== undefined) {
+    ctx.fail(`Data-list entries must not contain commas (got ${JSON.stringify(bad)}) — the list is stored comma-separated, so an embedded comma would corrupt it. Use separate constant entries (one number/formula per entry), and comma-free formulas; precompute anything needing min(a,b)-style calls with an expr() step and reference it.`);
+  }
   const id = ctx.node('ListConstant', { params: { values: entries.join(', ') } });
   return ctx.out(id, 'values', 'number[]');
 }
@@ -505,12 +512,14 @@ export const SKILLS: Record<string, SkillDef> = {
   },
   loft: {
     name: 'loft',
-    doc: 'loft a solid/surface through section curves in order — either curve1..curve4, or ONE grouped multi-curve (spline with groupBy) on curve1',
+    doc: 'loft a solid/surface through section curves in order — either curve1..curve6, or ONE grouped multi-curve (spline with groupBy) on curve1',
     args: {
       curve1: { kind: 'curve', required: true },
       curve2: { kind: 'curve' },
       curve3: { kind: 'curve' },
       curve4: { kind: 'curve' },
+      curve5: { kind: 'curve' },
+      curve6: { kind: 'curve' },
       ruled: { kind: 'bool' },
       closed: { kind: 'bool' },
     },
@@ -522,6 +531,11 @@ export const SKILLS: Record<string, SkillDef> = {
         curve2: ctx.refOpt('curve2', 'curve'),
         curve3: ctx.refOpt('curve3', 'curve'),
         curve4: ctx.refOpt('curve4', 'curve'),
+        // The LoftCurves node declares six section sockets — capping the IR at
+        // four made 5/6-rail lofts impossible from the very layer that
+        // recommends rail-loft construction.
+        curve5: ctx.refOpt('curve5', 'curve'),
+        curve6: ctx.refOpt('curve6', 'curve'),
       },
     })),
   },
@@ -621,13 +635,17 @@ export const SKILLS: Record<string, SkillDef> = {
   },
   linear_pattern: {
     name: 'linear_pattern',
-    doc: 'repeat a solid N times along a direction',
+    doc: 'repeat a solid N times along a direction (default +X spacing 15)',
     args: { shape: { kind: 'solid', required: true }, count: NUMR, directionX: NUM, directionY: NUM, directionZ: NUM },
     returns: 'solid',
     expand: (ctx) => solid(ctx, ctx.node('LinearPattern', {
       params: {
         count: ctx.num('count'),
-        directionX: ctx.numOpt('directionX') ?? 0, directionY: ctx.numOpt('directionY') ?? 0, directionZ: ctx.numOpt('directionZ') ?? 0,
+        // Omitted direction defaults to the node definition's (15, 0, 0); an
+        // EXPLICIT 0 stays 0 (the executor no longer "defaults" zeros away).
+        // Compiling omitted axes to all-zero left the pattern degenerate the
+        // moment the executor's `|| 15` crutch was removed.
+        directionX: ctx.numOpt('directionX') ?? 15, directionY: ctx.numOpt('directionY') ?? 0, directionZ: ctx.numOpt('directionZ') ?? 0,
       },
       inputs: { solid: ctx.ref('shape', 'solid') },
     })),

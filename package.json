@@ -4,11 +4,15 @@
   "author": "Semir Poturak, PhD <poturaksemir@gmail.com>",
   "private": true,
   "type": "module",
+  "engines": {
+    "node": ">=22.13"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "oxlint",
     "test": "node tests/run_tests.mjs",
+    "logs:merge": "node scripts/merge-logs.mjs",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -30,7 +34,6 @@
     "@types/react-dom": "^19.2.3",
     "@types/three": "^0.185.0",
     "@vitejs/plugin-react": "^6.0.3",
-    "autoprefixer": "^10.5.2",
     "oxlint": "^1.71.0",
     "postcss": "^8.5.16",
     "tailwindcss": "^4.3.2",

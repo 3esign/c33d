@@ -21,7 +21,8 @@ echo   STEP 2 of 3 - commit and push
 call "%~dp0commit.bat"
 if errorlevel 1 (
   echo.
-  echo   Commit step did not complete. Stopping before deploy.
+  echo   Commit step was skipped or did not complete. Stopping before deploy -
+  echo   the live site must never run code that exists in no commit.
   pause
   exit /b 1
 )
@@ -29,6 +30,12 @@ if errorlevel 1 (
 echo.
 echo   STEP 3 of 3 - deploy
 call "%~dp0deploy.bat"
+if errorlevel 1 (
+  echo.
+  echo   Deploy failed. The release did NOT reach the live site.
+  pause
+  exit /b 1
+)
 
 echo.
 echo   Release chain finished.

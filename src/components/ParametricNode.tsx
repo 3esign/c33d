@@ -1,15 +1,75 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Handle, Position } from '@xyflow/react';
 import type { NodeProps } from '@xyflow/react';
+import { useShallow } from 'zustand/react/shallow';
 import { NODE_LIBRARY } from '../nodes/NodeDefinitions';
 import type { NodeParamDef } from '../nodes/NodeDefinitions';
 import { useStore } from '../store/useStore';
 
+// Numeric field with local draft state: partial entries like "-", "" or "1e-"
+// stay local while typing, and the store (and thus a re-evaluation) is only
+// touched on blur/Enter with a finite number. This makes negative values
+// typeable and stops the per-keystroke eval storm.
+const NumberField: React.FC<{
+  value: number;
+  min: number;
+  max: number;
+  step: number;
+  disabled: boolean;
+  onCommit: (v: number) => void;
+}> = ({ value, min, max, step, disabled, onCommit }) => {
+  const [text, setText] = useState<string>(String(value));
+  const [editing, setEditing] = useState(false);
+
+  // Reflect external changes (slider drags, AI edits) while not being edited.
+  useEffect(() => {
+    if (!editing) setText(String(value));
+  }, [value, editing]);
+
+  const commit = () => {
+    setEditing(false);
+    const parsed = parseFloat(text);
+    if (Number.isFinite(parsed)) {
+      if (parsed !== value) onCommit(parsed);
+    } else {
+      setText(String(value)); // revert an unparseable draft
+    }
+  };
+
+  return (
+    <input
+      type="number"
+      min={min}
+      max={max}
+      step={step}
+      disabled={disabled}
+      className={`nodrag nopan bg-slate-900 text-slate-200 text-[10px] p-0.5 rounded border border-slate-650 w-10 text-center font-mono ${disabled ? 'opacity-40' : ''}`}
+      value={editing ? text : String(value)}
+      onChange={e => { setEditing(true); setText(e.target.value); }}
+      onBlur={commit}
+      onKeyDown={e => {
+        if (e.key === 'Enter') {
+          commit();
+          (e.target as HTMLInputElement).blur();
+        }
+      }}
+    />
+  );
+};
+
 export const ParametricNode: React.FC<NodeProps> = ({ id, type, data, isConnectable }) => {
   const definition = NODE_LIBRARY[type];
-  const { updateNodeData } = useStore();
-  const edges = useStore(state => state.edges);
-  const macros = useStore(state => state.macros);
+  const updateNodeData = useStore(state => state.updateNodeData);
+  // Subscribe only to the handles that drive THIS node's params — a shallow-
+  // compared string array, so unrelated edge changes don't re-render the node.
+  const drivenHandles = useStore(useShallow(state =>
+    state.edges
+      .filter(e => e.target === id && typeof e.targetHandle === 'string' && e.targetHandle.startsWith('param:'))
+      .map(e => e.targetHandle as string)
+  ));
+  const macroDefFromStore = useStore(state =>
+    type === 'Macro' ? state.macros.find(m => m.id === (data as any).macroId) ?? null : null
+  );
 
   if (!definition) return <div className="bg-red-500 text-white p-2">Unknown Node</div>;
 
@@ -18,7 +78,7 @@ export const ParametricNode: React.FC<NodeProps> = ({ id, type, data, isConnecta
   };
 
   // Macro nodes derive their params from the macro definition
-  const macroDef = type === 'Macro' ? macros.find(m => m.id === (data as any).macroId) : null;
+  const macroDef = macroDefFromStore;
   const params: NodeParamDef[] = macroDef
     ? macroDef.exposedParams.map(ep => ({ name: ep.name, type: ep.type, default: ep.default, min: ep.min, max: ep.max, step: ep.step }))
     : definition.params;
@@ -31,8 +91,7 @@ export const ParametricNode: React.FC<NodeProps> = ({ id, type, data, isConnecta
       ? 'bg-emerald-900/60 text-emerald-200'
       : 'bg-slate-700 text-slate-200';
 
-  const isDriven = (paramName: string) =>
-    edges.some(e => e.target === id && e.targetHandle === `param:${paramName}`);
+  const isDriven = (paramName: string) => drivenHandles.includes(`param:${paramName}`);
 
   return (
     <div className="bg-slate-800 border border-slate-600 rounded-lg shadow-lg min-w-[150px] font-sans text-sm">
@@ -107,15 +166,13 @@ export const ParametricNode: React.FC<NodeProps> = ({ id, type, data, isConnecta
                               value={currentVal}
                               onChange={e => handleChange(param.name, parseFloat(e.target.value))}
                             />
-                            <input
-                              type="number"
+                            <NumberField
                               min={minVal}
                               max={maxVal}
                               step={stepVal}
                               disabled={driven}
-                              className={`nodrag nopan bg-slate-900 text-slate-200 text-[10px] p-0.5 rounded border border-slate-650 w-10 text-center font-mono ${driven ? 'opacity-40' : ''}`}
-                              value={currentVal}
-                              onChange={e => handleChange(param.name, parseFloat(e.target.value) || 0)}
+                              value={Number(currentVal)}
+                              onCommit={v => handleChange(param.name, v)}
                             />
                           </>
                         );

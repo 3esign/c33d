@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { Star, X } from 'lucide-react';
+import { useShallow } from 'zustand/react/shallow';
 import { useStore, generateUUID } from '../store/useStore';
 import { captureViewportSnapshot } from '../utils/snapshot';
 import { tryEmbed } from '../ai/api';
@@ -7,16 +8,36 @@ import { exampleSearchText } from '../ai/retrieval';
 import { calculateParametricCoverage } from '../ai/graphValidation';
 import type { SuccessExample } from '../nodes/NodeDefinitions';
 
+// Outer shell: subscribes ONLY to the open flag. All heavy work (deep graph
+// clones, coverage analysis, snapshot capture) lives in the inner component,
+// which is mounted only while the modal is open — nothing runs while closed.
 export const SaveExampleModal: React.FC = () => {
-  const {
-    saveModalOpen, saveModalCandidate, closeSaveModal,
-    episodePrompts, episodePlan, nodes, edges, lastAIGraph,
-    addSuccessExample, addMessage, agentSlots, activeAgentId,
-    setNudgeCandidate,
-  } = useStore();
+  const saveModalOpen = useStore(state => state.saveModalOpen);
+  if (!saveModalOpen) return null;
+  return <SaveExampleModalInner />;
+};
+
+const SaveExampleModalInner: React.FC = () => {
+  const saveModalCandidate = useStore(state => state.saveModalCandidate);
+  const episodePrompts = useStore(state => state.episodePrompts);
+  const episodePlan = useStore(state => state.episodePlan);
+  const nodes = useStore(state => state.nodes);
+  const edges = useStore(state => state.edges);
+  const lastAIGraph = useStore(state => state.lastAIGraph);
+  const agentSlots = useStore(state => state.agentSlots);
+  const activeAgentId = useStore(state => state.activeAgentId);
+  const { closeSaveModal, addSuccessExample, addMessage, setNudgeCandidate } = useStore(
+    useShallow(state => ({
+      closeSaveModal: state.closeSaveModal,
+      addSuccessExample: state.addSuccessExample,
+      addMessage: state.addMessage,
+      setNudgeCandidate: state.setNudgeCandidate,
+    }))
+  );
 
   const [comment, setComment] = useState('');
   const [tags, setTags] = useState('');
+  const [isSaving, setIsSaving] = useState(false);
 
   const candidate = saveModalCandidate;
   const prompts = candidate ? candidate.prompts : episodePrompts;
@@ -26,7 +47,9 @@ export const SaveExampleModal: React.FC = () => {
       ? candidate.graphFinal
       : { nodes: JSON.parse(JSON.stringify(nodes)), edges: JSON.parse(JSON.stringify(edges)) };
   }, [candidate, nodes, edges]);
-  const graphOriginal = candidate ? candidate.graphOriginal : (lastAIGraph ? JSON.parse(JSON.stringify(lastAIGraph)) : null);
+  const graphOriginal = useMemo(() => {
+    return candidate ? candidate.graphOriginal : (lastAIGraph ? JSON.parse(JSON.stringify(lastAIGraph)) : null);
+  }, [candidate, lastAIGraph]);
 
   const { coverage, total } = useMemo(() => {
     return calculateParametricCoverage(graphFinal.nodes, graphFinal.edges);
@@ -34,15 +57,11 @@ export const SaveExampleModal: React.FC = () => {
 
   const coverageBlocked = total > 0 && coverage < 0.40;
 
-  const thumbnail = useMemo(() => {
-    if (!saveModalOpen) return '';
-    // For a nudge candidate the old design is already replaced on screen; the
-    // snapshot may show the new design. Still capture — better than nothing —
-    // but prefer live saves (button) for accurate thumbnails.
-    return captureViewportSnapshot(256) || '';
-  }, [saveModalOpen]);
-
-  if (!saveModalOpen) return null;
+  // Captured once, when the modal opens (= when this component mounts).
+  // For a nudge candidate the old design is already replaced on screen; the
+  // snapshot may show the new design. Still capture — better than nothing —
+  // but prefer live saves (button) for accurate thumbnails.
+  const [thumbnail] = useState(() => captureViewportSnapshot(256) || '');
 
   const modelName = (() => {
     if (candidate) return candidate.model;
@@ -51,33 +70,38 @@ export const SaveExampleModal: React.FC = () => {
   })();
 
   const save = async () => {
-    if (coverageBlocked) return;
-    const example: SuccessExample = {
-      id: generateUUID(),
-      createdAt: new Date().toISOString(),
-      prompts: prompts.length > 0 ? prompts : ['(manually built)'],
-      plan: plan || '',
-      comment: comment.trim(),
-      graphOriginal,
-      graphFinal,
-      thumbnail,
-      model: modelName,
-      tags: tags.split(',').map(t => t.trim()).filter(Boolean),
-    };
-    // Best-effort embedding for retrieval (provider-dependent; lexical fallback exists)
-    const emb = await tryEmbed(exampleSearchText(example));
-    if (emb) example.embedding = emb;
+    if (coverageBlocked || isSaving) return;
+    setIsSaving(true);
+    try {
+      const example: SuccessExample = {
+        id: generateUUID(),
+        createdAt: new Date().toISOString(),
+        prompts: prompts.length > 0 ? prompts : ['(manually built)'],
+        plan: plan || '',
+        comment: comment.trim(),
+        graphOriginal,
+        graphFinal,
+        thumbnail,
+        model: modelName,
+        tags: tags.split(',').map(t => t.trim()).filter(Boolean),
+      };
+      // Best-effort embedding for retrieval (provider-dependent; lexical fallback exists)
+      const emb = await tryEmbed(exampleSearchText(example));
+      if (emb) example.embedding = emb;
 
-    addSuccessExample(example);
-    addMessage({
-      id: generateUUID(),
-      role: 'system',
-      content: `Saved as successful example (${example.graphFinal.nodes.length} nodes). It is now part of the AI's verified knowledge and will be retrieved for similar future requests.`,
-    });
-    setComment('');
-    setTags('');
-    setNudgeCandidate(null);
-    closeSaveModal();
+      addSuccessExample(example);
+      addMessage({
+        id: generateUUID(),
+        role: 'system',
+        content: `Saved as successful example (${example.graphFinal.nodes.length} nodes). It is now part of the AI's verified knowledge and will be retrieved for similar future requests.`,
+      });
+      setComment('');
+      setTags('');
+      setNudgeCandidate(null);
+      closeSaveModal();
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   return (
@@ -143,14 +167,14 @@ export const SaveExampleModal: React.FC = () => {
           <button onClick={closeSaveModal} className="text-xs px-3 py-1.5 rounded bg-slate-700 text-slate-300 hover:bg-slate-650">Cancel</button>
           <button
             onClick={save}
-            disabled={coverageBlocked}
+            disabled={coverageBlocked || isSaving}
             className={`text-xs px-3 py-1.5 rounded flex items-center gap-1.5 font-medium transition-colors ${
-              coverageBlocked
+              coverageBlocked || isSaving
                 ? 'bg-slate-700 text-slate-500 cursor-not-allowed border border-slate-650'
                 : 'bg-emerald-600 text-white hover:bg-emerald-700'
             }`}
           >
-            <Star size={12} /> Save to library
+            <Star size={12} /> {isSaving ? 'Saving…' : 'Save to library'}
           </button>
         </div>
       </div>

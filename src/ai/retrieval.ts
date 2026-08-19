@@ -46,19 +46,33 @@ export async function retrieveSimilarExamples(
   // Try embedding path: query embedding + stored example embeddings
   const queryEmbedding = await tryEmbed(query);
 
-  const scored = examples.map(ex => {
-    let score: number;
-    if (queryEmbedding && ex.embedding && ex.embedding.length === queryEmbedding.length) {
-      score = cosine(queryEmbedding, ex.embedding);
-    } else {
-      score = lexicalScore(query, exampleSearchText(ex));
-    }
-    return { ex, score };
-  });
+  if (!queryEmbedding) {
+    const scored = examples.map(ex => ({ ex, score: lexicalScore(query, exampleSearchText(ex)) }));
+    scored.sort((a, b) => b.score - a.score);
+    return scored.filter(s => s.score >= 0.12).slice(0, topK).map(s => s.ex);
+  }
 
-  scored.sort((a, b) => b.score - a.score);
-  const MIN_SCORE = queryEmbedding ? 0.35 : 0.12;
-  return scored.filter(s => s.score >= MIN_SCORE).slice(0, topK).map(s => s.ex);
+  // Hybrid scoring: embedded examples compete on cosine (threshold 0.35).
+  // Examples WITHOUT a comparable embedding (never embedded, or embedded by a
+  // different provider/dimension) previously scored Dice against the 0.35
+  // embedding threshold — silently unreachable. They now compete via Dice with
+  // their own 0.2 threshold, capped at 2 candidates so lexical noise cannot
+  // crowd out genuine embedding matches.
+  const embedded: { ex: SuccessExample; score: number }[] = [];
+  const lexicalOnly: { ex: SuccessExample; score: number }[] = [];
+  for (const ex of examples) {
+    if (ex.embedding && ex.embedding.length === queryEmbedding.length) {
+      embedded.push({ ex, score: cosine(queryEmbedding, ex.embedding) });
+    } else {
+      lexicalOnly.push({ ex, score: lexicalScore(query, exampleSearchText(ex)) });
+    }
+  }
+  const pool = [
+    ...embedded.filter(s => s.score >= 0.35),
+    ...lexicalOnly.filter(s => s.score >= 0.2).sort((a, b) => b.score - a.score).slice(0, 2),
+  ];
+  pool.sort((a, b) => b.score - a.score);
+  return pool.slice(0, topK).map(s => s.ex);
 }
 
 // Condensed, token-cheap view of a graph for prompt injection

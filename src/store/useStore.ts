@@ -35,6 +35,28 @@ const createGeometryWorker = () =>
   });
 let worker = createGeometryWorker();
 
+// ---------------------------------------------------------------------------
+// SPEC-1: evaluation protocol ids. Every EVALUATE_GRAPH post carries a fresh
+// id; DONE/ERROR/PERTURBATION messages are applied only when their id matches
+// the eval we last posted. Stale results from a superseded or cleared graph
+// are dropped instead of resurrecting deleted geometry or stamping old
+// perturbation issues onto a new report.
+// ---------------------------------------------------------------------------
+let evalSeq = 0;
+let currentEvalId: string | null = null;
+const nextEvalId = () => { currentEvalId = String(++evalSeq); return currentEvalId; };
+
+// SPEC-2: watchdog. A wedged evaluation (infinite tokenizer loop, runaway
+// count) never posts DONE or ERROR — the timer is the only way out.
+const EVAL_WATCHDOG_MS = 120_000;
+let evalWatchdogTimer: ReturnType<typeof setTimeout> | null = null;
+const clearEvalWatchdog = () => {
+  if (evalWatchdogTimer) {
+    clearTimeout(evalWatchdogTimer);
+    evalWatchdogTimer = null;
+  }
+};
+
 export const generateUUID = () => {
   if (typeof crypto !== 'undefined' && crypto.randomUUID) {
     return crypto.randomUUID();
@@ -98,18 +120,29 @@ export async function saveSessionNote(
   }
 }
 
-// Persistence helper to dry up fetch calls
-async function persistData(endpoint: string, payload: any, isText = false) {
+// Persistence helper to dry up fetch calls. Returns whether the save actually
+// landed: a 404, or an SPA fallback that rewrites /api/* to index.html
+// (content-type text/html), is a MISS — not a success (SPEC-8).
+async function persistData(endpoint: string, payload: any, isText = false): Promise<boolean> {
   try {
-    await fetch(endpoint, {
+    const res = await fetch(endpoint, {
       method: 'POST',
       headers: { 'Content-Type': isText ? 'text/plain; charset=utf-8' : 'application/json' },
       body: isText ? payload : JSON.stringify(payload),
     });
+    if (!res.ok) return false;
+    if ((res.headers.get('content-type') || '').includes('text/html')) return false;
+    return true;
   } catch (e) {
     console.error(`Failed to save data to ${endpoint}:`, e);
+    return false;
   }
 }
+
+// One honest notice per data kind per session when the store backend is
+// unreachable (production static build) — instead of announcing durable saves
+// that a reload would erase.
+const persistFailureNotified = new Set<string>();
 
 // Scratch evaluations (isolated single-node repros for the agent's diagnosis
 // loop) — routed by id, never touching scene state.
@@ -124,8 +157,11 @@ const resolveEvalWaiters = (outcome: EvaluationOutcome) => {
 };
 export const waitForEvaluation = (timeoutMs = 30000): Promise<EvaluationOutcome> => {
   const state = useStore.getState();
-  if (!state.isEvaluating && !(window as any)._evalDebounceTimer && !state.nodes.length) {
-    return Promise.resolve({ error: null, report: null });
+  // Nothing in flight and nothing scheduled: the store already holds the
+  // settled outcome — resolve with it immediately instead of waiting 30s for
+  // an evaluation that will never come.
+  if (!state.isEvaluating && !(window as any)._evalDebounceTimer) {
+    return Promise.resolve({ error: state.lastEvaluationError ?? null, report: state.lastGeometryReport ?? null });
   }
   return new Promise((resolve) => {
     const timer = setTimeout(() => resolve({ error: 'Evaluation timed out after 30s', report: null }), timeoutMs);
@@ -250,7 +286,16 @@ export const useStore = create<AppState>()(
           }
           return;
         }
+        // SPEC-1: drop results from a superseded or cleared evaluation. Their
+        // meshes/reports describe a graph that no longer exists.
+        if (
+          (type === 'EVALUATE_DONE' || type === 'EVALUATE_ERROR' || type === 'PERTURBATION_REPORT') &&
+          id != null && id !== currentEvalId
+        ) {
+          return;
+        }
         if (type === 'EVALUATE_DONE') {
+          clearEvalWatchdog();
           // A3: poisoned-kernel detection. Per-node kernel-class failures never
           // reach EVALUATE_ERROR (the evaluation "succeeds"), so a corrupted
           // WASM instance would otherwise keep serving failing evals while the
@@ -264,9 +309,11 @@ export const useStore = create<AppState>()(
             worker = createGeometryWorker();
             bindWorker(worker);
             const { nodes, edges, macros } = get();
+            const replayId = nextEvalId();
+            armEvalWatchdog(replayId);
             worker.postMessage({
               type: 'EVALUATE_GRAPH',
-              id: id || generateUUID(),
+              id: replayId,
               payload: { nodes, edges, macros, disablePerturbation: true }
             });
             return;
@@ -285,28 +332,48 @@ export const useStore = create<AppState>()(
               edgeCount: get().edges.length,
               error: errStr
             });
-            set({ isEvaluating: false, lastEvaluationError: errStr, lastGeometryReport: report || null, hasRetriedDeleted: false });
-            resolveEvalWaiters({ error: errStr, report: report || null });
+            const stampedErrReport = report ? { ...report, evalId: id ?? currentEvalId } : null;
+            set({ isEvaluating: false, lastEvaluationError: errStr, lastGeometryReport: stampedErrReport, hasRetriedDeleted: false });
+            resolveEvalWaiters({ error: errStr, report: stampedErrReport });
             return;
           }
           const currentObjects = get().sceneObjects;
+
+          // Ancestor-color lookup, memoized per message with a cycle guard —
+          // the old per-leaf recursion re-walked the whole upstream graph for
+          // every leaf (exponential on diamond graphs, unbounded on cycles).
+          const nodeById = new Map(get().nodes.map(n => [n.id, n]));
+          const sourcesByTarget = new Map<string, string[]>();
+          get().edges.forEach(e => {
+            const list = sourcesByTarget.get(e.target);
+            if (list) list.push(e.source); else sourcesByTarget.set(e.target, [e.source]);
+          });
+          const colorMemo = new Map<string, string | undefined>();
+          const findColor = (nodeId: string, visited: Set<string>): string | undefined => {
+            if (colorMemo.has(nodeId)) return colorMemo.get(nodeId);
+            if (visited.has(nodeId)) return undefined;
+            visited.add(nodeId);
+            const node = nodeById.get(nodeId);
+            let color: string | undefined;
+            if (node) {
+              if (node.data && (node.data as any).color) {
+                color = (node.data as any).color;
+              } else {
+                for (const src of sourcesByTarget.get(nodeId) || []) {
+                  color = findColor(src, visited);
+                  if (color) break;
+                }
+              }
+            }
+            colorMemo.set(nodeId, color);
+            return color;
+          };
+
           const newObjects = result.map((res: any) => {
             const existing = currentObjects.find(o => o.id === res.id);
-            
-            // Helper to recursively find color of this node or its ancestor nodes in the graph
-            const findColor = (nodeId: string): string | undefined => {
-              const node = get().nodes.find(n => n.id === nodeId);
-              if (!node) return undefined;
-              if (node.data && (node.data as any).color) return (node.data as any).color;
-              
-              // Walk backwards along edges
-              const incomingEdges = get().edges.filter(e => e.target === nodeId);
-              for (const edge of incomingEdges) {
-                const colorVal = findColor(edge.source);
-                if (colorVal) return colorVal;
-              }
-              return undefined;
-            };
+            // SPEC-9: preserve the worker's mesh kind (Mesh | Line | Point) so
+            // the viewport can pick the right render primitive.
+            const resType = res.type || 'Mesh';
 
             // Reuse the previous geometryData object reference when this part's
             // geometry is unchanged (same worker hash). The viewport memoizes
@@ -317,11 +384,12 @@ export const useStore = create<AppState>()(
             return {
               id: res.id,
               name: existing ? existing.name : `Node_${res.id}`,
-              type: 'Mesh',
+              type: resType,
               visible: existing ? existing.visible : true,
-              color: findColor(res.id),
+              color: findColor(res.id, new Set()),
               meshHash: res.hash,
               geometryData: unchanged ? existing.geometryData : {
+                type: resType,
                 vertices: res.vertices,
                 indices: res.indices,
                 normals: res.normals
@@ -342,7 +410,7 @@ export const useStore = create<AppState>()(
               error: evaluationError
             });
           }
-          set({ sceneObjects: newObjects, isEvaluating: false, lastEvaluationError: evaluationError, lastGeometryReport: report || null, hasRetriedDeleted: false });
+          set({ sceneObjects: newObjects, isEvaluating: false, lastEvaluationError: evaluationError, lastGeometryReport: report ? { ...report, evalId: id ?? currentEvalId } : null, hasRetriedDeleted: false });
 
           // Recycle the worker periodically to contain OCCT WASM memory growth
           if (report?.recycleRecommended && !(window as any)._pendingEvaluation) {
@@ -371,6 +439,7 @@ export const useStore = create<AppState>()(
             return {};
           });
         } else if (type === 'EVALUATE_ERROR') {
+          clearEvalWatchdog();
           const errStr = String(error || 'Unknown error during graph evaluation');
           if (isSystemError(errStr) && !get().hasRetriedDeleted) {
             console.warn("Detected system/kernel deletion error. Respawning worker and retrying evaluation once...", errStr);
@@ -378,12 +447,14 @@ export const useStore = create<AppState>()(
             try { worker.terminate(); } catch {}
             worker = createGeometryWorker();
             bindWorker(worker);
-            
+
             // Re-post message to restart the evaluation
             const { nodes, edges, macros } = get();
+            const replayId = nextEvalId();
+            armEvalWatchdog(replayId);
             worker.postMessage({
               type: 'EVALUATE_GRAPH',
-              id: id || generateUUID(),
+              id: replayId,
               payload: { nodes, edges, macros, disablePerturbation: true }
             });
             return;
@@ -413,9 +484,18 @@ export const useStore = create<AppState>()(
         }
       };
 
-      // Catch worker loading/runtime errors and log them to performanceLogs
+      // Catch worker loading/runtime errors and log them to performanceLogs.
+      // SPEC-2: an errored worker may be wedged — respawn it and drop any
+      // queued re-evaluation so the pipeline can't deadlock on a dead worker.
       w.onerror = (err) => {
         console.error('Worker error:', err);
+        if (w !== worker) return; // an already-replaced worker; nothing to recover
+        clearEvalWatchdog();
+        currentEvalId = null;
+        (window as any)._pendingEvaluation = false;
+        try { worker.terminate(); } catch { /* noop */ }
+        worker = createGeometryWorker();
+        bindWorker(worker);
         const currentLogs = get().performanceLogs;
         set({
           performanceLogs: [
@@ -437,6 +517,47 @@ export const useStore = create<AppState>()(
         resolveEvalWaiters({ error: err.message || 'Worker Error', report: null });
       };
       };
+
+      // SPEC-2: per-eval watchdog. Armed on every EVALUATE_GRAPH post, cleared
+      // on DONE/ERROR. On fire the worker is presumed wedged: kill it, respawn,
+      // and surface an honest error instead of hanging forever.
+      const armEvalWatchdog = (evalId: string) => {
+        clearEvalWatchdog();
+        evalWatchdogTimer = setTimeout(() => {
+          evalWatchdogTimer = null;
+          if (evalId !== currentEvalId) return; // superseded meanwhile
+          currentEvalId = null;
+          (window as any)._pendingEvaluation = false;
+          try { worker.terminate(); } catch { /* noop */ }
+          worker = createGeometryWorker();
+          bindWorker(worker);
+          const errStr = 'Evaluation exceeded 120s and was terminated — likely an infinite loop or runaway count. The graph was NOT evaluated.';
+          get().addPerformanceLog({
+            model: 'System',
+            request: 'Graph Evaluation (Watchdog Timeout)',
+            success: false,
+            responseTimeMs: EVAL_WATCHDOG_MS,
+            nodeCount: get().nodes.length,
+            edgeCount: get().edges.length,
+            error: errStr
+          });
+          set({ isEvaluating: false, lastEvaluationError: errStr, hasRetriedDeleted: false });
+          resolveEvalWaiters({ error: errStr, report: null });
+        }, EVAL_WATCHDOG_MS);
+      };
+
+      // Persistence honesty (SPEC-8): tell the user, once per data kind, when a
+      // "durable" save only landed in this browser's localStorage.
+      const notifyPersistFailure = (what: string) => {
+        if (persistFailureNotified.has(what)) return;
+        persistFailureNotified.add(what);
+        get().addMessage({
+          id: generateUUID(),
+          role: 'system',
+          content: `${what} saved in this browser only — no store backend reachable. It will not sync to the shared knowledge store.`,
+        });
+      };
+
       bindWorker(worker);
 
       return {
@@ -454,7 +575,7 @@ export const useStore = create<AppState>()(
             id: 'default-ollama',
             name: 'Ollama (Local)',
             provider: 'ollama',
-            apiKey: 'http://localhost:11434',
+            apiKey: 'http://127.0.0.1:11434',
             model: 'llama3',
             optimizeForSmallModels: false,
           },
@@ -520,7 +641,7 @@ export const useStore = create<AppState>()(
                 id: 'default-ollama',
                 name: 'Ollama (Local)',
                 provider: 'ollama',
-                apiKey: 'http://localhost:11434',
+                apiKey: 'http://127.0.0.1:11434',
                 model: 'llama3',
                 optimizeForSmallModels: false,
               },
@@ -555,7 +676,7 @@ export const useStore = create<AppState>()(
           set((state) => ({
             performanceLogs: [newEntry, ...state.performanceLogs].slice(0, 50)
           }));
-          persistData('/api/log', { ...newEntry, sessionId: currentSessionId });
+          void persistData('/api/log', { ...newEntry, sessionId: currentSessionId });
         },
 
         // Chat
@@ -722,7 +843,15 @@ export const useStore = create<AppState>()(
             (window as any)._evalDebounceTimer = null;
             const { nodes, edges, macros } = get();
             if (nodes.length === 0) {
-              set({ sceneObjects: [], lastGeometryReport: null });
+              // Deleting the last node empties the scene. Invalidate any
+              // in-flight eval (SPEC-1 — its result would resurrect the
+              // deleted geometry) and clear the stale evaluation error: an
+              // empty graph has no failure to report.
+              evalSeq++;
+              currentEvalId = null;
+              clearEvalWatchdog();
+              (window as any)._pendingEvaluation = false;
+              set({ sceneObjects: [], lastGeometryReport: null, lastEvaluationError: null, isEvaluating: false });
               resolveEvalWaiters({ error: null, report: null });
               return;
             }
@@ -733,9 +862,11 @@ export const useStore = create<AppState>()(
             }
 
             set({ isEvaluating: true });
+            const evalId = nextEvalId();
+            armEvalWatchdog(evalId);
             worker.postMessage({
               type: 'EVALUATE_GRAPH',
-              id: generateUUID(),
+              id: evalId,
               payload: { nodes, edges, macros }
             });
           }, 50);
@@ -763,19 +894,23 @@ export const useStore = create<AppState>()(
           });
         },
         clearGraph: () => {
-          set({ nodes: [], edges: [], sceneObjects: [], lastEvaluationError: null, lastGeometryReport: null });
+          // SPEC-1: bump the eval sequence so any in-flight result is stale by
+          // definition — a cleared canvas must stay cleared, even if the old
+          // graph's evaluation finishes a second later.
+          evalSeq++;
+          currentEvalId = null;
+          clearEvalWatchdog();
+          (window as any)._pendingEvaluation = false;
+          set({ nodes: [], edges: [], sceneObjects: [], lastEvaluationError: null, lastGeometryReport: null, isEvaluating: false });
           // A5: a clean slate gets a fresh kernel. "Try from a clean graph" is
           // the instinctive recovery move (users and models both reach for it)
-          // — it must actually reset the engine, not just the node list.
-          if (!get().isEvaluating) {
-            try { worker.terminate(); } catch { /* noop */ }
-            worker = createGeometryWorker();
-            bindWorker(worker);
-          } else {
-            try {
-              worker.postMessage({ type: 'CLEAR_CACHE' });
-            } catch { /* noop */ }
-          }
+          // — it must actually reset the engine, not just the node list. An
+          // in-flight evaluation is terminated with the worker: its result is
+          // invalidated above, so letting it finish would only burn CPU.
+          try { worker.terminate(); } catch { /* noop */ }
+          worker = createGeometryWorker();
+          bindWorker(worker);
+          resolveEvalWaiters({ error: null, report: null });
         },
         lastEvaluationError: null,
         clearLastEvaluationError: () => set({ lastEvaluationError: null }),
@@ -785,14 +920,18 @@ export const useStore = create<AppState>()(
         agentGuidelines: DEFAULT_GUIDELINES,
         setAgentGuidelines: (agentGuidelines) => {
           set({ agentGuidelines });
-          persistData('/api/guidelines', agentGuidelines, true);
+          void persistData('/api/guidelines', agentGuidelines, true).then(ok => {
+            if (!ok) notifyPersistFailure('Guidelines');
+          });
         },
         initializeGuidelines: async () => {
           try {
             const res = await fetch('/api/guidelines');
-            if (res.ok) {
+            // SPA-rewrite guard: a static host serves index.html for unknown
+            // routes — that page must never become the agent's guidelines.
+            if (res.ok && !(res.headers.get('content-type') || '').includes('text/html')) {
               const text = await res.text();
-              if (text && text.trim()) {
+              if (text && text.trim() && !/^\s*<(!doctype|html)/i.test(text)) {
                 set({ agentGuidelines: text });
               }
             }
@@ -822,28 +961,35 @@ export const useStore = create<AppState>()(
         // Success library
         successExamples: [],
         addSuccessExample: (ex: SuccessExample) => {
-          set((state) => {
-            // C5: stamp capability provenance — retrieval shows the stamp so a
-            // stale success can't masquerade as current-environment truth.
-            const stamped = { ...ex, verifiedOnBuild: ex.verifiedOnBuild || new Date().toISOString().slice(0, 10) };
-            const successExamples = [stamped, ...state.successExamples];
-            persistData('/api/examples', successExamples);
-            return { successExamples };
+          // C5: stamp capability provenance — retrieval shows the stamp so a
+          // stale success can't masquerade as current-environment truth.
+          const stamped = { ...ex, verifiedOnBuild: ex.verifiedOnBuild || new Date().toISOString().slice(0, 10) };
+          const successExamples = [stamped, ...get().successExamples];
+          set({ successExamples });
+          void persistData('/api/examples', successExamples).then(ok => {
+            if (!ok) notifyPersistFailure('Example');
           });
         },
         removeSuccessExample: (id: string) => {
-          set((state) => {
-            const successExamples = state.successExamples.filter(e => e.id !== id);
-            persistData('/api/examples', successExamples);
-            return { successExamples };
+          const successExamples = get().successExamples.filter(e => e.id !== id);
+          set({ successExamples });
+          void persistData('/api/examples', successExamples).then(ok => {
+            if (!ok) notifyPersistFailure('Example');
           });
         },
         initializeExamples: async () => {
           try {
             const res = await fetch('/api/examples');
-            if (res.ok) {
+            // Reject SPA-rewritten HTML bodies and drop obviously-malformed
+            // entries so one bad row can't crash the Library UI or retrieval.
+            if (res.ok && !(res.headers.get('content-type') || '').includes('text/html')) {
               const data = await res.json();
-              if (Array.isArray(data)) set({ successExamples: data });
+              if (Array.isArray(data)) {
+                const valid = data.filter((ex: any) =>
+                  ex && typeof ex === 'object' && ex.id &&
+                  ex.graphFinal && Array.isArray(ex.graphFinal.nodes) && Array.isArray(ex.graphFinal.edges));
+                set({ successExamples: valid });
+              }
             }
           } catch (e) {
             console.error('Failed to load examples from server:', e);
@@ -853,25 +999,27 @@ export const useStore = create<AppState>()(
         // Macro library
         macros: [],
         addMacro: (m: MacroDefinition) => {
-          set((state) => {
-            const macros = [m, ...state.macros];
-            persistData('/api/macros', macros);
-            return { macros };
+          const macros = [m, ...get().macros];
+          set({ macros });
+          void persistData('/api/macros', macros).then(ok => {
+            if (!ok) notifyPersistFailure('Macro');
           });
         },
         removeMacro: (id: string) => {
-          set((state) => {
-            const macros = state.macros.filter(m => m.id !== id);
-            persistData('/api/macros', macros);
-            return { macros };
+          const macros = get().macros.filter(m => m.id !== id);
+          set({ macros });
+          void persistData('/api/macros', macros).then(ok => {
+            if (!ok) notifyPersistFailure('Macro');
           });
         },
         initializeMacros: async () => {
           try {
             const res = await fetch('/api/macros');
-            if (res.ok) {
+            if (res.ok && !(res.headers.get('content-type') || '').includes('text/html')) {
               const data = await res.json();
-              if (Array.isArray(data)) set({ macros: data });
+              if (Array.isArray(data)) {
+                set({ macros: data.filter((m: any) => m && m.id && Array.isArray(m.nodes)) });
+              }
             }
           } catch (e) {
             console.error('Failed to load macros from server:', e);
@@ -895,8 +1043,10 @@ export const useStore = create<AppState>()(
         // Eval harness results
         evalResults: [],
         addEvalResult: (r: EvalResultEntry) => {
-          set((state) => ({ evalResults: [r, ...state.evalResults] }));
-          persistData('/api/eval-results', r);
+          // Stamp a stable id: result rows are keyed/expanded by it in the UI.
+          const entry = r.id ? r : { ...r, id: generateUUID() };
+          set((state) => ({ evalResults: [entry, ...state.evalResults] }));
+          void persistData('/api/eval-results', entry);
         },
         isRunningEvals: false,
         setIsRunningEvals: (v: boolean) => set({ isRunningEvals: v }),
@@ -904,13 +1054,39 @@ export const useStore = create<AppState>()(
     },
     {
       name: 'ai-cad-storage',
-      version: 2, // v2: retired dynamicKnowledge (replaced by the success library)
+      // v2: retired dynamicKnowledge (replaced by the success library)
+      // v3 (SPEC-8): persist successExamples + macros (the app's only long-term
+      // knowledge no longer evaporates on reload in production); stop persisting
+      // the disableToolCalling ratchet; add a migrate that preserves old state.
+      version: 3,
+      migrate: (persisted: any) => {
+        // Older versions (0/1/2) differ only in retired keys — preserve
+        // everything compatible (keys, slots, history, messages) instead of
+        // silently discarding the user's state.
+        if (!persisted || typeof persisted !== 'object') return persisted;
+        const state = { ...persisted };
+        delete state.dynamicKnowledge; // retired in v2
+        if (Array.isArray(state.agentSlots)) {
+          // The persisted disableToolCalling ratchet permanently degraded a
+          // slot after one transient error — clear it; the checkbox still
+          // works per-session.
+          state.agentSlots = state.agentSlots.map((s: any) => ({ ...s, disableToolCalling: undefined }));
+        }
+        return state;
+      },
       partialize: (state) => ({
         messages: state.messages.slice(-50),
-        agentSlots: state.agentSlots,
+        // Strip the disableToolCalling ratchet from persisted slots (SPEC-8):
+        // one transient "tool" error must not degrade a slot across reloads.
+        agentSlots: state.agentSlots.map(s => ({ ...s, disableToolCalling: undefined })),
         activeAgentId: state.activeAgentId,
         performanceLogs: state.performanceLogs.slice(-50),
         agentGuidelines: state.agentGuidelines,
+        // The verified knowledge library and macros are newest-first; keep the
+        // newest 50 examples (thumbnails + graphs are the heavy part) and all
+        // macros so "Save to library" survives a reload even without a backend.
+        successExamples: state.successExamples.slice(0, 50),
+        macros: state.macros,
         // Keep the newest 200 runs (evalResults is newest-first). Graph snapshots
         // are large, so persist them only for the newest 30 — enough to click in
         // and re-load recent designs without blowing the localStorage quota.

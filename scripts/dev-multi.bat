@@ -63,8 +63,8 @@ echo   every turn, every message, every run, from all !n! windows.
 echo   Nothing to export, nothing to merge.
 echo.
 echo   Set a different model in each window, give them the same
-echo   prompt, then use [9] Session data to see what happened.
-echo   To leave a note on a run, use [8] Add a note.
+echo   prompt, then use [4] Session data to see what happened.
+echo   To leave a note on a run, use [3] Add a note.
 echo.
 echo   To stop: close the "C33D :port" windows.
 echo ===============================================================

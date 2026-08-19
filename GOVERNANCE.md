@@ -29,5 +29,7 @@ All other changes do not need an RFC and can go directly to a PR.
 
 There is no governance freeze. The project is open to contributions at all times. The maintainer aims to review PRs within 2 weeks.
 
+For honesty's sake: the project currently has a single maintainer, so "merge signals acceptance" means the maintainer's own review. The RFC process above describes how decisions will work as reviewers join; today it functions as a public design record.
+
 ---
 *C33D — Copyright 2026 Semir Poturak, PhD — Apache-2.0*

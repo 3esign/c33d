@@ -1,6 +1,7 @@
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import { createRequire } from 'module';
+import assert from 'assert';
 const projectRoot = join(dirname(fileURLToPath(import.meta.url)), '..');
 globalThis.__dirname = join(projectRoot, 'node_modules', 'replicad-opencascadejs', 'src');
 globalThis.require = createRequire(import.meta.url);
@@ -91,16 +92,37 @@ async function run() {
   const OC = await opencascade();
   replicad.setOC(OC);
 
+  const vol = (p) => replicad.measureVolume(p);
+  const bbox = (p) => p.boundingBox.bounds;
+
   console.log('=== Pipe 1: S-curve stem, starts at origin trending +X ===');
   const p1 = buildPipe('M 0 0 C 5 10 15 -10 20 0', 0.8);
-  console.log('volume:', replicad.measureVolume(p1).toFixed(2), 'bbox:', JSON.stringify(p1.boundingBox.bounds));
+  const v1 = vol(p1), b1 = bbox(p1);
+  console.log('volume:', v1.toFixed(2), 'bbox:', JSON.stringify(b1));
+  assert.ok(Number.isFinite(v1) && v1 > 10, `pipe 1 must be a real solid (volume ${v1})`);
+  // The profile is placed AT the path start (x=0), not centered around it, and
+  // the sweep must reach the endpoint at x=20.
+  assert.ok(b1[0][0] > -1, `pipe 1 must start at the origin, bbox min X ${b1[0][0]}`);
+  assert.ok(Math.abs(b1[1][0] - 20) < 1.5, `pipe 1 must reach x~20, bbox max X ${b1[1][0]}`);
 
   console.log('=== Pipe 2: vine trending mostly +Y, NOT starting at origin ===');
   const p2 = buildPipe('M 10 10 Q 15 20 10 30', 0.5);
-  console.log('volume:', replicad.measureVolume(p2).toFixed(2), 'bbox:', JSON.stringify(p2.boundingBox.bounds));
+  const v2 = vol(p2), b2 = bbox(p2);
+  console.log('volume:', v2.toFixed(2), 'bbox:', JSON.stringify(b2));
+  assert.ok(Number.isFinite(v2) && v2 > 7, `pipe 2 must be a real solid (volume ${v2})`);
+  // The pipe must sit at its own start point (10,10), not be dragged to the origin.
+  assert.ok(b2[0][0] > 9 && b2[0][1] > 9, `pipe 2 must start near (10,10), bbox min ${b2[0][0]},${b2[0][1]}`);
+  assert.ok(b2[1][1] > 29, `pipe 2 must reach y~30, bbox max Y ${b2[1][1]}`);
 
   console.log('=== Pipe 3: tentacle curling backward (tests non-trivial tangent) ===');
   const p3 = buildPipe('M 0 0 C -10 5 -15 15 -5 20', 0.4);
-  console.log('volume:', replicad.measureVolume(p3).toFixed(2), 'bbox:', JSON.stringify(p3.boundingBox.bounds));
+  const v3 = vol(p3), b3 = bbox(p3);
+  console.log('volume:', v3.toFixed(2), 'bbox:', JSON.stringify(b3));
+  assert.ok(Number.isFinite(v3) && v3 > 4, `pipe 3 must be a real solid (volume ${v3})`);
+  // Curling backward: the sweep must extend well into -X and up to y~20.
+  assert.ok(b3[0][0] < -8, `pipe 3 must curl into -X, bbox min X ${b3[0][0]}`);
+  assert.ok(b3[1][1] > 18, `pipe 3 must reach y~20, bbox max Y ${b3[1][1]}`);
+
+  console.log('All pipe assertions passed.');
 }
-run().catch(e => console.error('FATAL:', e.stack || e));
+run().catch(e => { console.error('FATAL:', e.stack || e); process.exitCode = 1; });

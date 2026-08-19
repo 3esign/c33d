@@ -343,6 +343,8 @@ export const NODE_LIBRARY: Record<string, NodeDefinition> = {
     label: 'Plane (2D)',
     category: 'geometry',
     inputs: [],
+    // NOTE: actual runtime value is a 2D Face, not a Solid — the socket type
+    // is load-bearing for connection matching, so it stays 'Solid'.
     outputs: [{ name: 'solid', type: 'Solid' }],
     params: [
       { name: 'width', type: 'number', default: 10, min: 0.1, max: 200, step: 0.1 },
@@ -365,7 +367,7 @@ export const NODE_LIBRARY: Record<string, NodeDefinition> = {
       { name: 'x', type: 'number', default: 0, min: -100, max: 100, step: 0.1 },
       { name: 'y', type: 'number', default: 0, min: -100, max: 100, step: 0.1 },
       { name: 'z', type: 'number', default: 0, min: -100, max: 100, step: 0.1 },
-      { name: 'isLocal', type: 'boolean', default: false },
+      // (isLocal removed: it was declared here but never read by the executor.)
     ],
   },
   Rotate: {
@@ -514,7 +516,10 @@ export const NODE_LIBRARY: Record<string, NodeDefinition> = {
     label: '2D Sketch (SVG)',
     category: 'geometry',
     inputs: [],
-    outputs: [{ name: 'solid', type: 'Solid' }], // We output the sketch itself to be used by sweep/extrude/loft
+    // NOTE: actual runtime value is a Sketch (2D), not a Solid — we output the
+    // sketch itself to be used by sweep/extrude/loft; the socket type is
+    // load-bearing for connection matching, so it stays 'Solid'.
+    outputs: [{ name: 'solid', type: 'Solid' }],
     params: [
       { name: 'svgPath', type: 'string', default: 'M 0 0 L 10 0 L 10 10 L 0 10 Z' },
       { name: 'color', type: 'string', default: '#3b82f6' },
@@ -733,6 +738,9 @@ export const NODE_LIBRARY: Record<string, NodeDefinition> = {
     label: 'Helix (Coil)',
     category: 'geometry',
     inputs: [],
+    // NOTE: actual runtime value is a Wire, not a Solid — the socket type is
+    // load-bearing for connection matching (Pipe/Sweep accept it), so it
+    // stays 'Solid'.
     outputs: [{ name: 'solid', type: 'Solid' }],
     params: [
       { name: 'pitch', type: 'number', default: 5, min: 0.1, max: 100, step: 0.1 },
@@ -751,7 +759,11 @@ export const NODE_LIBRARY: Record<string, NodeDefinition> = {
       { name: 'path', type: 'Solid' },
     ],
     outputs: [{ name: 'solid', type: 'Solid' }],
-    params: [],
+    params: [
+      // right|round|transformed — matches the executor's genericSweep option
+      // (previously read by the executor but undeclared, so unsettable).
+      { name: 'transitionMode', type: 'string', default: 'right' },
+    ],
   },
   VariableFillet: {
     type: 'VariableFillet',
@@ -1279,7 +1291,7 @@ export const NODE_LIBRARY: Record<string, NodeDefinition> = {
       { name: 'scaleStart', type: 'number', default: 1, min: 0.05, max: 5, step: 0.05 },
       { name: 'scaleEnd', type: 'number', default: 1, min: 0.05, max: 5, step: 0.05 },
       { name: 'everyNth', type: 'number', default: 1, min: 1, max: 20, step: 1 },
-      { name: 'maxCount', type: 'number', default: 100, min: 1, max: 200, step: 1 },
+      { name: 'maxCount', type: 'number', default: 100, min: 1, max: 500, step: 1 },
       { name: 'color', type: 'string', default: '#3b82f6' },
     ],
   },

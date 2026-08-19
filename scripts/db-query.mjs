@@ -19,6 +19,11 @@ import { openDb, stats, dbFile } from './lib/db.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const db = openDb(root);
+// This script only ever answers questions, and db.bat advertises it as
+// read-only — make that true at the engine level. query_only applies to the
+// whole connection (stats() shares it), so a pasted DELETE/UPDATE in the
+// "Run your own SQL" menu errors instead of silently destroying the index.
+db.exec('PRAGMA query_only = ON');
 const [cmd = 'overview', ...rest] = process.argv.slice(2);
 
 const table = (rows) => (rows.length ? console.table(rows) : console.log('  (no rows)'));

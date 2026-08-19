@@ -1,4 +1,4 @@
-import { chatCompletion, chatCompletionWithTools, providerSupportsTools, providerSupportsVision } from './api';
+import { chatCompletion, chatCompletionWithTools, providerSupportsTools, providerSupportsVision, isMalformedToolArgs } from './api';
 import { beginRun, endRun, throwIfAborted, isAbortError } from './abort';
 import type { AgentMessage } from './api';
 import { useStore, generateUUID, waitForEvaluation } from '../store/useStore';
@@ -8,7 +8,7 @@ import type { WorkingGraph } from './tools';
 import { autoLayout } from '../layout/autoLayout';
 import { retrieveSimilarExamples, formatExampleForPrompt, condenseGraph } from './retrieval';
 import { checkGeometrySanity, formatGeometryReport, runVisionVerification, computeGraphShapeMetrics } from './verification';
-import { validateGraphStructure, inferMissingEdges } from './graphValidation';
+import { validateGraphStructure, inferMissingEdges, requiredGeoInputs } from './graphValidation';
 import { validateGenome, scoreIntentRealization } from './genome';
 import { captureViewportSnapshot } from '../utils/snapshot';
 import { isSystemError } from '../utils/errors';
@@ -46,7 +46,10 @@ function summarizeProviderError(msg: string): string {
 // stays open. Only for real user turns (evals stay reproducible).
 function maybeVariationDirective(userText: string): string | null {
   const t = userText.toLowerCase();
-  const creative = /\b(beautiful|stunning|elegant|organic|artistic|creative|interesting|unique|surprise|best|most|gorgeous|striking)\b/.test(t)
+  // Trigger only on genuinely aesthetic wording — 'best'/'most'/'interesting'
+  // fire on plain engineering requests ("the most efficient bracket", "which is
+  // best?") and were randomizing runs that should stay reproducible.
+  const creative = /\b(beautiful|stunning|elegant|organic|artistic|creative|unique|surprise|gorgeous|striking)\b/.test(t)
     && !/\b\d+\s?(mm|cm|m|units?|degrees?|x)\b/.test(t); // dimensioned briefs are engineering, not creative
   if (!creative) return null;
   const axes = [
@@ -64,32 +67,52 @@ function maybeVariationDirective(userText: string): string | null {
 }
 
 // ---------- JSON repair (legacy fallback path) ----------
+
+// Single string-aware pass over the response: extracts the FIRST balanced
+// top-level object (not the old greedy first-{…last-} span, which glued two
+// objects — "{plan}{graph}" — into one unparseable blob) while stripping
+// // and /* */ comments OUTSIDE JSON strings. The old strippers corrupted any
+// string containing "//" (URLs, formulas) or "/*". Returns null when the text
+// has no '{' at all; an unbalanced (truncated) span is returned open so the
+// caller's repair path can name the problem.
+function extractJsonCandidate(text: string): string | null {
+  const start = text.indexOf('{');
+  if (start === -1) return null;
+  let out = '';
+  let depth = 0;
+  let inStr = false, esc = false, inLine = false, inBlock = false;
+  for (let i = start; i < text.length; i++) {
+    const ch = text[i];
+    if (inLine) { if (ch === '\n') { inLine = false; out += ch; } continue; }
+    if (inBlock) { if (ch === '*' && text[i + 1] === '/') { inBlock = false; i++; } continue; }
+    if (inStr) {
+      out += ch;
+      if (esc) esc = false;
+      else if (ch === '\\') esc = true;
+      else if (ch === '"') inStr = false;
+      continue;
+    }
+    if (ch === '/' && text[i + 1] === '/') { inLine = true; continue; }
+    if (ch === '/' && text[i + 1] === '*') { inBlock = true; i++; continue; }
+    if (ch === '"') { inStr = true; out += ch; continue; }
+    if (ch === '{') depth++;
+    else if (ch === '}') {
+      depth--;
+      if (depth === 0) { out += ch; return out; }
+    }
+    out += ch;
+  }
+  return out; // unbalanced (truncated) — hand the open span to the repair path
+}
+
 function robustJSONParse(text: string): any {
   if (typeof text !== 'string') {
     throw new Error("AI did not return any text response.");
   }
-  const jsonMatch = text.match(/\{[\s\S]*\}/);
-  if (!jsonMatch) {
+  let jsonStr = extractJsonCandidate(text);
+  if (!jsonStr) {
     throw new Error("AI did not return valid JSON. Response was: " + text);
   }
-  let jsonStr = jsonMatch[0];
-  if (!jsonStr) {
-    throw new Error("AI returned empty JSON match.");
-  }
-  jsonStr = jsonStr.replace(/\/\*[\s\S]*?\*\//g, '');
-  jsonStr = jsonStr.split('\n')
-    .map(line => {
-      const trimmed = line.trim();
-      if (trimmed.startsWith('//')) return '';
-      const commentIdx = line.indexOf('//');
-      if (commentIdx !== -1) {
-        const partBefore = line.substring(0, commentIdx);
-        const doubleQuoteCount = (partBefore.match(/"/g) || []).length;
-        if (doubleQuoteCount % 2 === 0) return partBefore;
-      }
-      return line;
-    })
-    .join('\n');
   jsonStr = jsonStr.replace(/,\s*(\r?\n?\s*[}\]])/g, '$1');
   try {
     return JSON.parse(jsonStr);
@@ -159,7 +182,7 @@ The geometry report measures this: "Placement provenance" counts how many leaves
 5. Placement: RELATIVE, never arithmetic. Translate between parts is forbidden; use Align or geometric sockets. GEOMETRIC SOCKETS (preferred): every solid primitive (Box/Sphere/Cylinder/Cone/Ellipsoid/Torus) has an optional "center" Point input — wire a Point/Centroid/Midpoint/PointBetween/DivideCurve output into it to place the primitive where geometry says, with zero Translate nodes. Cylinder/Cone/Torus also take an "axis" Vector input that tilts them onto the vector (no more Rotate 90 boilerplate). Rotate takes an optional "pivot" Point (rotation centre — hinges, joints, petal roots) and "axis" Vector. Translate takes an optional "target" Point that overrides x/y/z. Translate is only for small nudges, and its vector components must be formulas of a driver slider, never literals. To stack or attach a part next to another, use the Align node (inputs "shape" + "reference"; param mode: above/below/left/right/front/back/center/ground, plus offsetX/Y/Z) — it snaps the shape's bounding box against the reference's, so you never hand-compute stacking coordinates. Example rocket: nozzle at origin → Align(shape=stage1, reference=nozzle, mode "above") → Align(shape=stage2, reference=that Align, mode "above") → … A part used as an Align reference STILL renders as its own colored leaf (reference edges do not consume it). Chain each next Align's reference to the PREVIOUS Align node (not the raw part) so the stack stays connected when sliders move. Use mode "ground" (no reference needed) to sit a part on Z=0. For attaching onto curved surfaces use PlaceOnSurface u/v, PlaceOnVertices, ScatterOnSurface.
 6. Multi-color rendering: leaf nodes (no outgoing edges) mesh separately, each with its own "color" param traced from its subgraph. Keep sub-assemblies as separate leaves for multi-color models; merge with Boolean/Compound only what must be single-color/solid.
 7. Detailing: SubdivideSurface and FilterFaces carve panels/windows/facades out of base solids. Loft between profiles for tapered/organic forms. Revolve a Sketch profile for rotationally symmetric parts (vases, domes, wheels).
-7b. ORGANIC FORMS: use ScaleXYZ (non-uniform squash/stretch, isLocal default) to turn spheres into petals/leaves/discs/cushions — e.g. Sphere→ScaleXYZ(1, 0.4, 0.15) is a cupped petal, far better than a thin extruded sketch. Ellipsoid and Torus are direct primitives (seed heads, rings, tires, wreaths). CircularPattern supports startAngle (phase-offset interleaved petal rings), rise (z per copy → spirals/phyllotaxis), and scaleStart/scaleEnd (instances grade in size — natural, not mechanical). For a flower: petal = Ellipsoid or ScaleXYZ'd Sphere, tilted with Rotate(isLocal), Translate outward, CircularPattern with count=petalCount; second ring with startAngle "180/petalCount" and smaller scale.
+7b. ORGANIC FORMS: use ScaleXYZ (non-uniform squash/stretch, isLocal default; params factorX/factorY/factorZ) to turn spheres into petals/leaves/discs/cushions — e.g. Sphere→ScaleXYZ(factorX 1, factorY 0.4, factorZ 0.15) is a cupped petal, far better than a thin extruded sketch. Ellipsoid and Torus are direct primitives (seed heads, rings, tires, wreaths). CircularPattern supports startAngle (phase-offset interleaved petal rings), rise (z per copy → spirals/phyllotaxis), and scaleStart/scaleEnd (instances grade in size — natural, not mechanical). For a flower: petal = Ellipsoid or ScaleXYZ'd Sphere, tilted with Rotate(isLocal), Translate outward, CircularPattern with count=petalCount; second ring with startAngle "180/petalCount" and smaller scale.
 7c. SUB-SHAPE EDITING & SELECTIONS: use SelectFaces / SelectEdges (outputs "Selection") to target specific sub-faces or edges of a solid using a query predicate. Predicate queries support: "normal ~ +Z" (normal near direction), "center.z > 5" (face/edge centroid position), "parallel Z" (edge direction), "area > 10" (face area), "length < 5" (edge length), "coplanar" or "coaxial" checks. Boolean combinators (and, or, not) and parentheses are supported (e.g., "normal ~ +Z and center.z > 10"). Connect the Selection into ExtrudeFace (param height: positive to pull, negative to push/cut) or Fillet/Chamfer to modify the targeted sub-shapes. Use SplitLoop(solid, axis, at) to imprint edge loops (slice the outer face mesh into separate sub-faces) before selecting them; this allows localized extrusions/details on a single base solid. Note: Selection nodes output a Selection descriptor (resolved on execution); do not connect them to "solid" ports.
 7d. CONSTRUCTION LADDER — pick the strategy BEFORE picking nodes: shell/bowl/hull/organic skin → 2-3 rail curves at heights (EllipseCurve/SplineCurve + TransformCurve) → LoftCurves. tube/cable/rail/stem → OPEN curve → Pipe (connect the curve to its "path" input). ring/torus/hoop (small circle swept around a big circle) → Torus (majorRadius, minorRadius) — NEVER Pipe along a closed CircleCurve; the kernel fails on closed paths. repeated elements along a boundary (columns, windows, seats, spokes) → curve → DivideCurve → InstanceOnPoints (alignToTangent to follow the curve, scaleStart/scaleEnd to grade sizes). rotationally symmetric → profile curve → RevolveCurve. flat footprint/slab → closed curve → ExtrudeCurve. boxy/mechanical → primitives + Align. If ONE driving curve can generate the whole form, prefer it over assembling primitives — move one slider and everything follows. Curves and points are cheap construction geometry: they render as thin guides, never block leaves, and the report lists their coordinates.
 8. Style: vary construction strategies and aesthetics between requests — do not repeat one formulaic design.
@@ -268,6 +291,11 @@ const PARAM_SYNONYMS: Record<string, string> = {
   scalemax: 'scaleend', maxscale: 'scaleend', endscale: 'scaleend', maxsize: 'scaleend', sizemax: 'scaleend',
   num: 'count', number: 'count', divisions: 'count', segments: 'count', samples: 'count', resolution: 'count', copies: 'count', instances: 'count',
   major: 'majorradius', minor: 'minorradius', tuberadius: 'minorradius', tube: 'minorradius',
+  // ScaleXYZ(x, y, z) is the natural spelling models reach for; the canonical
+  // params are factorX/factorY/factorZ. Safe globally: the synonym only binds
+  // on nodes that actually declare the canonical param (only ScaleXYZ has
+  // factorX/…), and nodes with a REAL x/y/z param never consult this table.
+  x: 'factorx', y: 'factory', z: 'factorz',
 };
 // Params expressing an intent this kernel realizes a different way. Drop with a
 // note instead of rejecting the whole node when the type doesn't have them.
@@ -437,12 +465,19 @@ export function aggregateAndRankIssues(issues: string[]): string[] {
   const proportional: string[] = [];
   const others: string[] = [];
   const dropped: string[] = [];
+  const infos: string[] = [];
 
   const propRegex = /At (.*?) (?:increase|decrease) \(.*?x\), "(.*?)" shifts non-proportionally.*\(deviation (\d+)%\)/i;
   const propBySlider: Record<string, { parts: Set<string>; worstPart: string; worstDev: number }> = {};
 
   for (const issue of issues) {
     const lower = issue.toLowerCase();
+    // SPEC-3: "[info]" lines (executor warn channel) are informational — they
+    // must never be ranked as failures, only appended after the real issues.
+    if (lower.startsWith('[info]')) {
+      infos.push(issue);
+      continue;
+    }
     // Rejected-edge lines are aggregated by reason below so eight identical
     // rejections cost one line of the 5-issue cap instead of falling off it.
     if (lower.startsWith('dropped invalid edge')) {
@@ -563,7 +598,8 @@ export function aggregateAndRankIssues(issues: string[]): string[] {
     ...filteredContainment,
     ...proportionalFormatted,
     ...proportional.filter(p => !p.match(propRegex)),
-    ...others
+    ...others,
+    ...infos
   ];
 
   if (ordered.length > 5) {
@@ -690,6 +726,9 @@ function updateDiagnosis(diag: RepairDiagnosis, actionSummary: string, issues: s
 }
 // After a node has failed twice, evaluate it ALONE with default params —
 // harness-side, costing no model turn — and report causal attribution.
+// ONLY meaningful for nodes with no REQUIRED geometry inputs: a Boolean or
+// Fillet evaluated alone obviously fails (missing inputs), and attributing
+// that to "the engine — do not rewire" was the exact opposite of the truth.
 async function maybeMinimalRepro(diag: RepairDiagnosis): Promise<string | null> {
   const store = useStore.getState();
   for (const [nodeId, streak] of Object.entries(diag.nodeFailStreak)) {
@@ -697,6 +736,10 @@ async function maybeMinimalRepro(diag: RepairDiagnosis): Promise<string | null> 
     const node = store.nodes.find((n: any) => n.id === nodeId) as any;
     if (!node) continue;
     diag.reproDone.add(nodeId);
+    const required = requiredGeoInputs(node.type);
+    if (required) {
+      return `MINIMAL REPRO: isolated repro not applicable — node "${nodeId}" (${node.type}) requires upstream inputs (${required.handles.slice(0, 4).join(', ')}), so evaluating it alone proves nothing. Check that its required inputs are connected and that the upstream nodes produce valid geometry.`;
+    }
     try {
       const iso = await store.evaluateScratch([{ id: '__repro', type: node.type, data: {}, position: { x: 0, y: 0 } }]);
       const isoErrors = iso.report?.nodeErrors || [];
@@ -733,6 +776,22 @@ function currentModelName(): string {
   return a ? `${a.name} (${a.model})` : 'Unknown Agent';
 }
 
+// PERTURBATION timing: proportionalIntegrity arrives ASYNC (merged into
+// lastGeometryReport by a later PERTURBATION_REPORT), so at outcome time it may
+// be absent (still computing — tolerate, report undefined) or belong to a
+// DIFFERENT evaluation than the run's final attempt. Eval ids (SPEC-1) name the
+// evaluation a report belongs to; both are read defensively because they land
+// with the store/worker changes. When both ids exist and differ, omit the value
+// rather than stamping a previous graph's integrity onto this outcome.
+function resolveProportionalIntegrity(finalAttemptReport: any): number | undefined {
+  const live = useStore.getState().lastGeometryReport as any;
+  if (!live) return undefined;
+  const liveId = live?.evalId;
+  const finalId = finalAttemptReport?.evalId;
+  if (liveId !== undefined && finalId !== undefined && liveId !== finalId) return undefined;
+  return live?.proportionalIntegrity;
+}
+
 async function maybeVisionVerify(userText: string): Promise<{ score?: number; discrepancies: string[] }> {
   const store = useStore.getState();
   const agent = store.agentSlots.find(a => a.id === store.activeAgentId);
@@ -764,25 +823,36 @@ export async function processUserIntent(userText: string, options?: { forEval?: 
     return { parsedOk: true, evaluatedOk: true, geometrySane: true, nodeCount: store.nodes.length, edgeCount: store.edges.length, durationMs: 0 };
   }
 
-  // Deterministic command gate: unambiguous destructive commands must never
-  // depend on a (possibly flaky) model. "erase", "clear the canvas", "reset
-  // everything", "wipe it" etc. are handled directly and instantly.
+  // Deterministic command gate (SPEC-10): unambiguous destructive commands must
+  // never depend on a (possibly flaky) model — but the gate must fire ONLY on
+  // whole-scene commands. The old "≤ 4 words" shortcut executed
+  // clearGraph+clearMessages on "delete the blue cube" / "erase that sphere":
+  // a selective edit request instantly destroyed the design AND the chat.
+  // Now it fires only on: a bare verb ("clear"), an explicit whole-scene word,
+  // or a start-over phrase. Everything else goes to the model.
   if (!options?.forEval) {
     const t = userText.trim().toLowerCase().replace(/[.!]+$/, '');
-    const isClearCommand =
-      /^(erase|clear|delete|reset|wipe|empty|start over|new scene|new canvas)\b/.test(t) &&
-      // Guard: don't hijack build requests like "clear glass sphere" or
-      // "delete the top face of the box" — only fire when the command is short
-      // and refers to the whole scene, or is a bare verb.
-      (t.split(/\s+/).length <= 4 || /\b(all|everything|graph|canvas|scene|it|board|screen)\b/.test(t)) &&
-      !/\b(add|make|create|build|design|keep|except|but)\b/.test(t);
+    const isBareVerb = /^(erase|clear|delete|reset|wipe|empty)$/.test(t);
+    const isStartOverPhrase = /^(start over|new scene|new canvas)\b/.test(t);
+    const startsWithClearVerb = /^(erase|clear|delete|reset|wipe|empty)\b/.test(t);
+    const mentionsWholeScene = /\b(all|everything|whole|graph|canvas|scene|board|screen)\b/.test(t);
+    const hasGuardWord = /\b(add|make|create|build|design|keep|except|but)\b/.test(t);
+    const isClearCommand = !hasGuardWord &&
+      (isBareVerb || isStartOverPhrase || (startsWithClearVerb && mentionsWholeScene));
     if (isClearCommand) {
       store.addEpisodePrompt(userText);
       maybeSetNudgeCandidate();          // offer to save the prior design first
       store.clearGraph();
       store.resetEpisode();
-      store.clearMessages();
-      addAssistantMessage('Canvas cleared and chat history reset.');
+      // Chat history is wiped ONLY on explicit reset/start-over/history/chat
+      // wording — "clear the canvas" must not destroy the conversation.
+      const alsoClearChat = /\b(reset|start over|everything|history|chat)\b/.test(t);
+      if (alsoClearChat) {
+        store.clearMessages();
+        addAssistantMessage('Canvas cleared and chat history reset.');
+      } else {
+        addAssistantMessage("Canvas cleared. (Chat kept — say 'reset everything' to clear it too.)");
+      }
       return { parsedOk: true, evaluatedOk: true, geometrySane: true, nodeCount: 0, edgeCount: 0, durationMs: 0 };
     }
   }
@@ -835,6 +905,10 @@ export async function processUserIntent(userText: string, options?: { forEval?: 
       try {
         outcome = await runToolLoop(modifiedUserText, userText, options);
       } catch (toolErr: any) {
+        // A user Stop must NOT fall through to the legacy-JSON fallback (which
+        // would fire a fresh completion the user just cancelled) — rethrow and
+        // let the outer handler record a clean "stopped" outcome.
+        if (isAbortError(toolErr)) throw toolErr;
         // Provider rejected tool-calling (unsupported model, schema quirk, …):
         // fall back to the single-shot JSON protocol instead of failing.
         const errMsg = String(toolErr.message || toolErr);
@@ -848,13 +922,16 @@ export async function processUserIntent(userText: string, options?: { forEval?: 
             durationMs: 0, error: errMsg.slice(0, 200),
           };
         } else {
-          // If the provider's tool-call grammar is fundamentally broken for this
-          // model (the Ollama "closing '}'" 400, or any 400 on the tools payload),
-          // stop retrying native tools for the rest of the session — every future
-          // turn would fail the same way and waste a round-trip.
-          if (/400|closing '\}'|tool|schema|grammar/i.test(errMsg) && !options?.forEval) {
+          // Disable native tools ONLY on an explicit tool-schema rejection:
+          // HTTP 400/422 whose body actually mentions the tools payload. The
+          // old broad match (any "400|tool|schema|grammar" anywhere in the
+          // message) let a transient error whose body merely said "tools"
+          // permanently degrade the slot to the legacy JSON protocol.
+          const isToolSchemaRejection =
+            /\b(400|422)\b/.test(errMsg) && /tool|schema|function/i.test(errMsg);
+          if (isToolSchemaRejection && !options?.forEval) {
             useStore.getState().updateAgentSlot(activeAgent.id, { disableToolCalling: true });
-            addSystemMessage('Native tool-calling disabled for this agent (provider grammar error) — using the JSON protocol from now on.');
+            addSystemMessage('Native tool-calling disabled for this agent (provider rejected the tool schema) — using the JSON protocol from now on.');
           } else {
             addSystemMessage(`Tool-calling unavailable (${errMsg.slice(0, 160)}) — falling back to JSON protocol.`);
           }
@@ -927,6 +1004,7 @@ async function runToolLoop(modifiedUserText: string, originalText: string, optio
   let repairs = 0;
   let visionRepairUsed = false;
   let consecutiveEngineFaults = 0;
+  let lastPerceptReport: any = null; // final attempt's own report (for eval-id matching)
   const toolDiagnosis = newRepairDiagnosis();
 
   for (let turn = 0; turn < MAX_AGENT_TURNS; turn++) {
@@ -954,6 +1032,16 @@ async function runToolLoop(modifiedUserText: string, originalText: string, optio
     let cleared = false;
 
     for (const tc of modelTurn.toolCalls) {
+      // Provider delivered arguments that were not valid JSON: do NOT execute
+      // the tool with empty args — answer with a tool-result error so the
+      // model can resend the corrected call.
+      if (isMalformedToolArgs(tc.arguments)) {
+        messages.push({
+          role: 'tool', toolCallId: tc.id, name: tc.name,
+          content: `ERROR: the arguments for "${tc.name}" were not valid JSON — the call was NOT executed. Resend this call with well-formed JSON arguments.`,
+        });
+        continue;
+      }
       if (tc.name === 'clear_graph' && !options?.forEval) {
         // Offer saving the previous design before wiping (uses live store graph)
         maybeSetNudgeCandidate();
@@ -989,6 +1077,7 @@ async function runToolLoop(modifiedUserText: string, originalText: string, optio
       });
       evaluatedOk = !percept.error;
       geometrySane = percept.sanity.sane;
+      lastPerceptReport = percept.report;
       lastError = percept.error || (percept.sanity.issues.length ? percept.sanity.issues.join(' | ') : undefined);
       const compactState = formatCompactGraphState(graph.nodes, graph.edges);
       const reportText = formatGeometryReport(percept.report, percept.error) +
@@ -1067,6 +1156,13 @@ async function runToolLoop(modifiedUserText: string, originalText: string, optio
           messages.push({ role: 'user', content: `VISUAL REVIEW found discrepancies with the intent — fix them:\n${vision.discrepancies.map(d => '- ' + d).join('\n')}` });
           continue;
         }
+      } else {
+        // A vision-triggered repair happened: re-run the check so the RECORDED
+        // score reflects the post-repair geometry (parity with the legacy
+        // path, which re-verifies on every sane attempt). No further repair
+        // round is spent regardless of the verdict.
+        const vision = await maybeVisionVerify(originalText);
+        if (vision.score !== undefined) visionScore = vision.score;
       }
       addAssistantMessage(finished);
       break;
@@ -1085,7 +1181,7 @@ async function runToolLoop(modifiedUserText: string, originalText: string, optio
     parsedOk, evaluatedOk, geometrySane,
     nodeCount: s.nodes.length, edgeCount: s.edges.length,
     durationMs: 0, visionScore, error: lastError,
-    proportionalIntegrity: s.lastGeometryReport?.proportionalIntegrity,
+    proportionalIntegrity: resolveProportionalIntegrity(lastPerceptReport),
     derivationRatio: graphShape.derivationRatio,
     skeletonNodes: graphShape.skeletonNodes,
     magicNumberCount: graphShape.magicNumberCount,
@@ -1127,6 +1223,7 @@ async function runLegacyJson(modifiedUserText: string, originalText: string, opt
   let structuralExemptions = 0;
   let engineFaultExemptions = 0;
   let repairsUsed = 0;
+  let lastPerceptReport: any = null; // final attempt's own report (for eval-id matching)
   const jsonDiagnosis = newRepairDiagnosis();
 
   for (let attempt = 0; attempt <= MAX_AUTO_REPAIRS; attempt++) {
@@ -1184,8 +1281,12 @@ async function runLegacyJson(modifiedUserText: string, originalText: string, opt
 
     // IR PROGRAM path: a typed {params?, body, emit} program compiles
     // deterministically into nodes/edges (src/ai/ir). Compile errors are
-    // model-repairable and do not touch the canvas.
-    if (parsed && Array.isArray(parsed.body) && Array.isArray(parsed.emit)
+    // model-repairable and do not touch the canvas. Detected on `body` alone:
+    // a non-empty body with a MISSING/invalid `emit` used to slip past this
+    // gate and land in the "pure question" success path — a real build attempt
+    // silently recorded as a win. compileIr reports the emit problem, which
+    // routes it through the normal repair path below.
+    if (parsed && Array.isArray(parsed.body)
         && !parsed.nodes && !parsed.addedNodes && !parsed.updatedNodes) {
       if (parsed.body.length === 0 && parsed.questions?.length > 0) {
         // Question-only response wearing the IR shape — hand to the question path.
@@ -1244,6 +1345,22 @@ async function runLegacyJson(modifiedUserText: string, originalText: string, opt
       geometrySane = true;
       break;
     }
+    if (graphResult.protocolError) {
+      // SPEC-10: destructive protocol violation — the graph was NOT touched.
+      // Send the violation through the normal repair-retry path instead of
+      // wiping the canvas (and never record it as a success).
+      lastError = graphResult.protocolError;
+      evaluatedOk = false;
+      geometrySane = false;
+      if (attempt < MAX_AUTO_REPAIRS) {
+        addSystemMessage(`Protocol error (attempt ${attempt + 1}/${MAX_AUTO_REPAIRS + 1}): ${graphResult.protocolError} Asking the model to resend.`);
+        apiMessages.push({ role: 'assistant' as const, content: responseText.slice(0, 4000) });
+        apiMessages.push({ role: 'user' as const, content: `${graphResult.protocolError} Resend the FULL rebuild with BOTH "nodes": [...] and "edges": [...] (edges may be an empty array only if the design truly has no connections). Respond ONLY with JSON.` });
+        continue;
+      }
+      addSystemMessage(`Auto-repair limit reached. Remaining issues: ${graphResult.protocolError}`);
+      break;
+    }
 
     const graph = { nodes: graphResult.nodes, edges: graphResult.edges };
     const percept = await applyAndPerceive(graph, {
@@ -1262,6 +1379,7 @@ async function runLegacyJson(modifiedUserText: string, originalText: string, opt
     }
     evaluatedOk = !percept.error;
     geometrySane = percept.sanity.sane;
+    lastPerceptReport = percept.report;
     lastError = percept.error || (percept.sanity.issues.length ? percept.sanity.issues.join(' | ') : undefined);
     useStore.getState().setLastAIGraph({ nodes: JSON.parse(JSON.stringify(graph.nodes)), edges: JSON.parse(JSON.stringify(graph.edges)) });
 
@@ -1345,7 +1463,7 @@ async function runLegacyJson(modifiedUserText: string, originalText: string, opt
     parsedOk, evaluatedOk, geometrySane,
     nodeCount: s.nodes.length, edgeCount: s.edges.length,
     durationMs: 0, visionScore, error: lastError,
-    proportionalIntegrity: s.lastGeometryReport?.proportionalIntegrity,
+    proportionalIntegrity: resolveProportionalIntegrity(lastPerceptReport),
     derivationRatio: graphShape.derivationRatio,
     skeletonNodes: graphShape.skeletonNodes,
     magicNumberCount: graphShape.magicNumberCount,
@@ -1359,10 +1477,25 @@ async function runLegacyJson(modifiedUserText: string, originalText: string, opt
 // (Source-handle defaulting lives in tools.ts::defaultSourceHandle, shared with
 // the native tool path so both protocols resolve omitted handles identically.)
 
-function applyParsedGraphOps(parsed: any, options?: { forEval?: boolean }): (WorkingGraph & { droppedEdges: string[]; patchNotes: string[] }) | null {
+function applyParsedGraphOps(parsed: any, options?: { forEval?: boolean }): (WorkingGraph & { droppedEdges: string[]; patchNotes: string[]; protocolError?: string }) | null {
   const store = useStore.getState();
   let nextNodes: any[] = JSON.parse(JSON.stringify(store.nodes));
   let nextEdges: any[] = JSON.parse(JSON.stringify(store.edges));
+
+  // SPEC-10 full-rebuild guard: `clearGraph:true` plus a non-empty `nodes`
+  // array but NO `edges` array is a truncated/lazy rebuild. Executing it wiped
+  // the canvas, added nothing, evaluated the empty graph cleanly and logged a
+  // SUCCESS — the user's design silently destroyed and counted as a model win.
+  // Leave the graph untouched and route a protocol error into the repair path.
+  if (parsed.clearGraph === true && Array.isArray(parsed.nodes) && parsed.nodes.length > 0 && !Array.isArray(parsed.edges)) {
+    return {
+      nodes: nextNodes,
+      edges: nextEdges,
+      droppedEdges: [],
+      patchNotes: [],
+      protocolError: 'Full rebuild requires both nodes[] and edges[]; graph unchanged.',
+    };
+  }
   let hasUpdates = false;
   const droppedEdges: string[] = [];
   // Soft feedback channel: things the model asked for that did NOT happen

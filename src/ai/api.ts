@@ -1,5 +1,5 @@
 import { useStore } from '../store/useStore';
-import { currentSignal } from './abort';
+import { currentSignal, isAbortError } from './abort';
 import type { AgentSlot } from '../store/useStore';
 
 // ---------- Shared message / tool types ----------
@@ -14,6 +14,17 @@ export interface ToolCall {
   id: string;
   name: string;
   arguments: any;
+}
+
+// A provider sometimes emits tool-call arguments that are not valid JSON
+// (constrained-grammar glitches, truncation). Silently substituting {} made
+// the tool run with EMPTY args — e.g. clear_graph executing for real while the
+// model believed it had passed a node list. Instead the parse failure is
+// marked so the agent loop can return a tool-result ERROR and let the model
+// resend the call.
+export const MALFORMED_TOOL_ARGS_KEY = '__malformed_tool_args__';
+export function isMalformedToolArgs(args: any): boolean {
+  return !!args && typeof args === 'object' && MALFORMED_TOOL_ARGS_KEY in args;
 }
 
 export type AgentMessage =
@@ -45,6 +56,28 @@ async function abortableFetch(input: RequestInfo | URL, init: RequestInit = {}):
 const MAX_OUTPUT_TOKENS = 12000;
 const MIN_OUTPUT_TOKENS = 2000;
 
+// OpenAI's reasoning models (o1/o3/o4…, gpt-5*) reject `max_tokens` outright
+// and take `max_completion_tokens` instead. Pick the right field upfront for
+// known ids; a one-shot swap retry (below) covers ids the prefix misses.
+function outputTokensField(provider: AgentSlot['provider'], model: string): 'max_tokens' | 'max_completion_tokens' {
+  return provider === 'openai' && /^(o\d|gpt-5)/i.test(model || '') ? 'max_completion_tokens' : 'max_tokens';
+}
+// Swap whichever output-cap field the payload carries for the other one.
+// Returns true when a swap happened (so callers retry exactly once).
+function swapOutputTokensField(payload: any): boolean {
+  if (payload.max_tokens !== undefined) {
+    payload.max_completion_tokens = payload.max_tokens;
+    delete payload.max_tokens;
+    return true;
+  }
+  if (payload.max_completion_tokens !== undefined) {
+    payload.max_tokens = payload.max_completion_tokens;
+    delete payload.max_completion_tokens;
+    return true;
+  }
+  return false;
+}
+
 function getActiveAgent(): AgentSlot {
   const { agentSlots, activeAgentId } = useStore.getState();
   const activeAgent = agentSlots.find(a => a.id === activeAgentId);
@@ -68,14 +101,34 @@ export interface ProviderModelList {
   note?: string;
 }
 
+export async function fetchOllama(baseUrl: string, path: string, init: RequestInit = {}): Promise<Response> {
+  const cleanBase = (baseUrl || 'http://127.0.0.1:11434').trim().replace(/\/$/, '');
+  const targetHost = cleanBase.replace('localhost', '127.0.0.1');
+  const pathClean = path.startsWith('/') ? path : `/${path}`;
+  const directUrl = `${targetHost}${pathClean}`;
+
+  try {
+    const res = await abortableFetch(directUrl, init);
+    return res;
+  } catch (err: any) {
+    // A user Stop is not a network failure — retrying through the dev proxy
+    // would ignore the abort and keep the run alive. Rethrow it.
+    if (isAbortError(err)) throw err;
+    const proxyUrl = `/api/ollama-proxy${pathClean}`;
+    const headers = new Headers(init.headers || {});
+    headers.set('x-ollama-target', targetHost);
+    return abortableFetch(proxyUrl, { ...init, headers });
+  }
+}
+
 export async function listProviderModels(
   provider: AgentSlot['provider'],
   apiKey: string,
 ): Promise<ProviderModelList> {
   if (provider === 'ollama') {
-    const url = (apiKey || 'http://localhost:11434').trim().replace(/\/$/, '');
-    const r = await abortableFetch(`${url}/api/tags`);
-    if (!r.ok) throw new Error(`Ollama ${r.status} ${r.statusText} — is Ollama running at ${url}?`);
+    const rawUrl = apiKey || 'http://127.0.0.1:11434';
+    const r = await fetchOllama(rawUrl, '/api/tags');
+    if (!r.ok) throw new Error(`Ollama ${r.status} ${r.statusText} — is Ollama running at ${rawUrl}?`);
     const d = await r.json();
     const models = (Array.isArray(d.models) ? d.models.map((m: any) => String(m.name)) : []).sort();
     return { models };
@@ -83,7 +136,11 @@ export async function listProviderModels(
 
   if (provider === 'gemini') {
     if (!apiKey) throw new Error('Enter your Gemini API key first, then load models.');
-    const r = await abortableFetch(`https://generativelanguage.googleapis.com/v1beta/models?pageSize=1000&key=${encodeURIComponent(apiKey)}`);
+    // Key goes in the x-goog-api-key header, never the URL — query strings end
+    // up in proxy/server logs and browser history.
+    const r = await abortableFetch('https://generativelanguage.googleapis.com/v1beta/models?pageSize=1000', {
+      headers: { 'x-goog-api-key': apiKey },
+    });
     if (!r.ok) throw new Error(`Gemini ${r.status} ${r.statusText}`);
     const d = await r.json();
     const models = ((d.models || []) as any[])
@@ -150,7 +207,7 @@ export async function chatCompletion(
   // 1. Google Gemini
   if (provider === 'gemini') {
     const geminiModel = model || 'gemini-1.5-flash';
-    const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${geminiModel}:generateContent?key=${apiKey}`;
+    const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${geminiModel}:generateContent`;
 
     const contents = messages
       .filter(m => m.role !== 'system')
@@ -167,7 +224,7 @@ export async function chatCompletion(
 
     const response = await abortableFetch(endpoint, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'x-goog-api-key': apiKey },
       body: JSON.stringify(payload)
     });
 
@@ -177,13 +234,16 @@ export async function chatCompletion(
     }
 
     const data = await response.json();
-    return data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+    const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+    // Truncation parity with the OpenAI path: a MAX_TOKENS cut must be treated
+    // as truncation (continuation request), not misdiagnosed as malformed JSON.
+    if (data.candidates?.[0]?.finishReason === 'MAX_TOKENS') return text + '\n/*__TRUNCATED__*/';
+    return text;
   }
 
   // 2. Local Ollama
   if (provider === 'ollama') {
-    const url = apiKey || 'http://localhost:11434';
-    const endpoint = `${url.replace(/\/$/, '')}/api/chat`;
+    const rawUrl = apiKey || 'http://127.0.0.1:11434';
     const ollamaModel = model || 'llama3';
 
     const payload: any = {
@@ -198,7 +258,7 @@ export async function chatCompletion(
       payload.format = opts?.responseSchema ?? 'json';
     }
 
-    let response = await abortableFetch(endpoint, {
+    let response = await fetchOllama(rawUrl, '/api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
@@ -206,7 +266,7 @@ export async function chatCompletion(
 
     if (!response.ok && opts?.responseSchema && payload.format !== 'json') {
       payload.format = 'json';
-      response = await abortableFetch(endpoint, {
+      response = await fetchOllama(rawUrl, '/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
@@ -216,7 +276,10 @@ export async function chatCompletion(
     if (!response.ok) throw new Error(`Ollama Error: ${response.status} ${response.statusText}`);
 
     const data = await response.json();
-    return data.message?.content || '';
+    const content = data.message?.content || '';
+    // Truncation parity with the OpenAI path (done_reason === 'length').
+    if (data.done_reason === 'length') return content + '\n/*__TRUNCATED__*/';
+    return content;
   }
 
   // 3. OpenRouter / OpenAI standard completions
@@ -241,10 +304,20 @@ export async function chatCompletion(
       // strict subset forbids; the op-name enum is the high-value constraint.
       ? { type: 'json_schema', json_schema: { name: 'ir_program', strict: false, schema: opts.responseSchema } }
       : { type: 'json_object' },
-    max_tokens: MAX_OUTPUT_TOKENS
   };
+  // OpenAI reasoning models (o-series, gpt-5*) reject `max_tokens` and require
+  // `max_completion_tokens` — sending the wrong one 400s every retry.
+  payload[outputTokensField(provider, model)] = MAX_OUTPUT_TOKENS;
 
   let response = await abortableFetch(endpoint, { method: 'POST', headers, body: JSON.stringify(payload) });
+  // One-shot retry swapping max_tokens ⇄ max_completion_tokens when a 400
+  // names the field (catches ids the prefix heuristic misses, e.g. OpenRouter).
+  if (response.status === 400) {
+    const errPeek = await response.clone().text().catch(() => '');
+    if (/max_tokens|max_completion_tokens/i.test(errPeek) && swapOutputTokensField(payload)) {
+      response = await abortableFetch(endpoint, { method: 'POST', headers, body: JSON.stringify(payload) });
+    }
+  }
   if (!response.ok) {
     if (payload.response_format?.type === 'json_schema') {
       payload.response_format = { type: 'json_object' };
@@ -286,8 +359,9 @@ export async function chatCompletionWithTools(
   }
 
   if (provider === 'ollama') {
-    const url = (apiKey || 'http://localhost:11434').replace(/\/$/, '');
-    return openAIStyleToolCompletion(`${url}/api/chat`, {}, model || 'llama3', messages, systemPrompt, tools, 'ollama');
+    // For the ollama flavor, `endpoint` is the BASE URL — fetchOllama appends
+    // /api/chat and handles the localhost/proxy fallback.
+    return openAIStyleToolCompletion(apiKey || 'http://127.0.0.1:11434', {}, model || 'llama3', messages, systemPrompt, tools, 'ollama');
   }
 
   const endpoint = provider === 'openrouter'
@@ -301,6 +375,10 @@ export async function chatCompletionWithTools(
 // emitting malformed JSON ("Value looks like object, but can't find closing '}'").
 // Convert those to a STRING param ("JSON encoded as string"); the executor's
 // normalizeArgs already tolerantly re-parses stringified objects/arrays.
+// SCOPE: this rewrite is applied ONLY for the 'ollama' flavor (plus Gemini's
+// function declarations, whose OpenAPI subset rejects empty OBJECT schemas).
+// OpenRouter/OpenAI accept `{type:'object',properties:{}}` fine — rewriting it
+// to a string is what made the default OpenRouter slot 400 on clear_graph.
 function sanitizeSchema(schema: any): any {
   if (!schema || typeof schema !== 'object') return schema;
   if (schema.type === 'object' && (!schema.properties || Object.keys(schema.properties).length === 0)) {
@@ -364,11 +442,10 @@ async function openAIStyleToolCompletion(
     model,
     messages: apiMessages,
     tools: tools.map(t => {
-      const isOllamaOrAnthropic = flavor === 'ollama' || 
-                                  endpoint.includes('openrouter.ai') || 
-                                  model.toLowerCase().includes('claude') || 
-                                  model.toLowerCase().includes('anthropic');
-      const params = isOllamaOrAnthropic ? sanitizeSchema(t.parameters) : t.parameters;
+      // Empty-object rewrite is an Ollama grammar workaround ONLY — OpenRouter,
+      // OpenAI (and Anthropic models behind OpenRouter) accept valid
+      // `{type:'object',properties:{}}` schemas as-is.
+      const params = flavor === 'ollama' ? sanitizeSchema(t.parameters) : t.parameters;
       return { type: 'function', function: { name: t.name, description: t.description, parameters: params } };
     }),
   };
@@ -376,26 +453,39 @@ async function openAIStyleToolCompletion(
     payload.stream = false;
     payload.options = { num_predict: MAX_OUTPUT_TOKENS };
   } else {
-    payload.max_tokens = MAX_OUTPUT_TOKENS;
+    const activeAgent = getActiveAgent();
+    payload[outputTokensField(activeAgent.provider, model)] = MAX_OUTPUT_TOKENS;
   }
 
-  let response = await abortableFetch(endpoint, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...extraHeaders },
-    body: JSON.stringify(payload),
-  });
+  const send = (): Promise<Response> => flavor === 'ollama'
+    ? fetchOllama(endpoint, '/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', ...extraHeaders },
+        body: JSON.stringify(payload),
+      })
+    : abortableFetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', ...extraHeaders },
+        body: JSON.stringify(payload),
+      });
+
+  let response = await send();
+  // One-shot retry swapping max_tokens ⇄ max_completion_tokens when a 400
+  // names the field (OpenAI reasoning models; ids the prefix heuristic misses).
+  if (response.status === 400 && flavor !== 'ollama') {
+    const errPeek = await response.clone().text().catch(() => '');
+    if (/max_tokens|max_completion_tokens/i.test(errPeek) && swapOutputTokensField(payload)) {
+      response = await send();
+    }
+  }
   if (response.status === 402 && flavor !== 'ollama') {
     // Low-credit account: OpenRouter tells us what it can afford — retry once
     // with that cap rather than failing the whole build.
     const errText = await response.text().catch(() => '');
     const afford = errText.match(/afford (\d+)/);
     const cap = afford ? Math.max(MIN_OUTPUT_TOKENS, parseInt(afford[1], 10) - 200) : MIN_OUTPUT_TOKENS;
-    payload.max_tokens = cap;
-    response = await abortableFetch(endpoint, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', ...extraHeaders },
-      body: JSON.stringify(payload),
-    });
+    payload[payload.max_completion_tokens !== undefined ? 'max_completion_tokens' : 'max_tokens'] = cap;
+    response = await send();
   }
   if (!response.ok) {
     const errText = await response.text().catch(() => '');
@@ -409,7 +499,11 @@ async function openAIStyleToolCompletion(
   const toolCalls: ToolCall[] = (message.tool_calls || []).map((tc: any, idx: number) => {
     let args = tc.function?.arguments;
     if (typeof args === 'string') {
-      try { args = JSON.parse(args); } catch { args = {}; }
+      try { args = JSON.parse(args); } catch {
+        // Do NOT silently run the tool with {} — mark it so the agent loop
+        // returns a tool-result error and the model resends corrected JSON.
+        args = { [MALFORMED_TOOL_ARGS_KEY]: String(tc.function?.arguments || '').slice(0, 200) };
+      }
     }
     return { id: tc.id || `call_${idx}`, name: tc.function?.name || tc.name, arguments: args || {} };
   });
@@ -429,7 +523,7 @@ async function geminiToolCompletion(
   systemPrompt: string,
   tools: ToolDef[],
 ): Promise<ModelTurn> {
-  const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+  const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
 
   const contents: any[] = [];
   for (const m of messages) {
@@ -475,7 +569,7 @@ async function geminiToolCompletion(
 
   const response = await abortableFetch(endpoint, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json', 'x-goog-api-key': apiKey },
     body: JSON.stringify(payload),
   });
   if (!response.ok) {
@@ -508,7 +602,7 @@ export async function chatCompletionVision(prompt: string, imageDataUrls: string
   const { provider, apiKey, model } = activeAgent;
 
   if (provider === 'gemini') {
-    const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model || 'gemini-1.5-flash'}:generateContent?key=${apiKey}`;
+    const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model || 'gemini-1.5-flash'}:generateContent`;
     const parts: any[] = [{ text: prompt }];
     imageDataUrls.forEach(u => {
       const { mime, data } = dataUrlToBase64(u);
@@ -519,14 +613,14 @@ export async function chatCompletionVision(prompt: string, imageDataUrls: string
       contents: [{ role: 'user', parts }],
       generationConfig: { responseMimeType: 'application/json' },
     };
-    const response = await abortableFetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+    const response = await abortableFetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json', 'x-goog-api-key': apiKey }, body: JSON.stringify(payload) });
     if (!response.ok) throw new Error(`Gemini Vision Error: ${response.status}`);
     const data = await response.json();
     return data.candidates?.[0]?.content?.parts?.[0]?.text || '';
   }
 
   if (provider === 'ollama') {
-    const url = (apiKey || 'http://localhost:11434').replace(/\/$/, '');
+    const rawUrl = apiKey || 'http://127.0.0.1:11434';
     const payload: any = {
       model,
       messages: [
@@ -538,7 +632,7 @@ export async function chatCompletionVision(prompt: string, imageDataUrls: string
     if (!model.toLowerCase().includes('cloud')) {
       payload.format = 'json';
     }
-    const response = await abortableFetch(`${url}/api/chat`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+    const response = await fetchOllama(rawUrl, '/api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
     if (!response.ok) throw new Error(`Ollama Vision Error: ${response.status}`);
     const data = await response.json();
     return data.message?.content || '';
@@ -586,10 +680,10 @@ export async function tryEmbed(text: string): Promise<number[] | null> {
     }
 
     if (provider === 'gemini') {
-      const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/text-embedding-004:embedContent?key=${apiKey}`;
+      const endpoint = 'https://generativelanguage.googleapis.com/v1beta/models/text-embedding-004:embedContent';
       const response = await abortableFetch(endpoint, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'x-goog-api-key': apiKey },
         body: JSON.stringify({ content: { parts: [{ text: text.slice(0, 8000) }] } }),
       });
       if (!response.ok) return null;
@@ -598,8 +692,8 @@ export async function tryEmbed(text: string): Promise<number[] | null> {
     }
 
     if (provider === 'ollama') {
-      const url = (apiKey || 'http://localhost:11434').replace(/\/$/, '');
-      const response = await abortableFetch(`${url}/api/embeddings`, {
+      const rawUrl = apiKey || 'http://127.0.0.1:11434';
+      const response = await fetchOllama(rawUrl, '/api/embeddings', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ model: 'nomic-embed-text', prompt: text.slice(0, 8000) }),

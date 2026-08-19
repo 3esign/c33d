@@ -53,10 +53,37 @@ export function ensureText3DFont(): Promise<boolean> {
 
 export const isText3DFontReady = () => text3dFontReady;
 
-// NaN-safe numeric param read.
-function num(v: any, d: number): number {
+// NaN-safe numeric param read. Exported for tests: unlike the old
+// `parseFloat(x) || d` idiom, a legitimate 0 stays 0 instead of becoming the
+// default (the LinearPattern directionX=0 → 15 phantom-drift bug).
+export function num(v: any, d: number): number {
   const p = parseFloat(v);
   return isFinite(p) ? p : d;
+}
+
+// SPEC-6: hard ceiling on element/instance counts. UI min/max is advisory —
+// formulas and param: edges bypass it entirely, and a mistyped "count*1000"
+// used to freeze the worker with no abort path. Caps: 100_000 for pure number
+// arrays, 2_000 for shape-instancing totals.
+export function clampCount(n: any, max: number, warn: (msg: string) => void, label: string): number {
+  const p = parseFloat(n);
+  const v = Math.max(1, Math.round(isFinite(p) ? p : 1));
+  if (v > max) {
+    warn(`${label} count ${v} clamped to ${max}`);
+    return max;
+  }
+  return v;
+}
+
+// Declared number-input sockets (x/y/z/t…) used to validate and render but
+// were never read — a connected Series→Point.x silently did nothing. Edge
+// value wins over the typed param; lists collapse to their first entry (the
+// list-native versions of these nodes are PointsFromLists/DivideCurve).
+function numInput(inputs: any[], handle: string, params: any, pName: string, d: number): number {
+  const raw = inputs?.find((i: any) => i.targetHandle === handle)?.value;
+  const v = Array.isArray(raw) ? raw[0] : raw;
+  if (v !== undefined && v !== null && typeof v !== 'object') return num(v, d);
+  return num(params?.[pName], d);
 }
 
 function parseParamToNumberOrList(val: any, fallback = 0): number | number[] {
@@ -307,25 +334,44 @@ function orientAndPlace(shape: any, inputs: any[]): any {
   return out;
 }
 
+// SPEC-4: numbers-only digest of resolved selection elements (sum of area/
+// length, mean centroid). This is what travels in the Selection record and the
+// report — never the WASM-backed elements themselves.
+function summarizeSelection(elements: { centroid: [number, number, number]; areaOrLength: number }[]): { areaOrLength: number; centroid: [number, number, number] } {
+  let sum = 0;
+  let cx = 0, cy = 0, cz = 0;
+  for (const el of elements) {
+    sum += el.areaOrLength || 0;
+    cx += el.centroid?.[0] || 0;
+    cy += el.centroid?.[1] || 0;
+    cz += el.centroid?.[2] || 0;
+  }
+  const n = elements.length;
+  return {
+    areaOrLength: sum,
+    centroid: n > 0 ? [cx / n, cy / n, cz / n] : [0, 0, 0],
+  };
+}
+
 export const EXECUTORS: Record<
   string,
   (params: any, inputs: any[], warn: (msg: string) => void, scope?: Record<string, number>) => any
 > = {
   Box: (params, inputs) => {
-    const w = parseFloat(params.width) || 10;
-    const l = parseFloat(params.length) || 10;
-    const h = parseFloat(params.height) || 10;
+    const w = num(params.width, 10);
+    const l = num(params.length, 10);
+    const h = num(params.height, 10);
     return orientAndPlace(replicad.makeBox([-w / 2, -l / 2, -h / 2], [w / 2, l / 2, h / 2]), inputs);
   },
 
   Sphere: (params, inputs) => {
-    const r = parseFloat(params.radius) || 5;
+    const r = num(params.radius, 5);
     return orientAndPlace(replicad.makeSphere(r), inputs);
   },
 
   Cylinder: (params, inputs) => {
-    const r = parseFloat(params.radius) || 5;
-    const h = parseFloat(params.height) || 10;
+    const r = num(params.radius, 5);
+    const h = num(params.height, 10);
     return orientAndPlace(replicad.makeCylinder(r, h, [0, 0, -h / 2]), inputs);
   },
 
@@ -360,11 +406,12 @@ export const EXECUTORS: Record<
   },
 
   Plane: (params) => {
-    const w = parseFloat(params.width) || 10;
-    const l = parseFloat(params.length) || 10;
-    return (replicad.drawRectangle(w, l).sketchOnPlane("XY") as any)
-      .face()
-      .translate([-w / 2, -l / 2, 0]);
+    const w = num(params.width, 10);
+    const l = num(params.length, 10);
+    // replicad's drawRectangle is already centered on [0,0] — the old
+    // .translate([-w/2, -l/2, 0]) double-centered the face half a size off
+    // origin, making Plane disagree with every other primitive.
+    return (replicad.drawRectangle(w, l).sketchOnPlane("XY") as any).face();
   },
 
   Ellipsoid: (params, inputs, warn) => {
@@ -468,8 +515,10 @@ export const EXECUTORS: Record<
     const surfaceInput = inputs.find((i) => i.targetHandle === 'surface')?.value;
     const shapeInput = inputs.find((i) => i.targetHandle === 'shape')?.value;
     if (!surfaceInput || !shapeInput) return null;
-    const u = parseFloat(params.u) || 0;
-    const v = parseFloat(params.v) || 0;
+    // Defaults match the definition (0.5 = face center); u=0/v=0 stays a
+    // legal corner placement instead of being eaten by `|| 0`.
+    const u = num(params.u, 0.5);
+    const v = num(params.v, 0.5);
 
     const face = surfaceInput.faces
       ? surfaceInput.faces[0]
@@ -487,12 +536,12 @@ export const EXECUTORS: Record<
     return shapeInput ? shapeInput.clone() : null;
   },
 
-  ScatterOnSurface: (params, inputs) => {
+  ScatterOnSurface: (params, inputs, warn) => {
     const surface = inputs.find((i) => i.targetHandle === 'surface')?.value;
     const shape = inputs.find((i) => i.targetHandle === 'shape')?.value;
     if (!surface || !shape) return shape ? shape.clone() : null;
 
-    const count = parseInt(params.count) || 10;
+    const count = clampCount(num(params.count, 10), 2000, warn, 'ScatterOnSurface');
     const seed = num(params.seed, 1);
     const scaleMin = num(params.scaleMin, 1);
     const scaleMax = num(params.scaleMax, 1);
@@ -577,9 +626,9 @@ export const EXECUTORS: Record<
     if (!shapeInput) return null;
     const refInput = inputs.find((i) => i.targetHandle === 'reference')?.value;
     const mode = String(params.mode || 'above').toLowerCase();
-    const ox = parseFloat(params.offsetX) || 0;
-    const oy = parseFloat(params.offsetY) || 0;
-    const oz = parseFloat(params.offsetZ) || 0;
+    const ox = num(params.offsetX, 0);
+    const oy = num(params.offsetY, 0);
+    const oz = num(params.offsetZ, 0);
 
     const sb = shapeInput.boundingBox;
     if (!sb || !sb.bounds) return shapeInput.clone();
@@ -775,11 +824,11 @@ export const EXECUTORS: Record<
     const solidInput = inputs.find((i) => i.targetHandle === 'solid')?.value;
     if (!solidInput) return null;
     const selection = inputs.find((i) => i.targetHandle === 'selection')?.value;
-    const r = parseFloat(params.radius) || 1;
+    const r = num(params.radius, 1);
     return mapOverTree(solidInput, (shape) => {
       try {
         if (selection && selection.query) {
-          const descends = shape.sourceNodeId === selection.sourceNodeId || 
+          const descends = shape.sourceNodeId === selection.sourceNodeId ||
                            (shape.ancestorNodeIds && shape.ancestorNodeIds.includes(selection.sourceNodeId));
           if (!descends) {
             warn(`Selection sourceNodeId "${selection.sourceNodeId}" is not an ancestor of solid "${shape.sourceNodeId}". Filtering all edges.`);
@@ -805,7 +854,7 @@ export const EXECUTORS: Record<
     const solidInput = inputs.find((i) => i.targetHandle === 'solid')?.value;
     if (!solidInput) return null;
     const selection = inputs.find((i) => i.targetHandle === 'selection')?.value;
-    const r = parseFloat(params.radius) || 1;
+    const r = num(params.radius, 1);
     return mapOverTree(solidInput, (shape) => {
       try {
         if (selection && selection.query) {
@@ -834,7 +883,7 @@ export const EXECUTORS: Record<
   Extrude: (params, inputs, warn) => {
     const solidInput = inputs.find((i) => i.targetHandle === 'solid')?.value;
     if (!solidInput) return null;
-    const h = parseFloat(params.height) || 10;
+    const h = num(params.height, 10);
     const endFactor = Math.max(0.02, num(params.taperEndFactor, 1));
     const profileName = params.taperProfile === 'sCurve' ? 's-curve' : 'linear';
     const twist = num(params.twistAngle, 0);
@@ -886,7 +935,7 @@ export const EXECUTORS: Record<
       if (typeof err === 'number' || /^\d+$/.test(rawMsg.trim())) {
         warn(`Sketch failed: ${kernelAwareMsg(err)}.`);
       } else {
-        warn(`Sketch failed: ${rawMsg}. Check the svgPath string (supported: M L H V C Q Z).`);
+        warn(`Sketch failed: ${rawMsg}. Check the svgPath string (supported: M L H V C S Q T A Z).`);
       }
       return null;
     }
@@ -992,8 +1041,8 @@ export const EXECUTORS: Record<
 
   Text3D: (params, _inputs, warn) => {
     const txt = params.text || "C33D";
-    const size = parseFloat(params.size) || 10;
-    const h = parseFloat(params.height) || 2;
+    const size = num(params.size, 10);
+    const h = num(params.height, 2);
     if (!isText3DFontReady()) {
       warn(
         `Text3D unavailable: the text font could not be loaded (public/fonts/DejaVuSans.ttf missing or unreachable). Do not retry Text3D this session — build the label from primitives instead, or drop it.`
@@ -1018,7 +1067,7 @@ export const EXECUTORS: Record<
     const solidInput = inputs.find((i) => i.targetHandle === 'solid')?.value;
     if (!solidInput) return null;
     const selection = inputs.find((i) => i.targetHandle === 'selection')?.value;
-    const thickness = parseFloat(params.thickness) || 1;
+    const thickness = num(params.thickness, 1);
     const removeBottom =
       params.removeBottomFace === true || params.removeBottomFace === 'true';
     try {
@@ -1064,7 +1113,7 @@ export const EXECUTORS: Record<
   Revolve: (params, inputs, warn) => {
     const profile = inputs.find((i) => i.targetHandle === 'profile')?.value;
     if (!profile) return null;
-    const angleDeg = Math.max(1, Math.min(360, parseFloat(params.angle) || 360));
+    const angleDeg = Math.max(1, Math.min(360, num(params.angle, 360)));
     const axisName = (params.axis || 'Z').toUpperCase();
     const axis: [number, number, number] =
       axisName === 'X' ? [1, 0, 0] : axisName === 'Y' ? [0, 1, 0] : [0, 0, 1];
@@ -1084,13 +1133,15 @@ export const EXECUTORS: Record<
     }
   },
 
-  LinearPattern: (params, inputs) => {
+  LinearPattern: (params, inputs, warn) => {
     const solidInput = inputs.find((i) => i.targetHandle === 'solid')?.value;
     if (!solidInput) return null;
-    const count = parseInt(params.count) || 3;
-    const dx = parseFloat(params.directionX) || 15;
-    const dy = parseFloat(params.directionY) || 0;
-    const dz = parseFloat(params.directionZ) || 0;
+    const count = clampCount(num(params.count, 3), 2000, warn, 'LinearPattern');
+    // num(), not `|| 15`: a vertical pattern with directionX=0 must stay
+    // vertical instead of acquiring a phantom 15-unit X drift.
+    const dx = num(params.directionX, 15);
+    const dy = num(params.directionY, 0);
+    const dz = num(params.directionZ, 0);
     const copies = [];
     for (let i = 0; i < count; i++) {
       copies.push(safeTranslate(solidInput, [i * dx, i * dy, i * dz]));
@@ -1098,10 +1149,10 @@ export const EXECUTORS: Record<
     return replicad.makeCompound(copies);
   },
 
-  CircularPattern: (params, inputs) => {
+  CircularPattern: (params, inputs, warn) => {
     const solidInput = inputs.find((i) => i.targetHandle === 'solid')?.value;
     if (!solidInput) return null;
-    const count = parseInt(params.count) || 4;
+    const count = clampCount(num(params.count, 4), 2000, warn, 'CircularPattern');
     const r = num(params.radius, 20);
     const totalAngle = num(params.angle, 360);
     const startAngle = num(params.startAngle, 0);
@@ -1214,13 +1265,35 @@ export const EXECUTORS: Record<
     const rawTarget = inputs.find((i) => i.targetHandle === 'target')?.value;
     const rawTool = inputs.find((i) => i.targetHandle === 'tool')?.value;
 
-    if (!rawTarget || !rawTool) {
-      if (!rawTarget && !rawTool) return null;
-      const fallback = rawTarget || rawTool;
-      return mapOverTree(fallback, (s) => s.clone());
+    // Accept the aliases models actually write; anything else errors loudly
+    // instead of silently no-oping into a clone.
+    const OP_ALIASES: Record<string, string> = {
+      subtract: 'difference', sub: 'difference',
+      add: 'union', merge: 'union', fuse: 'union',
+      intersection: 'intersect',
+    };
+    const rawOp = String(params.operation || 'union').toLowerCase().trim();
+    const op = OP_ALIASES[rawOp] || rawOp;
+    if (op !== 'union' && op !== 'difference' && op !== 'intersect') {
+      throw new Error(`Boolean: unknown operation "${params.operation}" — valid operations: union, difference, intersect (aliases: add/merge/fuse → union, subtract/sub → difference, intersection → intersect).`);
     }
 
-    const op = params.operation || 'union';
+    if (!rawTarget || !rawTool) {
+      if (!rawTarget && !rawTool) return null;
+      if (!rawTarget) {
+        // Returning the TOOL for difference/intersect inverted the user's
+        // intent (the audit's "silent wrong geometry") — refuse instead.
+        if (op !== 'union') {
+          throw new Error(`Boolean ${op} requires a "target" input — only the tool is connected. Connect the solid to keep/cut to "target".`);
+        }
+        warn(`Boolean union has only one input (tool) — passing it through unchanged.`);
+        return mapOverTree(rawTool, (s) => s.clone());
+      }
+      // Target present, tool missing: identity for union/difference; warn so a
+      // dropped wire is visible.
+      warn(`Boolean ${op} has no "tool" input — passing the target through unchanged.`);
+      return mapOverTree(rawTarget, (s) => s.clone());
+    }
 
     const getToolShape = (t: any) => {
       if (!Array.isArray(t)) return t;
@@ -1261,13 +1334,15 @@ export const EXECUTORS: Record<
     });
   },
 
-  SubdivideSurface: (params, inputs, _warn) => {
+  SubdivideSurface: (params, inputs, warn) => {
     const rawSolidInput = inputs.find((i) => i.targetHandle === 'solid')?.value;
     if (!rawSolidInput) return null;
 
-    const uDivs = Math.max(1, parseInt(params.uDivisions) || 3);
-    const vDivs = Math.max(1, parseInt(params.vDivisions) || 3);
-    const inset = Math.max(0, Math.min(0.99, num(params.inset, 0)));
+    // u×v is a cell TOTAL — clamp the product, not just each axis.
+    const uDivs = clampCount(num(params.uDivisions, 3), 2000, warn, 'SubdivideSurface uDivisions');
+    const vDivs = clampCount(num(params.vDivisions, 3), Math.max(1, Math.floor(2000 / uDivs)), warn, 'SubdivideSurface vDivisions');
+    // Default 0.1 matches the definition (a visible gap between cells).
+    const inset = Math.max(0, Math.min(0.99, num(params.inset, 0.1)));
     const extrudeMin = num(params.extrudeMin, 0.5);
     const extrudeMax = num(params.extrudeMax, 0.5);
     const seed = num(params.seed, 1);
@@ -1410,8 +1485,8 @@ export const EXECUTORS: Record<
 
     const filterType = params.axisFilter || 'maxZ';
     const direction = params.direction || 'Z';
-    const index = parseInt(params.index) || 0;
-    const tol = parseFloat(params.tolerance) || 0.1;
+    const index = Math.round(num(params.index, 0));
+    const tol = num(params.tolerance, 0.1);
 
     const matchedFaces: any[] = [];
 
@@ -1535,6 +1610,7 @@ export const EXECUTORS: Record<
     const curve = builder.Curve();
     const makeEdge = new OC.BRepBuilderAPI_MakeEdge_24(curve);
     if (!makeEdge.IsDone()) {
+      try { curve.delete(); } catch {}
       ptsArray.delete();
       builder.delete();
       makeEdge.delete();
@@ -1543,6 +1619,7 @@ export const EXECUTORS: Record<
     const edge = makeEdge.Edge();
     const makeWire = new OC.BRepBuilderAPI_MakeWire_1(edge);
     if (!makeWire.IsDone()) {
+      try { curve.delete(); } catch {}
       ptsArray.delete();
       builder.delete();
       makeEdge.delete();
@@ -1552,6 +1629,9 @@ export const EXECUTORS: Record<
     const wire = makeWire.Wire();
     const shape = replicad.cast(wire);
 
+    // The Geom curve HANDLE is a creation-side temp — the edge holds its own
+    // reference, so freeing the JS wrapper is safe (unlike TopoDS shapes).
+    try { curve.delete(); } catch {}
     ptsArray.delete();
     builder.delete();
     makeEdge.delete();
@@ -1584,7 +1664,7 @@ export const EXECUTORS: Record<
     warn(`VariableFillet is deprecated. Please use Fillet with a Selection node instead.`);
     const solidInput = inputs.find((i) => i.targetHandle === 'solid')?.value;
     if (!solidInput) return null;
-    const radius = parseFloat(params.radius) || 1.0;
+    const radius = num(params.radius, 1.0);
     const filterAxis = String(params.filterAxis || 'all').toUpperCase();
     
     const parsedIndex = parseInt(params.edgeIndex);
@@ -1618,16 +1698,21 @@ export const EXECUTORS: Record<
     }
   },
 
+  // SPEC-4: SelectFaces/SelectEdges resolve IMMEDIATELY and return the full
+  // Selection record every consumer reads — hashes (Shell), matchedCount/
+  // summary (SelectionMeasure, report), sourceNodeId = the node that PRODUCED
+  // the input solid (Fillet/Chamfer provenance). No WASM objects in the record.
   SelectFaces: (params: any, inputs: any[], warn: (msg: string) => void, scope?: Record<string, number>) => {
     const solidInput = inputs.find((i: any) => i.targetHandle === 'solid')?.value;
     if (!solidInput) return null;
     const predicate = String(params.predicate || 'normal ~ +Z');
-    const tol = parseFloat(params.tolerance) || 0.1;
-    
+    const tol = num(params.tolerance, 0.1);
+    const sourceNodeId = solidInput.sourceNodeId || '';
+    const totalCount = (solidInput.faces || []).length;
+
     try {
       const res = evaluateSelectionQuery(predicate, 'faces', solidInput, scope || {}, tol);
-      const totalCount = (solidInput.faces || []).length;
-      
+
       if (res.hashes.length === 0) {
         warn(`Selection error: query "${predicate}" matched 0 faces on solid.`);
       } else if (res.hashes.length === totalCount) {
@@ -1642,11 +1727,15 @@ export const EXECUTORS: Record<
         type: 'Selection',
         domain: 'faces',
         query: predicate,
-        sourceNodeId: solidInput.sourceNodeId || ''
+        sourceNodeId,
+        hashes: res.hashes,
+        matchedCount: res.hashes.length,
+        totalCount,
+        summary: summarizeSelection(res.elements),
       };
     } catch (err: any) {
       warn(`SelectFaces failed: ${err.message || err}`);
-      return { type: 'Selection', domain: 'faces', query: predicate, sourceNodeId: solidInput.sourceNodeId || '' };
+      return { type: 'Selection', domain: 'faces', query: predicate, sourceNodeId, hashes: [], matchedCount: 0, totalCount, summary: summarizeSelection([]) };
     }
   },
 
@@ -1654,12 +1743,13 @@ export const EXECUTORS: Record<
     const solidInput = inputs.find((i: any) => i.targetHandle === 'solid')?.value;
     if (!solidInput) return null;
     const predicate = String(params.predicate || 'parallel Z');
-    const tol = parseFloat(params.tolerance) || 0.1;
-    
+    const tol = num(params.tolerance, 0.1);
+    const sourceNodeId = solidInput.sourceNodeId || '';
+    const totalCount = (solidInput.edges || []).length;
+
     try {
       const res = evaluateSelectionQuery(predicate, 'edges', solidInput, scope || {}, tol);
-      const totalCount = (solidInput.edges || []).length;
-      
+
       if (res.hashes.length === 0) {
         warn(`Selection error: query "${predicate}" matched 0 edges on solid.`);
       } else if (res.hashes.length === totalCount) {
@@ -1674,11 +1764,15 @@ export const EXECUTORS: Record<
         type: 'Selection',
         domain: 'edges',
         query: predicate,
-        sourceNodeId: solidInput.sourceNodeId || ''
+        sourceNodeId,
+        hashes: res.hashes,
+        matchedCount: res.hashes.length,
+        totalCount,
+        summary: summarizeSelection(res.elements),
       };
     } catch (err: any) {
       warn(`SelectEdges failed: ${err.message || err}`);
-      return { type: 'Selection', domain: 'edges', query: predicate, sourceNodeId: solidInput.sourceNodeId || '' };
+      return { type: 'Selection', domain: 'edges', query: predicate, sourceNodeId, hashes: [], matchedCount: 0, totalCount, summary: summarizeSelection([]) };
     }
   },
 
@@ -1686,11 +1780,11 @@ export const EXECUTORS: Record<
     const s1 = inputs.find((i: any) => i.targetHandle === 'selection1')?.value;
     const s2 = inputs.find((i: any) => i.targetHandle === 'selection2')?.value;
     const op = String(params.operation || 'union').toLowerCase();
-    
-    if (!s1 && !s2) return { type: 'Selection', domain: 'faces', query: '', sourceNodeId: '' };
+
+    if (!s1 && !s2) return { type: 'Selection', domain: 'faces', query: '', sourceNodeId: '', hashes: [], matchedCount: 0, totalCount: 0 };
     if (!s1) return s2;
     if (!s2) return s1;
-    
+
     let expr = '';
     if (op === 'union') {
       expr = `(${s1.query}) or (${s2.query})`;
@@ -1699,12 +1793,25 @@ export const EXECUTORS: Record<
     } else if (op === 'subtract') {
       expr = `(${s1.query}) and (not (${s2.query}))`;
     }
-    
+
+    // Both inputs resolved against (normally) the same solid, so the hash
+    // set-op is real data — Shell and the report stay truthful for combos.
+    let hashes: number[] = [];
+    if (Array.isArray(s1.hashes) && Array.isArray(s2.hashes)) {
+      const h2 = new Set(s2.hashes);
+      if (op === 'intersect') hashes = s1.hashes.filter((h: number) => h2.has(h));
+      else if (op === 'subtract') hashes = s1.hashes.filter((h: number) => !h2.has(h));
+      else hashes = [...new Set([...s1.hashes, ...s2.hashes])];
+    }
+
     return {
       type: 'Selection',
       domain: s1.domain,
       query: expr,
-      sourceNodeId: s1.sourceNodeId || s2.sourceNodeId || ''
+      sourceNodeId: s1.sourceNodeId || s2.sourceNodeId || '',
+      hashes,
+      matchedCount: hashes.length,
+      totalCount: s1.totalCount ?? s2.totalCount ?? 0,
     };
   },
   SplitLoop: (params, inputs, warn) => {
@@ -1887,8 +1994,13 @@ export const EXECUTORS: Record<
   // ---------------------------------------------------------
   // POINT NODES
   // ---------------------------------------------------------
-  Point: (params) => {
-    return { type: 'Point', x: num(params.x, 0), y: num(params.y, 0), z: num(params.z, 0) };
+  Point: (params, inputs) => {
+    return {
+      type: 'Point',
+      x: numInput(inputs, 'x', params, 'x', 0),
+      y: numInput(inputs, 'y', params, 'y', 0),
+      z: numInput(inputs, 'z', params, 'z', 0),
+    };
   },
   DeconstructPoint: (_params, inputs) => {
     const pt = inputs.find(i => i.targetHandle === 'point')?.value || { x: 0, y: 0, z: 0 };
@@ -1913,7 +2025,7 @@ export const EXECUTORS: Record<
   PointBetween: (params, inputs) => {
     const p1 = inputs.find(i => i.targetHandle === 'a' || i.targetHandle === 'pointA')?.value || { x: 0, y: 0, z: 0 };
     const p2 = inputs.find(i => i.targetHandle === 'b' || i.targetHandle === 'pointB')?.value || { x: 0, y: 0, z: 0 };
-    const t = num(params.t, 0.5);
+    const t = numInput(inputs, 't', params, 't', 0.5);
     return { type: 'Point', x: p1.x + (p2.x - p1.x) * t, y: p1.y + (p2.y - p1.y) * t, z: p1.z + (p2.z - p1.z) * t };
   },
   Endpoints: (_params, inputs) => {
@@ -1938,17 +2050,28 @@ export const EXECUTORS: Record<
   // ---------------------------------------------------------
   // VECTOR NODES
   // ---------------------------------------------------------
-  VectorXYZ: (params) => {
-    return { type: 'Vector', x: num(params.x, 0), y: num(params.y, 0), z: num(params.z, 0) };
+  VectorXYZ: (params, inputs) => {
+    return {
+      type: 'Vector',
+      x: numInput(inputs, 'x', params, 'x', 0),
+      y: numInput(inputs, 'y', params, 'y', 0),
+      z: numInput(inputs, 'z', params, 'z', 0),
+    };
   },
   DeconstructVector: (_params, inputs) => {
     const v = inputs.find(i => i.targetHandle === 'vector')?.value || { x: 0, y: 0, z: 0 };
     return { __multi: true, values: { x: v.x, y: v.y, z: v.z } };
   },
-  Vector2Pt: (_params, inputs) => {
+  Vector2Pt: (params, inputs) => {
     const p1 = inputs.find(i => i.targetHandle === 'a' || i.targetHandle === 'from')?.value || { x: 0, y: 0, z: 0 };
     const p2 = inputs.find(i => i.targetHandle === 'b' || i.targetHandle === 'to')?.value || { x: 0, y: 0, z: 0 };
-    return { type: 'Vector', x: p2.x - p1.x, y: p2.y - p1.y, z: p2.z - p1.z };
+    let x = p2.x - p1.x, y = p2.y - p1.y, z = p2.z - p1.z;
+    // Declared `normalize` param, previously never applied.
+    if (params.normalize === true || params.normalize === 'true') {
+      const len = Math.sqrt(x * x + y * y + z * z);
+      if (len > 1e-9) { x /= len; y /= len; z /= len; }
+    }
+    return { type: 'Vector', x, y, z };
   },
   VectorMath: (params, inputs, warn) => {
     const v1 = inputs.find(i => i.targetHandle === 'a' || i.targetHandle === 'vectorA')?.value || { x: 0, y: 0, z: 0 };
@@ -2088,6 +2211,7 @@ export const EXECUTORS: Record<
        // from DivideCurve); consecutive runs of equal value become separate
        // splines — one Curve with many wires, ready for LoftCurves.
        const groupBy = String(params.groupBy ?? '').trim();
+       const closed = params.closed === true || params.closed === 'true';
        const nested: any[][] = Array.isArray(pts[0])
          ? (pts as any[][])
          : (groupBy ? partitionByChannel(pts, groupBy) : [pts]);
@@ -2095,6 +2219,14 @@ export const EXECUTORS: Record<
          .filter(sub => Array.isArray(sub) && sub.length >= 2)
          .map((subPts: any[]) => {
            const coords = subPts.map((p: any) => [p.x||0, p.y||0, p.z||0] as [number, number, number]);
+           // Declared `closed` param, previously ignored (closed splines
+           // silently rendered open): route the approximation back through
+           // the first point.
+           if (closed) {
+             const first = coords[0], last = coords[coords.length - 1];
+             const gap = Math.hypot(first[0] - last[0], first[1] - last[1], first[2] - last[2]);
+             if (gap > 1e-9) coords.push([first[0], first[1], first[2]]);
+           }
            return (replicad as any).makeBSplineApproximation(coords);
          });
        if (wires.length === 0) return null;
@@ -2170,24 +2302,21 @@ export const EXECUTORS: Record<
     }
     return { __multi: true, values: { isInside: inside } };
   },
-  SelectionMeasure: (_params, inputs) => {
+  SelectionMeasure: (_params, inputs, warn) => {
+    // SPEC-4: Selection records carry a numbers-only summary (sum + mean
+    // centroid) resolved at selection time — the old `sel.elements` field
+    // never existed on any producer, so this node always output 0.
     const sel = inputs.find(i => i.targetHandle === 'selection')?.value;
     let v = 0;
-    let cx = 0, cy = 0, cz = 0;
-    let count = 0;
-    if (sel && sel.elements && sel.elements.length > 0) {
-      for (const e of sel.elements) {
-        v += (sel.domain === 'faces' ? e.area : e.length) || 0;
-        if (e.centroid) {
-           cx += e.centroid[0]; cy += e.centroid[1]; cz += e.centroid[2];
-           count++;
-        }
-      }
-      if (count > 0) {
-         cx /= count; cy /= count; cz /= count;
-      }
+    let c = { type: 'Point', x: 0, y: 0, z: 0 };
+    if (sel && sel.type === 'Selection' && sel.summary) {
+      v = num(sel.summary.areaOrLength, 0);
+      const cd = Array.isArray(sel.summary.centroid) ? sel.summary.centroid : [0, 0, 0];
+      c = { type: 'Point', x: num(cd[0], 0), y: num(cd[1], 0), z: num(cd[2], 0) };
+    } else if (sel && sel.type === 'Selection') {
+      warn('SelectionMeasure: this Selection carries no summary (combined selections measure via their source SelectFaces/SelectEdges nodes).');
     }
-    return { __multi: true, values: { areaOrLength: v, centroid: { type: 'Point', x: cx, y: cy, z: cz } } };
+    return { __multi: true, values: { areaOrLength: v, centroid: c } };
   },
   CurveLength: (_params, inputs) => {
     const curve = inputs.find(i => i.targetHandle === 'curve')?.value;
@@ -2201,7 +2330,7 @@ export const EXECUTORS: Record<
   },
   PointOnCurve: (params, inputs) => {
     const curve = inputs.find(i => i.targetHandle === 'curve')?.value;
-    let t = num(params.t, 0.5);
+    let t = numInput(inputs, 't', params, 't', 0.5);
     let p = { type: 'Point', x: 0, y: 0, z: 0 };
     if (curve && curve.type === 'Curve') {
        try {
@@ -2213,7 +2342,7 @@ export const EXECUTORS: Record<
   },
   EvaluateCurve: (params, inputs) => {
     const curve = inputs.find(i => i.targetHandle === 'curve')?.value;
-    let t = num(params.t, 0.5);
+    let t = numInput(inputs, 't', params, 't', 0.5);
     let p = { type: 'Point', x: 0, y: 0, z: 0 };
     let v = { type: 'Vector', x: 1, y: 0, z: 0 };
     if (curve && curve.type === 'Curve') {
@@ -2227,9 +2356,9 @@ export const EXECUTORS: Record<
     }
     return { __multi: true, values: { point: p, tangent: v } };
   },
-  DivideCurve: (params, inputs) => {
+  DivideCurve: (params, inputs, warn) => {
     const curve = inputs.find(i => i.targetHandle === 'curve')?.value;
-    const count = Math.max(2, Math.round(num(params.count, 10)));
+    const count = Math.max(2, clampCount(num(params.count, 10), 2000, warn, 'DivideCurve'));
     const pts = [];
     if (curve && curve.type === 'Curve') {
        try {
@@ -2264,9 +2393,10 @@ export const EXECUTORS: Record<
     }
     return { __multi: true, values: { points: pts } };
   },
-  PointGrid: (params) => {
-    const nx = Math.max(1, Math.round(num(params.countX, 5)));
-    const ny = Math.max(1, Math.round(num(params.countY, 5)));
+  PointGrid: (params, _inputs, warn) => {
+    // nx×ny is a point TOTAL — clamp the product, not just each axis.
+    const nx = clampCount(num(params.countX, 5), 2000, warn, 'PointGrid countX');
+    const ny = clampCount(num(params.countY, 5), Math.max(1, Math.floor(2000 / nx)), warn, 'PointGrid countY');
     const sx = num(params.spacingX, 2);
     const sy = num(params.spacingY, 2);
     const pts = [];
@@ -2664,9 +2794,9 @@ export const EXECUTORS: Record<
       return null;
     }
     const everyNth = Math.max(1, Math.round(num(params.everyNth, 1)));
-    // Cap raised 200→500: dotted-orbit / dense-scatter patterns legitimately
-    // instance hundreds of small shapes.
-    const maxCount = Math.max(1, Math.min(500, Math.round(num(params.maxCount, 100))));
+    // Ceiling is the SPEC-6 instancing cap (2000); the definition's UI max
+    // stays 500 as the sane advisory range for hand-set values.
+    const maxCount = clampCount(num(params.maxCount, 100), 2000, warn, 'InstanceOnPoints maxCount');
     const s0 = num(params.scaleStart, 1);
     const s1 = num(params.scaleEnd, 1);
     const align = params.alignToTangent === true || params.alignToTangent === 'true';

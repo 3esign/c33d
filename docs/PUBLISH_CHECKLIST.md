@@ -1,5 +1,7 @@
 # Publish Checklist — 2026-07-11
 
+> Historical snapshot (Jul 2026) — kept for the record; counts and statuses below are stale.
+
 Everything is committed on `main`, 4 commits ahead of `origin/main` (github.com/3esign/c33d). Working tree clean.
 
 ## Ready to publish

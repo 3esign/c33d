@@ -174,9 +174,12 @@ export function computeGraphShapeMetrics(nodes: any[], edges: any[]): GraphShape
       if (p.type !== 'number') continue;
       const v = (n.data || {})[p.name];
       if (v === undefined || v === null || v === '') continue;
-      const parsed = parseFloat(v);
-      const isLiteral = typeof v !== 'string' || String(parsed) === String(v).trim();
-      if (isLiteral && isFinite(parsed) && Math.abs(parsed) > 1e-9 && parsed !== p.default) magicNumberCount++;
+      // Numeric-string comparison via Number(): "5.0" IS a literal ("5.0" ≠
+      // String(5) tripped the old exact-round-trip check), while a formula
+      // like "r*2" yields NaN and is correctly skipped.
+      const parsed = typeof v === 'string' ? Number(v.trim()) : (typeof v === 'number' ? v : NaN);
+      const isLiteral = isFinite(parsed);
+      if (isLiteral && Math.abs(parsed) > 1e-9 && parsed !== p.default) magicNumberCount++;
     }
   }
 
@@ -214,6 +217,10 @@ export function checkGeometrySanity(report: GeometryReport | null, evalError: st
   if (report.meshedLeafCount === 0 && report.leaves.length > 0) {
     issues.push('No leaf node produced meshable geometry — the viewport is empty.');
   }
+  // SPEC-3: ONLY nodeErrors are failures. Executor warn() output arrives on the
+  // separate nodeWarnings channel and is surfaced as informational "[info]"
+  // lines — a SelectFaces "matched N faces" note on its normal success path
+  // used to fail sanity here and burn repair turns on healthy geometry.
   for (const err of report.nodeErrors) {
     issues.push(`Node "${err.id}" failed: ${err.error}`);
   }
@@ -236,6 +243,12 @@ export function checkGeometrySanity(report: GeometryReport | null, evalError: st
   }
 
   const warnings: string[] = [];
+
+  // Executor warn() channel (SPEC-3, read defensively — the field lands with
+  // the worker changes): informational only, never a failure.
+  for (const w of (((report as any).nodeWarnings || []) as { id: string; message: string }[]).slice(0, 12)) {
+    warnings.push(`[info] node "${w.id}": ${w.message}`);
+  }
 
   // Scattered-parts check: any leaf whose center is far outside the scene bulk
   if (report.scene && report.leaves.length > 1) {
@@ -397,6 +410,11 @@ export function formatGeometryReport(report: GeometryReport | null, evalError: s
   for (const err of report.nodeErrors.slice(0, 10)) {
     lines.push(`! node "${err.id}" error: ${err.error}`);
   }
+  // SPEC-3 warn channel: informational executor notes ("matched N faces", …) —
+  // rendered as [info] percept lines, never as failures.
+  for (const w of (((report as any).nodeWarnings || []) as { id: string; message: string }[]).slice(0, 10)) {
+    lines.push(`[info] node "${w.id}": ${w.message}`);
+  }
   const numberEntries = Object.entries(report.numbers || {});
   if (numberEntries.length > 0) {
     lines.push(`Numbers: ${numberEntries.slice(0, 15).map(([k, v]) => {
@@ -412,16 +430,24 @@ export function formatGeometryReport(report: GeometryReport | null, evalError: s
   if (selectionEntries.length > 0) {
     lines.push('Selections:');
     for (const [nodeId, sel] of selectionEntries) {
-      lines.push(`- ${nodeId}: matched ${sel.matchedCount} elements${sel.warning ? ` (WARNING: ${sel.warning})` : ''}`);
-      sel.elements.forEach((el, idx) => {
+      // SPEC-4 payloads may carry matchedCount/totalCount/summary without a
+      // per-element list — read both shapes defensively.
+      const total = (sel as any).totalCount;
+      lines.push(`- ${nodeId}: matched ${sel.matchedCount}${total !== undefined ? `/${total}` : ''} elements${sel.warning ? ` (WARNING: ${sel.warning})` : ''}`);
+      const elements = sel.elements || [];
+      elements.forEach((el, idx) => {
         if (idx < 5) {
           const normalStr = el.normal ? `, normal [${el.normal.map(fmt).join(', ')}]` : '';
           const dirStr = el.direction ? `, direction [${el.direction.map(fmt).join(', ')}]` : '';
           lines.push(`  * [${idx}]: center [${el.centroid.map(fmt).join(', ')}]${normalStr}${dirStr}, size ${fmt(el.areaOrLength)}`);
         }
       });
-      if (sel.elements.length > 5) {
-        lines.push(`  * ... and ${sel.elements.length - 5} more`);
+      if (elements.length > 5) {
+        lines.push(`  * ... and ${elements.length - 5} more`);
+      }
+      const summary = (sel as any).summary;
+      if (elements.length === 0 && summary && Array.isArray(summary.centroid)) {
+        lines.push(`  * summary: centroid [${summary.centroid.map(fmt).join(', ')}], total area/length ${fmt(summary.areaOrLength ?? 0)}`);
       }
     }
   }

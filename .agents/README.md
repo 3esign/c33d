@@ -9,3 +9,5 @@ These files are kept local and versioned to ensure transparency of what the AI i
 - **`EVAL_RESULTS.json`**: Local logs of evaluation test runs.
 
 By exposing these files rather than hiding them on a server, C33D ensures the AI's instructions are public, auditable, and locally modifiable.
+
+One honest qualifier: `AGENTS.md` is the dev-mode instruction file served by the local dev server, and it can drift — the system prompt the model actually receives is generated from `NODE_LIBRARY` in `src/ai/agent.ts` (`condensedNodeLibrary()`), which is always authoritative. Audit against that when the two disagree.

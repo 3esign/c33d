@@ -1,42 +1,61 @@
 import assert from 'assert';
+import { register } from 'node:module';
+import { pathToFileURL } from 'node:url';
+import { writeFileSync, mkdtempSync } from 'node:fs';
+import { join } from 'node:path';
+import { tmpdir } from 'node:os';
 
 // Regression tests for the July 2026 wiring/schema fixes that ended the
 // "clean the graph / still not correct" spiral in the circle→pipe→spheres log.
 //
-// These replicate the two pure-function contracts (the repo's tests are
-// self-contained — no TS loader), pinning the exact behavior the source now
-// implements in src/ai/tools.ts::defaultSourceHandle and
-// src/ai/agent.ts::validateAndNormalizeNodeData.
+// The source-handle contract drives the REAL src/ai/tools.ts (and through it
+// the real NODE_LIBRARY) via the same strip-types resolve hook as
+// test_ir_ref_coercion — the previous local replica of defaultSourceHandle had
+// already drifted from source (it checked the number-alias before the
+// single-output rule; the shipped code checks the declared output first).
+//
+// The parameter-synonym half below still mirrors the agent.ts fragment
+// (validateAndNormalizeNodeData's else-branch): that function lives mid-file
+// in the agent loop and has no importable seam yet.
 
-// ---- Minimal NODE_LIBRARY mirroring the real output ports ----
-const NODE_LIBRARY = {
-  Point:            { outputs: [{ name: 'point',  type: 'Point'  }], params: [] },
-  VectorXYZ:        { outputs: [{ name: 'vector', type: 'Vector' }], params: [] },
-  CircleCurve:      { outputs: [{ name: 'curve',  type: 'Curve'  }], params: [{ name: 'radius', type: 'number' }] },
-  Line:             { outputs: [{ name: 'curve',  type: 'Curve'  }], params: [] },
-  DivideCurve:      { outputs: [{ name: 'points', type: 'Point'  }], params: [{ name: 'count', type: 'number' }] },
-  Sphere:           { outputs: [{ name: 'solid',  type: 'Solid'  }], params: [{ name: 'radius', type: 'number' }] },
-  Torus:            { outputs: [{ name: 'solid',  type: 'Solid'  }], params: [{ name: 'majorRadius', type: 'number' }, { name: 'minorRadius', type: 'number' }] },
-  NumberSlider:     { outputs: [{ name: 'value',  type: 'number' }], params: [] },
-  // multi-output decomposition node → must fall back (needs explicit handle)
-  BoundingBox:      { outputs: [{ name: 'min', type: 'Point' }, { name: 'max', type: 'Point' }, { name: 'size', type: 'Vector' }], params: [] },
-  InstanceOnPoints: { outputs: [{ name: 'solid', type: 'Solid' }], params: [
-    { name: 'scaleStart', type: 'number' }, { name: 'scaleEnd', type: 'number' },
-    { name: 'everyNth', type: 'number' }, { name: 'maxCount', type: 'number' },
-  ] },
+// ---- resolve hook: let Node follow the app's extensionless .ts imports ------
+const hookDir = mkdtempSync(join(tmpdir(), 'c33d-ts-'));
+const hookPath = join(hookDir, 'ts-resolve.mjs');
+writeFileSync(hookPath, `
+import { existsSync } from 'fs';
+import { fileURLToPath } from 'url';
+export function resolve(specifier, context, nextResolve) {
+  if (specifier.startsWith('.') && !/\\.[a-z]+$/i.test(specifier)) {
+    for (const ext of ['.ts', '.tsx']) {
+      try {
+        const r = new URL(specifier + ext, context.parentURL);
+        if (existsSync(fileURLToPath(r))) return { url: r.href, shortCircuit: true };
+      } catch { /* fall through */ }
+    }
+  }
+  return nextResolve(specifier, context);
+}
+`);
+register(pathToFileURL(hookPath));
+
+// tools.ts pulls in agent.ts → useStore.ts, which touch browser globals at
+// module scope. Stub just enough for the module graph to load under Node.
+globalThis.Worker = class {
+  postMessage() {}
+  terminate() {}
+  addEventListener() {}
+  removeEventListener() {}
+};
+globalThis.localStorage = globalThis.localStorage ?? {
+  getItem: () => null, setItem: () => {}, removeItem: () => {}, clear: () => {}, key: () => null, length: 0,
 };
 
-const NUMBER_OUTPUT_TYPES = new Set(['NumberSlider', 'Expression', 'Series', 'Range', 'ListItem', 'ListLength']);
+const { defaultSourceHandle } = await import('../src/ai/tools.ts');
+const { NODE_LIBRARY } = await import('../src/nodes/NodeDefinitions.ts');
 
-// ---- Contract 1: source-handle inference (src/ai/tools.ts) ----
-function defaultSourceHandle(sourceType) {
-  if (sourceType && NUMBER_OUTPUT_TYPES.has(sourceType)) return 'value';
-  const def = sourceType ? NODE_LIBRARY[sourceType] : undefined;
-  if (def && def.outputs.length === 1) return def.outputs[0].name;
-  return 'solid';
-}
-
-// ---- Contract 2: parameter synonym / benign-drop resolution (src/ai/agent.ts) ----
+// ---- Contract 2 mirror: parameter synonym / benign-drop resolution ----------
+// (src/ai/agent.ts::validateAndNormalizeNodeData else-branch — keep in
+// lockstep with source; uses the REAL NODE_LIBRARY for the param lists.)
 const PARAM_SYNONYMS = {
   scalemin: 'scalestart', minscale: 'scalestart', startscale: 'scalestart', minsize: 'scalestart', sizemin: 'scalestart',
   scalemax: 'scaleend', maxscale: 'scaleend', endscale: 'scaleend', maxsize: 'scaleend', sizemax: 'scaleend',
@@ -74,7 +93,7 @@ function resolveParams(type, data) {
 let passed = 0;
 const check = (name, fn) => { fn(); console.log(`  ok - ${name}`); passed++; };
 
-console.log('Source-handle inference:');
+console.log('Source-handle inference (REAL defaultSourceHandle + NODE_LIBRARY):');
 // The exact nodes from the failing transcript — every one used to default to
 // 'solid', an output they do not have, which the validator then rejected.
 check('CircleCurve -> curve', () => assert.strictEqual(defaultSourceHandle('CircleCurve'), 'curve'));
@@ -85,7 +104,13 @@ check('Line -> curve',        () => assert.strictEqual(defaultSourceHandle('Line
 check('Sphere -> solid',      () => assert.strictEqual(defaultSourceHandle('Sphere'), 'solid'));
 check('Torus -> solid',       () => assert.strictEqual(defaultSourceHandle('Torus'), 'solid'));
 check('NumberSlider -> value',() => assert.strictEqual(defaultSourceHandle('NumberSlider'), 'value'));
-check('multi-output BoundingBox falls back to solid', () => assert.strictEqual(defaultSourceHandle('BoundingBox'), 'solid'));
+check('multi-output node falls back to solid', () => {
+  // Pick a genuinely multi-output decomposition node from the REAL library so
+  // this contract cannot silently rot if outputs change.
+  const multi = Object.entries(NODE_LIBRARY).find(([, def]) => (def.outputs?.length ?? 0) > 1);
+  assert.ok(multi, 'library should contain at least one multi-output node');
+  assert.strictEqual(defaultSourceHandle(multi[0]), 'solid');
+});
 check('unknown type falls back to solid', () => assert.strictEqual(defaultSourceHandle('Nonexistent'), 'solid'));
 
 // The whole reason this matters: the divide->instance edge now resolves to a
@@ -93,10 +118,11 @@ check('unknown type falls back to solid', () => assert.strictEqual(defaultSource
 check('DivideCurve.points is type-compatible with InstanceOnPoints.points input', () => {
   const sh = defaultSourceHandle('DivideCurve');
   const outType = NODE_LIBRARY.DivideCurve.outputs.find(o => o.name === sh).type;
-  assert.strictEqual(outType, 'Point'); // matches the "points" input port type
+  const inType = NODE_LIBRARY.InstanceOnPoints.inputs.find(i => i.name === 'points').type;
+  assert.strictEqual(outType, inType);
 });
 
-console.log('Parameter synonym / benign-drop resolution:');
+console.log('Parameter synonym / benign-drop resolution (mirror, real param lists):');
 check('scaleMin/scaleMax map to scaleStart/scaleEnd on InstanceOnPoints', () => {
   const r = resolveParams('InstanceOnPoints', { scaleMin: 0.5, scaleMax: 1.8 });
   assert.strictEqual(r.errors.length, 0, 'should not reject the node');

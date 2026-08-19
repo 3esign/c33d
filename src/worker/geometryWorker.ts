@@ -3,7 +3,7 @@ import opencascadeWasm from 'replicad-opencascadejs/src/replicad_single.wasm?url
 import * as replicad from 'replicad';
 import { NODE_LIBRARY } from '../nodes/NodeDefinitions';
 import { evaluateExpression as evaluateExpressionSafe, normalizeVarName } from '../utils/expression';
-import { EXECUTORS, ensureText3DFont } from './executors';
+import { EXECUTORS, ensureText3DFont, clampCount } from './executors';
 import { classifyNodeError, isKernelClass } from './errorClass';
 
 const TRANSFORM_TYPES = new Set([
@@ -32,6 +32,11 @@ const ANCHORED_PLACEMENT_TYPES = new Set([
   'Loft',
 ]);
 const GEO_SOCKET_HANDLES = new Set(['center', 'pivot', 'target', 'axis']);
+
+// SPEC-5: nodes that MEASURE their input rather than consuming it. Edges whose
+// target is one of these must not mark the source as "consumed" for leaf
+// detection — probing a part must never hide it from the viewport.
+const PROBE_TYPES = new Set(['Measure', 'BoundingBox', 'Centroid', 'DistanceMeasure', 'SelectionMeasure']);
 
 export function computePlacementProvenance(
   nodeList: any[],
@@ -160,6 +165,108 @@ export function collectShapes(val: any, out = new Set<any>()): Set<any> {
   return out;
 }
 
+// Relative mesh quality: fixed tolerance 0.1 over-faceted large parts and
+// over-tessellated tiny ones. diag/500 clamped to [0.01, 1.0] keeps facet size
+// proportional to the shape; angular tolerance 0.5 rad (~28°) bounds curvature
+// chords. Deterministic — same shape, same mesh.
+function relativeMeshTolerance(shape: any): number {
+  let tol = 0.1;
+  try {
+    const bb = shape.boundingBox;
+    if (bb && bb.bounds) {
+      const [mn, mx] = bb.bounds;
+      const diag = Math.sqrt((mx[0] - mn[0]) ** 2 + (mx[1] - mn[1]) ** 2 + (mx[2] - mn[2]) ** 2);
+      if (isFinite(diag) && diag > 0) tol = Math.min(1.0, Math.max(0.01, diag / 500));
+    }
+  } catch { /* keep the default */ }
+  return tol;
+}
+
+// Flattens a leaf value into its meshable parts. Leaf values are not always a
+// single shape: EdgesAsCurves/MergePoints/SliceList return Arrays, and several
+// nodes return non-geometry (__multi measurement records) that must simply be
+// skipped — calling .mesh() on them threw the TypeError that the phantom
+// "kernel corrupted" spiral (audit §1.7) was made of.
+function collectMeshables(value: any, out: { points: any[]; wires: any[]; shapes: any[] }): void {
+  if (!value || typeof value !== 'object') return;
+  if (value.__multi) return;
+  if (Array.isArray(value)) {
+    for (const v of value) collectMeshables(v, out);
+    return;
+  }
+  if (value.type === 'Point') { out.points.push(value); return; }
+  if (value.type === 'Curve') {
+    const list = Array.isArray(value.value) ? value.value : [value.value];
+    for (const w of list) if (w) out.wires.push(w);
+    return;
+  }
+  if (value.type === 'Vector' || value.type === 'Plane' || value.type === 'Selection') return;
+  if (typeof value.mesh === 'function') out.shapes.push(value);
+}
+
+function meshPointCrosses(points: any[], sz: number): any {
+  const vertices: number[] = [];
+  const indices: number[] = [];
+  for (const p of points) {
+    const base = vertices.length / 3;
+    vertices.push(
+      p.x - sz, p.y, p.z, p.x + sz, p.y, p.z,
+      p.x, p.y - sz, p.z, p.x, p.y + sz, p.z,
+      p.x, p.y, p.z - sz, p.x, p.y, p.z + sz,
+    );
+    for (let k = 0; k < 6; k++) indices.push(base + k);
+  }
+  return { type: 'Point', vertices, indices, normals: [] };
+}
+
+function meshWireLines(wires: any[]): any {
+  const steps = 50;
+  const vertices: number[] = [];
+  const indices: number[] = [];
+  let vertOffset = 0;
+  for (const singleWire of wires) {
+    for (let i = 0; i <= steps; i++) {
+      const pt = singleWire.pointAt(i / steps);
+      vertices.push(pt[0], pt[1], pt[2]);
+      if (i < steps) {
+        indices.push(vertOffset + i, vertOffset + i + 1);
+      }
+    }
+    vertOffset += steps + 1;
+  }
+  return { type: 'Line', vertices, indices, normals: [] };
+}
+
+// Meshes ONE leaf value into a single result entry (the store keys scene
+// objects by node id, so a leaf must not emit several). Mixed content picks
+// the strongest representation: solids > wires > points; nothing meshable
+// (e.g. a pure data record) is null, NOT an error.
+function meshLeafValue(value: any, helperSize: number): any | null {
+  const parts = { points: [] as any[], wires: [] as any[], shapes: [] as any[] };
+  collectMeshables(value, parts);
+  if (parts.shapes.length > 0) {
+    const vertices: number[] = [];
+    const indices: number[] = [];
+    const normals: number[] = [];
+    let normalsOk = true;
+    for (const shape of parts.shapes) {
+      const mesh = shape.mesh({ tolerance: relativeMeshTolerance(shape), angularTolerance: 0.5 });
+      const base = vertices.length / 3;
+      for (let k = 0; k < mesh.vertices.length; k++) vertices.push(mesh.vertices[k]);
+      for (let k = 0; k < mesh.triangles.length; k++) indices.push(base + mesh.triangles[k]);
+      if (mesh.normals && mesh.normals.length === mesh.vertices.length) {
+        for (let k = 0; k < mesh.normals.length; k++) normals.push(mesh.normals[k]);
+      } else {
+        normalsOk = false;
+      }
+    }
+    return { type: 'Mesh', vertices, indices, normals: normalsOk ? normals : [] };
+  }
+  if (parts.wires.length > 0) return meshWireLines(parts.wires);
+  if (parts.points.length > 0) return meshPointCrosses(parts.points, helperSize);
+  return null;
+}
+
 // Inline parametric expressions: any numeric parameter may be given as a FORMULA
 // STRING that references NumberSlider labels by name (e.g. height "bodyRadius*0.2").
 // This removes the need for Expression nodes + "param:" edges for scalar math —
@@ -263,8 +370,36 @@ self.onmessage = async (e) => {
 
 // ---------- Macro expansion ----------
 // Replaces every Macro node with its (prefixed) inner subgraph, applying
-// exposed param overrides from the macro node's data.
+// exposed param overrides from the macro node's data. Macros may contain
+// Macro nodes (nested components): expand until no Macro remains, with a
+// depth cap so a self-referential definition errors instead of exploding.
+const MACRO_MAX_DEPTH = 10;
+
 function expandMacros(nodes: any[], edges: any[], macros: any[]): { nodes: any[]; edges: any[]; aliasMap: Record<string, string> } {
+  let outNodes = nodes;
+  let outEdges = edges;
+  const aliasMap: Record<string, string> = {};
+  let depth = 0;
+  while (outNodes.some(n => n.type === 'Macro')) {
+    if (++depth > MACRO_MAX_DEPTH) {
+      throw new Error(`Macro expansion exceeded ${MACRO_MAX_DEPTH} levels — a macro definition references itself (directly or through another macro). Remove the cycle.`);
+    }
+    const pass = expandMacrosOnce(outNodes, outEdges, macros);
+    outNodes = pass.nodes;
+    outEdges = pass.edges;
+    // Compose aliases: an earlier alias that pointed AT a macro node now
+    // points at that macro's inner output.
+    for (const k of Object.keys(aliasMap)) {
+      if (pass.aliasMap[aliasMap[k]]) aliasMap[k] = pass.aliasMap[aliasMap[k]];
+    }
+    for (const [k, v] of Object.entries(pass.aliasMap)) {
+      if (!(k in aliasMap)) aliasMap[k] = v;
+    }
+  }
+  return { nodes: outNodes, edges: outEdges, aliasMap };
+}
+
+function expandMacrosOnce(nodes: any[], edges: any[], macros: any[]): { nodes: any[]; edges: any[]; aliasMap: Record<string, string> } {
   const macroById: Record<string, any> = {};
   macros.forEach(m => { macroById[m.id] = m; });
 
@@ -373,6 +508,10 @@ async function evaluateGraphInternal(
   const nodeCache: Record<string, any> = {};
   const numberCache: Record<string, number | number[]> = {};
   const nodeErrors: { id: string; error: string; cls?: string }[] = [];
+  // SPEC-3: informational messages live in their OWN channel. Executor warn()
+  // used to land in nodeErrors, so a SelectFaces "matched N faces" info line
+  // made healthy graphs fail sanity and silently disabled perturbation.
+  const nodeWarnings: { id: string; message: string }[] = [];
   let kernelFaultCount = 0;
   let kernelRegression = false;
 
@@ -438,7 +577,10 @@ async function evaluateGraphInternal(
   });
 
   edges.forEach(e => {
-    if (inDegree[e.target] === undefined) return;
+    // Both ends must exist: an edge from a deleted node used to inflate the
+    // target's in-degree forever, making it unsortable (and, below, falsely
+    // reported as a cycle member).
+    if (inDegree[e.target] === undefined || inDegree[e.source] === undefined) return;
     inDegree[e.target] = (inDegree[e.target] || 0) + 1;
     if (!adjList[e.source]) adjList[e.source] = [];
     adjList[e.source].push(e.target);
@@ -485,7 +627,23 @@ async function evaluateGraphInternal(
     });
   }
 
+  // Kahn never visits cycle members — they used to vanish from results with a
+  // generic "produced no visible shapes". Name each one and keep evaluating
+  // the acyclic part of the graph.
+  if (sortedNodes.length < nodes.length) {
+    const sortedIds = new Set(sortedNodes.map(n => n.id));
+    for (const n of nodes) {
+      if (!sortedIds.has(n.id)) {
+        nodeErrors.push({ id: n.id, error: `node is part of a dependency cycle (A→B→A) — break the cycle` });
+      }
+    }
+  }
+
   const nodeHashes: Record<string, string> = {};
+
+  // SPEC-3: the warn channel executors get. Warnings are informational —
+  // failures still go through nodeErrors via throw/catch.
+  const nodeWarn = (id: string) => (msg: string) => nodeWarnings.push({ id, message: msg });
 
   // Execute nodes in topological order
   for (const node of sortedNodes) {
@@ -532,7 +690,11 @@ async function evaluateGraphInternal(
         // Unified namespace: Expression formulas see slider labels directly
         // (same contract as inline numeric params). Edge-fed vars (a,b,c,d)
         // shadow sliders on name collision.
-        numberCache[node.id] = evaluateExpressionWithLists(String(effectiveParams.formula ?? '0'), { ...computedBindingScope, ...vars });
+        numberCache[node.id] = evaluateExpressionWithLists(
+          String(effectiveParams.formula ?? '0'),
+          { ...computedBindingScope, ...vars },
+          (msg: string) => nodeErrors.push({ id: node.id, error: `Expression error: ${msg}` })
+        );
       } catch (err: any) {
         numberCache[node.id] = 0;
         nodeErrors.push({ id: node.id, error: `Expression error: ${err.message}` });
@@ -543,8 +705,8 @@ async function evaluateGraphInternal(
     if (node.type === 'Series') {
       const start = getNumericInputOrParam('start', 0, incoming, effectiveParams, numberCache, nodeCache);
       const step = getNumericInputOrParam('step', 1, incoming, effectiveParams, numberCache, nodeCache);
-      const count = Math.max(1, Math.round(getNumericInputOrParam('count', 5, incoming, effectiveParams, numberCache, nodeCache)));
-      
+      const count = clampCount(getNumericInputOrParam('count', 5, incoming, effectiveParams, numberCache, nodeCache), 100_000, nodeWarn(node.id), 'Series');
+
       const values: number[] = [];
       for (let i = 0; i < count; i++) {
         values.push(start + i * step);
@@ -556,7 +718,7 @@ async function evaluateGraphInternal(
     if (node.type === 'Range') {
       const min = getNumericInputOrParam('min', 0, incoming, effectiveParams, numberCache, nodeCache);
       const max = getNumericInputOrParam('max', 10, incoming, effectiveParams, numberCache, nodeCache);
-      const steps = Math.max(1, Math.round(getNumericInputOrParam('steps', 5, incoming, effectiveParams, numberCache, nodeCache)));
+      const steps = clampCount(getNumericInputOrParam('steps', 5, incoming, effectiveParams, numberCache, nodeCache), 100_000, nodeWarn(node.id), 'Range');
 
       const values: number[] = [];
       for (let i = 0; i <= steps; i++) {
@@ -575,7 +737,9 @@ async function evaluateGraphInternal(
         const v = resolveSourceValue(listEdge.source, listEdge.sourceHandle, nodeCache, numberCache);
         if (v !== undefined) listVal = Array.isArray(v) ? v : [v];
       }
-      const count = Math.max(1, Math.round(getNumericInputOrParam('count', 2, incoming, effectiveParams, numberCache, nodeCache)));
+      // The OUTPUT length (list × count) is what must stay under the cap.
+      const perItemMax = Math.max(1, Math.floor(100_000 / Math.max(1, listVal.length)));
+      const count = clampCount(getNumericInputOrParam('count', 2, incoming, effectiveParams, numberCache, nodeCache), perItemMax, nodeWarn(node.id), node.type);
       const values: number[] = [];
       if (node.type === 'RepeatEach') {
         for (const v of listVal) for (let i = 0; i < count; i++) values.push(v);
@@ -644,7 +808,10 @@ async function evaluateGraphInternal(
       .map(e => `${e.targetHandle}=${nodeHashes[e.source] || 'missing'}`)
       .sort()
       .join('|');
-    const hash = `${node.type}#${stableHash(effectiveParams)}#${inputHashPart}`;
+    // color is render-only — a palette tweak must not rebuild the B-Rep.
+    const hashedParams = { ...effectiveParams };
+    delete hashedParams.color;
+    const hash = `${node.type}#${stableHash(hashedParams)}#${inputHashPart}`;
     nodeHashes[node.id] = hash;
 
     const cached = customShapeCache.get(node.id);
@@ -662,13 +829,18 @@ async function evaluateGraphInternal(
       const val = executeNode(
         { ...node, data: effectiveParams },
         nodeInputs,
-        (msg: string) => nodeErrors.push({ id: node.id, error: msg }),
+        nodeWarn(node.id),
         computedBindingScope
       );
       nodeCache[node.id] = val;
       if (val) succeededTypesThisWorker.add(node.type);
       if (val && typeof val === 'object') {
-        val.sourceNodeId = node.id;
+        // SPEC-4: Selection records carry the id of the node that PRODUCED the
+        // solid they were resolved against. Overwriting it with the selection
+        // node's own id broke every Fillet/Chamfer provenance check.
+        if (!(val.type === 'Selection' && val.sourceNodeId)) {
+          val.sourceNodeId = node.id;
+        }
         const ancestors = new Set<string>();
         for (const input of nodeInputs) {
           if (input.value && typeof input.value === 'object') {
@@ -717,9 +889,17 @@ async function evaluateGraphInternal(
   }
 
   // ---------- Mesh leaf nodes + geometry report ----------
+  // SPEC-5: measurement probes OBSERVE a part, they don't consume it. An edge
+  // into a probe must not suppress the source as a rendered leaf — "measure my
+  // part" used to make the part vanish from the viewport.
+  const nodeTypeById: Record<string, string> = {};
+  nodes.forEach(n => { nodeTypeById[n.id] = n.type; });
   const sourceNodeIds = new Set(
-    edges.filter(e => !String(e.targetHandle || '').startsWith('param:') && String(e.targetHandle || '') !== 'reference')
-      .map(e => e.source)
+    edges.filter(e =>
+      !String(e.targetHandle || '').startsWith('param:') &&
+      String(e.targetHandle || '') !== 'reference' &&
+      !PROBE_TYPES.has(nodeTypeById[e.target])
+    ).map(e => e.source)
   );
 
   const finalMeshes: any[] = [];
@@ -760,6 +940,9 @@ async function evaluateGraphInternal(
     if (node.type === 'NumberSlider' || node.type === 'Expression') continue;
 
     const isHelper = node.type === 'Point' || node.type === 'Vector' || node.type === 'Plane' || node.type === 'Curve' || node.type === 'Selection';
+    // __multi measurement records are data, not geometry: no meshing, no leaf
+    // report (their numbers surface through the report's probe channels).
+    const isMeasurement = !!(value && typeof value === 'object' && value.__multi === true);
 
     if (!value) {
       if (!isHelper) {
@@ -783,45 +966,21 @@ async function evaluateGraphInternal(
       if (!skipMeshing && !meshData) {
         try {
           if (value && value.type === 'Point') {
-            const sz = helperSize;
-            meshData = {
-              type: 'Point',
-              vertices: [
-                value.x - sz, value.y, value.z,
-                value.x + sz, value.y, value.z,
-                value.x, value.y - sz, value.z,
-                value.x, value.y + sz, value.z,
-                value.x, value.y, value.z - sz,
-                value.x, value.y, value.z + sz
-              ],
-              indices: [0, 1, 2, 3, 4, 5],
-              normals: []
-            };
+            meshData = meshPointCrosses([value], helperSize);
           } else if (value && value.type === 'Curve') {
-            const steps = 50;
-            const vertices: number[] = [];
-            const indices: number[] = [];
-            const curvesList = Array.isArray(value.value) ? value.value : [value.value];
-            let vertOffset = 0;
-            for (const singleWire of curvesList) {
-              for (let i = 0; i <= steps; i++) {
-                const pt = singleWire.pointAt(i / steps);
-                vertices.push(pt[0], pt[1], pt[2]);
-                if (i < steps) {
-                  indices.push(vertOffset + i, vertOffset + i + 1);
-                }
-              }
-              vertOffset += steps + 1;
-            }
-            meshData = { type: 'Line', vertices, indices, normals: [] };
-          } else if (isHelper) {
+            meshData = meshWireLines(Array.isArray(value.value) ? value.value : [value.value]);
+          } else if (isHelper || isMeasurement) {
             meshData = null;
           } else {
-            const mesh = value.mesh({ tolerance: 0.1, angularTolerance: 30 });
-            meshData = { type: 'Mesh', vertices: mesh.vertices, indices: mesh.triangles, normals: mesh.normals };
+            // Handles single shapes AND arrays/nested structures; skips any
+            // non-geometry entries instead of TypeError-ing on them.
+            meshData = meshLeafValue(value, helperSize);
           }
           if (entry) entry.mesh = meshData;
         } catch (err: any) {
+          // isKernelClass only admits genuine OCCT aborts here — a JS-level
+          // TypeError in the mesh path is a plain node-level error and must
+          // not feed the kernel-suspect respawn heuristic (audit §1.7).
           const meshCls = classifyNodeError(err);
           if (isKernelClass(meshCls.cls)) kernelFaultCount++;
           meshError = `[${meshCls.cls}] ${meshCls.msg}`;
@@ -832,7 +991,7 @@ async function evaluateGraphInternal(
         finalMeshes.push({ id: reportId, hash: entry?.hash, ...meshData });
       }
 
-      if (!isHelper) {
+      if (!isHelper && !isMeasurement) {
         // Metrics
         let bbox: any = null;
         let volume: number | undefined = undefined;
@@ -916,6 +1075,8 @@ async function evaluateGraphInternal(
         }
         selections[reportId] = {
           matchedCount: val.matchedCount,
+          totalCount: val.totalCount,
+          summary: val.summary,
           elements: val.elements || [],
           warning
         };
@@ -950,6 +1111,9 @@ async function evaluateGraphInternal(
   const report = {
     leaves: leafReports,
     nodeErrors,
+    // SPEC-3: informational lines from executor warn() — rendered as [info]
+    // by consumers, never counted as failures.
+    nodeWarnings,
     numbers: numberCache,
     sliders: sliderInventory,
     selections,
@@ -1026,14 +1190,16 @@ function getRelationSignature(leaves: any[], sceneBbox: any): LeafRelationSignat
       const lB = leaves[j];
       if (!lB.bbox) continue;
 
+      // '::' separator: node ids are uuids (hyphens) and macro-prefixed ids
+      // (double underscores) — splitting on '-'/'_in_' truncated them.
       if (bboxesOverlap(lA.bbox, lB.bbox)) {
-        overlaps.push(`${lA.id}-${lB.id}`);
+        overlaps.push(`${lA.id}::${lB.id}`);
       }
 
       if (bboxContains(lA.bbox, lB.bbox)) {
-        containments.push(`${lB.id}_in_${lA.id}`);
+        containments.push(`${lB.id}::${lA.id}`);
       } else if (bboxContains(lB.bbox, lA.bbox)) {
-        containments.push(`${lA.id}_in_${lB.id}`);
+        containments.push(`${lA.id}::${lB.id}`);
       }
     }
   }
@@ -1052,7 +1218,7 @@ function compareSignatures(
 
   for (const overlap of defaultSig.overlaps) {
     if (!perturbedSig.overlaps.includes(overlap)) {
-      const [idA, idB] = overlap.split('-');
+      const [idA, idB] = overlap.split('::');
       const nameA = leaves.find(l => l.id === idA)?.id || idA;
       const nameB = leaves.find(l => l.id === idB)?.id || idB;
       issues.push(`At ${sliderLabel} ${factor > 1 ? 'increase' : 'decrease'} (${factor}x), "${nameA}" detaches from "${nameB}". Check that their positions are driven by formulas or Align rather than absolute coordinates.`);
@@ -1061,7 +1227,7 @@ function compareSignatures(
 
   for (const containment of perturbedSig.containments) {
     if (!defaultSig.containments.includes(containment)) {
-      const [childId, parentId] = containment.split('_in_');
+      const [childId, parentId] = containment.split('::');
       const childName = leaves.find(l => l.id === childId)?.id || childId;
       const parentName = leaves.find(l => l.id === parentId)?.id || parentId;
       issues.push(`At ${sliderLabel} ${factor > 1 ? 'increase' : 'decrease'} (${factor}x), "${childName}" becomes fully buried inside "${parentName}".`);
@@ -1122,7 +1288,11 @@ async function evaluateGraph(rawNodes: any[], rawEdges: any[], macros: any[], di
           const v = String(node.data?.[p.name] || '');
           if (v) {
             for (const key of Object.keys(sliderCounts)) {
-              if (new RegExp(`(^|[^a-zA-Z0-9_])${key}([^a-zA-Z0-9_]|$)`, 'i').test(v)) {
+              // User labels are arbitrary text — escape regex metachars so a
+              // label like "size (mm)" can't crash (or subtly corrupt) the ref
+              // count.
+              const escaped = key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+              if (new RegExp(`(^|[^a-zA-Z0-9_])${escaped}([^a-zA-Z0-9_]|$)`, 'i').test(v)) {
                 sliderCounts[key]++;
               }
             }
@@ -1246,7 +1416,11 @@ function executeNode(node: any, inputs: any[], warn: (msg: string) => void = () 
 
 // SVG Path and parameter list helpers removed
 
-function evaluateExpressionWithLists(formula: string, vars: Record<string, number | number[]>): number | number[] {
+function evaluateExpressionWithLists(
+  formula: string,
+  vars: Record<string, number | number[]>,
+  onElementError?: (msg: string) => void
+): number | number[] {
   let isArray = false;
   let maxLen = 1;
   for (const val of Object.values(vars)) {
@@ -1261,6 +1435,8 @@ function evaluateExpressionWithLists(formula: string, vars: Record<string, numbe
   }
 
   const result: number[] = [];
+  let failCount = 0;
+  let firstFail: { index: number; msg: string } | null = null;
   for (let i = 0; i < maxLen; i++) {
     const localVars: Record<string, number> = {};
     for (const [k, val] of Object.entries(vars)) {
@@ -1272,9 +1448,16 @@ function evaluateExpressionWithLists(formula: string, vars: Record<string, numbe
     }
     try {
       result.push(evaluateExpressionSafe(formula, localVars));
-    } catch {
+    } catch (err: any) {
+      // Never a SILENT 0: the placeholder keeps list lengths aligned, but the
+      // failure is reported below with the element index that caused it.
       result.push(0);
+      failCount++;
+      if (!firstFail) firstFail = { index: i, msg: String(err?.message ?? err) };
     }
+  }
+  if (failCount > 0 && firstFail && onElementError) {
+    onElementError(`formula "${formula}" failed for ${failCount} of ${maxLen} elements (first at index ${firstFail.index}: ${firstFail.msg}) — those elements were emitted as 0.`);
   }
   return result;
 }

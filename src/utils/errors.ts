@@ -17,5 +17,6 @@ export function isSystemError(errorStr: string | null | undefined): boolean {
          lower.includes('worker error') ||
          lower.includes('kernel exception') ||
          lower.includes('is not a constructor') ||
-         lower.includes('kernel canary');
+         lower.includes('kernel canary') ||
+         lower.includes('was terminated'); // eval watchdog kill (SPEC-2)
 }

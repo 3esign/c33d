@@ -99,11 +99,17 @@ function parseCallSyntax(raw: string): { op: string; args: Record<string, any> }
 // Function/constant names allowed inside formulas — identifiers in a formula
 // that are NOT bindings and NOT one of these are left for the runtime scope
 // (slider labels) to resolve.
+// KEEP IN EXACT SYNC with the runtime evaluator (src/utils/expression.ts,
+// SPEC-7): FUNCS + lerp + the constants pi/e/tau. Anything listed here that
+// the runtime does not implement compiles clean and then fails at every
+// consuming node ("random" was the worst offender — it does not exist at
+// runtime and is intentionally absent: seeded jitter() is the sanctioned
+// randomness).
 const KNOWN_FUNCS = new Set([
   'sin', 'cos', 'tan', 'asin', 'acos', 'atan', 'atan2', 'sinh', 'cosh', 'tanh',
   'sqrt', 'cbrt', 'abs', 'sign', 'min', 'max', 'floor', 'ceil', 'round', 'trunc',
-  'pow', 'exp', 'log', 'log2', 'log10', 'mod', 'clamp', 'random',
-  'pi', 'PI', 'e', 'E', 'tau', 'TAU',
+  'pow', 'exp', 'log', 'log2', 'log10', 'mod', 'clamp', 'lerp',
+  'pi', 'e', 'tau',
 ]);
 
 export function compileIr(program: IrProgram): CompileResult {

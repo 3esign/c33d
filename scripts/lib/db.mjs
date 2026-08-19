@@ -155,6 +155,17 @@ export function openDb(root = process.cwd()) {
   return db;
 }
 
+/** Close the open database connection if one exists. */
+export function closeDb() {
+  if (db) {
+    try {
+      db.close();
+    } catch {}
+    db = null;
+    dbPath = null;
+  }
+}
+
 export function dbFile() { return dbPath; }
 
 /** The tag new records are stamped with — the most recent version row. */

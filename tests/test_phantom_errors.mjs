@@ -1,5 +1,13 @@
 import assert from 'assert';
 
+// WARNING: this file tests a hand-copied REPLICA that has drifted from src
+// (see the Aug-18 audit): the copies of checkGeometrySanity /
+// aggregateAndRankIssues below predate the Jul-25+ sanity logic in
+// src/ai/verification.ts and no longer match what ships. It is kept only as a
+// pin on the replica's own logic and is superseded by the real-import tests
+// (test_ir_ref_coercion, test_handle_inference, test_number_input_edges, ...).
+// Do not extend it — write real-import tests against verification.ts instead.
+
 // Define NODE_LIBRARY subset for testing
 const NODE_LIBRARY = {
   Sphere: {

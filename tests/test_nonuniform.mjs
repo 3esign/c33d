@@ -1,6 +1,7 @@
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import { createRequire } from 'module';
+import assert from 'assert';
 import fs from 'fs';
 
 const projectRoot = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -12,6 +13,16 @@ import * as replicad from 'replicad';
 
 const log = [];
 function say(...args) { log.push(args.map(a => typeof a === 'object' ? JSON.stringify(a) : a).join(' ')); }
+// scratch/ is gitignored — create it on demand so a fresh clone passes.
+function writeLog() {
+  try {
+    const dir = join(projectRoot, 'scratch');
+    fs.mkdirSync(dir, { recursive: true });
+    fs.writeFileSync(join(dir, 'nonuniform_result.txt'), log.join('\n'));
+  } catch (e) {
+    console.warn('could not write scratch log (non-fatal):', e?.message);
+  }
+}
 
 function solidFromScaledMesh(OC, shape, fx, fy, fz, center) {
   const t0 = Date.now();
@@ -112,14 +123,20 @@ async function run() {
   if (r1.explorerError) say('explorer error:', r1.explorerError);
   if (r1.directShellError) say('direct shell error:', r1.directShellError);
 
-  if (!solidShape) {
-    say('FAILED: no solid produced');
-  } else {
+  assert.ok(solidShape, 'TEST 1 must produce a solid from the scaled sphere mesh');
+  {
     const wrapped = replicad.cast(solidShape);
     const vol = replicad.measureVolume(wrapped);
+    const errPct = 100 * Math.abs(vol - expectedVolume) / expectedVolume;
     say('resulting volume:', vol.toFixed(3));
     say('resulting bbox:', JSON.stringify(wrapped.boundingBox.bounds));
-    say('volume error %:', (100 * Math.abs(vol - expectedVolume) / expectedVolume).toFixed(2));
+    say('volume error %:', errPct.toFixed(2));
+    // Tessellation at tolerance 0.05 loses a few percent — 10% is failure.
+    assert.ok(errPct < 10,
+      `ellipsoid volume should be within 10% of ${expectedVolume.toFixed(3)}, got ${vol.toFixed(3)} (${errPct.toFixed(2)}% off)`);
+    const bb = wrapped.boundingBox.bounds;
+    assert.ok(Math.abs(bb[1][1] - 3) < 0.15 && Math.abs(bb[1][2] - 0.5) < 0.1,
+      `scaled semi-axes should be ~(2,3,0.5), bbox max ${JSON.stringify(bb[1])}`);
 
     try {
       const analyzer = new OC.BRepCheck_Analyzer(wrapped.wrapped, true, false);
@@ -129,14 +146,12 @@ async function run() {
       say('BRepCheck_Analyzer not available or failed:', e.message);
     }
 
-    try {
-      const box = replicad.makeBox([-0.5,-0.5,-0.5],[0.5,0.5,0.5]).translate([0, 0, 3]);
-      const union = wrapped.fuse(box);
-      const unionVol = replicad.measureVolume(union);
-      say('fuse-with-box succeeded, union volume:', unionVol.toFixed(3));
-    } catch (e) {
-      say('fuse-with-box FAILED:', e.message);
-    }
+    // The scaled solid must stay usable by downstream booleans.
+    const box = replicad.makeBox([-0.5,-0.5,-0.5],[0.5,0.5,0.5]).translate([0, 0, 3]);
+    const union = wrapped.fuse(box);
+    const unionVol = replicad.measureVolume(union);
+    say('fuse-with-box succeeded, union volume:', unionVol.toFixed(3));
+    assert.ok(unionVol > vol, `union with a disjoint box must add volume: ${unionVol.toFixed(3)} vs ${vol.toFixed(3)}`);
   }
 
   say('');
@@ -145,20 +160,26 @@ async function run() {
   const expectedVol2 = 8 * 3 * 6;
   const r2 = solidFromScaledMesh(OC, box2, 2, 0.5, 3, [0, 0, 0]);
   say('sewn shape type:', r2.shapeTypeName, ' shells found:', r2.shellsFound, 'faces built:', r2.builtFaces, '/', r2.triCount);
-  if (r2.solidShape) {
+  assert.ok(r2.solidShape,
+    `TEST 2 must produce a solid. explorerError=${r2.explorerError} directShellError=${r2.directShellError}`);
+  {
     const w2 = replicad.cast(r2.solidShape);
     const vol2 = replicad.measureVolume(w2);
     say('expected volume', expectedVol2, ' got', vol2.toFixed(3), ' bbox', JSON.stringify(w2.boundingBox.bounds));
-  } else {
-    say('FAILED: no solid for box test. explorerError=', r2.explorerError, 'directShellError=', r2.directShellError);
+    // A box mesh is exact — the scaled solid must match to within 2%.
+    assert.ok(Math.abs(vol2 - expectedVol2) / expectedVol2 < 0.02,
+      `scaled box volume should be ~${expectedVol2}, got ${vol2.toFixed(3)}`);
   }
 
-  fs.writeFileSync(join(projectRoot, 'scratch', 'nonuniform_result.txt'), log.join('\n'));
-  console.log('DONE, see nonuniform_result.txt');
+  say('');
+  say('All nonuniform-scale assertions passed.');
+  writeLog();
+  console.log('PASS, details in scratch/nonuniform_result.txt');
 }
 
 run().catch(err => {
   log.push('FATAL ERROR: ' + (err && err.stack || err));
-  fs.writeFileSync(join(projectRoot, 'scratch', 'nonuniform_result.txt'), log.join('\n'));
-  console.error('FAILED, see nonuniform_result.txt');
+  writeLog();
+  console.error('FAILED:', err && err.message || err, '(details in scratch/nonuniform_result.txt)');
+  process.exitCode = 1;
 });

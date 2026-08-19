@@ -12,7 +12,7 @@ cd /d "%~dp0.."
 
 echo.
 echo   About to deploy the CURRENT WORKING FOLDER to production.
-echo   If you have not run the checks yet, cancel and run option [1] first.
+echo   If you have not run the checks yet, cancel and run option [5] first.
 echo.
 set "yn="
 set /p yn=Deploy to production now? [y/N]: 

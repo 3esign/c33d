@@ -1,6 +1,8 @@
 @echo off
 REM ===========================================================================
-REM  Look at what has been recorded. Read-only - nothing here changes data.
+REM  Look at what has been recorded. All queries run on a read-only connection;
+REM  the only option that writes anything is [9], which rebuilds the derived
+REM  index from the event log (the log itself is never touched).
 REM ===========================================================================
 setlocal
 call "%~dp0_common.bat" || exit /b 1
@@ -19,7 +21,7 @@ echo    [4]  Regressions       sessions that ended worse than they peaked
 echo    [5]  Recent sessions
 echo    [6]  My notes
 echo    [7]  Compare two versions
-echo    [8]  Run your own SQL
+echo    [8]  Run your own SQL   (read-only)
 echo    [9]  Rebuild the index   from the event log (safe, non-destructive)
 echo.
 echo    [0]  Back
@@ -54,6 +56,7 @@ setlocal enabledelayedexpansion
 echo.
 echo   Tables: sessions, turns, messages, runs, comments, versions
 echo   (the index is derived - data\events\*.jsonl is the source of truth)
+echo   The connection is read-only: SELECT works, DELETE/UPDATE will error.
 echo   Example: SELECT model, COUNT(*) FROM sessions GROUP BY model
 echo.
 set "q="

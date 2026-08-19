@@ -1,3 +1,4 @@
+import * as replicad from 'replicad';
 import { evaluateExpression as evaluateExpressionSafe } from '../utils/expression.ts';
 
 export interface ElementData {
@@ -46,6 +47,13 @@ function getNormalVec(face: any): [number, number, number] {
 function getArea(face: any): number {
   if (typeof face.surfaceArea === 'function') return face.surfaceArea();
   if (typeof face.area === 'number') return face.area;
+  // Real replicad Faces expose NEITHER of the above — measureArea is the
+  // actual API. Without this, every `area > x` query and the SPEC-4 summary
+  // reported 0.
+  try {
+    const v = (replicad as any).measureArea?.(face);
+    if (typeof v === 'number' && isFinite(v)) return v;
+  } catch { /* best-effort */ }
   return 0;
 }
 
@@ -64,6 +72,11 @@ function getEdgeDirection(edge: any): [number, number, number] {
 function getLength(edge: any): number {
   if (typeof edge.length === 'number') return edge.length;
   if (typeof edge.length === 'function') return edge.length();
+  // Same story as getArea: replicad measures edge length via measureLength.
+  try {
+    const v = (replicad as any).measureLength?.(edge);
+    if (typeof v === 'number' && isFinite(v)) return v;
+  } catch { /* best-effort */ }
   return 0;
 }
 
@@ -87,7 +100,11 @@ function resolveDirection(dirStr: string): [number, number, number] | null {
   return null;
 }
 
-function tokenizeQuery(src: string): string[] {
+// Exported for tests: the stray 's' that used to sit in the delimiter set
+// below made ANY query containing the letter s ("spherical", "smallest",
+// "size > 5") emit an empty token without advancing i — an infinite loop that
+// pegged the worker at 100% CPU forever (audit §1.6).
+export function tokenizeQuery(src: string): string[] {
   const tokens: string[] = [];
   let i = 0;
   while (i < src.length) {
@@ -110,7 +127,7 @@ function tokenizeQuery(src: string): string[] {
       continue;
     }
     let j = i;
-    while (j < src.length && !'()><~=s,'.includes(src[j]) && !/\s/.test(src[j])) {
+    while (j < src.length && !'()><~=,'.includes(src[j]) && !/\s/.test(src[j])) {
       if (src[j] === '[') {
         while (j < src.length && src[j] !== ']') j++;
         if (j < src.length) j++;
@@ -123,6 +140,10 @@ function tokenizeQuery(src: string): string[] {
       }
       j++;
     }
+    // Termination guarantee: if the scan stopped immediately (a bare delimiter
+    // like ','), consume that one character as its own token — i must ALWAYS
+    // advance, whatever the delimiter set says.
+    if (j === i) j = i + 1;
     const val = src.slice(i, j);
     tokens.push(val);
     i = j;

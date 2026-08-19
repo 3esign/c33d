@@ -35,4 +35,8 @@ Each example is a JSON file with the following structure:
 
 ## Current Examples
 
-*(Empty — first examples will be added after the proportional-coherence work lands, ensuring verified examples remain coherent under parameter perturbation.)*
+- `bridge-from-two-splines.json`
+- `cat-from-spine-curve.json`
+- `stadium-from-one-ellipse.json`
+
+**Provenance note:** the current seeds were authored and verified with AI assistance (`verifiedBy: "antigravity"`) and are pending human re-verification. Human sign-off is the intended gate for this library; treat these three as provisional until a maintainer re-verifies slider coherence by hand.

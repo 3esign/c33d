@@ -12,6 +12,8 @@
 //      server) the button still works and simply reports that it wasn't saved.
 //
 // Collapsed it is a single small pill; Ctrl+Enter saves, Escape closes.
+// Anchored bottom-right of the viewport — the top-right corner belongs to the
+// Outliner ("Scene Layers"), which the pill used to cover.
 // ---------------------------------------------------------------------------
 import { useEffect, useRef, useState } from 'react';
 import { saveSessionNote } from '../store/useStore';
@@ -75,7 +77,7 @@ export function SessionNote() {
       <button
         onClick={() => setOpen(true)}
         title="Leave a note on this session (Ctrl+M) — stored with the data, never sent to a model"
-        className="absolute top-3 right-3 z-30 flex items-center gap-1.5 rounded-full border border-slate-700/80
+        className="absolute bottom-3 right-3 z-30 flex items-center gap-1.5 rounded-full border border-slate-700/80
                    bg-slate-900/85 px-3 py-1.5 text-xs text-slate-300 backdrop-blur
                    transition-colors hover:border-slate-500 hover:text-white"
       >
@@ -89,7 +91,7 @@ export function SessionNote() {
 
   return (
     <div
-      className="absolute top-3 right-3 z-30 w-80 rounded-lg border border-slate-700 bg-slate-900/95
+      className="absolute bottom-3 right-3 z-30 w-80 rounded-lg border border-slate-700 bg-slate-900/95
                  p-3 shadow-2xl backdrop-blur"
       onKeyDown={(e) => {
         if (e.key === 'Escape') { e.stopPropagation(); setOpen(false); }

@@ -5,8 +5,11 @@
 //
 // Provider wiring (all in src/ai/api.ts):
 //   OpenAI / OpenRouter:  response_format: { type: 'json_schema',
-//                           json_schema: { name: 'ir_program', strict: true,
+//                           json_schema: { name: 'ir_program', strict: false,
 //                                          schema: buildIrJsonSchema() } }
+//                           (strict:false — the free-form `args` objects are
+//                           not expressible in the strict subset; the op-name
+//                           enum is the high-value constraint)
 //   Ollama (structured outputs): format: buildIrJsonSchema()
 //                           (instead of the loose format: 'json')
 //   Gemini:               generationConfig.responseSchema (OpenAPI subset —
@@ -48,6 +51,11 @@ export function buildIrJsonSchema(): any {
       // Escape hatch: a clarifying-question response (empty body + questions)
       // is still expressible under the constrained grammar.
       questions: { type: 'array', items: { type: 'string' } },
+      // The design genome the system prompt asks for (archetype + parts with
+      // roles/counts). additionalProperties:false without this property made
+      // the grammar FORBID the field the prompt demanded — under constrained
+      // decoding the model literally could not comply.
+      genome: { type: 'object', additionalProperties: true },
       params: {
         type: 'array',
         items: {
@@ -78,7 +86,10 @@ export function buildIrJsonSchema(): any {
       },
       emit: {
         type: 'array',
-        minItems: 1,
+        // minItems 0: a question-only response carries an empty emit, and a
+        // build with a missing/empty emit must reach compileIr (which reports
+        // a repairable message) instead of dying in the decoder grammar.
+        minItems: 0,
         items: {
           type: 'object',
           additionalProperties: false,

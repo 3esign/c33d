@@ -23,7 +23,10 @@
 // grow new kinds of records without any migration.
 // ---------------------------------------------------------------------------
 
-import { appendFileSync, existsSync, mkdirSync, readdirSync, readFileSync } from 'node:fs';
+import {
+  closeSync, existsSync, fstatSync, fsyncSync, mkdirSync,
+  openSync, readSync, readdirSync, readFileSync, writeSync,
+} from 'node:fs';
 import { join } from 'node:path';
 
 export function eventsDir(root = process.cwd()) {
@@ -41,14 +44,37 @@ function fileFor(root, port, when) {
  * Append one event. Returns the event as written (with ts filled in).
  * Never throws: losing a record is bad, but breaking the app to report it is
  * worse — the caller is on the app's critical path.
+ *
+ * Durability details:
+ *  - If the file's last byte is not '\n' (a previous append was cut short by a
+ *    kill or a full disk), a newline is written first, so this record starts on
+ *    its own line. The torn line stays torn — one skipped record on replay —
+ *    instead of merging with this one and corrupting BOTH.
+ *  - The write is fsync'd: a crash right after appendEvent returns cannot lose
+ *    the record to the OS page cache. This is the source of truth; the extra
+ *    syscall is what "source of truth" costs.
  */
 export function appendEvent(root, port, event) {
   const ts = event.ts ?? new Date().toISOString();
   const line = JSON.stringify({ ts, port: port ?? null, ...event });
+  let fd;
   try {
-    appendFileSync(fileFor(root, port, ts), line + '\n', 'utf8');
+    fd = openSync(fileFor(root, port, ts), 'a+');
+    let payload = line + '\n';
+    const { size } = fstatSync(fd);
+    if (size > 0) {
+      const last = Buffer.alloc(1);
+      readSync(fd, last, 0, 1, size - 1);
+      if (last[0] !== 0x0a) payload = '\n' + payload;
+    }
+    writeSync(fd, payload);
+    fsyncSync(fd);
   } catch (err) {
     console.warn(`[events] could not append: ${err?.message}`);
+  } finally {
+    if (fd !== undefined) {
+      try { closeSync(fd); } catch { /* nothing useful to do */ }
+    }
   }
   return { ts, port: port ?? null, ...event };
 }

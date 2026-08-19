@@ -15,7 +15,7 @@ Add new parametric operations to the node library.
 5. **Exemplar** — add at least one verified example graph using the new node to `data/seed-examples/`.
 6. **Eval Prompt** — add at least one L1/L2 test prompt to `docs/test_prompts.md`.
 
-See [docs/contributing/adding-a-node.md](docs/contributing/adding-a-node.md) (coming soon) for a walkthrough.
+See [docs/contributing/adding-a-node.md](docs/contributing/adding-a-node.md) for a walkthrough.
 
 Good first nodes to add: see the "S-cost" rows in [docs/research/node_expansion_research.md](docs/research/node_expansion_research.md) — these are well-specified, isolated tasks ideal for first contributions.
 
@@ -42,7 +42,7 @@ Use the issue template and include:
 
 - [ ] Code builds without errors: `npm run build`
 - [ ] TypeScript compiles: `tsc -b`
-- [ ] Worker unit tests pass: `node tests/test_selection.mjs`
+- [ ] Full test suite passes: `npm test`
 - [ ] Node contributions include all standard kit items (executor, definition, validation, percept, exemplar, eval prompt)
 
 ## Governance

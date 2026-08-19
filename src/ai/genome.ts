@@ -141,12 +141,20 @@ export function scoreIntentRealization(
     const wantsMany = (typeof p.count === 'number' && p.count > 1) || p.role === 'repeated';
     if (!wantsMany) continue;
     const ref = typeof p.count === 'string' ? p.count.toLowerCase() : '';
+    // Slider match: the part's own name, its declared count slider, or a
+    // *count-named* slider (exact "count" or a "…Count" suffix). The old bare
+    // `includes('count')` grabbed ANY slider containing "count" ("countertopW",
+    // "discountRate") and attributed a collapse to the wrong part.
     const key = sliderKeys.find(k => {
       const kl = k.toLowerCase();
-      return kl.includes(p.id.toLowerCase()) || (ref && kl.includes(ref)) || kl.includes('count');
+      return kl.includes(p.id.toLowerCase()) || (ref !== '' && kl.includes(ref)) || kl === 'count' || /count$/.test(kl);
     });
-    if (key && sliders[key] <= 1) {
-      deferred.push(`"${p.id}" was planned as repeated (count ${p.count ?? '>1'}) but slider "${key}" is ${sliders[key]} — restore the repetition.`);
+    if (key !== undefined) {
+      // Sliders can arrive as numeric strings — coerce before comparing.
+      const val = Number(sliders[key]);
+      if (isFinite(val) && val <= 1) {
+        deferred.push(`"${p.id}" was planned as repeated (count ${p.count ?? '>1'}) but slider "${key}" is ${val} — restore the repetition.`);
+      }
     }
   }
 

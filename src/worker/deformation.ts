@@ -105,21 +105,35 @@ export function solidFromDeformedMesh(
     pb.delete();
     pc.delete();
   }
-  if (builtFaces === 0) throw new Error('deform produced zero valid faces (degenerate mesh)');
+  if (builtFaces === 0) {
+    try { sewing.delete(); } catch { /* best-effort */ }
+    throw new Error('deform produced zero valid faces (degenerate mesh)');
+  }
 
   sewing.Perform(new OC.Message_ProgressRange_1());
   const sewn = sewing.SewedShape();
 
+  // Keep ALL shells: a hollow part sews into an outer shell AND an inner
+  // cavity shell. The old loop rebuilt the solid per shell and kept only the
+  // last one — Bend/Twist/ScaleXYZ silently filled every cavity. Add every
+  // shell to ONE MakeSolid instead.
   let solidShape: any = null;
+  let sm: any = null;
   const ex = new OC.TopExp_Explorer_2(sewn, OC.TopAbs_ShapeEnum.TopAbs_SHELL, OC.TopAbs_ShapeEnum.TopAbs_SHAPE);
   while (ex.More()) {
     const shell = OC.TopoDS.Shell_1(ex.Current());
-    const sm = new OC.BRepBuilderAPI_MakeSolid_3(shell);
-    solidShape = sm.Solid();
-    sm.delete();
+    if (!sm) sm = new OC.BRepBuilderAPI_MakeSolid_3(shell);
+    else sm.Add(shell);
     ex.Next();
   }
   ex.delete();
+  if (sm) {
+    solidShape = sm.Solid();
+    sm.delete();
+  }
+  // The sewing tool is a creation-side temp object (the sewn shape has its own
+  // TopoDS ownership) — safe to free, unlike TopoDS shapes themselves.
+  try { sewing.delete(); } catch { /* best-effort */ }
   if (!solidShape) throw new Error('sewing did not close into a shell (mesh may be non-manifold)');
   return copyMetadata(shape, replicad.cast(solidShape));
 }

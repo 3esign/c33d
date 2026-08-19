@@ -74,9 +74,12 @@ export async function runEvalSuite(onProgress?: (done: number, total: number, cu
   const modelName = activeSlot ? `${activeSlot.name} (${activeSlot.model})` : 'Unknown';
   const providerName = activeSlot?.provider ?? 'unknown';
 
-  // Snapshot user state to restore afterwards
+  // Snapshot user state to restore afterwards — the harness clears the chat
+  // per prompt, so messages must be saved and restored too (previously an eval
+  // run silently destroyed the user's conversation history).
   const savedNodes = JSON.parse(JSON.stringify(store.nodes));
   const savedEdges = JSON.parse(JSON.stringify(store.edges));
+  const savedMessages = JSON.parse(JSON.stringify(store.messages));
 
   try {
     for (let i = 0; i < EVAL_PROMPTS.length; i++) {
@@ -90,8 +93,13 @@ export async function runEvalSuite(onProgress?: (done: number, total: number, cu
       // Fresh canvas per prompt
       useStore.getState().clearGraph();
       useStore.getState().clearMessages();
-      useStore.getState().setEpisodeGenome(null); // avoid stale genome carryover between prompts
-      useStore.getState().addMessage({ id: generateUUID(), role: 'user', content: `[EVAL ${p.id}] ${p.prompt}` });
+      useStore.getState().resetEpisode(); // no stale plan/ratios/genome carryover between prompts
+      // Label the transcript with a SYSTEM marker (filtered out of model
+      // history) and add the prompt as a plain user message with the EXACT
+      // text passed to processUserIntent — a "[EVAL Lx]"-prefixed user message
+      // dodged the history dedup and the model received the prompt TWICE.
+      useStore.getState().addMessage({ id: generateUUID(), role: 'system', content: `[EVAL ${p.id}]` });
+      useStore.getState().addMessage({ id: generateUUID(), role: 'user', content: p.prompt });
 
       const t0 = performance.now();
       let outcome;
@@ -142,9 +150,10 @@ export async function runEvalSuite(onProgress?: (done: number, total: number, cu
     }
     onProgress?.(EVAL_PROMPTS.length, EVAL_PROMPTS.length, 'done');
   } finally {
-    // Restore user's graph
+    // Restore user's graph AND conversation
     useStore.getState().setNodes(savedNodes);
     useStore.getState().setEdges(savedEdges);
+    useStore.setState({ messages: savedMessages });
     useStore.getState().setIsRunningEvals(false);
   }
 }

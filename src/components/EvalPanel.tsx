@@ -1,12 +1,33 @@
 import React, { useMemo, useState } from 'react';
 import { Play, FlaskConical, Square, Download, ChevronRight } from 'lucide-react';
-import { useStore } from '../store/useStore';
+import { useStore, generateUUID } from '../store/useStore';
 import { runEvalSuite, stopEvalSuite, EVAL_PROMPTS } from '../ai/evalHarness';
+import type { EvalResultEntry } from '../store/types';
+
+// Stable row identity: entries created since the id stamp carry one; older
+// persisted rows fall back to timestamp+promptId (index-independent, so
+// expansion doesn't jump when new results are prepended).
+const resultKey = (r: EvalResultEntry) => r.id ?? `${r.timestamp}:${r.promptId}`;
 
 export const EvalPanel: React.FC = () => {
-  const { evalResults, isRunningEvals } = useStore();
+  const evalResults = useStore(state => state.evalResults);
+  const isRunningEvals = useStore(state => state.isRunningEvals);
   const [progress, setProgress] = useState<{ done: number; total: number; current: string } | null>(null);
-  const [expanded, setExpanded] = useState<number | null>(null);
+  const [expanded, setExpanded] = useState<string | null>(null);
+
+  const startSuite = () => {
+    runEvalSuite((done, total, current) => setProgress({ done, total, current }))
+      .catch((err: any) => {
+        // The suite's own finally-block restores state; this catch keeps an
+        // unexpected crash from becoming an unhandled rejection.
+        console.error('Eval suite crashed:', err);
+        useStore.getState().addMessage({
+          id: generateUUID(),
+          role: 'system',
+          content: `Eval suite crashed: ${String(err?.message || err)}`,
+        });
+      });
+  };
 
   // Load a stored eval graph back onto the canvas — this is what makes each run
   // a re-usable experience rather than a throwaway score. Fresh kernel first.
@@ -43,7 +64,7 @@ export const EvalPanel: React.FC = () => {
         </h3>
         <div className="flex items-center gap-1.5">
           <button
-            onClick={() => runEvalSuite((done, total, current) => setProgress({ done, total, current }))}
+            onClick={startSuite}
             disabled={isRunningEvals}
             className="text-[10px] bg-purple-700 hover:bg-purple-600 disabled:bg-slate-700 disabled:text-slate-500 text-white px-3 py-1.5 rounded flex items-center gap-1.5 font-medium"
           >
@@ -65,7 +86,7 @@ export const EvalPanel: React.FC = () => {
       <p className="text-[10px] text-slate-400 leading-relaxed">
         Runs a fixed {EVAL_PROMPTS.length}-prompt suite (4 complexity levels) through the active agent and scores each run:
         parsed → evaluated → geometry sane. Run before/after changing prompts, nodes or models to see if the system actually improved.
-        Uses API tokens; your current graph is restored afterwards.
+        Uses API tokens; the chat conversation is cleared during eval runs, and your current graph is restored afterwards.
       </p>
 
       {/* Per-model per-level summary */}
@@ -99,13 +120,14 @@ export const EvalPanel: React.FC = () => {
 
       {/* Recent results — click a row to inspect and re-load its graph */}
       <div className="space-y-1.5">
-        {evalResults.slice(0, 40).map((r, i) => {
-          const isOpen = expanded === i;
+        {evalResults.slice(0, 40).map((r) => {
+          const key = resultKey(r);
+          const isOpen = expanded === key;
           const badge = r.geometrySane ? 'SANE' : r.evaluatedOk ? 'EVAL' : r.parsedOk ? 'PARSE' : 'FAIL';
           return (
-            <div key={i} className="bg-slate-900/60 border border-slate-800 rounded text-[10px] overflow-hidden">
+            <div key={key} className="bg-slate-900/60 border border-slate-800 rounded text-[10px] overflow-hidden">
               <button
-                onClick={() => setExpanded(isOpen ? null : i)}
+                onClick={() => setExpanded(isOpen ? null : key)}
                 className="w-full p-2 flex items-center gap-2 text-left hover:bg-slate-800/50"
               >
                 <ChevronRight size={11} className={`shrink-0 text-slate-500 transition-transform ${isOpen ? 'rotate-90' : ''}`} />

@@ -14,6 +14,7 @@ import { readdirSync, readFileSync, existsSync, mkdirSync, renameSync } from 'no
 import { join, dirname, basename } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { execSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import * as store from './lib/db.mjs';
 import { appendEvent } from './lib/events.mjs';
 
@@ -122,19 +123,33 @@ for (const f of files) {
 }
 
 // The legacy per-run log becomes the runs table.
+//
+// Dedup is a hash of the FULL entry JSON, not timestamp|model|request: two
+// parallel servers answering the same prompt in the same second are two real
+// runs (they differ in responseTimeMs/counts/error) and must both survive.
+// Idempotency across re-imports is checked against every column the runs
+// table stores, for the same reason.
+const entryHash = (r) => createHash('sha1').update(JSON.stringify(r)).digest('hex');
+const storedKey = (at, model, request, success, ms, nodes, edges, error) =>
+  [at ?? '', model ?? '', request ?? '', success ? 1 : 0, ms ?? '', nodes ?? '', edges ?? '', error ?? ''].join('|');
+const inDb = new Set(
+  db.prepare("SELECT at, model, request, success, response_ms ms, node_count n, edge_count e, error FROM runs")
+    .all().map(r => storedKey(r.at, r.model, r.request, r.success, r.ms, r.n, r.e, r.error)),
+);
+const seenEntries = new Set();
 for (const name of readdirSync(root).filter(f => /^intelligence_log(\.\d+)?\.json$/.test(f))) {
   let rows = [];
   try { rows = JSON.parse(readFileSync(join(root, name), 'utf8')); } catch { continue; }
   if (!Array.isArray(rows)) continue;
-  const seen = new Set(
-    db.prepare("SELECT at, IFNULL(model,'') m, IFNULL(request,'') q FROM runs")
-      .all().map(r => `${r.at}|${r.m}|${r.q}`),
-  );
   let added = 0;
   for (const r of rows) {
-    const k = `${r.timestamp}|${r.model ?? ''}|${r.request ?? ''}`;
-    if (seen.has(k)) continue;
-    seen.add(k);
+    const h = entryHash(r);                     // exact duplicate across log files
+    if (seenEntries.has(h)) continue;
+    const k = storedKey(r.timestamp, r.model, r.request, r.success,
+                        r.responseTimeMs, r.nodeCount, r.edgeCount, r.error);
+    if (inDb.has(k)) continue;                  // already imported on a previous run
+    seenEntries.add(h);
+    inDb.add(k);
     addRun({ at: r.timestamp, model: r.model, request: r.request, success: r.success,
              responseTimeMs: r.responseTimeMs, nodeCount: r.nodeCount, edgeCount: r.edgeCount,
              error: r.error, versionTag: tag });
@@ -173,6 +188,10 @@ function fileStamp(f) {
 function verdictOf(comment) {
   const c = String(comment).toLowerCase();
   if (/\bfail|no visible|zero export/.test(c)) return 'FAIL';
+  // "not bad" is praise. It must be tested BEFORE the generic /bad/ branch
+  // below, which would otherwise grade it WEAK — the exception in the OK line
+  // was unreachable for exactly the comments it was written for.
+  if (/\bnot\s+(?:that\s+|too\s+|so\s+)?bad\b/.test(c)) return 'OK';
   if (/primitive|poor|missed|only|bad/.test(c) && !/amazing|almost correct/.test(c)) return 'WEAK';
   if (/interest|amazing|nice|almost correct|best|not.*bad|progres/.test(c)) return 'OK';
   return null;

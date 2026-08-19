@@ -4,6 +4,8 @@
 
 If you discover a security vulnerability in C33D, please report it privately. Do not open a public issue.
 
+Email **poturaksemir@gmail.com** with the subject **[C33D SECURITY]**. We will acknowledge reports as quickly as we can and ask that you allow up to **90 days** for a fix before public disclosure; we will credit reporters unless they prefer otherwise.
+
 ## API Key Security
 
 C33D is designed as a client-side architecture for executing LLM-generated node graphs.

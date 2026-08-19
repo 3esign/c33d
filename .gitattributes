@@ -1,0 +1,8 @@
+# Windows batch files must keep CRLF endings — cmd.exe mis-parses LF-only
+# .bat files (labels and multi-line if blocks break). Without this rule git
+# normalises them to LF in the index and they show as permanently "modified"
+# in the working tree, which makes `git status` noisy after every commit.
+*.bat text eol=crlf
+
+# Everything else: normalise to LF in the repository, check out native.
+* text=auto

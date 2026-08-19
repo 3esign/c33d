@@ -1,6 +1,8 @@
 # C33D — Consolidated Development Roadmap
 *July 2026. A living design record and master roadmap combining implementation phases, code-level analysis, reliability diagnostics, and architectural conventions.*
 
+> **Status update (2026-08-18):** several phases below have since landed and read as future work only because this document predates them — notably the kernel-health work (error taxonomy, poisoned-eval respawn, canary), the curve→solid bridge (LoftCurves, PipeOnCurve, SweepAlongCurve, geometric sockets), typed handle inference, the retrieval/experience store, the Macro node, the IR compiler + skills catalog, and the SQLite session store. Consult `git log` for what is real; this document is kept as the design rationale, not as a status board.
+
 ---
 
 ## 1. The Perception–Action Loop (The Intelligence Harness)

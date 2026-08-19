@@ -2,11 +2,14 @@
 //
 // Each dev server past the first writes intelligence_log.<port>.json so that
 // parallel servers never overwrite each other. This folds them back together,
-// de-duplicating on (timestamp, model, request) and sorting by time. It never
-// deletes anything: merged side-files are renamed to .merged-<stamp>.
+// de-duplicating on a hash of the FULL entry and sorting by time. (The old
+// timestamp|model|request key silently dropped parallel runs of the same
+// prompt landing in the same second — exactly what dev-multi produces.) It
+// never deletes anything: merged side-files are renamed to .merged-<stamp>.
 import { readdirSync, readFileSync, writeFileSync, renameSync, copyFileSync, existsSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
+import { createHash } from 'crypto';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const mainPath = join(root, 'intelligence_log.json');
@@ -18,11 +21,15 @@ if (sides.length === 0) { console.log('No per-port logs to merge. Nothing to do.
 const main = read(mainPath);
 if (existsSync(mainPath)) copyFileSync(mainPath, `${mainPath}.backup-${Date.now()}`);
 
-const seen = new Set(main.map(r => `${r.timestamp}|${r.model}|${r.request}`));
+// Two entries are the same run only if EVERY field matches — same-second
+// same-prompt runs from parallel servers differ in responseTimeMs/counts and
+// must all survive the merge.
+const keyOf = (r) => createHash('sha1').update(JSON.stringify(r)).digest('hex');
+const seen = new Set(main.map(keyOf));
 let added = 0;
 for (const f of sides) {
   for (const r of read(join(root, f))) {
-    const k = `${r.timestamp}|${r.model}|${r.request}`;
+    const k = keyOf(r);
     if (seen.has(k)) continue;
     seen.add(k); main.push(r); added++;
   }

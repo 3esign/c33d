@@ -1,9 +1,20 @@
 import assert from 'assert';
+import { register } from 'node:module';
+import { pathToFileURL } from 'node:url';
+import { writeFileSync, mkdtempSync } from 'node:fs';
+import { join } from 'node:path';
+import { tmpdir } from 'node:os';
 
 // Contract test for the Jul-21 NUMBER-INPUT WIRING WALL fix
 // (src/ai/tools.ts::allInputHandles/pickTargetHandle + the edge-acceptance
 // checks in tools.ts::connect and agent.ts::validateAndResolveEdge).
-// Self-contained mirror per repo convention — keep in lockstep with source.
+//
+// Drives the REAL tools.ts helpers and the REAL NODE_LIBRARY via the same
+// strip-types resolve hook as test_ir_ref_coercion — the previous local
+// mirrors of defaultSourceHandle/pickTargetHandle had drifted from source.
+// Only acceptsHandle below remains a mirror: the acceptance rule is inline in
+// connect()/validateAndResolveEdge and has no importable seam; it now at
+// least reads the REAL library instead of a hand-copied one.
 //
 // Motivation (12 exports, Jul 21 evening): models emitted semantically correct
 // list-layer wiring — Series→Expression:a, Expression→PointsFromLists:x/y/z/
@@ -15,75 +26,46 @@ import assert from 'assert';
 // The IR compiler's own correct edges were stripped by the same whitelist on
 // the apply path.
 
-// Minimal NODE_LIBRARY extract (keep in lockstep with NodeDefinitions.ts).
-const LIB = {
-  Expression: {
-    inputs: [
-      { name: 'a', type: 'number' }, { name: 'b', type: 'number' },
-      { name: 'c', type: 'number' }, { name: 'd', type: 'number' },
-    ],
-    outputs: [{ name: 'value', type: 'number' }],
-    params: [{ name: 'formula', type: 'string' }],
-  },
-  Series: {
-    inputs: [
-      { name: 'start', type: 'number' }, { name: 'step', type: 'number' },
-      { name: 'count', type: 'number' },
-    ],
-    outputs: [{ name: 'values', type: 'number' }],
-    params: [],
-  },
-  PointsFromLists: {
-    inputs: [
-      { name: 'x', type: 'number' }, { name: 'y', type: 'number' },
-      { name: 'z', type: 'number' }, { name: 'scale', type: 'number' },
-      { name: 'group', type: 'number' },
-    ],
-    outputs: [{ name: 'points', type: 'Point' }],
-    params: [],
-  },
-  SplineCurve: {
-    inputs: [{ name: 'points', type: 'Point' }],
-    outputs: [{ name: 'curve', type: 'Curve' }],
-    params: [],
-  },
-  Pipe: {
-    inputs: [{ name: 'path', type: 'Curve' }],
-    outputs: [{ name: 'solid', type: 'Solid' }],
-    params: [{ name: 'radius', type: 'number' }],
-  },
-  PointOnCurve: {
-    inputs: [{ name: 'curve', type: 'Curve' }, { name: 't', type: 'number' }],
-    outputs: [{ name: 'point', type: 'Point' }],
-    params: [],
-  },
+// ---- resolve hook: let Node follow the app's extensionless .ts imports ------
+const hookDir = mkdtempSync(join(tmpdir(), 'c33d-ts-'));
+const hookPath = join(hookDir, 'ts-resolve.mjs');
+writeFileSync(hookPath, `
+import { existsSync } from 'fs';
+import { fileURLToPath } from 'url';
+export function resolve(specifier, context, nextResolve) {
+  if (specifier.startsWith('.') && !/\\.[a-z]+$/i.test(specifier)) {
+    for (const ext of ['.ts', '.tsx']) {
+      try {
+        const r = new URL(specifier + ext, context.parentURL);
+        if (existsSync(fileURLToPath(r))) return { url: r.href, shortCircuit: true };
+      } catch { /* fall through */ }
+    }
+  }
+  return nextResolve(specifier, context);
+}
+`);
+register(pathToFileURL(hookPath));
+
+// tools.ts pulls in agent.ts → useStore.ts, which touch browser globals at
+// module scope. Stub just enough for the module graph to load under Node.
+globalThis.Worker = class {
+  postMessage() {}
+  terminate() {}
+  addEventListener() {}
+  removeEventListener() {}
+};
+globalThis.localStorage = globalThis.localStorage ?? {
+  getItem: () => null, setItem: () => {}, removeItem: () => {}, clear: () => {}, key: () => null, length: 0,
 };
 
-// ---- mirrors of the handle helpers ----------------------------------------
-const allInputHandles = (t) => (LIB[t] ? LIB[t].inputs.map(i => i.name) : []);
-const defaultSourceHandle = (t) => (LIB[t] && LIB[t].outputs.length === 1 ? LIB[t].outputs[0].name : 'solid');
+const { defaultSourceHandle, pickTargetHandle, allInputHandles } = await import('../src/ai/tools.ts');
+const { NODE_LIBRARY } = await import('../src/nodes/NodeDefinitions.ts');
 
-function pickTargetHandle(sourceType, sourceHandle, targetType, taken) {
-  const targetDef = LIB[targetType];
-  if (!targetDef || targetType === 'Macro') return undefined;
-  const srcDef = sourceType ? LIB[sourceType] : undefined;
-  const shName = sourceHandle || defaultSourceHandle(sourceType);
-  const srcOutType = srcDef?.outputs.find(o => o.name === shName)?.type;
-  if (!srcOutType) return undefined;
-  if (srcOutType === 'number') {
-    const numHandles = targetDef.inputs.filter(i => i.type === 'number').map(i => i.name);
-    if (numHandles.length === 0) return undefined;
-    return numHandles.find(h => !taken.has(h)) ?? undefined;
-  }
-  const typedHandles = targetDef.inputs.filter(i => i.type === srcOutType).map(i => i.name);
-  if (typedHandles.length === 0) return null;
-  return typedHandles.find(h => !taken.has(h)) ?? undefined;
-}
-
-// Mirror of the shared edge-acceptance rule (post-fix): a targetHandle is
-// valid iff it is "param:<numeric param>" OR any declared input handle.
+// Mirror of the shared edge-acceptance rule (post-fix), reading the REAL
+// library: a targetHandle is valid iff it is "param:<numeric param>" OR any
+// declared input handle.
 function acceptsHandle(targetType, th) {
-  const def = LIB[targetType];
+  const def = NODE_LIBRARY[targetType];
   if (!def) return true;
   if (th.startsWith('param:')) {
     const p = th.slice(6);
@@ -113,7 +95,7 @@ assert.ok(!acceptsHandle('PointsFromLists', 'w'), 'PFL:w still rejected');
 assert.ok(!acceptsHandle('Expression', 'param:a'), 'param:a is NOT a numeric param of Expression');
 assert.ok(acceptsHandle('Pipe', 'param:radius'), 'param:radius on Pipe still works');
 
-// ---- number-source auto-pick (omitted targetHandle) ------------------------
+// ---- number-source auto-pick (omitted targetHandle), REAL pickTargetHandle --
 // Series→Expression with no targetHandle lands on 'a' (first free number input).
 assert.strictEqual(pickTargetHandle('Series', undefined, 'Expression', new Set()), 'a');
 // With 'a' taken, the next free is 'b'.
@@ -128,6 +110,8 @@ assert.strictEqual(pickTargetHandle('Expression', undefined, 'SplineCurve', new 
 assert.strictEqual(pickTargetHandle('PointsFromLists', undefined, 'SplineCurve', new Set()), 'points');
 // Known geometry mismatch still honestly rejects (null).
 assert.strictEqual(pickTargetHandle('Pipe', undefined, 'PointsFromLists', new Set()), null);
+// And the source-handle default that feeds pickTargetHandle is the real one.
+assert.strictEqual(defaultSourceHandle('Series'), NODE_LIBRARY.Series.outputs[0].name);
 
 // ---- the deadlock scenario end-to-end (glm-5.2 divide-curve export) --------
 // 12 nodes, 12 intended edges; pre-fix the 8 number-input edges were dropped
@@ -149,4 +133,4 @@ for (const [, , target, th] of intended) {
 }
 assert.strictEqual(accepted, intended.length, `all ${intended.length} intended edges accepted (got ${accepted})`);
 
-console.log('test_number_input_edges: all contracts PASS');
+console.log('test_number_input_edges: all contracts PASS (real tools.ts + real NODE_LIBRARY)');

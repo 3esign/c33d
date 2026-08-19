@@ -3,7 +3,8 @@ import { useStore } from '../store/useStore';
 import { Layers, Eye, EyeOff } from 'lucide-react';
 
 export const Outliner: React.FC = () => {
-  const { sceneObjects, toggleObjectVisibility } = useStore();
+  const sceneObjects = useStore(state => state.sceneObjects);
+  const toggleObjectVisibility = useStore(state => state.toggleObjectVisibility);
 
   return (
     <div className="absolute top-4 right-4 w-64 bg-slate-800/90 backdrop-blur-md border border-slate-700 rounded-lg shadow-xl overflow-hidden pointer-events-auto">

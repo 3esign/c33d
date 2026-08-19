@@ -23,7 +23,9 @@ interface GEdge { source: string; target: string; sourceHandle?: string; targetH
 // The geometry input handles a node type must have connected to evaluate.
 // Derived from NODE_LIBRARY, with a few multi-input rules that can't be inferred
 // from arity alone (Loft needs >=2 of its 4 profiles; Compound needs >=1 of 4).
-function requiredGeoInputs(type: string): { handles: string[]; minConnected: number } | null {
+// Exported: the minimal-repro harness (agent.ts) consults the same requiredness
+// to know when a lone-node evaluation would fail for the wrong reason.
+export function requiredGeoInputs(type: string): { handles: string[]; minConnected: number } | null {
   const def = NODE_LIBRARY[type];
   if (!def) return null;
   // S2 (Jul-20 geometric sockets): "center" (primitives), "pivot"/"axis"
@@ -38,7 +40,11 @@ function requiredGeoInputs(type: string): { handles: string[]; minConnected: num
     .map(i => i.name);
   if (geoHandles.length === 0) return null; // primitives, number nodes
   if (type === 'Loft') return { handles: geoHandles, minConnected: 2 };
-  if (type === 'LoftCurves') return { handles: geoHandles, minConnected: 2 };
+  // LoftCurves: ONE connection is legal — a single grouped multi-curve (spline
+  // with groupBy) carries several sections on curve1, and the executor lofts
+  // them fine. Requiring 2 punished the model for following the skill catalog
+  // and the CURTAIN_IR exemplar, and skipped an evaluation that would succeed.
+  if (type === 'LoftCurves') return { handles: geoHandles, minConnected: 1 };
   if (type === 'Compound') return { handles: geoHandles, minConnected: 1 };
   // Pipe: the Curve input is optional — pathSvg param is the fallback.
   if (type === 'Pipe') return null;

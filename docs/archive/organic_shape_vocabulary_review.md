@@ -1,5 +1,5 @@
 # C3D — Organic Shape Vocabulary Review
-*July 9, 2026. Response to the platform-introspection request ("more freedom, more unique results, more nodes") and the accompanying 14-category node proposal. Grounded in the actual code (`NodeDefinitions.ts`, `geometryWorker.ts`, `agent.ts`, `replicad`'s own source) rather than the proposal's assumptions. Companion to [Evaluation and Improvement Plan.md](file:///C:/Users/treed/OneDrive/Desktop/C3D/Evaluation%20and%20Improvement%20Plan.md) and [Reliability and Diagnostics Plan.md](file:///C:/Users/treed/OneDrive/Desktop/C3D/Reliability%20and%20Diagnostics%20Plan.md). Engineering detail for the fixes below lives in `.agents/AGENTS.md` §12.*
+*July 9, 2026. Response to the platform-introspection request ("more freedom, more unique results, more nodes") and the accompanying 14-category node proposal. Grounded in the actual code (`NodeDefinitions.ts`, `geometryWorker.ts`, `agent.ts`, `replicad`'s own source) rather than the proposal's assumptions. Companion to "Evaluation and Improvement Plan.md" and "Reliability and Diagnostics Plan.md" (local planning documents from the same period, not included in this repository). Engineering detail for the fixes below lives in `.agents/AGENTS.md` §12.*
 
 ---
 

@@ -1,26 +1,49 @@
 import React from 'react';
 import { Star, Trash2, Upload, Package } from 'lucide-react';
+import { useShallow } from 'zustand/react/shallow';
 import { useStore, generateUUID } from '../store/useStore';
 import { NODE_LIBRARY } from '../nodes/NodeDefinitions';
 import type { MacroExposedParam, SuccessExample } from '../nodes/NodeDefinitions';
 import { autoLayout } from '../layout/autoLayout';
 
 export const LibraryPanel: React.FC = () => {
+  const successExamples = useStore(state => state.successExamples);
+  const macros = useStore(state => state.macros);
   const {
-    successExamples, removeSuccessExample,
-    macros, addMacro, removeMacro,
+    removeSuccessExample, addMacro, removeMacro,
     setNodes, setEdges, addMessage, zoomToFit,
-  } = useStore();
+  } = useStore(useShallow(state => ({
+    removeSuccessExample: state.removeSuccessExample,
+    addMacro: state.addMacro,
+    removeMacro: state.removeMacro,
+    setNodes: state.setNodes,
+    setEdges: state.setEdges,
+    addMessage: state.addMessage,
+    zoomToFit: state.zoomToFit,
+  })));
+
+  // Old/hand-edited store files can contain rows missing graphFinal — never
+  // let one malformed entry take down the whole panel or the canvas load.
+  const hasGraph = (ex: SuccessExample) =>
+    !!ex.graphFinal && Array.isArray(ex.graphFinal.nodes) && Array.isArray(ex.graphFinal.edges);
 
   const loadExample = (ex: SuccessExample) => {
+    if (!hasGraph(ex)) {
+      addMessage({ id: generateUUID(), role: 'system', content: 'Cannot load: this example has no stored graph (malformed entry).' });
+      return;
+    }
     const laidOut = autoLayout(JSON.parse(JSON.stringify(ex.graphFinal.nodes)), ex.graphFinal.edges);
     setNodes(laidOut as any[]);
     setEdges(JSON.parse(JSON.stringify(ex.graphFinal.edges)));
     zoomToFit();
-    addMessage({ id: generateUUID(), role: 'system', content: `Loaded example "${ex.comment || ex.prompts[0] || ex.id}" onto the canvas.` });
+    addMessage({ id: generateUUID(), role: 'system', content: `Loaded example "${ex.comment || ex.prompts?.[0] || ex.id}" onto the canvas.` });
   };
 
   const convertToMacro = (ex: SuccessExample) => {
+    if (!hasGraph(ex)) {
+      addMessage({ id: generateUUID(), role: 'system', content: 'Cannot convert: this example has no stored graph (malformed entry).' });
+      return;
+    }
     const nodes = ex.graphFinal.nodes.filter((n: any) => n.type !== 'group');
     const edges = ex.graphFinal.edges.filter((e: any) =>
       nodes.some((n: any) => n.id === e.source) && nodes.some((n: any) => n.id === e.target));
@@ -44,11 +67,11 @@ export const LibraryPanel: React.FC = () => {
         max: n.data?.max,
         step: n.data?.step,
       }));
-    const name = (ex.comment || ex.prompts[0] || 'Component').slice(0, 40);
+    const name = (ex.comment || ex.prompts?.[0] || 'Component').slice(0, 40);
     addMacro({
       id: `macro_${generateUUID().slice(0, 8)}`,
       name,
-      description: `From verified example: ${ex.prompts.slice(0, 2).join(' | ').slice(0, 200)}`,
+      description: `From verified example: ${(ex.prompts ?? []).slice(0, 2).join(' | ').slice(0, 200)}`,
       createdAt: new Date().toISOString(),
       nodes: JSON.parse(JSON.stringify(nodes)),
       edges: JSON.parse(JSON.stringify(edges)),
@@ -66,7 +89,7 @@ export const LibraryPanel: React.FC = () => {
       id: `macro_inst_${generateUUID().slice(0, 6)}`,
       type: 'Macro',
       position: { x: 40, y: 40 },
-      data: Object.fromEntries([['macroId', macro.id], ...macro.exposedParams.map(p => [p.name, p.default])]),
+      data: Object.fromEntries([['macroId', macro.id], ...(macro.exposedParams ?? []).map(p => [p.name, p.default])]),
     };
     const laidOut = autoLayout([...JSON.parse(JSON.stringify(nodes)), newNode], edges as any[]);
     setNodes(laidOut as any[]);
@@ -94,9 +117,9 @@ export const LibraryPanel: React.FC = () => {
                   ? <img src={ex.thumbnail} alt="" className="w-full h-20 object-cover" />
                   : <div className="w-full h-20 bg-slate-800 flex items-center justify-center text-slate-600 text-[10px]">no snapshot</div>}
                 <div className="p-2 space-y-1 flex-1 flex flex-col">
-                  <div className="text-[10px] text-slate-200 font-medium line-clamp-2">{ex.comment || ex.prompts[0] || '(no comment)'}</div>
-                  <div className="text-[9px] text-slate-500">{ex.graphFinal.nodes.length} nodes · {new Date(ex.createdAt).toLocaleDateString()}</div>
-                  {ex.tags.length > 0 && <div className="text-[9px] text-blue-400 truncate">{ex.tags.join(', ')}</div>}
+                  <div className="text-[10px] text-slate-200 font-medium line-clamp-2">{ex.comment || ex.prompts?.[0] || '(no comment)'}</div>
+                  <div className="text-[9px] text-slate-500">{ex.graphFinal?.nodes?.length ?? 0} nodes · {ex.createdAt ? new Date(ex.createdAt).toLocaleDateString() : '—'}</div>
+                  {(ex.tags?.length ?? 0) > 0 && <div className="text-[9px] text-blue-400 truncate">{ex.tags.join(', ')}</div>}
                   <div className="flex gap-1 pt-1 mt-auto">
                     <button onClick={() => loadExample(ex)} title="Load graph onto canvas"
                       className="flex-1 text-[9px] bg-slate-700 hover:bg-slate-650 text-slate-200 px-1 py-1 rounded flex items-center justify-center gap-1"><Upload size={10} />Load</button>
@@ -139,7 +162,7 @@ export const LibraryPanel: React.FC = () => {
                 </div>
                 <div className="text-[10px] text-slate-400 mt-1 line-clamp-2">{m.description}</div>
                 <div className="text-[9px] text-slate-500 mt-1">
-                  {m.nodes.length} inner nodes · params: {m.exposedParams.map(p => p.name).join(', ') || 'none'} · id: {m.id}
+                  {m.nodes?.length ?? 0} inner nodes · params: {(m.exposedParams ?? []).map(p => p.name).join(', ') || 'none'} · id: {m.id}
                 </div>
               </div>
             ))}

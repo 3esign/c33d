@@ -1,5 +1,17 @@
 @import "tailwindcss";
 
+/* Intermediate shades used throughout the UI that Tailwind does not ship.
+   Defining them here (Tailwind v4 @theme) makes bg-slate-750 etc. real
+   utilities instead of silent no-ops. Values are interpolated midpoints of
+   the neighbouring stock shades. */
+@theme {
+  --color-slate-350: #b0bccd; /* between slate-300 #cbd5e1 and slate-400 #94a3b8 */
+  --color-slate-650: #3d4b5f; /* between slate-600 #475569 and slate-700 #334155 */
+  --color-slate-750: #293548; /* between slate-700 #334155 and slate-800 #1e293b */
+  --color-slate-850: #172033; /* between slate-800 #1e293b and slate-900 #0f172a */
+  --color-red-350: #fa8b8b;   /* between red-300 #fca5a5 and red-400 #f87171 */
+}
+
 html, body, #root {
   height: 100%;
   width: 100%;

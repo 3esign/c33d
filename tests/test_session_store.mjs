@@ -20,7 +20,7 @@ import { tmpdir } from 'node:os';
 
 const root = mkdtempSync(join(tmpdir(), 'c33d-store-'));
 const {
-  openDb, addVersion, currentVersionTag, upsertSession, addTurn, addMessage,
+  openDb, closeDb, addVersion, currentVersionTag, upsertSession, addTurn, addMessage,
   addRun, addComment, latestSessionId, stats, dbFile,
 } = await import('../scripts/lib/db.mjs');
 
@@ -112,5 +112,6 @@ const s = stats();
 ok('stats reports the corpus', s.sessions === 2 && s.turns === 2 && s.comments === 2);
 ok('stats groups by model', s.byModel.some(r => r.model === 'glm-5.2:cloud'));
 
+closeDb();
 rmSync(root, { recursive: true, force: true });
 console.log(`test_session_store: all ${checks} contracts PASS`);

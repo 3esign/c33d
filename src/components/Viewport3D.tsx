@@ -23,13 +23,16 @@ const BoundsController: React.FC = () => {
   }, [triggerFitCount, bounds]);
 
   useEffect(() => {
-    if (prevCountRef.current === 0 && sceneObjectsCount > 0) {
+    // Update the ref on EVERY run so the camera only auto-fits on the genuine
+    // 0 → N transition — not on every add/remove while objects are visible.
+    const prevCount = prevCountRef.current;
+    prevCountRef.current = sceneObjectsCount;
+    if (prevCount === 0 && sceneObjectsCount > 0) {
       const timer = setTimeout(() => {
         bounds.refresh().fit();
       }, 100);
       return () => clearTimeout(timer);
     }
-    prevCountRef.current = sceneObjectsCount;
   }, [sceneObjectsCount, bounds]);
 
   return null;
@@ -38,30 +41,49 @@ const BoundsController: React.FC = () => {
 const GeometryMesh: React.FC<{ object: SceneObject }> = ({ object }) => {
   const geometry = useMemo(() => {
     if (!object.geometryData) return null;
-    const { vertices, indices, normals } = object.geometryData;
-    
+    const { vertices, indices, normals, type } = object.geometryData;
+    const kind = type || object.type || 'Mesh';
+
     const geo = new THREE.BufferGeometry();
     geo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(vertices), 3));
-    if (normals) {
+    if (normals && normals.length) {
       geo.setAttribute('normal', new THREE.BufferAttribute(new Float32Array(normals), 3));
-    } else {
+    } else if (kind === 'Mesh') {
+      // Empty normals array is truthy — without the length guard it installed
+      // a broken 0-length attribute. Lines/points don't need normals at all.
       geo.computeVertexNormals();
     }
-    if (indices) {
+    if (indices && kind !== 'Point') {
       geo.setIndex(indices);
     }
     return geo;
-  }, [object.geometryData]);
+  }, [object.geometryData, object.type]);
+
+  // Dispose GPU buffers when the geometry is replaced or the mesh unmounts.
+  // R3F only auto-disposes JSX-created objects; useMemo-created ones leak on
+  // every slider tick otherwise (long sessions die by WebGL context loss).
+  useEffect(() => {
+    return () => { geometry?.dispose(); };
+  }, [geometry]);
 
   if (!geometry) return null;
 
   const objectColor = object.color || "#3b82f6";
-  const geoType = (object.geometryData as any).type || 'Mesh';
+  const geoType = (object.geometryData as any).type || object.type || 'Mesh';
+  const helperColor = objectColor === "#3b82f6" ? "#facc15" : objectColor;
 
-  if (geoType === 'Line' || geoType === 'Point') {
+  if (geoType === 'Point') {
+    return (
+      <points geometry={geometry}>
+        <pointsMaterial color={helperColor} size={4} sizeAttenuation={false} />
+      </points>
+    );
+  }
+
+  if (geoType === 'Line') {
     return (
       <lineSegments geometry={geometry}>
-        <lineBasicMaterial color={objectColor === "#3b82f6" ? "#facc15" : objectColor} linewidth={geoType === 'Point' ? 2 : 3} />
+        <lineBasicMaterial color={helperColor} linewidth={3} />
       </lineSegments>
     );
   }
@@ -79,7 +101,12 @@ const GeometryMesh: React.FC<{ object: SceneObject }> = ({ object }) => {
 };
 
 export const Viewport3D: React.FC = () => {
-  const { sceneObjects, zoomToFit, openSaveModal, nodes, lastEvaluationError } = useStore();
+  // Narrow selectors: this component must not re-render on chat/graph churn.
+  const sceneObjects = useStore(state => state.sceneObjects);
+  const zoomToFit = useStore(state => state.zoomToFit);
+  const openSaveModal = useStore(state => state.openSaveModal);
+  const hasNodes = useStore(state => state.nodes.length > 0);
+  const lastEvaluationError = useStore(state => state.lastEvaluationError);
   const [showExport, setShowExport] = useState(false);
   const [exportComment, setExportComment] = useState('');
 
@@ -88,6 +115,12 @@ export const Viewport3D: React.FC = () => {
     setShowExport(false);
     setExportComment('');
   };
+
+  // Unregister the snapshot canvas when the viewport unmounts — snapshot
+  // capture must not read from a disposed WebGL canvas.
+  useEffect(() => {
+    return () => registerViewportCanvas(null);
+  }, []);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -171,7 +204,7 @@ export const Viewport3D: React.FC = () => {
           Export JSON
         </button>
 
-        {nodes.length > 0 && !isSystemError(lastEvaluationError) && (
+        {hasNodes && !isSystemError(lastEvaluationError) && (
           <button
             onClick={() => openSaveModal(null)}
             className="bg-emerald-700/90 hover:bg-emerald-600 text-white font-medium px-3 py-1.5 rounded-lg border border-emerald-600 shadow-lg flex items-center gap-1.5 text-xs transition-colors cursor-pointer"

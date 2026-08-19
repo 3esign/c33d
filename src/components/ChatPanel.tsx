@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { useShallow } from 'zustand/react/shallow';
 import { useStore, generateUUID } from '../store/useStore';
 import { Settings, Send, Square, MessageSquare, BarChart2, BookOpen, Star, FlaskConical, Library, X, Brain, RefreshCw, ChevronDown, ChevronRight } from 'lucide-react';
 import { processUserIntent } from '../ai/agent';
@@ -66,11 +67,20 @@ const SystemMessageBadge: React.FC<{ content: string }> = ({ content }) => {
 };
 
 export const ChatPanel: React.FC = () => {
+  // Narrow subscriptions: this panel must not re-render on nodes/edges/scene
+  // churn (slider drags). Data slices individually; stable actions as one
+  // shallow-compared pick.
+  const messages = useStore(state => state.messages);
+  const agentSlots = useStore(state => state.agentSlots);
+  const activeAgentId = useStore(state => state.activeAgentId);
+  const performanceLogs = useStore(state => state.performanceLogs);
+  const agentGuidelines = useStore(state => state.agentGuidelines);
+  const nudgeCandidate = useStore(state => state.nudgeCandidate);
+  const episodePlan = useStore(state => state.episodePlan);
+  const episodeRatios = useStore(state => state.episodeRatios);
+  const episodeDrivers = useStore(state => state.episodeDrivers);
   const {
-    messages = [],
     addMessage,
-    agentSlots = [],
-    activeAgentId = null,
     addAgentSlot,
     removeAgentSlot,
     updateAgentSlot,
@@ -78,16 +88,24 @@ export const ChatPanel: React.FC = () => {
     restoreDefaultAgents,
     clearGraph,
     clearMessages,
-    performanceLogs = [],
-    agentGuidelines,
+    resetEpisode,
     setAgentGuidelines,
-    nudgeCandidate,
     setNudgeCandidate,
     openSaveModal,
-    episodePlan,
-    episodeRatios,
-    episodeDrivers,
-  } = useStore();
+  } = useStore(useShallow(state => ({
+    addMessage: state.addMessage,
+    addAgentSlot: state.addAgentSlot,
+    removeAgentSlot: state.removeAgentSlot,
+    updateAgentSlot: state.updateAgentSlot,
+    setActiveAgentId: state.setActiveAgentId,
+    restoreDefaultAgents: state.restoreDefaultAgents,
+    clearGraph: state.clearGraph,
+    clearMessages: state.clearMessages,
+    resetEpisode: state.resetEpisode,
+    setAgentGuidelines: state.setAgentGuidelines,
+    setNudgeCandidate: state.setNudgeCandidate,
+    openSaveModal: state.openSaveModal,
+  })));
 
   const [input, setInput] = useState('');
   const [showSettings, setShowSettings] = useState(false);
@@ -102,37 +120,63 @@ export const ChatPanel: React.FC = () => {
   const [modelErrors, setModelErrors] = useState<Record<string, string>>({});
   const [modelNotes, setModelNotes] = useState<Record<string, string>>({});
   const [editManual, setEditManual] = useState<Record<string, boolean>>({});
+  // Per-slot request sequence + debounce timers: typing in the URL/key field
+  // must not fire one fetch per keystroke, and a slow stale response must not
+  // overwrite the result of a newer one.
+  const modelFetchSeq = useRef<Record<string, number>>({});
+  const modelFetchTimers = useRef<Record<string, ReturnType<typeof setTimeout>>>({});
+
+  useEffect(() => {
+    const timers = modelFetchTimers.current;
+    return () => { Object.values(timers).forEach(clearTimeout); };
+  }, []);
 
   const fetchModelsForSlot = async (slotId: string, provider: string, apiKey: string) => {
+    const seq = (modelFetchSeq.current[slotId] = (modelFetchSeq.current[slotId] || 0) + 1);
     setLoadingModels(prev => ({ ...prev, [slotId]: true }));
     setModelErrors(prev => ({ ...prev, [slotId]: '' }));
     try {
       const { models, note } = await listProviderModels(provider as any, apiKey);
+      if (modelFetchSeq.current[slotId] !== seq) return; // stale response — discard
       setSlotModels(prev => ({ ...prev, [slotId]: models }));
       setModelNotes(prev => ({ ...prev, [slotId]: note || '' }));
       if (models.length === 0) {
         setModelErrors(prev => ({ ...prev, [slotId]: 'Provider returned no models.' }));
       }
     } catch (err: any) {
+      if (modelFetchSeq.current[slotId] !== seq) return; // stale error — discard
       console.error('Error fetching models for slot:', slotId, err);
       setSlotModels(prev => ({ ...prev, [slotId]: [] }));
       setModelErrors(prev => ({ ...prev, [slotId]: String(err?.message || err).slice(0, 140) }));
     } finally {
-      setLoadingModels(prev => ({ ...prev, [slotId]: false }));
+      if (modelFetchSeq.current[slotId] === seq) {
+        setLoadingModels(prev => ({ ...prev, [slotId]: false }));
+      }
     }
   };
 
-  // A slot can auto-load its model list when it doesn't need a key (Ollama URL
-  // default, OpenRouter public endpoint) or when a key is already entered.
-  const canListModels = (slot: { provider: string; apiKey: string }) =>
-    slot.provider === 'ollama' || slot.provider === 'openrouter' || !!(slot.apiKey && slot.apiKey.trim());
+  const debouncedFetchModels = (slotId: string, provider: string, apiKey: string, delayMs = 500) => {
+    if (modelFetchTimers.current[slotId]) clearTimeout(modelFetchTimers.current[slotId]);
+    modelFetchTimers.current[slotId] = setTimeout(() => {
+      delete modelFetchTimers.current[slotId];
+      fetchModelsForSlot(slotId, provider, apiKey);
+    }, delayMs);
+  };
+
+  // A slot can auto-load its model list when it doesn't need a key (OpenRouter
+  // public endpoint) or when the entered URL/key at least looks plausible —
+  // half-typed keys would only produce guaranteed 401s and pinned errors.
+  const canListModels = (slot: { provider: string; apiKey: string }) => {
+    if (slot.provider === 'openrouter') return true;
+    return (slot.apiKey || '').trim().length >= 12;
+  };
 
   useEffect(() => {
     if (!showSettings) return;
 
     agentSlots.forEach(slot => {
       if (slotModels[slot.id] === undefined && !loadingModels[slot.id] && canListModels(slot)) {
-        fetchModelsForSlot(slot.id, slot.provider, slot.apiKey);
+        debouncedFetchModels(slot.id, slot.provider, slot.apiKey);
       }
     });
   }, [showSettings, agentSlots, slotModels, loadingModels]);
@@ -179,6 +223,9 @@ export const ChatPanel: React.FC = () => {
             onClick={() => {
               clearGraph();
               clearMessages();
+              // A cleared conversation is a fresh episode: prompts, plan and
+              // genome from the old design must not leak into the next one.
+              resetEpisode();
               addMessage({
                 id: generateUUID(),
                 role: 'system',
@@ -357,7 +404,7 @@ export const ChatPanel: React.FC = () => {
                           defaultModel = 'gemini-1.5-flash';
                           defaultName = 'Google Gemini';
                         } else if (newProvider === 'ollama') {
-                          defaultKey = 'http://localhost:11434';
+                          defaultKey = 'http://127.0.0.1:11434';
                           defaultModel = 'llama3';
                           defaultName = 'Ollama (Local)';
                         } else if (newProvider === 'openai') {
@@ -402,14 +449,17 @@ export const ChatPanel: React.FC = () => {
                       type="password"
                       value={slot.apiKey}
                       onChange={(e) => {
-                        const newUrl = e.target.value;
-                        updateAgentSlot(slot.id, { apiKey: newUrl });
-                        if (slot.provider === 'ollama') {
-                          fetchModelsForSlot(slot.id, 'ollama', newUrl);
+                        const newValue = e.target.value;
+                        updateAgentSlot(slot.id, { apiKey: newValue });
+                        // The key/URL changed: the previously pinned error no
+                        // longer describes this value.
+                        setModelErrors(prev => ({ ...prev, [slot.id]: '' }));
+                        if (slot.provider === 'ollama' && newValue.trim().length >= 12) {
+                          debouncedFetchModels(slot.id, 'ollama', newValue);
                         }
                       }}
                       className="w-full bg-slate-900 border border-slate-650 rounded px-2 py-1 text-xs text-slate-200"
-                      placeholder={slot.provider === 'ollama' ? 'http://localhost:11434' : 'Key...'}
+                      placeholder={slot.provider === 'ollama' ? 'http://127.0.0.1:11434' : 'Key...'}
                     />
                   </div>
                   <div>
@@ -727,7 +777,11 @@ export const ChatPanel: React.FC = () => {
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && handleSend()}
+              onKeyDown={(e) => {
+                // IME composition (Japanese/Chinese/Korean input) ends with an
+                // Enter that must confirm the composition, not send the message.
+                if (e.key === 'Enter' && !e.nativeEvent.isComposing) handleSend();
+              }}
               placeholder={stopping ? "Stopping…" : isLoading ? "AI is reasoning… (Stop to interrupt)" : "Type your design intent..."}
               disabled={isLoading}
               className="flex-1 bg-slate-900 border border-slate-600 rounded-lg px-4 py-2 text-sm text-slate-200 focus:outline-none focus:border-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"

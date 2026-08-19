@@ -27,6 +27,17 @@ function App() {
     initializeMacros();
   }, [initializeGuidelines, initializeExamples, initializeMacros]);
 
+  // Re-clamp the split sizes when the window shrinks/grows — otherwise a
+  // shrunk window can leave the node graph (or chat) with zero visible height.
+  useEffect(() => {
+    const handleWindowResize = () => {
+      setTopHeight(h => Math.min(Math.max(h, 100), Math.max(100, window.innerHeight - 100)));
+      setLeftWidth(w => Math.min(Math.max(w, 200), Math.max(200, window.innerWidth - 300)));
+    };
+    window.addEventListener('resize', handleWindowResize);
+    return () => window.removeEventListener('resize', handleWindowResize);
+  }, []);
+
   const startResizeTop = (e: React.MouseEvent) => {
     e.preventDefault();
     setIsDraggingTop(true);

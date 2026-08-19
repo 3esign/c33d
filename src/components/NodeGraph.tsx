@@ -30,7 +30,10 @@ interface ParamCandidate {
 }
 
 const MacroDialog: React.FC<{ onClose: () => void }> = ({ onClose }) => {
-  const { nodes, edges, addMacro, addMessage } = useStore();
+  const nodes = useStore(state => state.nodes);
+  const edges = useStore(state => state.edges);
+  const addMacro = useStore(state => state.addMacro);
+  const addMessage = useStore(state => state.addMessage);
   const selected = nodes.filter(n => (n as any).selected && n.type !== 'group');
   const selectedIds = new Set(selected.map(n => n.id));
   const internalEdges = edges.filter(e => selectedIds.has(e.source) && selectedIds.has(e.target));
@@ -141,7 +144,11 @@ const MacroDialog: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 };
 
 export const NodeGraph: React.FC = () => {
-  const { nodes, edges, onNodesChange, onEdgesChange, onConnect } = useStore();
+  const nodes = useStore(state => state.nodes);
+  const edges = useStore(state => state.edges);
+  const onNodesChange = useStore(state => state.onNodesChange);
+  const onEdgesChange = useStore(state => state.onEdgesChange);
+  const onConnect = useStore(state => state.onConnect);
   const graphFitCount = useStore(state => state.graphFitCount);
   const [macroDialogOpen, setMacroDialogOpen] = useState(false);
   const selectedCount = useMemo(() => nodes.filter(n => (n as any).selected).length, [nodes]);

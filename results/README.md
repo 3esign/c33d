@@ -50,10 +50,10 @@ Each published row **must** carry: `model`, `modelVersion`, `provider`, `date`, 
 
 ## Submitting Results
 
-1. Run the local eval harness (`npm run eval` — coming with eval upgrade Phase 1).
-2. Save your result as `results/YYYY-MM-DD-model-provider.json`.
-3. Open a PR. The schema is validated automatically by CI.
+1. Run the eval suite from the in-browser **Eval panel** (`src/components/EvalPanel.tsx`, driving `runEvalSuite` in `src/ai/evalHarness.ts` over the fixed `EVAL_PROMPTS` set). There is no `npm run eval` script; the harness runs inside the app against your configured provider.
+2. Assemble your run into the schema above and save it as `results/YYYY-MM-DD-model-provider.json`.
+3. Open a PR. The maintainer reviews submissions against the schema by hand — there is no automated CI validation yet.
 
 ## Results Matrix
 
-*Cross-provider matrix will be published once the eval upgrade (version stamps, protocol fields, and n=3 repeats) is finalized. Publishing single-run numbers invites fair criticism that rankings are noise.*
+*No results are published yet — this directory currently contains only the protocol and schema. The cross-provider matrix will be published once the eval upgrade (version stamps, protocol fields, and n=3 repeats) is finalized. Publishing single-run numbers invites fair criticism that rankings are noise.*

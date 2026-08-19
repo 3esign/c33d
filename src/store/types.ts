@@ -12,7 +12,13 @@ export type LeafReport = {
 
 export type GeometryReport = {
   leaves: LeafReport[];
+  /** Thrown/real failures only (SPEC-3). */
   nodeErrors: { id: string; error: string; cls?: string }[];
+  /** Informational executor warn() lines — never failures (SPEC-3). */
+  nodeWarnings?: { id: string; message: string }[];
+  /** Eval-protocol id (SPEC-1): stamped by the store when the report lands, so
+   *  late async percepts (perturbation) can be matched to the graph they measured. */
+  evalId?: string;
   numbers: Record<string, number | number[]>;
   scene: { min: number[]; max: number[]; size: number[] } | null;
   meshedLeafCount: number;
@@ -39,6 +45,7 @@ export type GeometryReport = {
     string,
     {
       matchedCount: number;
+      totalCount?: number;
       elements: {
         centroid: number[];
         areaOrLength: number;
@@ -63,6 +70,8 @@ export type NudgeCandidate = {
 };
 
 export type EvalResultEntry = {
+  /** Stable identity for UI keys/expansion; stamped by addEvalResult. */
+  id?: string;
   timestamp: string;
   model: string;
   promptId: string;

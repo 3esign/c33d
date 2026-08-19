@@ -3,7 +3,7 @@
 This document outlines the core architecture, constraints, coordinate systems, and design conventions for the AI Architect graph editor application. All AI coding assistants and graph generation agents working on this project must adhere strictly to these rules.
 
 ## 1. Node Library & Handles
-The graph engine supports the following nodes defined in [NodeDefinitions.ts](file:///C:/Users/treed/OneDrive/Desktop/C3D/src/nodes/NodeDefinitions.ts). NOTE: this file had drifted behind the actual node registry — the live system prompt (`condensedNodeLibrary()` in `agent.ts`) is generated dynamically from `NODE_LIBRARY` and is always authoritative for what the model sees; this doc is the human/dev-facing reference and must be kept in sync manually.
+The graph engine supports the following nodes defined in [NodeDefinitions.ts](../src/nodes/NodeDefinitions.ts). NOTE: this file had drifted behind the actual node registry — the live system prompt (`condensedNodeLibrary()` in `agent.ts`) is generated dynamically from `NODE_LIBRARY` and is always authoritative for what the model sees; this doc is the human/dev-facing reference and must be kept in sync manually.
 - **Primitives**: `Box`, `Sphere`, `Cylinder`, `Cone`, `Ellipsoid`, `Torus`, `Plane`, `Text3D`.
   - Primitives only have output handles named `"solid"`.
   - `Plane` represents a true 2D flat surface. Do NOT use a thin `Box` to simulate a flat plane.

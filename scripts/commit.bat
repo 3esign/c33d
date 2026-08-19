@@ -17,7 +17,7 @@ if errorlevel 1 (
 if exist ".git\index.lock" (
   echo.
   echo   A git lock file is present - git will refuse to commit.
-  echo   Run option [7] in the menu first, then come back.
+  echo   Run option [L] in the menu first, then come back.
   echo.
   pause
   exit /b 1
@@ -33,13 +33,16 @@ git --no-pager diff --stat
 echo.
 
 set "src="
-set /p src=Stage the source changes (src, tests, docs, scripts)? [Y/n]: 
+set /p src=Stage all changes (everything except ignored files)? [Y/n]: 
 if /i "!src!"=="n" (
   echo   Nothing staged. Stopping.
   pause
-  exit /b 0
+  exit /b 2
 )
-git add src tests docs scripts .agents C3D.bat package.json package-lock.json 2>nul
+REM Stage everything: .gitignore already protects data/, logs and scratch.
+REM (The old hardcoded whitelist silently left top-level files - vite.config.ts,
+REM  .gitignore, .gitattributes - uncommitted for weeks.)
+git add -A -- . ":(exclude)JSONs"
 
 echo.
 set "exports="
@@ -61,11 +64,14 @@ echo   (JSONs excluded from this list - they are staged, just not shown)
 echo.
 
 set "msg="
-echo Commit message - press Enter to use the default below.
-echo   fix: accept inline literals in reference args, N-ary compound/union,
-echo        report all IR body errors per attempt, add run abort + Stop button
+echo Commit message - describe THIS change. Empty input aborts.
 set /p msg=Message: 
-if "!msg!"=="" set "msg=fix: accept inline literals in reference args, N-ary compound/union, report all IR body errors per attempt, add run abort + Stop button"
+if "!msg!"=="" (
+  echo.
+  echo   A commit message is required. Nothing was committed.
+  pause
+  exit /b 1
+)
 
 git commit -m "!msg!"
 if errorlevel 1 (
@@ -79,7 +85,7 @@ echo.
 set "push="
 set /p push=Push to origin/main now? [Y/n]: 
 if /i "!push!"=="n" (
-  echo   Committed locally. Push later with option [4] again, or: git push
+  echo   Committed locally. Push later with option [7] again, or: git push
   pause
   exit /b 0
 )
@@ -95,6 +101,6 @@ echo.
 echo   Committed and pushed.
 echo.
 echo   REMINDER: pushing does NOT update c33d.vercel.app - that site is
-echo   deployed from the CLI, not connected to GitHub. Use option [5].
+echo   deployed from the CLI, not connected to GitHub. Use option [8].
 echo.
 pause

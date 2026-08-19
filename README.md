@@ -1,10 +1,9 @@
 # C33D
 **AI that designs editable 3D models — parametric CAD you can talk to.**
 
-> **Research Preview** — works today, evolving fast. [Try the live demo](#) or run it locally in 4 commands.
+> **Research Preview** — works today, evolving fast. [Try the live demo](https://c33d.vercel.app) or run it locally in 4 commands.
 
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
-[![TypeScript](https://img.shields.io/badge/TypeScript-89%25-blue)](src/)
 [![Research Preview](https://img.shields.io/badge/Status-Research%20Preview-orange)](#status--roadmap)
 
 **[Try it](#quickstart) · [How it works](#how-it-works) · [Research](docs/research/README.md) · [Contributing](CONTRIBUTING.md)**
@@ -17,9 +16,11 @@ C33D is a browser-based, AI-native parametric CAD system. You describe an object
 
 The underlying engine runs **OpenCascade** (via [`replicad`](https://replicad.xyz)) in WebAssembly — producing robust B-Rep solids exportable directly to **STEP** for manufacturing or 3D printing.
 
-C33D uses a **Bring Your Own Key (BYOK)** architecture. API keys are entered once in the UI, stored exclusively in your browser's local storage, and never sent anywhere except the AI provider you chose. Nothing phones home.
+C33D uses a **Bring Your Own Key (BYOK)** architecture. API keys are entered once in the UI, stored exclusively in your browser's local storage, and never sent anywhere except the AI provider you chose. Nothing phones home. One caveat for the dev build: when run via `npm run dev`, the local dev server records conversations and runs to local files (`data/`, `intelligence_log.json`) for the research corpus — nothing leaves your machine, but be aware of it before pasting sensitive text into the chat.
 
 ## Quickstart
+
+Requires Node ≥ 22.13.
 
 ```bash
 git clone https://github.com/3esign/c33d.git
@@ -28,7 +29,7 @@ npm install
 npm run dev
 ```
 
-Then open **http://localhost:5173** and enter your Gemini or OpenAI API key. *Or use the [hosted live demo](#).*
+Then open **http://localhost:5173** and enter your Gemini or OpenAI API key. *Or use the [hosted live demo](https://c33d.vercel.app).*
 
 ## How it works
 
@@ -50,15 +51,17 @@ Then open **http://localhost:5173** and enter your Gemini or OpenAI API key. *Or
 | **Runs in browser, no install** | ✅ | ❌ | ❌ | ✅ (SaaS) | ❌ |
 | **Model-agnostic (BYOK, Ollama)** | ✅ | — | — | ❌ vendor-locked | varies |
 | **AI feedback loop (percepts + auto-repair)** | ✅ | — | — | internal / closed | ❌ |
-| **Self-improving knowledge base** | ✅ human-gated | — | — | closed | ❌ |
+| **Self-improving knowledge base** | ✅ human-gated (dev build) | — | — | closed | ❌ |
 | **Evaluation of parametric integrity** | ✅ (unique metric) | — | — | ❌ | ❌ |
+
+*(dev build): the knowledge library persists through the local dev-server store; the static hosted demo does not durably save it.*
 
 ## The research angle
 
 C33D is also an open research platform for **parametric design intelligence**:
 
 1. **The Knowledge Loop** — The agent saves verified successful designs as few-shot examples, organically extending its own vocabulary based on human validation.
-2. **Evaluation Methodology** — Unlike static text-to-CAD benchmarks (which measure if a shape *compiles*), our [eval suite](results/README.md) scores models on **proportional integrity under parameter perturbation**: does the design logic survive when slider values change? Does a car's wheelbase stretch coherently when you double the chassis length?
+2. **Evaluation Methodology** — Unlike static text-to-CAD benchmarks (which measure if a shape *compiles*), our [eval suite](results/README.md) scores models on **proportional integrity under parameter perturbation**: does the design logic survive when slider values change? Does a car's wheelbase stretch coherently when you double the chassis length? To be plain about where this stands: the first public eval results are still pending — `results/` currently contains only the protocol and schema, no published runs.
 
 See the [Research Directory](docs/research/README.md) for the foundational design documents (proportional coherence, sub-shape editing, vector/curve toolkit, node expansion, and eval upgrade plans).
 

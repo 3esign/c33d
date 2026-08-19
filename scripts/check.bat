@@ -28,16 +28,14 @@ echo ===============================================================
 echo   [3/3]  Test suite  (npm test)
 echo ===============================================================
 call npm test
+if errorlevel 1 goto fail
+echo   PASS
 
 echo.
 echo ===============================================================
-echo   Typecheck and build passed.
+echo   Typecheck, build and test suite all passed.
 echo.
-echo   About the test count: test_flower_integration and test_nonuniform
-echo   fail in some environments because of the OpenCascade WASM kernel,
-echo   not because of application code. They failed the same way BEFORE
-echo   the Jul-25 changes. Everything else should say PASS - in particular
-echo   test_ir_ref_coercion (39 contracts) and test_run_abort (24).
+echo   If any test fails, fix it before deploying.
 echo ===============================================================
 echo.
 pause
