@@ -187,5 +187,7 @@ export interface SkillDef {
   doc: string;
   args: Record<string, SkillArg>;
   returns: IrType;
+  /** Preferred skeleton-derived alternative (e.g. 'point → circle → extrude'). */
+  prefer?: string;
   expand(ctx: ExpandCtx): ValueRef;
 }

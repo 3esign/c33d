@@ -118,3 +118,32 @@ export const RING_OF_SPHERES_IR: IrProgram = {
     { ref: '$balls', color: '#f59e0b' },
   ],
 };
+
+// Point-first derivation pattern: flanged cylinder constructed entirely from
+// skeletal curves, extrusion, and instanced cutter operations.
+export const FLANGED_CYLINDER_IR: IrProgram = {
+  intent: 'Flanged cylinder built point-first: circular profile sketches extruded and combined with bolt hole cuts.',
+  params: [
+    { name: 'shaftRadius', value: 5, min: 1, max: 20 },
+    { name: 'totalHeight', value: 30, min: 10, max: 100 },
+    { name: 'flangeRadius', value: 10, min: 5, max: 40 },
+    { name: 'flangeThickness', value: 4, min: 1, max: 15 },
+  ],
+  body: [
+    { let: 'shaftProfile', op: 'circle', args: { radius: 'shaftRadius' } },
+    { let: 'shaft', op: 'extrude', args: { curve: '$shaftProfile', height: 'totalHeight' } },
+    { let: 'flangeProfile', op: 'circle', args: { radius: 'flangeRadius' } },
+    { let: 'flangeBase', op: 'extrude', args: { curve: '$flangeProfile', height: 'flangeThickness' } },
+    { let: 'boltCircle', op: 'circle', args: { radius: '(shaftRadius + flangeRadius) * 0.5' } },
+    { let: 'boltPts', op: 'divide', args: { curve: '$boltCircle', count: 6 } },
+    { let: 'holeProfile', op: 'circle', args: { radius: 'shaftRadius * 0.2' } },
+    { let: 'holeCutter', op: 'extrude', args: { curve: '$holeProfile', height: 'flangeThickness * 1.5' } },
+    { let: 'cutters', op: 'instances', args: { shape: '$holeCutter', points: '$boltPts' } },
+    { let: 'flange', op: 'difference', args: { a: '$flangeBase', b: '$cutters' } },
+    { let: 'assembly', op: 'union', args: { a: '$flange', b: '$shaft' } },
+  ],
+  emit: [
+    { ref: '$assembly', color: '#64748b' },
+  ],
+};
+

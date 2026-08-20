@@ -442,6 +442,7 @@ export const SKILLS: Record<string, SkillDef> = {
   box: {
     name: 'box',
     doc: 'box primitive (width, length, height); optional center point places it directly',
+    prefer: 'point → rect → extrude',
     args: { width: NUMR, length: NUMR, height: NUMR, center: { kind: 'point' } },
     returns: 'solid',
     expand: (ctx) => solid(ctx, ctx.node('Box', {
@@ -452,6 +453,7 @@ export const SKILLS: Record<string, SkillDef> = {
   sphere: {
     name: 'sphere',
     doc: 'sphere primitive; optional center point places it directly (no translate needed)',
+    prefer: 'point → arc → revolve or ellipsoid',
     args: { radius: NUMR, center: { kind: 'point' } },
     returns: 'solid',
     expand: (ctx) => solid(ctx, ctx.node('Sphere', {
@@ -462,6 +464,7 @@ export const SKILLS: Record<string, SkillDef> = {
   cylinder: {
     name: 'cylinder',
     doc: 'cylinder primitive; optional center point + axis vector place and tilt it (axis replaces rotate-90)',
+    prefer: 'point → circle → extrude',
     args: { radius: NUMR, height: NUMR, center: { kind: 'point' }, axis: { kind: 'vector' } },
     returns: 'solid',
     expand: (ctx) => solid(ctx, ctx.node('Cylinder', {
@@ -472,6 +475,7 @@ export const SKILLS: Record<string, SkillDef> = {
   cone: {
     name: 'cone',
     doc: 'cone/frustum primitive (radius1 bottom, radius2 top); optional center point + axis vector place and tilt it',
+    prefer: 'points → circle1 + circle2 → loft',
     args: { radius1: NUMR, radius2: NUM, height: NUMR, center: { kind: 'point' }, axis: { kind: 'vector' } },
     returns: 'solid',
     expand: (ctx) => solid(ctx, ctx.node('Cone', {
@@ -1427,14 +1431,14 @@ export function resolveSkill(op: string): SkillDef | undefined {
   return SKILLS[op] ?? SKILLS[SKILL_ALIASES[op]];
 }
 
-/** Compact catalog for the system prompt / few-shot context. */
 export function skillCatalogText(): string {
   const lines: string[] = [];
   for (const s of Object.values(SKILLS)) {
     const sig = Object.entries(s.args)
       .map(([n, a]) => (a.required ? n : `${n}?`))
       .join(', ');
-    lines.push(`${s.name}(${sig}) -> ${s.returns} — ${s.doc}`);
+    const preferStr = s.prefer ? ` [prefer: ${s.prefer}]` : '';
+    lines.push(`${s.name}(${sig}) -> ${s.returns}${preferStr} — ${s.doc}`);
   }
   return lines.join('\n');
 }

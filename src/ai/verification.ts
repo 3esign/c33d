@@ -380,7 +380,16 @@ export function formatGeometryReport(report: GeometryReport | null, evalError: s
   try {
     const { nodes: gNodes, edges: gEdges } = useStore.getState();
     const gm = computeGraphShapeMetrics(gNodes as any[], gEdges as any[]);
-    lines.push(`Graph shape: derivation ratio ${gm.derivationRatio.toFixed(2)} (geometry nodes fed by upstream geometry), skeleton nodes on leaf paths ${gm.skeletonNodes}, magic numbers ${gm.magicNumberCount}, max chain depth ${gm.maxDepth}, edges/node ${gm.edgeNodeRatio.toFixed(2)}. Raise derivation by building from curves/points (LoftCurves, DivideCurve→InstanceOnPoints, Pipe "path") instead of hardcoded positions.`);
+    let shapeLine = `Graph shape: derivation ratio ${gm.derivationRatio.toFixed(2)} (geometry nodes fed by upstream geometry), skeleton nodes on leaf paths ${gm.skeletonNodes}, magic numbers ${gm.magicNumberCount}, max chain depth ${gm.maxDepth}, edges/node ${gm.edgeNodeRatio.toFixed(2)}.`;
+    if (gm.derivationRatio < 0.3) {
+      shapeLine += ` ⚠️ LOW DERIVATION (${gm.derivationRatio.toFixed(2)} < 0.30): the model is a primitive collage with hardcoded geometry. Rebuild from skeletal curves/points (point → circle → Extrude/Loft/Pipe, DivideCurve → InstanceOnPoints) instead of disconnected atomic solids.`;
+    } else if (gm.derivationRatio < 0.5) {
+      shapeLine += ` Moderate derivation (${gm.derivationRatio.toFixed(2)} < 0.50): consider raising interconnectivity by deriving downstream solids from upstream profiles and anchor points.`;
+    }
+    if (gm.magicNumberCount > 5) {
+      shapeLine += ` ⚠️ High magic numbers (${gm.magicNumberCount} > 5): replace hardcoded literal dimensions with formulas derived from top-level design sliders.`;
+    }
+    lines.push(shapeLine);
   } catch { /* metrics are best-effort */ }
   // S1 (Jul-20): per-leaf placement provenance — the in-loop measurement of
   // "placement: RELATIVE, never arithmetic" (rule 5).
