@@ -1156,4 +1156,7 @@ export type {
   PerformanceLogEntry,
   AgentSlot,
   GraphTimelineEntry,
+  GroupIntention,
+  GroupNodeData,
+  C3dProject,
 } from './types';

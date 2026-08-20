@@ -748,6 +748,25 @@ export const SKILLS: Record<string, SkillDef> = {
       return ctx.combine(all, 'solid');
     },
   },
+  group: {
+    name: 'group',
+    doc: 'organize nodes into an intention container (part, assembly, idea, skeleton, driver)',
+    args: {
+      label: { kind: 'string', required: true },
+      intention: { kind: 'string', doc: 'part | assembly | idea | skeleton | driver' },
+      members: { kind: 'solid', doc: 'list of $refs or parts to group' },
+    },
+    returns: 'solid',
+    expand: (ctx) => {
+      const label = ctx.str('label') || 'Group';
+      const intention = ctx.str('intention') || 'part';
+      const listed = ctx.refList('members', 'solid', 'curve', 'point', 'number') ?? [];
+      const groupId = ctx.node('group', {
+        params: { label, intention, memberCount: listed.length },
+      });
+      return ctx.out(groupId, 'solid', 'solid');
+    },
+  },
 
   // --- Architectural Skills (12) ---
   multi_loft: {

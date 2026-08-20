@@ -8,12 +8,14 @@ import {
 } from '@xyflow/react';
 import type { ReactFlowInstance } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
-import { Package, Maximize } from 'lucide-react';
+import { Package, Maximize, Layers } from 'lucide-react';
 import { useStore, generateUUID } from '../store/useStore';
 import { NODE_LIBRARY } from '../nodes/NodeDefinitions';
 import type { MacroExposedParam } from '../nodes/NodeDefinitions';
+import type { GroupIntention } from '../store/types';
 import { ParametricNode } from './ParametricNode';
 import { GroupNode } from './GroupNode';
+import { INTENTION_CONFIG } from '../utils/groupConfig';
 import { TimelinePanel } from './TimelinePanel';
 
 // Register every library node type + the group container
@@ -144,6 +146,130 @@ const MacroDialog: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   );
 };
 
+const GroupDialog: React.FC<{ onClose: () => void }> = ({ onClose }) => {
+  const nodes = useStore(state => state.nodes);
+  const setNodes = useStore(state => state.setNodes);
+  const evaluateGraph = useStore(state => state.evaluateGraph);
+  const selected = nodes.filter(n => (n as any).selected && n.type !== 'group');
+  const selectedIds = new Set(selected.map(n => n.id));
+
+  const [name, setName] = useState('');
+  const [intention, setIntention] = useState<GroupIntention>('part');
+
+  const createGroup = () => {
+    if (!name.trim() || selected.length < 2) return;
+    const groupId = `group_${generateUUID().slice(0, 8)}`;
+
+    let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+    for (const n of selected) {
+      const nx = n.position.x;
+      const ny = n.position.y;
+      const nw = (n.style?.width as number) || (n as any).width || 180;
+      const nh = (n.style?.height as number) || (n as any).height || 180;
+      minX = Math.min(minX, nx);
+      minY = Math.min(minY, ny);
+      maxX = Math.max(maxX, nx + nw);
+      maxY = Math.max(maxY, ny + nh);
+    }
+    const pad = 30;
+    const groupX = minX - pad;
+    const groupY = minY - pad - 35;
+    const groupW = Math.max(260, (maxX - minX) + pad * 2);
+    const groupH = Math.max(180, (maxY - minY) + pad * 2 + 35);
+
+    const groupNode = {
+      id: groupId,
+      type: 'group',
+      position: { x: groupX, y: groupY },
+      style: { width: groupW, height: groupH },
+      data: {
+        label: name.trim(),
+        intention,
+        collapsed: false,
+        expandedWidth: groupW,
+        expandedHeight: groupH,
+      },
+    };
+
+    const updatedNodes = nodes.map(n => {
+      if (selectedIds.has(n.id)) {
+        return {
+          ...n,
+          parentId: groupId,
+          position: {
+            x: n.position.x - groupX,
+            y: n.position.y - groupY,
+          },
+          selected: false,
+        };
+      }
+      return n;
+    });
+
+    setNodes([groupNode, ...updatedNodes]);
+    evaluateGraph();
+    onClose();
+  };
+
+  const intentionTypes: GroupIntention[] = ['part', 'assembly', 'idea', 'skeleton', 'driver'];
+
+  return (
+    <div className="absolute inset-0 z-50 bg-slate-950/70 flex items-center justify-center p-4" onClick={onClose}>
+      <div className="bg-slate-800 border border-slate-600 rounded-xl p-5 w-[22rem] space-y-4 shadow-2xl" onClick={e => e.stopPropagation()}>
+        <h3 className="text-sm font-semibold text-slate-100 flex items-center gap-1.5">
+          <Layers size={16} className="text-blue-400" /> Group Selected Nodes ({selected.length})
+        </h3>
+        
+        <div>
+          <label className="text-[11px] font-medium text-slate-300 block mb-1">Group Name</label>
+          <input
+            value={name}
+            onChange={e => setName(e.target.value)}
+            placeholder="e.g. Petal Bloom, Chassis Assembly"
+            autoFocus
+            className="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-blue-500"
+          />
+        </div>
+
+        <div>
+          <label className="text-[11px] font-medium text-slate-300 block mb-1.5">Semantic Intention</label>
+          <div className="grid grid-cols-2 gap-1.5">
+            {intentionTypes.map(t => {
+              const cfg = INTENTION_CONFIG[t];
+              const Icon = cfg.icon;
+              const isSelected = intention === t;
+              return (
+                <button
+                  key={t}
+                  type="button"
+                  onClick={() => setIntention(t)}
+                  className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border text-xs font-medium transition-colors ${
+                    isSelected ? 'bg-blue-600 border-blue-400 text-white' : 'bg-slate-900/60 border-slate-700 text-slate-300 hover:border-slate-500'
+                  }`}
+                >
+                  <Icon size={12} />
+                  <span>{cfg.label}</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        <div className="flex justify-end gap-2 pt-2 border-t border-slate-700">
+          <button onClick={onClose} className="text-xs px-3 py-1.5 rounded-lg bg-slate-700 text-slate-300 hover:bg-slate-650">Cancel</button>
+          <button
+            onClick={createGroup}
+            disabled={!name.trim()}
+            className="text-xs px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-medium disabled:opacity-40"
+          >
+            Create Group
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export const NodeGraph: React.FC = () => {
   const nodes = useStore(state => state.nodes);
   const edges = useStore(state => state.edges);
@@ -152,7 +278,8 @@ export const NodeGraph: React.FC = () => {
   const onConnect = useStore(state => state.onConnect);
   const graphFitCount = useStore(state => state.graphFitCount);
   const [macroDialogOpen, setMacroDialogOpen] = useState(false);
-  const selectedCount = useMemo(() => nodes.filter(n => (n as any).selected).length, [nodes]);
+  const [groupDialogOpen, setGroupDialogOpen] = useState(false);
+  const selectedCount = useMemo(() => nodes.filter(n => (n as any).selected && n.type !== 'group').length, [nodes]);
 
   // Zoom-to-fit for the NODE GRAPH (Jul 22): big AI-generated graphs used to be
   // impossible to see whole — React Flow's default minZoom (0.5) blocked
@@ -223,16 +350,28 @@ export const NodeGraph: React.FC = () => {
       </button>
 
       {selectedCount >= 2 && (
-        <button
-          onClick={() => setMacroDialogOpen(true)}
-          className="absolute top-3 right-3 z-40 bg-amber-600/90 hover:bg-amber-600 text-white text-xs font-medium px-3 py-1.5 rounded-lg shadow-lg flex items-center gap-1.5"
-          title="Collapse the selected nodes into a reusable macro"
-        >
-          <Package size={13} />
-          Collapse to Macro ({selectedCount})
-        </button>
+        <div className="absolute top-3 right-3 z-40 flex items-center gap-2">
+          <button
+            onClick={() => setGroupDialogOpen(true)}
+            className="bg-blue-600/90 hover:bg-blue-600 text-white text-xs font-medium px-3 py-1.5 rounded-lg shadow-lg flex items-center gap-1.5 border border-blue-500"
+            title="Group the selected nodes with semantic intention"
+          >
+            <Layers size={13} />
+            Group Selection ({selectedCount})
+          </button>
+
+          <button
+            onClick={() => setMacroDialogOpen(true)}
+            className="bg-amber-600/90 hover:bg-amber-600 text-white text-xs font-medium px-3 py-1.5 rounded-lg shadow-lg flex items-center gap-1.5"
+            title="Collapse the selected nodes into a reusable macro"
+          >
+            <Package size={13} />
+            Collapse to Macro ({selectedCount})
+          </button>
+        </div>
       )}
 
+      {groupDialogOpen && <GroupDialog onClose={() => setGroupDialogOpen(false)} />}
       {macroDialogOpen && <MacroDialog onClose={() => setMacroDialogOpen(false)} />}
       <TimelinePanel />
     </div>

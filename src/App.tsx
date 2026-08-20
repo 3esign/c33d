@@ -4,7 +4,7 @@ import { NodeGraph } from './components/NodeGraph';
 import { Viewport3D } from './components/Viewport3D';
 import { SaveExampleModal } from './components/SaveExampleModal';
 import { SessionNote } from './components/SessionNote';
-import { useStore } from './store/useStore';
+import { useStore, generateUUID } from './store/useStore';
 
 function App() {
   const initializeGuidelines = useStore(state => state.initializeGuidelines);
@@ -25,6 +25,35 @@ function App() {
     initializeGuidelines();
     initializeExamples();
     initializeMacros();
+
+    // Check for ?load=<url> parameter on startup
+    const searchParams = new URLSearchParams(window.location.search);
+    const loadUrl = searchParams.get('load');
+    if (loadUrl) {
+      let targetUrl = loadUrl.trim();
+      if (targetUrl.includes('github.com') && targetUrl.includes('/blob/')) {
+        targetUrl = targetUrl.replace('github.com', 'raw.githubusercontent.com').replace('/blob/', '/');
+      }
+      fetch(targetUrl)
+        .then(r => r.json())
+        .then(data => {
+          const nodes = Array.isArray(data.nodes) ? data.nodes : (data.graph?.nodes || []);
+          const edges = Array.isArray(data.edges) ? data.edges : (data.graph?.edges || []);
+          if (nodes.length > 0) {
+            useStore.getState().setNodes(nodes);
+            useStore.getState().setEdges(edges);
+            useStore.getState().evaluateGraph();
+            useStore.getState().addMessage({
+              id: generateUUID(),
+              role: 'system',
+              content: `Auto-loaded project "${data.name || loadUrl}" with ${nodes.length} nodes from URL parameter.`,
+            });
+          }
+        })
+        .catch(err => {
+          console.error('Failed to auto-load ?load= URL:', err);
+        });
+    }
   }, [initializeGuidelines, initializeExamples, initializeMacros]);
 
   // Re-clamp the split sizes when the window shrinks/grows — otherwise a

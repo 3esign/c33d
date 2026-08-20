@@ -2,8 +2,12 @@ import React, { Suspense, useMemo, useEffect, useRef, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Grid, Bounds, useBounds } from '@react-three/drei';
 import * as THREE from 'three';
-import { Maximize, Star, Download } from 'lucide-react';
+import { Maximize, Star, Download, Sparkles, Upload, Globe } from 'lucide-react';
 import { Outliner } from './Outliner';
+import { ControlsPanel } from './ControlsPanel';
+import { ImportDialog } from './ImportDialog';
+import { PublishModal } from './PublishModal';
+import { GalleryModal } from './GalleryModal';
 import { useStore } from '../store/useStore';
 import type { SceneObject } from '../store/useStore';
 import { registerViewportCanvas } from '../utils/snapshot';
@@ -109,6 +113,9 @@ export const Viewport3D: React.FC = () => {
   const lastEvaluationError = useStore(state => state.lastEvaluationError);
   const [showExport, setShowExport] = useState(false);
   const [exportComment, setExportComment] = useState('');
+  const [showImport, setShowImport] = useState(false);
+  const [showPublish, setShowPublish] = useState(false);
+  const [showGallery, setShowGallery] = useState(false);
 
   const doExport = () => {
     downloadSessionExport(exportComment);
@@ -184,37 +191,72 @@ export const Viewport3D: React.FC = () => {
         <OrbitControls makeDefault />
       </Canvas>
 
-      {/* Floating Action Buttons */}
-      <div className="absolute top-4 left-4 flex items-center gap-2 z-50 pointer-events-auto">
+      {/* Floating Action Buttons Toolbar */}
+      <div className="absolute top-4 left-4 flex items-center gap-1.5 z-50 pointer-events-auto flex-wrap max-w-[calc(100%-20rem)]">
         <button
           onClick={zoomToFit}
-          className="bg-slate-800/90 hover:bg-slate-750 text-slate-200 font-medium px-3 py-1.5 rounded-lg border border-slate-700 shadow-lg flex items-center gap-1.5 text-xs transition-colors cursor-pointer"
+          className="bg-slate-800/90 hover:bg-slate-750 text-slate-200 font-medium px-2.5 py-1.5 rounded-lg border border-slate-700 shadow-lg flex items-center gap-1.5 text-xs transition-colors cursor-pointer"
           title="Zoom to Fit (F)"
         >
-          <Maximize size={14} />
-          Zoom to Fit
+          <Maximize size={13} />
+          Fit
+        </button>
+
+        <button
+          onClick={() => setShowGallery(true)}
+          className="bg-purple-900/80 hover:bg-purple-800 text-purple-200 font-medium px-2.5 py-1.5 rounded-lg border border-purple-700/80 shadow-lg flex items-center gap-1.5 text-xs transition-colors cursor-pointer"
+          title="Browse Community and Curated CAD Gallery"
+        >
+          <Sparkles size={13} className="text-purple-400" />
+          Gallery
+        </button>
+
+        <button
+          onClick={() => setShowImport(true)}
+          className="bg-slate-800/90 hover:bg-slate-750 text-slate-200 font-medium px-2.5 py-1.5 rounded-lg border border-slate-700 shadow-lg flex items-center gap-1.5 text-xs transition-colors cursor-pointer"
+          title="Import .c3d.json file, URL, or JSON paste"
+        >
+          <Upload size={13} />
+          Import
+        </button>
+
+        <button
+          onClick={() => setShowPublish(true)}
+          className="bg-slate-800/90 hover:bg-slate-750 text-slate-200 font-medium px-2.5 py-1.5 rounded-lg border border-slate-700 shadow-lg flex items-center gap-1.5 text-xs transition-colors cursor-pointer"
+          title="Publish and Export metadata-rich .c3d.json project"
+        >
+          <Globe size={13} className="text-emerald-400" />
+          Publish
         </button>
 
         <button
           onClick={() => setShowExport(true)}
-          className="bg-slate-800/90 hover:bg-slate-750 text-slate-200 font-medium px-3 py-1.5 rounded-lg border border-slate-700 shadow-lg flex items-center gap-1.5 text-xs transition-colors cursor-pointer"
+          className="bg-slate-800/90 hover:bg-slate-750 text-slate-200 font-medium px-2.5 py-1.5 rounded-lg border border-slate-700 shadow-lg flex items-center gap-1.5 text-xs transition-colors cursor-pointer"
           title="Export the graph, conversation, plan/genome and geometry report as one JSON file"
         >
-          <Download size={14} />
-          Export JSON
+          <Download size={13} />
+          Session
         </button>
 
         {hasNodes && !isSystemError(lastEvaluationError) && (
           <button
             onClick={() => openSaveModal(null)}
-            className="bg-emerald-700/90 hover:bg-emerald-600 text-white font-medium px-3 py-1.5 rounded-lg border border-emerald-600 shadow-lg flex items-center gap-1.5 text-xs transition-colors cursor-pointer"
+            className="bg-emerald-700/90 hover:bg-emerald-600 text-white font-medium px-2.5 py-1.5 rounded-lg border border-emerald-600 shadow-lg flex items-center gap-1.5 text-xs transition-colors cursor-pointer"
             title="Save this design (graph + prompts + comment) as a verified successful example — it becomes AI knowledge"
           >
-            <Star size={14} />
-            Save as Successful
+            <Star size={13} />
+            Save Success
           </button>
         )}
       </div>
+
+      {/* Floating Interactive Controls Panel */}
+      <ControlsPanel />
+
+      {/* Modals */}
+      <ImportDialog isOpen={showImport} onClose={() => setShowImport(false)} />
+      <PublishModal isOpen={showPublish} onClose={() => setShowPublish(false)} />
+      <GalleryModal isOpen={showGallery} onClose={() => setShowGallery(false)} />
 
       {showExport && (
         <div

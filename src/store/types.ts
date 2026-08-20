@@ -182,3 +182,27 @@ export type AgentSlot = {
   enableVisionVerification?: boolean; // send viewport snapshots to vision models for a verification pass
   disableToolCalling?: boolean;       // force the legacy single-shot JSON protocol
 };
+
+export type GroupIntention = 'part' | 'assembly' | 'idea' | 'skeleton' | 'driver';
+
+export interface GroupNodeData {
+  label: string;
+  intention?: GroupIntention;
+  collapsed?: boolean;
+  color?: string;
+  description?: string;
+}
+
+export interface C3dProject {
+  version: string;
+  name?: string;
+  description?: string;
+  author?: string;
+  tags?: string[];
+  thumbnail?: string;
+  createdAt?: string;
+  nodes: any[];
+  edges: any[];
+  sliders?: Record<string, number>;
+}
+
