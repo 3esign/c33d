@@ -219,6 +219,10 @@ type AppState = {
   // Graph timeline: per-turn history of the graph for session exports.
   graphTimeline: GraphTimelineEntry[];
   recordGraphSnapshot: (trigger: string, label: string, details?: string[]) => void;
+  restoreGraphSnapshot: (index: number) => void;
+  forkGraphBranch: (fromIndex: number, newBranchName?: string) => void;
+  activeBranchId: string;
+  setActiveBranchId: (branchId: string) => void;
 
   // Agent Guidelines (Continuous Knowledge Base)
   agentGuidelines: string;
@@ -823,6 +827,31 @@ export const useStore = create<AppState>()(
             model: agent?.model ?? null,
             provider: agent?.provider ?? null,
           });
+        },
+        activeBranchId: 'main',
+        setActiveBranchId: (branchId) => set({ activeBranchId: branchId }),
+        restoreGraphSnapshot: (index) => {
+          const s = get();
+          const entry = s.graphTimeline[index];
+          if (!entry || !Array.isArray(entry.nodes)) return;
+          set({
+            nodes: JSON.parse(JSON.stringify(entry.nodes)),
+            edges: JSON.parse(JSON.stringify(entry.edges)),
+          });
+          get().evaluateGraph();
+        },
+        forkGraphBranch: (fromIndex, newBranchName) => {
+          const s = get();
+          const entry = s.graphTimeline[fromIndex];
+          if (!entry || !Array.isArray(entry.nodes)) return;
+          const branchId = newBranchName || `branch-${Date.now().toString(36)}`;
+          set({
+            activeBranchId: branchId,
+            nodes: JSON.parse(JSON.stringify(entry.nodes)),
+            edges: JSON.parse(JSON.stringify(entry.edges)),
+          });
+          s.recordGraphSnapshot('branch-fork', `Forked branch: ${branchId}`);
+          get().evaluateGraph();
         },
         evaluateGraph: () => {
           // Debounce rapid re-evaluations (slider drags): trailing edge.

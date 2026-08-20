@@ -117,6 +117,7 @@ export type ChatMessage = {
 // entry, so a session export can be replayed step by step when analyzing what
 // a model did while "fixing" things.
 export type GraphTimelineEntry = {
+  id?: string;
   at: string;
   /** Number of user messages in the conversation when this was recorded. */
   turn: number;
@@ -138,6 +139,13 @@ export type GraphTimelineEntry = {
   };
   /** Dropped edges / validation issues tied to this exact application. */
   details?: string[];
+  reasoning?: string;
+  prompt?: string;
+  geometryReport?: any;
+  visionResults?: any;
+  branchId?: string;
+  parentId?: string;
+  durationMs?: number;
   nodes: any[];
   edges: any[];
 };

@@ -10,7 +10,12 @@ import { fileURLToPath } from 'url';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const defs = readFileSync(join(root, 'src/nodes/NodeDefinitions.ts'), 'utf8');
-const execs = readFileSync(join(root, 'src/worker/executors.ts'), 'utf8');
+let execs = readFileSync(join(root, 'src/worker/executors.ts'), 'utf8');
+for (const f of ['architectural.ts', 'organic.ts', 'engineering.ts', 'generative.ts', 'analysis.ts']) {
+  try {
+    execs += '\n' + readFileSync(join(root, 'src/worker/executors', f), 'utf8');
+  } catch { /* best effort */ }
+}
 const worker = readFileSync(join(root, 'src/worker/geometryWorker.ts'), 'utf8');
 
 const defTypes = [...defs.matchAll(/^\s{4}type: '([A-Za-z0-9]+)',$/gm)].map(m => m[1]);

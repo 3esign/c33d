@@ -14,6 +14,7 @@ import { NODE_LIBRARY } from '../nodes/NodeDefinitions';
 import type { MacroExposedParam } from '../nodes/NodeDefinitions';
 import { ParametricNode } from './ParametricNode';
 import { GroupNode } from './GroupNode';
+import { TimelinePanel } from './TimelinePanel';
 
 // Register every library node type + the group container
 const nodeTypes: Record<string, any> = Object.fromEntries(
@@ -233,6 +234,7 @@ export const NodeGraph: React.FC = () => {
       )}
 
       {macroDialogOpen && <MacroDialog onClose={() => setMacroDialogOpen(false)} />}
+      <TimelinePanel />
     </div>
   );
 };

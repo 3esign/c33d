@@ -744,6 +744,600 @@ export const SKILLS: Record<string, SkillDef> = {
       return ctx.combine(all, 'solid');
     },
   },
+
+  // --- Architectural Skills (12) ---
+  multi_loft: {
+    name: 'multi_loft',
+    doc: 'loft across 2+ section curves (curve1..curve8 or curve list)',
+    args: {
+      curve1: { kind: 'curve' }, curve2: { kind: 'curve' }, curve3: { kind: 'curve' }, curve4: { kind: 'curve' },
+      curve5: { kind: 'curve' }, curve6: { kind: 'curve' }, curve7: { kind: 'curve' }, curve8: { kind: 'curve' },
+      ruled: { kind: 'bool' }, closed: { kind: 'bool' },
+    },
+    returns: 'solid',
+    expand: (ctx) => solid(ctx, ctx.node('MultiLoft', {
+      params: { ruled: ctx.bool('ruled') ?? false, closed: ctx.bool('closed') ?? false },
+      inputs: {
+        curve1: ctx.refOpt('curve1', 'curve'), curve2: ctx.refOpt('curve2', 'curve'),
+        curve3: ctx.refOpt('curve3', 'curve'), curve4: ctx.refOpt('curve4', 'curve'),
+        curve5: ctx.refOpt('curve5', 'curve'), curve6: ctx.refOpt('curve6', 'curve'),
+        curve7: ctx.refOpt('curve7', 'curve'), curve8: ctx.refOpt('curve8', 'curve'),
+      }
+    }))
+  },
+  offset_curve: {
+    name: 'offset_curve',
+    doc: 'parallel inset or outset of a 2D planar curve',
+    args: { curve: { kind: 'curve', required: true }, distance: NUMR },
+    returns: 'curve',
+    expand: (ctx) => ctx.out(ctx.node('CurveOffset', {
+      params: { distance: ctx.num('distance') },
+      inputs: { curve: ctx.ref('curve', 'curve') }
+    }), 'curve', 'curve')
+  },
+  regular_polygon: {
+    name: 'regular_polygon',
+    doc: 'N-gon wire (sides 3..32) with corner filleting and star ratio',
+    args: { sides: NUM, radius: NUM, filletRadius: NUM, starRatio: NUM },
+    returns: 'curve',
+    expand: (ctx) => ctx.out(ctx.node('RegularPolygon', {
+      params: {
+        sides: ctx.numOpt('sides') ?? 6,
+        radius: ctx.numOpt('radius') ?? 10,
+        filletRadius: ctx.numOpt('filletRadius') ?? 0,
+        starRatio: ctx.numOpt('starRatio') ?? 1.0,
+      }
+    }), 'curve', 'curve')
+  },
+  floor_grid: {
+    name: 'floor_grid',
+    doc: 'multi-story architectural floor slabs and column grid',
+    args: { width: NUM, length: NUM, floors: NUM, floorHeight: NUM, slabThickness: NUM, columnRadius: NUM, columnSpacing: NUM },
+    returns: 'solid',
+    expand: (ctx) => solid(ctx, ctx.node('FloorGrid', {
+      params: {
+        width: ctx.numOpt('width') ?? 30, length: ctx.numOpt('length') ?? 40,
+        floors: ctx.numOpt('floors') ?? 4, floorHeight: ctx.numOpt('floorHeight') ?? 4,
+        slabThickness: ctx.numOpt('slabThickness') ?? 0.4, columnRadius: ctx.numOpt('columnRadius') ?? 0.35,
+        columnSpacing: ctx.numOpt('columnSpacing') ?? 8
+      }
+    }))
+  },
+  facade_divider: {
+    name: 'facade_divider',
+    doc: 'window mullion and curtain wall facade panel grid',
+    args: { width: NUM, height: NUM, uPanels: NUM, vPanels: NUM, frameThickness: NUM, glassDepth: NUM, mullionWidth: NUM },
+    returns: 'solid',
+    expand: (ctx) => solid(ctx, ctx.node('FacadeDivider', {
+      params: {
+        width: ctx.numOpt('width') ?? 20, height: ctx.numOpt('height') ?? 12,
+        uPanels: ctx.numOpt('uPanels') ?? 5, vPanels: ctx.numOpt('vPanels') ?? 3,
+        frameThickness: ctx.numOpt('frameThickness') ?? 0.2, glassDepth: ctx.numOpt('glassDepth') ?? 0.05,
+        mullionWidth: ctx.numOpt('mullionWidth') ?? 0.15
+      }
+    }))
+  },
+  stairs: {
+    name: 'stairs',
+    doc: 'parametric straight or spiral stair treads',
+    args: { type: { kind: 'string' }, steps: NUM, width: NUM, totalHeight: NUM, treadDepth: NUM, innerRadius: NUM },
+    returns: 'solid',
+    expand: (ctx) => solid(ctx, ctx.node('Stairs', {
+      params: {
+        type: ctx.str('type') ?? 'straight', steps: ctx.numOpt('steps') ?? 14,
+        width: ctx.numOpt('width') ?? 1.2, totalHeight: ctx.numOpt('totalHeight') ?? 2.8,
+        treadDepth: ctx.numOpt('treadDepth') ?? 0.28, innerRadius: ctx.numOpt('innerRadius') ?? 0.6
+      }
+    }))
+  },
+  roof_profile: {
+    name: 'roof_profile',
+    doc: 'gable, hip, shed, or mansard architectural roof geometry',
+    args: { type: { kind: 'string' }, width: NUM, length: NUM, pitchAngle: NUM, thickness: NUM },
+    returns: 'solid',
+    expand: (ctx) => solid(ctx, ctx.node('RoofProfile', {
+      params: {
+        type: ctx.str('type') ?? 'gable', width: ctx.numOpt('width') ?? 12,
+        length: ctx.numOpt('length') ?? 16, pitchAngle: ctx.numOpt('pitchAngle') ?? 30,
+        thickness: ctx.numOpt('thickness') ?? 0.3
+      }
+    }))
+  },
+  arch: {
+    name: 'arch',
+    doc: 'roman, gothic, or parabolic structural architectural arch',
+    args: { type: { kind: 'string' }, span: NUM, height: NUM, depth: NUM, wallThickness: NUM },
+    returns: 'solid',
+    expand: (ctx) => solid(ctx, ctx.node('Arch', {
+      params: {
+        type: ctx.str('type') ?? 'roman', span: ctx.numOpt('span') ?? 4,
+        height: ctx.numOpt('height') ?? 5, depth: ctx.numOpt('depth') ?? 1.2,
+        wallThickness: ctx.numOpt('wallThickness') ?? 0.4
+      }
+    }))
+  },
+  column: {
+    name: 'column',
+    doc: 'classical column with pedestal base, fluted shaft, and capital',
+    args: { height: NUM, baseRadius: NUM, topRadius: NUM, fluteCount: NUM, baseHeight: NUM, capitalHeight: NUM },
+    returns: 'solid',
+    expand: (ctx) => solid(ctx, ctx.node('Column', {
+      params: {
+        height: ctx.numOpt('height') ?? 8, baseRadius: ctx.numOpt('baseRadius') ?? 0.6,
+        topRadius: ctx.numOpt('topRadius') ?? 0.48, fluteCount: ctx.numOpt('fluteCount') ?? 16,
+        baseHeight: ctx.numOpt('baseHeight') ?? 0.8, capitalHeight: ctx.numOpt('capitalHeight') ?? 0.8
+      }
+    }))
+  },
+  truss: {
+    name: 'truss',
+    doc: 'structural Warren truss framework with chords and web diagonals',
+    args: { span: NUM, height: NUM, depth: NUM, panels: NUM, barThickness: NUM },
+    returns: 'solid',
+    expand: (ctx) => solid(ctx, ctx.node('Truss', {
+      params: {
+        span: ctx.numOpt('span') ?? 16, height: ctx.numOpt('height') ?? 2.5,
+        depth: ctx.numOpt('depth') ?? 0.4, panels: ctx.numOpt('panels') ?? 6,
+        barThickness: ctx.numOpt('barThickness') ?? 0.15
+      }
+    }))
+  },
+  balustrade: {
+    name: 'balustrade',
+    doc: 'linear railing and vertical baluster fence/guard',
+    args: { length: NUM, height: NUM, balusterSpacing: NUM, balusterRadius: NUM, railRadius: NUM },
+    returns: 'solid',
+    expand: (ctx) => solid(ctx, ctx.node('Balustrade', {
+      params: {
+        length: ctx.numOpt('length') ?? 10, height: ctx.numOpt('height') ?? 1.0,
+        balusterSpacing: ctx.numOpt('balusterSpacing') ?? 0.2,
+        balusterRadius: ctx.numOpt('balusterRadius') ?? 0.025,
+        railRadius: ctx.numOpt('railRadius') ?? 0.04
+      }
+    }))
+  },
+  wall_with_openings: {
+    name: 'wall_with_openings',
+    doc: 'solid wall with patterned door/window opening cutouts',
+    args: { length: NUM, height: NUM, thickness: NUM, openingWidth: NUM, openingHeight: NUM, openingCount: NUM, openingBottomOffset: NUM },
+    returns: 'solid',
+    expand: (ctx) => solid(ctx, ctx.node('WallWithOpenings', {
+      params: {
+        length: ctx.numOpt('length') ?? 12, height: ctx.numOpt('height') ?? 3.2,
+        thickness: ctx.numOpt('thickness') ?? 0.3, openingWidth: ctx.numOpt('openingWidth') ?? 1.4,
+        openingHeight: ctx.numOpt('openingHeight') ?? 1.8, openingCount: ctx.numOpt('openingCount') ?? 3,
+        openingBottomOffset: ctx.numOpt('openingBottomOffset') ?? 0.8
+      }
+    }))
+  },
+
+  // --- Organic Skills (10) ---
+  phyllotaxis: {
+    name: 'phyllotaxis',
+    doc: 'Fibonacci spiral point & rotation distribution on planes or dome caps',
+    args: { count: NUM, spread: NUM, divergenceAngle: NUM, pitchZ: NUM, domeRadius: NUM },
+    returns: 'point[]',
+    expand: (ctx) => ctx.out(ctx.node('Phyllotaxis', {
+      params: {
+        count: ctx.numOpt('count') ?? 34, spread: ctx.numOpt('spread') ?? 2.0,
+        divergenceAngle: ctx.numOpt('divergenceAngle') ?? 137.5077,
+        pitchZ: ctx.numOpt('pitchZ') ?? 0.2, domeRadius: ctx.numOpt('domeRadius') ?? 0
+      }
+    }), 'points', 'point[]')
+  },
+  airfoil: {
+    name: 'airfoil',
+    doc: 'NACA 4-digit aerodynamic wing/fin profile curve',
+    args: { chord: NUM, nacaCode: { kind: 'string' }, numPoints: NUM },
+    returns: 'curve',
+    expand: (ctx) => ctx.out(ctx.node('AirfoilCurve', {
+      params: { chord: ctx.numOpt('chord') ?? 10, nacaCode: ctx.str('nacaCode') ?? '0012', numPoints: ctx.numOpt('numPoints') ?? 40 }
+    }), 'curve', 'curve')
+  },
+  superellipse: {
+    name: 'superellipse',
+    doc: 'Lamé curve / squircle rounded cross-section wire',
+    args: { radiusX: NUM, radiusY: NUM, exponent: NUM, numPoints: NUM },
+    returns: 'curve',
+    expand: (ctx) => ctx.out(ctx.node('Superellipse', {
+      params: { radiusX: ctx.numOpt('radiusX') ?? 6, radiusY: ctx.numOpt('radiusY') ?? 4, exponent: ctx.numOpt('exponent') ?? 2.5, numPoints: ctx.numOpt('numPoints') ?? 48 }
+    }), 'curve', 'curve')
+  },
+  organic_rib: {
+    name: 'organic_rib',
+    doc: 'tapered curved organic rib spine',
+    args: { length: NUM, baseRadius: NUM, tipRadius: NUM, archHeight: NUM },
+    returns: 'solid',
+    expand: (ctx) => solid(ctx, ctx.node('OrganicRib', {
+      params: { length: ctx.numOpt('length') ?? 10, baseRadius: ctx.numOpt('baseRadius') ?? 0.8, tipRadius: ctx.numOpt('tipRadius') ?? 0.2, archHeight: ctx.numOpt('archHeight') ?? 2.5 }
+    }))
+  },
+  branching_system: {
+    name: 'branching_system',
+    doc: 'recursive 3D branching tree / vascular tubular system',
+    args: { levels: NUM, trunkRadius: NUM, trunkHeight: NUM, branchAngle: NUM, radiusDecay: NUM },
+    returns: 'solid',
+    expand: (ctx) => solid(ctx, ctx.node('BranchingSystem', {
+      params: { levels: ctx.numOpt('levels') ?? 2, trunkRadius: ctx.numOpt('trunkRadius') ?? 0.8, trunkHeight: ctx.numOpt('trunkHeight') ?? 6, branchAngle: ctx.numOpt('branchAngle') ?? 30, radiusDecay: ctx.numOpt('radiusDecay') ?? 0.65 }
+    }))
+  },
+  tendon: {
+    name: 'tendon',
+    doc: 'catenary sagging organic tendon cable',
+    args: { radius: NUM, length: NUM, sag: NUM },
+    returns: 'solid',
+    expand: (ctx) => solid(ctx, ctx.node('Tendon', {
+      params: { radius: ctx.numOpt('radius') ?? 0.3, length: ctx.numOpt('length') ?? 10, sag: ctx.numOpt('sag') ?? 1.0 }
+    }))
+  },
+  petal_morph: {
+    name: 'petal_morph',
+    doc: 'curved botanical flower petal with cup depth and edge waviness',
+    args: { length: NUM, width: NUM, cupDepth: NUM, edgeWaviness: NUM, thickness: NUM },
+    returns: 'solid',
+    expand: (ctx) => solid(ctx, ctx.node('PetalMorph', {
+      params: { length: ctx.numOpt('length') ?? 10, width: ctx.numOpt('width') ?? 5, cupDepth: ctx.numOpt('cupDepth') ?? 1.5, edgeWaviness: ctx.numOpt('edgeWaviness') ?? 0.4, thickness: ctx.numOpt('thickness') ?? 0.3 }
+    }))
+  },
+  spine_loft: {
+    name: 'spine_loft',
+    doc: 'variable cross-section loft along a curved spine',
+    args: { spineLength: NUM, radiusStart: NUM, radiusMid: NUM, radiusEnd: NUM, segments: NUM },
+    returns: 'solid',
+    expand: (ctx) => solid(ctx, ctx.node('SpineLoft', {
+      params: { spineLength: ctx.numOpt('spineLength') ?? 12, radiusStart: ctx.numOpt('radiusStart') ?? 1.5, radiusMid: ctx.numOpt('radiusMid') ?? 3.0, radiusEnd: ctx.numOpt('radiusEnd') ?? 0.4, segments: ctx.numOpt('segments') ?? 8 }
+    }))
+  },
+  segmented_body: {
+    name: 'segmented_body',
+    doc: 'tapered insect / arthropod segmented shell',
+    args: { segments: NUM, baseRadius: NUM, maxRadius: NUM, length: NUM, segmentGap: NUM },
+    returns: 'solid',
+    expand: (ctx) => solid(ctx, ctx.node('SegmentedBody', {
+      params: { segments: ctx.numOpt('segments') ?? 6, baseRadius: ctx.numOpt('baseRadius') ?? 1.2, maxRadius: ctx.numOpt('maxRadius') ?? 2.5, length: ctx.numOpt('length') ?? 12, segmentGap: ctx.numOpt('segmentGap') ?? 0.15 }
+    }))
+  },
+  metaballs: {
+    name: 'metaballs',
+    doc: 'cluster of organic smoothed blob spheres',
+    args: { count: NUM, radius: NUM, spread: NUM },
+    returns: 'solid',
+    expand: (ctx) => solid(ctx, ctx.node('MetaballCluster', {
+      params: { count: ctx.numOpt('count') ?? 5, radius: ctx.numOpt('radius') ?? 2.0, spread: ctx.numOpt('spread') ?? 3.0 }
+    }))
+  },
+
+  // --- Engineering Skills (11) ---
+  involute_gear: {
+    name: 'involute_gear',
+    doc: 'precision spur gear with involute tooth profile and center bore',
+    args: { teeth: NUM, module: NUM, faceWidth: NUM, boreDiameter: NUM, pressureAngle: NUM },
+    returns: 'solid',
+    expand: (ctx) => solid(ctx, ctx.node('InvoluteGear', {
+      params: { teeth: ctx.numOpt('teeth') ?? 20, module: ctx.numOpt('module') ?? 1.0, faceWidth: ctx.numOpt('faceWidth') ?? 5.0, boreDiameter: ctx.numOpt('boreDiameter') ?? 4.0, pressureAngle: ctx.numOpt('pressureAngle') ?? 20 }
+    }))
+  },
+  bevel_gear: {
+    name: 'bevel_gear',
+    doc: 'conical bevel gear blank with pitch cone angle',
+    args: { teeth: NUM, module: NUM, faceWidth: NUM, boreDiameter: NUM },
+    returns: 'solid',
+    expand: (ctx) => solid(ctx, ctx.node('BevelGear', {
+      params: { teeth: ctx.numOpt('teeth') ?? 18, module: ctx.numOpt('module') ?? 1.2, faceWidth: ctx.numOpt('faceWidth') ?? 4.0, boreDiameter: ctx.numOpt('boreDiameter') ?? 4.0 }
+    }))
+  },
+  rack_and_pinion: {
+    name: 'rack_and_pinion',
+    doc: 'linear gear rack with matching module teeth',
+    args: { length: NUM, module: NUM, height: NUM, width: NUM },
+    returns: 'solid',
+    expand: (ctx) => solid(ctx, ctx.node('RackAndPinion', {
+      params: { length: ctx.numOpt('length') ?? 30, module: ctx.numOpt('module') ?? 1.0, height: ctx.numOpt('height') ?? 8.0, width: ctx.numOpt('width') ?? 5.0 }
+    }))
+  },
+  sprocket: {
+    name: 'sprocket',
+    doc: 'ANSI/ISO roller chain sprocket with roller tooth cutouts',
+    args: { teeth: NUM, pitch: NUM, rollerDiameter: NUM, thickness: NUM, boreDiameter: NUM },
+    returns: 'solid',
+    expand: (ctx) => solid(ctx, ctx.node('Sprocket', {
+      params: { teeth: ctx.numOpt('teeth') ?? 16, pitch: ctx.numOpt('pitch') ?? 6.35, rollerDiameter: ctx.numOpt('rollerDiameter') ?? 3.3, thickness: ctx.numOpt('thickness') ?? 2.5, boreDiameter: ctx.numOpt('boreDiameter') ?? 5.0 }
+    }))
+  },
+  timing_pulley: {
+    name: 'timing_pulley',
+    doc: 'timing belt pulley with retaining side flanges',
+    args: { teeth: NUM, pitch: NUM, width: NUM, boreDiameter: NUM, flangeHeight: NUM },
+    returns: 'solid',
+    expand: (ctx) => solid(ctx, ctx.node('TimingPulley', {
+      params: { teeth: ctx.numOpt('teeth') ?? 24, pitch: ctx.numOpt('pitch') ?? 2.0, width: ctx.numOpt('width') ?? 7.0, boreDiameter: ctx.numOpt('boreDiameter') ?? 5.0, flangeHeight: ctx.numOpt('flangeHeight') ?? 1.2 }
+    }))
+  },
+  bolt_nut: {
+    name: 'bolt_nut',
+    doc: 'ISO hex head bolt with threaded shank',
+    args: { boltDiameter: NUM, length: NUM },
+    returns: 'solid',
+    expand: (ctx) => solid(ctx, ctx.node('HexNutBolt', {
+      params: { boltDiameter: ctx.numOpt('boltDiameter') ?? 6.0, length: ctx.numOpt('length') ?? 25.0 }
+    }))
+  },
+  snap_fit: {
+    name: 'snap_fit',
+    doc: 'cantilever snap-fit beam with catch latch',
+    args: { beamLength: NUM, beamWidth: NUM, beamThickness: NUM, hookDepth: NUM },
+    returns: 'solid',
+    expand: (ctx) => solid(ctx, ctx.node('SnapFitJoint', {
+      params: { beamLength: ctx.numOpt('beamLength') ?? 12, beamWidth: ctx.numOpt('beamWidth') ?? 4, beamThickness: ctx.numOpt('beamThickness') ?? 1.2, hookDepth: ctx.numOpt('hookDepth') ?? 1.0 }
+    }))
+  },
+  oring_groove: {
+    name: 'oring_groove',
+    doc: 'shaft with recessed O-ring sealing gland channel',
+    args: { shaftDiameter: NUM, grooveWidth: NUM, grooveDepth: NUM, shaftLength: NUM },
+    returns: 'solid',
+    expand: (ctx) => solid(ctx, ctx.node('OringGroove', {
+      params: { shaftDiameter: ctx.numOpt('shaftDiameter') ?? 20, grooveWidth: ctx.numOpt('grooveWidth') ?? 2.5, grooveDepth: ctx.numOpt('grooveDepth') ?? 1.5, shaftLength: ctx.numOpt('shaftLength') ?? 20 }
+    }))
+  },
+  heat_sink: {
+    name: 'heat_sink',
+    doc: 'finned thermal cooling heat sink array',
+    args: { baseWidth: NUM, baseLength: NUM, baseThickness: NUM, finCount: NUM, finHeight: NUM, finThickness: NUM },
+    returns: 'solid',
+    expand: (ctx) => solid(ctx, ctx.node('HeatSink', {
+      params: { baseWidth: ctx.numOpt('baseWidth') ?? 30, baseLength: ctx.numOpt('baseLength') ?? 40, baseThickness: ctx.numOpt('baseThickness') ?? 3, finCount: ctx.numOpt('finCount') ?? 12, finHeight: ctx.numOpt('finHeight') ?? 15, finThickness: ctx.numOpt('finThickness') ?? 1.0 }
+    }))
+  },
+  flange: {
+    name: 'flange',
+    doc: 'pipe flange connection with circular PCD bolt hole pattern',
+    args: { pipeDiameter: NUM, outerDiameter: NUM, flangeThickness: NUM, boltCount: NUM, boltHoleDiameter: NUM, pcd: NUM },
+    returns: 'solid',
+    expand: (ctx) => solid(ctx, ctx.node('FlangeConnection', {
+      params: { pipeDiameter: ctx.numOpt('pipeDiameter') ?? 15, outerDiameter: ctx.numOpt('outerDiameter') ?? 30, flangeThickness: ctx.numOpt('flangeThickness') ?? 4, boltCount: ctx.numOpt('boltCount') ?? 6, boltHoleDiameter: ctx.numOpt('boltHoleDiameter') ?? 3.5, pcd: ctx.numOpt('pcd') ?? 22.5 }
+    }))
+  },
+  keyway_shaft: {
+    name: 'keyway_shaft',
+    doc: 'drive shaft with rectangular keyway slot',
+    args: { diameter: NUM, length: NUM, keywayWidth: NUM, keywayDepth: NUM, keywayLength: NUM },
+    returns: 'solid',
+    expand: (ctx) => solid(ctx, ctx.node('KeywayShaft', {
+      params: { diameter: ctx.numOpt('diameter') ?? 16, length: ctx.numOpt('length') ?? 40, keywayWidth: ctx.numOpt('keywayWidth') ?? 5, keywayDepth: ctx.numOpt('keywayDepth') ?? 3, keywayLength: ctx.numOpt('keywayLength') ?? 20 }
+    }))
+  },
+
+  // --- Generative Skills (14) ---
+  curve_frame: {
+    name: 'curve_frame',
+    doc: 'Frenet-Serret PTNB orientation frame evaluation along a curve',
+    args: { curve: { kind: 'curve', required: true }, samples: NUM },
+    returns: 'point[]',
+    expand: (ctx) => ctx.out(ctx.node('CurveFrame', {
+      params: { samples: ctx.numOpt('samples') ?? 20 },
+      inputs: { curve: ctx.ref('curve', 'curve') }
+    }), 'points', 'point[]')
+  },
+  attractor_field: {
+    name: 'attractor_field',
+    doc: 'modulate point scale/weights based on proximity to an attractor target',
+    args: { points: { kind: 'point[]', required: true }, target: { kind: 'point' }, radius: NUM, falloff: { kind: 'string' } },
+    returns: 'point[]',
+    expand: (ctx) => ctx.out(ctx.node('AttractorField', {
+      params: { radius: ctx.numOpt('radius') ?? 10, falloff: ctx.str('falloff') ?? 'linear' },
+      inputs: { points: ctx.ref('points', 'point[]'), target: ctx.refOpt('target', 'point') }
+    }), 'points', 'point[]')
+  },
+  noise_displacement: {
+    name: 'noise_displacement',
+    doc: 'procedural 3D noise perturbation of a solid',
+    args: { solid: { kind: 'solid', required: true }, amplitude: NUM, frequency: NUM },
+    returns: 'solid',
+    expand: (ctx) => solid(ctx, ctx.node('NoiseDisplacement', {
+      params: { amplitude: ctx.numOpt('amplitude') ?? 1.0, frequency: ctx.numOpt('frequency') ?? 0.2 },
+      inputs: { solid: ctx.ref('solid', 'solid') }
+    }))
+  },
+  voronoi_pattern: {
+    name: 'voronoi_pattern',
+    doc: 'cellular 2D Voronoi partition slab with perforated cells',
+    args: { width: NUM, height: NUM, cellCount: NUM, borderPadding: NUM, thickness: NUM },
+    returns: 'solid',
+    expand: (ctx) => solid(ctx, ctx.node('VoronoiPattern', {
+      params: { width: ctx.numOpt('width') ?? 20, height: ctx.numOpt('height') ?? 20, cellCount: ctx.numOpt('cellCount') ?? 12, borderPadding: ctx.numOpt('borderPadding') ?? 0.4, thickness: ctx.numOpt('thickness') ?? 1.0 }
+    }))
+  },
+  gyroid_lattice: {
+    name: 'gyroid_lattice',
+    doc: 'triply periodic minimal surface (TPMS) Gyroid unit cell array',
+    args: { cellSize: NUM, periodsX: NUM, periodsY: NUM, periodsZ: NUM, wallThickness: NUM },
+    returns: 'solid',
+    expand: (ctx) => solid(ctx, ctx.node('GyroidLattice', {
+      params: { cellSize: ctx.numOpt('cellSize') ?? 5, periodsX: ctx.numOpt('periodsX') ?? 2, periodsY: ctx.numOpt('periodsY') ?? 2, periodsZ: ctx.numOpt('periodsZ') ?? 2, wallThickness: ctx.numOpt('wallThickness') ?? 0.4 }
+    }))
+  },
+  diamond_lattice: {
+    name: 'diamond_lattice',
+    doc: 'Diamond TPMS minimal surface lattice structure',
+    args: { cellSize: NUM, periodsX: NUM, periodsY: NUM, periodsZ: NUM, wallThickness: NUM },
+    returns: 'solid',
+    expand: (ctx) => solid(ctx, ctx.node('DiamondLattice', {
+      params: { cellSize: ctx.numOpt('cellSize') ?? 6, periodsX: ctx.numOpt('periodsX') ?? 2, periodsY: ctx.numOpt('periodsY') ?? 2, periodsZ: ctx.numOpt('periodsZ') ?? 2, wallThickness: ctx.numOpt('wallThickness') ?? 0.4 }
+    }))
+  },
+  schwarz_p_lattice: {
+    name: 'schwarz_p_lattice',
+    doc: 'Schwarz-P TPMS minimal surface unit cell block',
+    args: { cellSize: NUM, periodsX: NUM, periodsY: NUM, periodsZ: NUM, wallThickness: NUM },
+    returns: 'solid',
+    expand: (ctx) => solid(ctx, ctx.node('SchwarzPLattice', {
+      params: { cellSize: ctx.numOpt('cellSize') ?? 6, periodsX: ctx.numOpt('periodsX') ?? 2, periodsY: ctx.numOpt('periodsY') ?? 2, periodsZ: ctx.numOpt('periodsZ') ?? 2, wallThickness: ctx.numOpt('wallThickness') ?? 0.5 }
+    }))
+  },
+  delaunay_network: {
+    name: 'delaunay_network',
+    doc: 'Delaunay triangulation wireframe network across a point cloud',
+    args: { points: { kind: 'point[]', required: true }, strutRadius: NUM },
+    returns: 'solid',
+    expand: (ctx) => solid(ctx, ctx.node('DelaunayTriangulation', {
+      params: { strutRadius: ctx.numOpt('strutRadius') ?? 0.1 },
+      inputs: { points: ctx.ref('points', 'point[]') }
+    }))
+  },
+  wave_field: {
+    name: 'wave_field',
+    doc: 'harmonic ripple spatial wave deformation',
+    args: { solid: { kind: 'solid', required: true }, frequencyX: NUM, amplitude: NUM },
+    returns: 'solid',
+    expand: (ctx) => solid(ctx, ctx.node('WaveField', {
+      params: { frequencyX: ctx.numOpt('frequencyX') ?? 0.2, amplitude: ctx.numOpt('amplitude') ?? 1.0 },
+      inputs: { solid: ctx.ref('solid', 'solid') }
+    }))
+  },
+  curve_morph: {
+    name: 'curve_morph',
+    doc: 'interpolated morphing transition between two curves',
+    args: { curve1: { kind: 'curve', required: true }, curve2: { kind: 'curve', required: true }, factor: NUM },
+    returns: 'curve',
+    expand: (ctx) => ctx.out(ctx.node('CurveMorph', {
+      params: { factor: ctx.numOpt('factor') ?? 0.5 },
+      inputs: { curve1: ctx.ref('curve1', 'curve'), curve2: ctx.ref('curve2', 'curve') }
+    }), 'curve', 'curve')
+  },
+  reaction_diffusion: {
+    name: 'reaction_diffusion',
+    doc: 'Turing pattern spot distribution simulation',
+    args: { gridSize: NUM, spotRadius: NUM },
+    returns: 'solid',
+    expand: (ctx) => solid(ctx, ctx.node('ReactionDiffusion', {
+      params: { gridSize: ctx.numOpt('gridSize') ?? 20, spotRadius: ctx.numOpt('spotRadius') ?? 0.6 }
+    }))
+  },
+  cellular_automata: {
+    name: 'cellular_automata',
+    doc: 'discrete 3D voxel growth pattern solid',
+    args: { gridSize: NUM, cellSize: NUM },
+    returns: 'solid',
+    expand: (ctx) => solid(ctx, ctx.node('CellularAutomata', {
+      params: { gridSize: ctx.numOpt('gridSize') ?? 8, cellSize: ctx.numOpt('cellSize') ?? 1.5 }
+    }))
+  },
+  differential_growth: {
+    name: 'differential_growth',
+    doc: 'meandering organic differential growth curve',
+    args: { initialRadius: NUM, steps: NUM, tubeRadius: NUM },
+    returns: 'curve',
+    expand: (ctx) => ctx.out(ctx.node('DifferentialGrowth', {
+      params: { initialRadius: ctx.numOpt('initialRadius') ?? 6, steps: ctx.numOpt('steps') ?? 36, tubeRadius: ctx.numOpt('tubeRadius') ?? 0.25 }
+    }), 'curve', 'curve')
+  },
+  radial_symmetry: {
+    name: 'radial_symmetry',
+    doc: 'distribute a solid across N-fold rotational symmetry',
+    args: { solid: { kind: 'solid', required: true }, count: NUM, totalAngle: NUM },
+    returns: 'solid',
+    expand: (ctx) => solid(ctx, ctx.node('RadialSymmetryCluster', {
+      params: { count: ctx.numOpt('count') ?? 6, totalAngle: ctx.numOpt('totalAngle') ?? 360 },
+      inputs: { solid: ctx.ref('solid', 'solid') }
+    }))
+  },
+
+  // --- Analysis Skills (10) ---
+  mass_properties: {
+    name: 'mass_properties',
+    doc: 'calculate volume, area, and center of gravity',
+    args: { solid: { kind: 'solid', required: true } },
+    returns: 'solid',
+    expand: (ctx) => solid(ctx, ctx.node('MassProperties', {
+      inputs: { solid: ctx.ref('solid', 'solid') }
+    }))
+  },
+  curvature_analysis: {
+    name: 'curvature_analysis',
+    doc: 'evaluate mean curvature across solid faces',
+    args: { solid: { kind: 'solid', required: true } },
+    returns: 'solid',
+    expand: (ctx) => solid(ctx, ctx.node('CurvatureAnalysis', {
+      inputs: { solid: ctx.ref('solid', 'solid') }
+    }))
+  },
+  interference_check: {
+    name: 'interference_check',
+    doc: 'detect geometric collision volume between two solids',
+    args: { solid1: { kind: 'solid', required: true }, solid2: { kind: 'solid', required: true } },
+    returns: 'solid',
+    expand: (ctx) => solid(ctx, ctx.node('InterferenceCheck', {
+      inputs: { solid1: ctx.ref('solid1', 'solid'), solid2: ctx.ref('solid2', 'solid') }
+    }))
+  },
+  wall_thickness_check: {
+    name: 'wall_thickness_check',
+    doc: 'check minimum wall thickness threshold',
+    args: { solid: { kind: 'solid', required: true }, minThreshold: NUM },
+    returns: 'solid',
+    expand: (ctx) => solid(ctx, ctx.node('WallThicknessCheck', {
+      params: { minThreshold: ctx.numOpt('minThreshold') ?? 1.0 },
+      inputs: { solid: ctx.ref('solid', 'solid') }
+    }))
+  },
+  overhang_analysis: {
+    name: 'overhang_analysis',
+    doc: 'detect 3D printing steep overhang angles (>45 deg)',
+    args: { solid: { kind: 'solid', required: true }, thresholdAngle: NUM },
+    returns: 'solid',
+    expand: (ctx) => solid(ctx, ctx.node('OverhangAnalysis', {
+      params: { thresholdAngle: ctx.numOpt('thresholdAngle') ?? 45 },
+      inputs: { solid: ctx.ref('solid', 'solid') }
+    }))
+  },
+  draft_angle_analysis: {
+    name: 'draft_angle_analysis',
+    doc: 'verify injection molding draft angles along mold pull vector',
+    args: { solid: { kind: 'solid', required: true }, requiredAngle: NUM },
+    returns: 'solid',
+    expand: (ctx) => solid(ctx, ctx.node('DraftAngleAnalysis', {
+      params: { requiredAngle: ctx.numOpt('requiredAngle') ?? 2.0 },
+      inputs: { solid: ctx.ref('solid', 'solid') }
+    }))
+  },
+  bounding_box_oriented: {
+    name: 'bounding_box_oriented',
+    doc: 'compute minimum-volume oriented bounding box (OBB)',
+    args: { solid: { kind: 'solid', required: true } },
+    returns: 'solid',
+    expand: (ctx) => solid(ctx, ctx.node('BoundingBoxOriented', {
+      inputs: { solid: ctx.ref('solid', 'solid') }
+    }))
+  },
+  center_of_gravity: {
+    name: 'center_of_gravity',
+    doc: 'visual marker sphere placed at center of gravity (COG)',
+    args: { solid: { kind: 'solid', required: true } },
+    returns: 'solid',
+    expand: (ctx) => solid(ctx, ctx.node('CenterOfGravity', {
+      inputs: { solid: ctx.ref('solid', 'solid') }
+    }))
+  },
+  cross_section_slice: {
+    name: 'cross_section_slice',
+    doc: 'slice solid into an array of planar cross sections',
+    args: { solid: { kind: 'solid', required: true }, count: NUM, startOffset: NUM, endOffset: NUM },
+    returns: 'solid',
+    expand: (ctx) => solid(ctx, ctx.node('CrossSectionSlice', {
+      params: { count: ctx.numOpt('count') ?? 5, startOffset: ctx.numOpt('startOffset') ?? -10, endOffset: ctx.numOpt('endOffset') ?? 10 },
+      inputs: { solid: ctx.ref('solid', 'solid') }
+    }))
+  },
+  geometry_diff: {
+    name: 'geometry_diff',
+    doc: 'visual boolean diff between two revision solids',
+    args: { solid1: { kind: 'solid', required: true }, solid2: { kind: 'solid', required: true } },
+    returns: 'solid',
+    expand: (ctx) => solid(ctx, ctx.node('GeometryDiff', {
+      inputs: { solid1: ctx.ref('solid1', 'solid'), solid2: ctx.ref('solid2', 'solid') }
+    }))
+  },
 };
 
 /** Alias table: natural-language-adjacent names → canonical skill. */
@@ -757,6 +1351,76 @@ export const SKILL_ALIASES: Record<string, string> = {
   instance_on_points: 'instances',
   subtract: 'difference',
   fuse: 'union',
+  spur_gear: 'involute_gear',
+  gear: 'involute_gear',
+  spiral_stair: 'stairs',
+  staircase: 'stairs',
+  facade: 'facade_divider',
+  windows: 'facade_divider',
+  mullions: 'facade_divider',
+  floors: 'floor_grid',
+  building_frame: 'floor_grid',
+  polygon: 'regular_polygon',
+  ngon: 'regular_polygon',
+  hexagon: 'regular_polygon',
+  pentagon: 'regular_polygon',
+  octagon: 'regular_polygon',
+  roof: 'roof_profile',
+  gable_roof: 'roof_profile',
+  mansard: 'roof_profile',
+  gothic_arch: 'arch',
+  roman_arch: 'arch',
+  colonnade_column: 'column',
+  pillar: 'column',
+  warren_truss: 'truss',
+  bridge_truss: 'truss',
+  railing: 'balustrade',
+  fence: 'balustrade',
+  wall: 'wall_with_openings',
+  fibonacci_spiral: 'phyllotaxis',
+  sunflower_points: 'phyllotaxis',
+  naca_airfoil: 'airfoil',
+  wing_profile: 'airfoil',
+  squircle: 'superellipse',
+  curved_rib: 'organic_rib',
+  tree_branches: 'branching_system',
+  vascular_network: 'branching_system',
+  cable: 'tendon',
+  petal: 'petal_morph',
+  flower_petal: 'petal_morph',
+  tapered_spine: 'spine_loft',
+  caterpillar_body: 'segmented_body',
+  blobs: 'metaballs',
+  heatsink: 'heat_sink',
+  thermal_fins: 'heat_sink',
+  pipe_flange: 'flange',
+  bolt: 'bolt_nut',
+  screw: 'bolt_nut',
+  nut_and_bolt: 'bolt_nut',
+  chain_sprocket: 'sprocket',
+  pulley: 'timing_pulley',
+  belt_pulley: 'timing_pulley',
+  frenet_frame: 'curve_frame',
+  attractor: 'attractor_field',
+  perlin_noise: 'noise_displacement',
+  voronoi: 'voronoi_pattern',
+  gyroid: 'gyroid_lattice',
+  minimal_surface: 'gyroid_lattice',
+  diamond_tpms: 'diamond_lattice',
+  schwarz_p: 'schwarz_p_lattice',
+  delaunay: 'delaunay_network',
+  ripple_wave: 'wave_field',
+  morph_curves: 'curve_morph',
+  turing_pattern: 'reaction_diffusion',
+  cellular: 'cellular_automata',
+  meander_growth: 'differential_growth',
+  rotational_symmetry: 'radial_symmetry',
+  cog: 'center_of_gravity',
+  centroid: 'center_of_gravity',
+  obb: 'bounding_box_oriented',
+  clash_detect: 'interference_check',
+  slice_solid: 'cross_section_slice',
+  mesh_diff: 'geometry_diff',
 };
 
 export function resolveSkill(op: string): SkillDef | undefined {

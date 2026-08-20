@@ -9,6 +9,7 @@ import {
 } from './deformation.ts';
 import { parseSVGPath } from './svgPath.ts';
 import { evaluateSelectionQuery } from './selectionQuery.ts';
+import { ALL_DOMAIN_EXECUTORS } from './executors/index.ts';
 
 export const mapOverTree = (input: any, fn: (shape: any) => any): any => {
   if (Array.isArray(input)) {
@@ -2894,5 +2895,8 @@ export const EXECUTORS: Record<
       warn(`OffsetCurve failed: ${kernelAwareMsg(err)}`);
       return null;
     }
-  }
+  },
+  ...ALL_DOMAIN_EXECUTORS
 };
+
+export const ALL_EXECUTORS = EXECUTORS;
