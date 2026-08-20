@@ -2,6 +2,7 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import fs from 'fs'
 import path from 'path'
+import { spawn } from 'child_process'
 
 // ---------------------------------------------------------------------------
 // Local-API protection shared by both dev middlewares.
@@ -131,6 +132,62 @@ export default defineConfig({
                 res.end(JSON.stringify({ error: `Ollama proxy error connecting to ${destUrl}: ${err.message}` }));
               }
             });
+            return;
+          }
+
+          if (url.startsWith('/api/claude-cli-bridge') && req.method === 'POST') {
+            const data = await readJson(req);
+            const prompt = data.prompt || '';
+            const systemPrompt = data.systemPrompt || '';
+
+            try {
+              const claudePath = path.join(process.env.USERPROFILE || '', '.local', 'bin', 'claude.exe');
+              const exe = fs.existsSync(claudePath) ? claudePath : 'claude';
+              // Never pass the prompt in args on Windows — it exceeds the 8191 char limit (ENAMETOOLONG).
+              // Passing -p with stdin piping handles arbitrarily large system + user prompts safely!
+              const args = ['-p', '--output-format', 'text'];
+
+              const proc = spawn(exe, args, {
+                shell: false,
+                windowsHide: true,
+                stdio: ['pipe', 'pipe', 'pipe'],
+              });
+
+              let stdout = '';
+              let stderr = '';
+
+              proc.stdout.on('data', (c) => { stdout += c.toString(); });
+              proc.stderr.on('data', (c) => { stderr += c.toString(); });
+
+              proc.on('close', (code) => {
+                if (code === 0) {
+                  res.statusCode = 200;
+                  res.setHeader('Content-Type', 'application/json');
+                  res.end(JSON.stringify({ text: stdout.trim() }));
+                } else {
+                  res.statusCode = 500;
+                  res.setHeader('Content-Type', 'application/json');
+                  res.end(JSON.stringify({ error: stderr || `Claude Code exited with code ${code}` }));
+                }
+              });
+
+              proc.on('error', (err) => {
+                res.statusCode = 500;
+                res.setHeader('Content-Type', 'application/json');
+                res.end(JSON.stringify({ error: `Failed to spawn Claude Code CLI: ${err.message}` }));
+              });
+
+              const fullPayload = systemPrompt
+                ? `SYSTEM INSTRUCTIONS:\n${systemPrompt}\n\nUSER REQUEST:\n${prompt}`
+                : prompt;
+
+              proc.stdin.write(fullPayload);
+              proc.stdin.end();
+            } catch (err: any) {
+              res.statusCode = 500;
+              res.setHeader('Content-Type', 'application/json');
+              res.end(JSON.stringify({ error: err.message }));
+            }
             return;
           }
 

@@ -166,8 +166,9 @@ export type PerformanceLogEntry = {
 export type AgentSlot = {
   id: string;
   name: string;
-  provider: 'gemini' | 'ollama' | 'openai' | 'openrouter';
-  apiKey: string; // API Key or URL for Ollama
+  provider: 'gemini' | 'ollama' | 'openai' | 'openrouter' | 'anthropic' | 'custom';
+  apiKey: string; // API Key or URL for Ollama / Custom
+  baseUrl?: string; // Custom endpoint or proxy URL
   model: string;
   optimizeForSmallModels?: boolean;
   enableVisionVerification?: boolean; // send viewport snapshots to vision models for a verification pass

@@ -80,8 +80,15 @@ function swapOutputTokensField(payload: any): boolean {
 
 function getActiveAgent(): AgentSlot {
   const { agentSlots, activeAgentId } = useStore.getState();
-  const activeAgent = agentSlots.find(a => a.id === activeAgentId);
+  let activeAgent = agentSlots.find(a => a.id === activeAgentId) || agentSlots[0];
   if (!activeAgent) throw new Error('No active agent. Please create or select an agent in settings.');
+  // If active slot doesn't have an API key, check if another slot with the same provider has one configured
+  if (!activeAgent.apiKey && activeAgent.provider !== 'ollama') {
+    const sibling = agentSlots.find(a => a.provider === activeAgent.provider && a.apiKey);
+    if (sibling) {
+      activeAgent = { ...activeAgent, apiKey: sibling.apiKey, baseUrl: activeAgent.baseUrl || sibling.baseUrl };
+    }
+  }
   return activeAgent;
 }
 
@@ -134,21 +141,64 @@ export async function listProviderModels(
     return { models };
   }
 
+  if (provider === 'anthropic') {
+    const defaultAnthropicModels = [
+      'claude-3-7-sonnet-20250219',
+      'claude-3-5-sonnet-20241022',
+      'claude-3-5-haiku-20241022',
+      'claude-3-opus-20240229',
+      'claude-3-sonnet-20240229',
+      'claude-3-haiku-20240307',
+    ];
+    if (!apiKey) return { models: defaultAnthropicModels };
+    try {
+      const r = await abortableFetch('https://api.anthropic.com/v1/models', {
+        headers: {
+          'x-api-key': apiKey,
+          'anthropic-version': '2023-06-01',
+          'anthropic-dangerous-direct-browser-access': 'true',
+        },
+      });
+      if (r.ok) {
+        const d = await r.json();
+        const fetched = ((d.data || []) as any[]).map(m => String(m.id)).filter(Boolean).sort();
+        if (fetched.length > 0) return { models: fetched };
+      }
+    } catch {
+      // Return defaults if model listing endpoint is unavailable
+    }
+    return { models: defaultAnthropicModels };
+  }
+
   if (provider === 'gemini') {
-    if (!apiKey) throw new Error('Enter your Gemini API key first, then load models.');
+    const fallbackGemini = [
+      'gemini-2.5-pro',
+      'gemini-2.5-flash',
+      'gemini-2.0-flash',
+      'gemini-2.0-pro-exp-02-05',
+      'gemini-2.0-flash-thinking-exp',
+      'gemini-1.5-pro',
+      'gemini-1.5-flash',
+      'gemini-1.5-flash-8b',
+    ];
+    if (!apiKey) return { models: fallbackGemini, note: 'Enter Gemini API key to load account-specific models' };
     // Key goes in the x-goog-api-key header, never the URL — query strings end
     // up in proxy/server logs and browser history.
-    const r = await abortableFetch('https://generativelanguage.googleapis.com/v1beta/models?pageSize=1000', {
-      headers: { 'x-goog-api-key': apiKey },
-    });
-    if (!r.ok) throw new Error(`Gemini ${r.status} ${r.statusText}`);
-    const d = await r.json();
-    const models = ((d.models || []) as any[])
-      .filter(m => (m.supportedGenerationMethods || []).includes('generateContent'))
-      .map(m => String(m.name || '').replace(/^models\//, ''))
-      .filter(Boolean)
-      .sort();
-    return { models };
+    try {
+      const r = await abortableFetch('https://generativelanguage.googleapis.com/v1beta/models?pageSize=1000', {
+        headers: { 'x-goog-api-key': apiKey },
+      });
+      if (!r.ok) throw new Error(`Gemini ${r.status} ${r.statusText}`);
+      const d = await r.json();
+      const models = ((d.models || []) as any[])
+        .filter(m => (m.supportedGenerationMethods || []).includes('generateContent'))
+        .map(m => String(m.name || '').replace(/^models\//, ''))
+        .filter(Boolean)
+        .sort();
+      return { models: models.length > 0 ? models : fallbackGemini };
+    } catch (err: any) {
+      return { models: fallbackGemini, note: `Listing fallback models (${err.message || 'API error'})` };
+    }
   }
 
   if (provider === 'openai') {
@@ -166,6 +216,23 @@ export async function listProviderModels(
     return {
       models,
       note: all.length > models.length ? `${all.length - models.length} non-chat models hidden` : undefined,
+    };
+  }
+
+  if (provider === 'custom') {
+    return {
+      models: [
+        'claude-3-7-sonnet-20250219',
+        'claude-3-5-sonnet-20241022',
+        'gemini-2.5-pro',
+        'gemini-2.0-flash',
+        'gpt-4o',
+        'gpt-4o-mini',
+        'o3-mini',
+        'deepseek-chat',
+        'llama3',
+      ],
+      note: 'Custom endpoint models can also be typed manually',
     };
   }
 
@@ -202,12 +269,13 @@ export async function chatCompletion(
   },
 ) {
   const activeAgent = getActiveAgent();
-  const { provider, apiKey, model } = activeAgent;
+  const { provider, apiKey, model, baseUrl } = activeAgent;
 
   // 1. Google Gemini
   if (provider === 'gemini') {
-    const geminiModel = model || 'gemini-1.5-flash';
-    const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${geminiModel}:generateContent`;
+    const geminiModel = model || 'gemini-2.5-pro';
+    const base = baseUrl?.replace(/\/$/, '') || 'https://generativelanguage.googleapis.com/v1beta';
+    const endpoint = `${base}/models/${geminiModel}:generateContent`;
 
     const contents = messages
       .filter(m => m.role !== 'system')
@@ -241,7 +309,77 @@ export async function chatCompletion(
     return text;
   }
 
-  // 2. Local Ollama
+  // 2. Anthropic Claude
+  if (provider === 'anthropic') {
+    const claudeModel = model || 'claude-3-7-sonnet-20250219';
+
+    // If no API key is set, harness the user's Claude Code / Claude Desktop subscription via local CLI bridge!
+    if (!apiKey) {
+      const userPrompt = messages.map(m => `${m.role.toUpperCase()}:\n${m.content}`).join('\n\n');
+      const response = await abortableFetch('/api/claude-cli-bridge', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt: userPrompt, systemPrompt }),
+      });
+      if (!response.ok) {
+        const errData = await response.json().catch(() => ({}));
+        throw new Error(errData.error || `Claude Code Bridge Error: ${response.status} ${response.statusText}`);
+      }
+      const data = await response.json();
+      return data.text || '';
+    }
+
+    const base = baseUrl?.replace(/\/$/, '') || 'https://api.anthropic.com/v1';
+    const endpoint = base.endsWith('/messages') ? base : `${base}/messages`;
+
+    const contents: Array<{ role: 'user' | 'assistant'; content: string }> = [];
+    for (const m of messages) {
+      if (m.role === 'system') continue;
+      const role = m.role === 'user' ? 'user' : 'assistant';
+      if (contents.length > 0 && contents[contents.length - 1].role === role) {
+        contents[contents.length - 1].content += `\n\n${m.content}`;
+      } else {
+        contents.push({ role, content: m.content });
+      }
+    }
+    if (contents.length === 0 || contents[0].role !== 'user') {
+      contents.unshift({ role: 'user', content: 'Generate JSON graph output.' });
+    }
+
+    const payload = {
+      model: claudeModel,
+      max_tokens: MAX_OUTPUT_TOKENS,
+      system: systemPrompt,
+      messages: contents,
+    };
+
+    const response = await abortableFetch(endpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true',
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+      const errData = await response.json().catch(() => ({}));
+      throw new Error(`Anthropic API Error: ${response.status} ${response.statusText}. ${errData.error?.message || ''}`);
+    }
+
+    const data = await response.json();
+    const text = (data.content || [])
+      .filter((b: any) => b.type === 'text')
+      .map((b: any) => b.text)
+      .join('') || '';
+
+    if (data.stop_reason === 'max_tokens') return text + '\n/*__TRUNCATED__*/';
+    return text;
+  }
+
+  // 3. Local Ollama
   if (provider === 'ollama') {
     const rawUrl = apiKey || 'http://127.0.0.1:11434';
     const ollamaModel = model || 'llama3';
@@ -282,16 +420,21 @@ export async function chatCompletion(
     return content;
   }
 
-  // 3. OpenRouter / OpenAI standard completions
+  // 4. OpenRouter / OpenAI / Custom standard completions
   let endpoint = '';
   const headers: Record<string, string> = { 'Content-Type': 'application/json' };
 
   if (provider === 'openrouter') {
     endpoint = 'https://openrouter.ai/api/v1/chat/completions';
-    headers['Authorization'] = `Bearer ${apiKey}`;
+    if (apiKey) headers['Authorization'] = `Bearer ${apiKey}`;
   } else if (provider === 'openai') {
-    endpoint = 'https://api.openai.com/v1/chat/completions';
-    headers['Authorization'] = `Bearer ${apiKey}`;
+    const base = baseUrl?.replace(/\/$/, '') || 'https://api.openai.com/v1';
+    endpoint = base.endsWith('/chat/completions') ? base : `${base}/chat/completions`;
+    if (apiKey) headers['Authorization'] = `Bearer ${apiKey}`;
+  } else if (provider === 'custom') {
+    const base = (baseUrl || 'http://localhost:8080/v1').replace(/\/$/, '');
+    endpoint = base.endsWith('/chat/completions') ? base : `${base}/chat/completions`;
+    if (apiKey) headers['Authorization'] = `Bearer ${apiKey}`;
   } else {
     throw new Error(`Unsupported provider: ${provider}`);
   }
@@ -343,7 +486,8 @@ export async function chatCompletion(
 
 export function providerSupportsTools(agent: AgentSlot): boolean {
   if (agent.disableToolCalling) return false;
-  return agent.provider === 'openai' || agent.provider === 'openrouter' || agent.provider === 'gemini' || agent.provider === 'ollama';
+  if (agent.provider === 'anthropic' && !agent.apiKey) return false; // Route headless Claude Code CLI through fast single-shot IR JSON compiler
+  return agent.provider === 'openai' || agent.provider === 'openrouter' || agent.provider === 'gemini' || agent.provider === 'ollama' || agent.provider === 'anthropic' || agent.provider === 'custom';
 }
 
 export async function chatCompletionWithTools(
@@ -352,10 +496,14 @@ export async function chatCompletionWithTools(
   tools: ToolDef[],
 ): Promise<ModelTurn> {
   const activeAgent = getActiveAgent();
-  const { provider, apiKey, model } = activeAgent;
+  const { provider, apiKey, model, baseUrl } = activeAgent;
 
   if (provider === 'gemini') {
-    return geminiToolCompletion(apiKey, model || 'gemini-1.5-flash', messages, systemPrompt, tools);
+    return geminiToolCompletion(apiKey, model || 'gemini-2.5-pro', messages, systemPrompt, tools, baseUrl);
+  }
+
+  if (provider === 'anthropic') {
+    return anthropicToolCompletion(apiKey, model || 'claude-3-7-sonnet-20250219', messages, systemPrompt, tools, baseUrl);
   }
 
   if (provider === 'ollama') {
@@ -364,10 +512,20 @@ export async function chatCompletionWithTools(
     return openAIStyleToolCompletion(apiKey || 'http://127.0.0.1:11434', {}, model || 'llama3', messages, systemPrompt, tools, 'ollama');
   }
 
-  const endpoint = provider === 'openrouter'
-    ? 'https://openrouter.ai/api/v1/chat/completions'
-    : 'https://api.openai.com/v1/chat/completions';
-  return openAIStyleToolCompletion(endpoint, { Authorization: `Bearer ${apiKey}` }, model, messages, systemPrompt, tools, 'openai');
+  if (provider === 'custom') {
+    const base = (baseUrl || 'http://localhost:8080/v1').replace(/\/$/, '');
+    const endpoint = base.endsWith('/chat/completions') ? base : `${base}/chat/completions`;
+    return openAIStyleToolCompletion(endpoint, apiKey ? { Authorization: `Bearer ${apiKey}` } : {}, model || 'gpt-4o', messages, systemPrompt, tools, 'openai');
+  }
+
+  if (provider === 'openai') {
+    const base = baseUrl?.replace(/\/$/, '') || 'https://api.openai.com/v1';
+    const endpoint = base.endsWith('/chat/completions') ? base : `${base}/chat/completions`;
+    return openAIStyleToolCompletion(endpoint, apiKey ? { Authorization: `Bearer ${apiKey}` } : {}, model || 'gpt-4o', messages, systemPrompt, tools, 'openai');
+  }
+
+  const endpoint = 'https://openrouter.ai/api/v1/chat/completions';
+  return openAIStyleToolCompletion(endpoint, apiKey ? { Authorization: `Bearer ${apiKey}` } : {}, model || 'anthropic/claude-3.7-sonnet', messages, systemPrompt, tools, 'openai');
 }
 
 // Ollama's constrained tool-call grammar (used by cloud models like kimi-k2)
@@ -514,7 +672,160 @@ async function openAIStyleToolCompletion(
   return { text: message.content || null, toolCalls, truncated };
 }
 
-// Schema sanitization logic shared by Ollama and Gemini (removes empty properties and converts empty objects to JSON strings)
+async function anthropicToolCompletion(
+  apiKey: string,
+  model: string,
+  messages: AgentMessage[],
+  systemPrompt: string,
+  tools: ToolDef[],
+  baseUrl?: string,
+): Promise<ModelTurn> {
+  // If no API key is provided, execute directly via the local Claude Code CLI subscription bridge!
+  if (!apiKey) {
+    const formattedPrompt = messages.map(m => {
+      if (m.role === 'tool') return `[TOOL RESULT]: ${m.content}`;
+      return `${m.role.toUpperCase()}: ${m.content || ''}`;
+    }).join('\n\n');
+
+    const bridgeRes = await abortableFetch('/api/claude-cli-bridge', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt: formattedPrompt, systemPrompt }),
+    });
+
+    if (!bridgeRes.ok) {
+      const errData = await bridgeRes.json().catch(() => ({}));
+      throw new Error(errData.error || `Claude Code Bridge Error: ${bridgeRes.status}`);
+    }
+
+    const bridgeData = await bridgeRes.json();
+    return { text: bridgeData.text || '', toolCalls: [] };
+  }
+
+  const cleanBase = (baseUrl || 'https://api.anthropic.com/v1').replace(/\/$/, '');
+  const endpoint = cleanBase.endsWith('/messages') ? cleanBase : `${cleanBase}/messages`;
+
+  const apiMessages: any[] = [];
+  for (const m of messages) {
+    if (m.role === 'user' || m.role === 'system') {
+      const parts: any[] = [];
+      if ('imageDataUrl' in m && m.imageDataUrl) {
+        const { mime, data } = dataUrlToBase64(m.imageDataUrl);
+        parts.push({
+          type: 'image',
+          source: { type: 'base64', media_type: mime, data },
+        });
+      }
+      if (m.content) {
+        parts.push({ type: 'text', text: m.content });
+      }
+      if (parts.length === 0) parts.push({ type: 'text', text: '' });
+
+      const last = apiMessages[apiMessages.length - 1];
+      if (last && last.role === 'user') {
+        last.content = [...(Array.isArray(last.content) ? last.content : [{ type: 'text', text: last.content }]), ...parts];
+      } else {
+        apiMessages.push({ role: 'user', content: parts });
+      }
+    } else if (m.role === 'assistant') {
+      const parts: any[] = [];
+      if (m.content) {
+        parts.push({ type: 'text', text: m.content });
+      }
+      if (m.toolCalls && m.toolCalls.length > 0) {
+        m.toolCalls.forEach(tc => {
+          parts.push({
+            type: 'tool_use',
+            id: tc.id,
+            name: tc.name,
+            input: tc.arguments && typeof tc.arguments === 'object' ? tc.arguments : {},
+          });
+        });
+      }
+      if (parts.length === 0) parts.push({ type: 'text', text: '' });
+      apiMessages.push({ role: 'assistant', content: parts });
+    } else if (m.role === 'tool') {
+      const toolPart = {
+        type: 'tool_result',
+        tool_use_id: m.toolCallId,
+        content: m.content,
+      };
+      const last = apiMessages[apiMessages.length - 1];
+      if (last && last.role === 'user') {
+        if (Array.isArray(last.content)) {
+          last.content.push(toolPart);
+        } else {
+          last.content = [{ type: 'text', text: String(last.content) }, toolPart];
+        }
+      } else {
+        apiMessages.push({ role: 'user', content: [toolPart] });
+      }
+    }
+  }
+
+  if (apiMessages.length === 0 || apiMessages[0].role !== 'user') {
+    apiMessages.unshift({ role: 'user', content: [{ type: 'text', text: 'Generate CAD model operations' }] });
+  }
+
+  const anthropicTools = tools.map(t => ({
+    name: t.name,
+    description: t.description,
+    input_schema: sanitizeSchema(t.parameters) || { type: 'object', properties: {} },
+  }));
+
+  const payload = {
+    model: model || 'claude-3-7-sonnet-20250219',
+    max_tokens: MAX_OUTPUT_TOKENS,
+    system: systemPrompt,
+    messages: apiMessages,
+    tools: anthropicTools,
+  };
+
+  const response = await abortableFetch(endpoint, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': apiKey,
+      'anthropic-version': '2023-06-01',
+      'anthropic-dangerous-direct-browser-access': 'true',
+    },
+    body: JSON.stringify(payload),
+  });
+
+  if (!response.ok) {
+    const errData = await response.json().catch(() => ({}));
+    throw new Error(`Anthropic API Error: ${response.status} ${response.statusText}. ${errData.error?.message || ''}`);
+  }
+
+  const data = await response.json();
+  const content = data.content || [];
+  let text: string | null = null;
+  const toolCalls: ToolCall[] = [];
+
+  for (const block of content) {
+    if (block.type === 'text') {
+      text = (text || '') + block.text;
+    } else if (block.type === 'tool_use') {
+      let args = block.input;
+      if (typeof args === 'string') {
+        try { args = JSON.parse(args); } catch {
+          args = { [MALFORMED_TOOL_ARGS_KEY]: String(args).slice(0, 200) };
+        }
+      }
+      toolCalls.push({
+        id: block.id,
+        name: block.name,
+        arguments: args || {},
+      });
+    }
+  }
+
+  return {
+    text,
+    toolCalls,
+    truncated: data.stop_reason === 'max_tokens',
+  };
+}
 
 async function geminiToolCompletion(
   apiKey: string,
@@ -522,8 +833,10 @@ async function geminiToolCompletion(
   messages: AgentMessage[],
   systemPrompt: string,
   tools: ToolDef[],
+  baseUrl?: string,
 ): Promise<ModelTurn> {
-  const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
+  const base = baseUrl?.replace(/\/$/, '') || 'https://generativelanguage.googleapis.com/v1beta';
+  const endpoint = `${base}/models/${model}:generateContent`;
 
   const contents: any[] = [];
   for (const m of messages) {
@@ -594,15 +907,16 @@ async function geminiToolCompletion(
 // ---------- Vision (single-shot, used by the verification pass) ----------
 
 export function providerSupportsVision(agent: AgentSlot): boolean {
-  return agent.provider === 'gemini' || agent.provider === 'openai' || agent.provider === 'openrouter' || agent.provider === 'ollama';
+  return agent.provider === 'gemini' || agent.provider === 'openai' || agent.provider === 'openrouter' || agent.provider === 'ollama' || agent.provider === 'anthropic' || agent.provider === 'custom';
 }
 
 export async function chatCompletionVision(prompt: string, imageDataUrls: string[], systemPrompt: string): Promise<string> {
   const activeAgent = getActiveAgent();
-  const { provider, apiKey, model } = activeAgent;
+  const { provider, apiKey, model, baseUrl } = activeAgent;
 
   if (provider === 'gemini') {
-    const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model || 'gemini-1.5-flash'}:generateContent`;
+    const base = baseUrl?.replace(/\/$/, '') || 'https://generativelanguage.googleapis.com/v1beta';
+    const endpoint = `${base}/models/${model || 'gemini-2.5-pro'}:generateContent`;
     const parts: any[] = [{ text: prompt }];
     imageDataUrls.forEach(u => {
       const { mime, data } = dataUrlToBase64(u);
@@ -617,6 +931,47 @@ export async function chatCompletionVision(prompt: string, imageDataUrls: string
     if (!response.ok) throw new Error(`Gemini Vision Error: ${response.status}`);
     const data = await response.json();
     return data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+  }
+
+  if (provider === 'anthropic') {
+    const claudeModel = model || 'claude-3-7-sonnet-20250219';
+    const cleanBase = (baseUrl || 'https://api.anthropic.com/v1').replace(/\/$/, '');
+    const endpoint = cleanBase.endsWith('/messages') ? cleanBase : `${cleanBase}/messages`;
+
+    const parts: any[] = [];
+    imageDataUrls.forEach(u => {
+      const { mime, data } = dataUrlToBase64(u);
+      parts.push({
+        type: 'image',
+        source: { type: 'base64', media_type: mime, data },
+      });
+    });
+    parts.push({ type: 'text', text: prompt });
+
+    const payload = {
+      model: claudeModel,
+      max_tokens: 4000,
+      system: systemPrompt,
+      messages: [{ role: 'user', content: parts }],
+    };
+
+    const response = await abortableFetch(endpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true',
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) throw new Error(`Anthropic Vision Error: ${response.status}`);
+    const data = await response.json();
+    return (data.content || [])
+      .filter((b: any) => b.type === 'text')
+      .map((b: any) => b.text)
+      .join('') || '';
   }
 
   if (provider === 'ollama') {
@@ -638,9 +993,21 @@ export async function chatCompletionVision(prompt: string, imageDataUrls: string
     return data.message?.content || '';
   }
 
-  const endpoint = provider === 'openrouter'
-    ? 'https://openrouter.ai/api/v1/chat/completions'
-    : 'https://api.openai.com/v1/chat/completions';
+  let endpoint = '';
+  const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+  if (provider === 'openrouter') {
+    endpoint = 'https://openrouter.ai/api/v1/chat/completions';
+    if (apiKey) headers['Authorization'] = `Bearer ${apiKey}`;
+  } else if (provider === 'custom') {
+    const base = (baseUrl || 'http://localhost:8080/v1').replace(/\/$/, '');
+    endpoint = base.endsWith('/chat/completions') ? base : `${base}/chat/completions`;
+    if (apiKey) headers['Authorization'] = `Bearer ${apiKey}`;
+  } else {
+    const base = baseUrl?.replace(/\/$/, '') || 'https://api.openai.com/v1';
+    endpoint = base.endsWith('/chat/completions') ? base : `${base}/chat/completions`;
+    if (apiKey) headers['Authorization'] = `Bearer ${apiKey}`;
+  }
+
   const content: any[] = [{ type: 'text', text: prompt }];
   imageDataUrls.forEach(u => content.push({ type: 'image_url', image_url: { url: u } }));
   const payload = {
@@ -653,7 +1020,7 @@ export async function chatCompletionVision(prompt: string, imageDataUrls: string
   };
   const response = await abortableFetch(endpoint, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${apiKey}` },
+    headers,
     body: JSON.stringify(payload),
   });
   if (!response.ok) throw new Error(`Vision API Error: ${response.status}`);
@@ -666,10 +1033,12 @@ export async function chatCompletionVision(prompt: string, imageDataUrls: string
 export async function tryEmbed(text: string): Promise<number[] | null> {
   try {
     const activeAgent = getActiveAgent();
-    const { provider, apiKey } = activeAgent;
+    const { provider, apiKey, baseUrl } = activeAgent;
 
-    if (provider === 'openai') {
-      const response = await abortableFetch('https://api.openai.com/v1/embeddings', {
+    if (provider === 'openai' || provider === 'custom') {
+      const base = baseUrl?.replace(/\/$/, '') || 'https://api.openai.com/v1';
+      const endpoint = base.endsWith('/embeddings') ? base : `${base}/embeddings`;
+      const response = await abortableFetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${apiKey}` },
         body: JSON.stringify({ model: 'text-embedding-3-small', input: text.slice(0, 8000) }),
@@ -680,7 +1049,8 @@ export async function tryEmbed(text: string): Promise<number[] | null> {
     }
 
     if (provider === 'gemini') {
-      const endpoint = 'https://generativelanguage.googleapis.com/v1beta/models/text-embedding-004:embedContent';
+      const base = baseUrl?.replace(/\/$/, '') || 'https://generativelanguage.googleapis.com/v1beta';
+      const endpoint = `${base}/models/text-embedding-004:embedContent`;
       const response = await abortableFetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'x-goog-api-key': apiKey },
@@ -703,7 +1073,7 @@ export async function tryEmbed(text: string): Promise<number[] | null> {
       return data.embedding || null;
     }
 
-    return null; // openrouter: no stable embeddings endpoint
+    return null; // openrouter / anthropic: no direct embeddings endpoint
   } catch {
     return null;
   }

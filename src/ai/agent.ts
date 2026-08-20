@@ -877,9 +877,17 @@ export async function processUserIntent(userText: string, options?: { forEval?: 
 
   const provider = activeAgent.provider;
   const isOllama = provider === 'ollama';
-  const hasKey = activeAgent.apiKey && activeAgent.apiKey.trim().length > 0;
-  if (!isOllama && !hasKey) {
-    const errorMsg = `Agent slot "${activeAgent.name}" has no API key. Please configure the API key in the settings panel before generating designs.`;
+  const isAnthropic = provider === 'anthropic';
+  const isOpenRouter = provider === 'openrouter';
+  const isCustom = provider === 'custom';
+  const siblingWithKey = store.agentSlots.find(a => a.provider === provider && a.apiKey && a.apiKey.trim().length > 0);
+  const hasKey = (activeAgent.apiKey && activeAgent.apiKey.trim().length > 0) || !!siblingWithKey;
+
+  // Ollama, Anthropic (via local Claude Code subscription bridge), OpenRouter, and Custom do not require an API key
+  const noKeyRequired = isOllama || isAnthropic || isOpenRouter || isCustom;
+
+  if (!noKeyRequired && !hasKey) {
+    const errorMsg = `Agent slot "${activeAgent.name}" has no API key. Please configure your free Google AI Studio key (or provider key) in Settings.`;
     addSystemMessage(`Error: ${errorMsg}`);
     return {
       parsedOk: false,

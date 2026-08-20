@@ -271,6 +271,65 @@ type AppState = {
   setIsRunningEvals: (v: boolean) => void;
 };
 
+export const DEFAULT_AGENT_SLOTS: AgentSlot[] = [
+  {
+    id: 'default-gemini-ultra',
+    name: 'Google Ultra (Gemini 2.5 Pro)',
+    provider: 'gemini',
+    apiKey: '',
+    model: 'gemini-2.5-pro',
+    optimizeForSmallModels: false,
+  },
+  {
+    id: 'default-anthropic',
+    name: 'Claude Code (Claude 3.7 Sonnet)',
+    provider: 'anthropic',
+    apiKey: '',
+    model: 'claude-3-7-sonnet-20250219',
+    optimizeForSmallModels: false,
+  },
+  {
+    id: 'default-claude-35',
+    name: 'Claude 3.5 Sonnet',
+    provider: 'anthropic',
+    apiKey: '',
+    model: 'claude-3-5-sonnet-20241022',
+    optimizeForSmallModels: false,
+  },
+  {
+    id: 'default-gemini-flash',
+    name: 'Google Gemini 2.5 Flash',
+    provider: 'gemini',
+    apiKey: '',
+    model: 'gemini-2.5-flash',
+    optimizeForSmallModels: false,
+  },
+  {
+    id: 'default-openai',
+    name: 'OpenAI (GPT-4o)',
+    provider: 'openai',
+    apiKey: '',
+    model: 'gpt-4o',
+    optimizeForSmallModels: false,
+  },
+  {
+    id: 'default-openrouter',
+    name: 'OpenRouter',
+    provider: 'openrouter',
+    apiKey: '',
+    model: 'anthropic/claude-3.7-sonnet',
+    optimizeForSmallModels: false,
+  },
+  {
+    id: 'default-ollama',
+    name: 'Ollama (Local)',
+    provider: 'ollama',
+    apiKey: 'http://127.0.0.1:11434',
+    model: 'llama3',
+    optimizeForSmallModels: false,
+  },
+];
+
 export const useStore = create<AppState>()(
   persist(
     (set, get) => {
@@ -562,41 +621,8 @@ export const useStore = create<AppState>()(
 
       return {
         // Agent Slots Configuration
-        agentSlots: [
-          {
-            id: 'default-gemini',
-            name: 'Google Gemini',
-            provider: 'gemini',
-            apiKey: '',
-            model: 'gemini-1.5-flash',
-            optimizeForSmallModels: false,
-          },
-          {
-            id: 'default-ollama',
-            name: 'Ollama (Local)',
-            provider: 'ollama',
-            apiKey: 'http://127.0.0.1:11434',
-            model: 'llama3',
-            optimizeForSmallModels: false,
-          },
-          {
-            id: 'default-openai',
-            name: 'OpenAI',
-            provider: 'openai',
-            apiKey: '',
-            model: 'gpt-4o',
-            optimizeForSmallModels: false,
-          },
-          {
-            id: 'default-openrouter',
-            name: 'OpenRouter',
-            provider: 'openrouter',
-            apiKey: '',
-            model: 'anthropic/claude-3.5-sonnet',
-            optimizeForSmallModels: false,
-          }
-        ],
-        activeAgentId: 'default-gemini',
+        agentSlots: DEFAULT_AGENT_SLOTS,
+        activeAgentId: 'default-gemini-ultra',
         
         addAgentSlot: (slot) => {
           const newSlot = { ...slot, id: generateUUID() };
@@ -628,41 +654,8 @@ export const useStore = create<AppState>()(
         },
         restoreDefaultAgents: () => {
           set({
-            agentSlots: [
-              {
-                id: 'default-gemini',
-                name: 'Google Gemini',
-                provider: 'gemini',
-                apiKey: '',
-                model: 'gemini-1.5-flash',
-                optimizeForSmallModels: false,
-              },
-              {
-                id: 'default-ollama',
-                name: 'Ollama (Local)',
-                provider: 'ollama',
-                apiKey: 'http://127.0.0.1:11434',
-                model: 'llama3',
-                optimizeForSmallModels: false,
-              },
-              {
-                id: 'default-openai',
-                name: 'OpenAI',
-                provider: 'openai',
-                apiKey: '',
-                model: 'gpt-4o',
-                optimizeForSmallModels: false,
-              },
-              {
-                id: 'default-openrouter',
-                name: 'OpenRouter',
-                provider: 'openrouter',
-                apiKey: '',
-                model: 'anthropic/claude-3.5-sonnet',
-                optimizeForSmallModels: false,
-              }
-            ],
-            activeAgentId: 'default-gemini'
+            agentSlots: DEFAULT_AGENT_SLOTS,
+            activeAgentId: 'default-gemini-ultra'
           });
         },
 
@@ -1058,19 +1051,44 @@ export const useStore = create<AppState>()(
       // v3 (SPEC-8): persist successExamples + macros (the app's only long-term
       // knowledge no longer evaporates on reload in production); stop persisting
       // the disableToolCalling ratchet; add a migrate that preserves old state.
-      version: 3,
+      // v4: Google Ultra (Gemini 2.5 Pro) and Anthropic Claude Code first-class slots
+      version: 4,
+      onRehydrateStorage: () => (state) => {
+        if (!state) return;
+        // Merge missing default slots into state.agentSlots so that any existing
+        // browser session automatically gets Google Ultra and Claude Code in its list!
+        const existingSlots = Array.isArray(state.agentSlots) ? state.agentSlots : [];
+        const existingIds = new Set(existingSlots.map(s => s.id));
+        const missing = DEFAULT_AGENT_SLOTS.filter(d => !existingIds.has(d.id));
+        if (missing.length > 0) {
+          state.agentSlots = [...existingSlots, ...missing];
+        }
+      },
       migrate: (persisted: any) => {
-        // Older versions (0/1/2) differ only in retired keys — preserve
-        // everything compatible (keys, slots, history, messages) instead of
-        // silently discarding the user's state.
         if (!persisted || typeof persisted !== 'object') return persisted;
         const state = { ...persisted };
         delete state.dynamicKnowledge; // retired in v2
-        if (Array.isArray(state.agentSlots)) {
-          // The persisted disableToolCalling ratchet permanently degraded a
-          // slot after one transient error — clear it; the checkbox still
-          // works per-session.
-          state.agentSlots = state.agentSlots.map((s: any) => ({ ...s, disableToolCalling: undefined }));
+        let existingSlots: AgentSlot[] = Array.isArray(state.agentSlots) ? state.agentSlots : [];
+        
+        // Upgrade legacy default-gemini if needed
+        existingSlots = existingSlots.map((s: any) => {
+          if (s.id === 'default-gemini') {
+            return {
+              ...s,
+              id: 'default-gemini-ultra',
+              name: s.name === 'Google Gemini' ? 'Google Ultra (Gemini 2.5 Pro)' : s.name,
+              model: s.model === 'gemini-1.5-flash' ? 'gemini-2.5-pro' : s.model,
+              disableToolCalling: undefined,
+            };
+          }
+          return { ...s, disableToolCalling: undefined };
+        });
+
+        const existingIds = new Set(existingSlots.map(s => s.id));
+        const missingDefaults = DEFAULT_AGENT_SLOTS.filter(d => !existingIds.has(d.id));
+        state.agentSlots = [...existingSlots, ...missingDefaults];
+        if (!state.activeAgentId || !state.agentSlots.some((s: AgentSlot) => s.id === state.activeAgentId)) {
+          state.activeAgentId = state.agentSlots[0]?.id || 'default-gemini-ultra';
         }
         return state;
       },

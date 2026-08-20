@@ -163,11 +163,10 @@ export const ChatPanel: React.FC = () => {
     }, delayMs);
   };
 
-  // A slot can auto-load its model list when it doesn't need a key (OpenRouter
-  // public endpoint) or when the entered URL/key at least looks plausible —
-  // half-typed keys would only produce guaranteed 401s and pinned errors.
+  // A slot can auto-load its model list when it doesn't need a key (OpenRouter/Anthropic/Gemini presets)
+  // or when the entered URL/key at least looks plausible.
   const canListModels = (slot: { provider: string; apiKey: string }) => {
-    if (slot.provider === 'openrouter') return true;
+    if (slot.provider === 'openrouter' || slot.provider === 'custom' || slot.provider === 'anthropic' || slot.provider === 'gemini') return true;
     return (slot.apiKey || '').trim().length >= 12;
   };
 
@@ -356,7 +355,7 @@ export const ChatPanel: React.FC = () => {
                     name: 'New Custom Agent',
                     provider: 'gemini',
                     apiKey: '',
-                    model: 'gemini-1.5-flash'
+                    model: 'gemini-2.5-pro'
                   });
                 }}
                 className="text-[10px] bg-blue-600 hover:bg-blue-700 text-white px-2 py-1 rounded transition-colors font-medium"
@@ -397,44 +396,51 @@ export const ChatPanel: React.FC = () => {
                       onChange={(e) => {
                         const newProvider = e.target.value as any;
                         let defaultModel = '';
-                        let defaultKey = '';
+                        let defaultKey = slot.apiKey;
                         let defaultName = '';
+                        let defaultBaseUrl = slot.baseUrl;
                         
                         if (newProvider === 'gemini') {
-                          defaultModel = 'gemini-1.5-flash';
-                          defaultName = 'Google Gemini';
+                          defaultModel = 'gemini-2.5-pro';
+                          defaultName = 'Google Gemini (Ultra / Pro)';
+                        } else if (newProvider === 'anthropic') {
+                          defaultModel = 'claude-3-7-sonnet-20250219';
+                          defaultName = 'Anthropic Claude (Claude Code)';
                         } else if (newProvider === 'ollama') {
-                          defaultKey = 'http://127.0.0.1:11434';
+                          defaultKey = defaultKey || 'http://127.0.0.1:11434';
                           defaultModel = 'llama3';
                           defaultName = 'Ollama (Local)';
                         } else if (newProvider === 'openai') {
                           defaultModel = 'gpt-4o';
                           defaultName = 'OpenAI';
                         } else if (newProvider === 'openrouter') {
-                          defaultModel = 'anthropic/claude-3.5-sonnet';
+                          defaultModel = 'anthropic/claude-3.7-sonnet';
                           defaultName = 'OpenRouter';
+                        } else if (newProvider === 'custom') {
+                          defaultModel = 'claude-3-7-sonnet-20250219';
+                          defaultBaseUrl = defaultBaseUrl || 'http://localhost:8080/v1';
+                          defaultName = 'Custom / Local Proxy';
                         }
 
                         updateAgentSlot(slot.id, {
                           provider: newProvider,
                           model: defaultModel,
                           apiKey: defaultKey,
+                          baseUrl: defaultBaseUrl,
                           name: defaultName
                         });
-                        // Refresh the model list for the new provider (works
-                        // immediately for Ollama/OpenRouter; keyed providers
-                        // load once a key is entered or on the ↻ button).
+                        // Refresh the model list for the new provider
                         setSlotModels(prev => { const next = { ...prev }; delete next[slot.id]; return next; });
-                        if (newProvider === 'ollama' || newProvider === 'openrouter') {
-                          fetchModelsForSlot(slot.id, newProvider, defaultKey);
-                        }
+                        fetchModelsForSlot(slot.id, newProvider, defaultKey);
                       }}
                       className="w-full bg-slate-900 border border-slate-650 rounded px-2 py-1 text-xs text-slate-200"
                     >
-                      <option value="gemini">Google Gemini</option>
-                      <option value="ollama">Ollama (Local)</option>
+                      <option value="gemini">Google Gemini (Ultra / Pro / Flash)</option>
+                      <option value="anthropic">Anthropic Claude (Claude Code / 3.7)</option>
                       <option value="openai">OpenAI</option>
                       <option value="openrouter">OpenRouter</option>
+                      <option value="ollama">Ollama (Local)</option>
+                      <option value="custom">Custom / Local Proxy</option>
                     </select>
                   </div>
                 </div>
@@ -443,7 +449,13 @@ export const ChatPanel: React.FC = () => {
                 <div className="grid grid-cols-2 gap-2">
                   <div>
                     <label className="block text-[9px] text-slate-400 mb-1">
-                      {slot.provider === 'ollama' ? 'Local URL' : 'API Key'}
+                      {slot.provider === 'ollama'
+                        ? 'Local URL'
+                        : slot.provider === 'anthropic'
+                          ? 'Anthropic API Key (Optional)'
+                          : slot.provider === 'gemini'
+                            ? 'Gemini / Google AI Key (Free)'
+                            : 'API Key'}
                     </label>
                     <input
                       type="password"
@@ -451,15 +463,21 @@ export const ChatPanel: React.FC = () => {
                       onChange={(e) => {
                         const newValue = e.target.value;
                         updateAgentSlot(slot.id, { apiKey: newValue });
-                        // The key/URL changed: the previously pinned error no
-                        // longer describes this value.
                         setModelErrors(prev => ({ ...prev, [slot.id]: '' }));
-                        if (slot.provider === 'ollama' && newValue.trim().length >= 12) {
-                          debouncedFetchModels(slot.id, 'ollama', newValue);
+                        if ((slot.provider === 'ollama' || slot.provider === 'gemini' || slot.provider === 'anthropic') && newValue.trim().length >= 12) {
+                          debouncedFetchModels(slot.id, slot.provider, newValue);
                         }
                       }}
-                      className="w-full bg-slate-900 border border-slate-650 rounded px-2 py-1 text-xs text-slate-200"
-                      placeholder={slot.provider === 'ollama' ? 'http://127.0.0.1:11434' : 'Key...'}
+                      className="w-full bg-slate-900 border border-slate-650 rounded px-2 py-1 text-xs text-slate-200 font-mono"
+                      placeholder={
+                        slot.provider === 'ollama'
+                          ? 'http://127.0.0.1:11434'
+                          : slot.provider === 'anthropic'
+                            ? 'Uses your Claude subscription CLI if empty'
+                            : slot.provider === 'gemini'
+                              ? 'AIzaSy... (Free at aistudio.google.com)'
+                              : 'Key...'
+                      }
                     />
                   </div>
                   <div>
@@ -517,7 +535,7 @@ export const ChatPanel: React.FC = () => {
                           value={slot.model}
                           onChange={(e) => updateAgentSlot(slot.id, { model: e.target.value })}
                           className="w-full bg-slate-900 border border-slate-650 rounded px-2 py-1 text-xs text-slate-200 focus:outline-none focus:border-blue-500"
-                          placeholder="e.g. llama3"
+                          placeholder={slot.provider === 'anthropic' ? 'claude-3-7-sonnet-20250219' : slot.provider === 'gemini' ? 'gemini-2.5-pro' : 'e.g. gpt-4o'}
                         />
                         {loadingModels[slot.id] && (
                           <span className="absolute right-2 top-1.5 text-[9px] text-slate-500 animate-pulse">
@@ -536,6 +554,79 @@ export const ChatPanel: React.FC = () => {
                     )}
                   </div>
                 </div>
+
+                {/* Quick Model Presets for Gemini and Anthropic */}
+                {slot.provider === 'gemini' && (
+                  <div className="flex flex-wrap items-center gap-1 pt-0.5">
+                    <span className="text-[8.5px] text-slate-500 font-medium mr-1">Presets:</span>
+                    {[
+                      { id: 'gemini-2.5-pro', label: '★ 2.5 Pro (Ultra)' },
+                      { id: 'gemini-2.5-flash', label: '2.5 Flash' },
+                      { id: 'gemini-2.0-flash', label: '2.0 Flash' },
+                      { id: 'gemini-1.5-pro', label: '1.5 Pro' },
+                    ].map(preset => (
+                      <button
+                        key={preset.id}
+                        type="button"
+                        onClick={() => updateAgentSlot(slot.id, { model: preset.id })}
+                        className={`text-[8.5px] px-1.5 py-0.5 rounded border transition-colors cursor-pointer ${
+                          slot.model === preset.id
+                            ? 'bg-blue-600/30 border-blue-500 text-blue-300 font-semibold'
+                            : 'bg-slate-850 border-slate-700 text-slate-400 hover:text-slate-200'
+                        }`}
+                      >
+                        {preset.label}
+                      </button>
+                    ))}
+                  </div>
+                )}
+                {slot.provider === 'anthropic' && (
+                  <div className="flex flex-wrap items-center gap-1 pt-0.5">
+                    <span className="text-[8.5px] text-slate-500 font-medium mr-1">Presets:</span>
+                    {[
+                      { id: 'claude-3-7-sonnet-20250219', label: '★ 3.7 Sonnet (Claude Code)' },
+                      { id: 'claude-3-5-sonnet-20241022', label: '3.5 Sonnet' },
+                      { id: 'claude-3-5-haiku-20241022', label: '3.5 Haiku' },
+                      { id: 'claude-3-opus-20240229', label: '3 Opus' },
+                    ].map(preset => (
+                      <button
+                        key={preset.id}
+                        type="button"
+                        onClick={() => updateAgentSlot(slot.id, { model: preset.id })}
+                        className={`text-[8.5px] px-1.5 py-0.5 rounded border transition-colors cursor-pointer ${
+                          slot.model === preset.id
+                            ? 'bg-purple-600/30 border-purple-500 text-purple-300 font-semibold'
+                            : 'bg-slate-850 border-slate-700 text-slate-400 hover:text-slate-200'
+                        }`}
+                      >
+                        {preset.label}
+                      </button>
+                    ))}
+                  </div>
+                )}
+
+                {/* Optional Custom Base URL / Proxy Input */}
+                {(slot.provider === 'custom' || slot.provider === 'anthropic' || slot.provider === 'openai' || slot.baseUrl) && (
+                  <div className="pt-1">
+                    <label className="block text-[9px] text-slate-400 mb-0.5">
+                      Custom Base URL / Proxy Endpoint (Optional)
+                    </label>
+                    <input
+                      type="text"
+                      value={slot.baseUrl || ''}
+                      onChange={(e) => updateAgentSlot(slot.id, { baseUrl: e.target.value })}
+                      className="w-full bg-slate-900 border border-slate-650 rounded px-2 py-1 text-xs text-slate-200 placeholder:text-slate-600 font-mono text-[11px]"
+                      placeholder={
+                        slot.provider === 'anthropic'
+                          ? 'https://api.anthropic.com/v1 (or Claude Code local bridge)'
+                          : slot.provider === 'custom'
+                            ? 'http://localhost:8080/v1'
+                            : 'https://api.openai.com/v1'
+                      }
+                    />
+                  </div>
+                )}
+
                 {/* Behavior checkboxes */}
                 <div className="space-y-1.5 pt-2 border-t border-slate-700/50 mt-1">
                   <div className="flex items-center gap-2">
