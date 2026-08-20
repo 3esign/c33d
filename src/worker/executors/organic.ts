@@ -263,8 +263,7 @@ export const ORGANIC_EXECUTORS: Record<string, (params: any, inputs: any[], warn
       let solid = pen.sketchOnPlane('XY').extrude(thickness);
 
       if (Math.abs(cup) > 0.1) {
-        const bbox = [[-width, 0, 0], [width, length, thickness]] as [[number, number, number], [number, number, number]];
-        solid = bendShape(solid, 'X', cup * 20, bbox);
+        solid = bendShape(solid, 'X', cup * 20);
       }
       return solid;
     } catch (err: any) {
